@@ -10,379 +10,469 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <h1>Methods and Algorithms</h1>
-        <p class="subtitle">MSc Data Science - Course Materials Hub</p>
-        <div class="stats-bar">
-            <span class="stat-item"><strong>6</strong> Lectures</span>
-            <span class="stat-item"><strong>12</strong> Slide Decks</span>
-            <span class="stat-item"><strong>6</strong> Notebooks</span>
-            <span class="stat-item"><strong>45</strong> Quiz Questions</span>
-        </div>
-    </header>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" aria-label="Toggle navigation">
+        <span></span>
+    </button>
 
-    <!-- Main Content -->
-    <main class="container">
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay"></div>
 
-        <!-- Lectures Section -->
-        <h2 class="section-title">Lecture Materials</h2>
-
-        <!-- L01: Introduction & Linear Regression -->
-        <div class="lecture-card">
-            <div class="lecture-header" tabindex="0" role="button" aria-expanded="true">
-                <div class="lecture-number">01</div>
-                <div class="lecture-info">
-                    <div class="lecture-title">Introduction & Linear Regression</div>
-                    <div class="lecture-subtitle">OLS, Gradient Descent, Regularization</div>
-                </div>
-                <span class="toggle-icon">&#9660;</span>
+    <div class="wiki-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Methods & Algorithms</div>
+                <div class="sidebar-subtitle">MSc Data Science</div>
             </div>
-            <div class="lecture-content">
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <a href="#home" class="nav-item active">Home</a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Lectures</div>
+                    <a href="#l01" class="nav-item"><span class="nav-item-number">01</span> Linear Regression</a>
+                    <a href="#l02" class="nav-item"><span class="nav-item-number">02</span> Logistic Regression</a>
+                    <a href="#l03" class="nav-item"><span class="nav-item-number">03</span> KNN & K-Means</a>
+                    <a href="#l04" class="nav-item"><span class="nav-item-number">04</span> Random Forests</a>
+                    <a href="#l05" class="nav-item"><span class="nav-item-number">05</span> PCA & t-SNE</a>
+                    <a href="#l06" class="nav-item"><span class="nav-item-number">06</span> Embeddings & RL</a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Assessment</div>
+                    <a href="#quizzes" class="nav-item">Quizzes</a>
+                    <a href="#capstone" class="nav-item">Capstone Project</a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                Last updated: January 2026
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Mobile TOC -->
+            <nav class="toc-mobile">
+                <a href="#home" class="toc-link active">Home</a>
+                <a href="#l01" class="toc-link">L01</a>
+                <a href="#l02" class="toc-link">L02</a>
+                <a href="#l03" class="toc-link">L03</a>
+                <a href="#l04" class="toc-link">L04</a>
+                <a href="#l05" class="toc-link">L05</a>
+                <a href="#l06" class="toc-link">L06</a>
+                <a href="#quizzes" class="toc-link">Quizzes</a>
+                <a href="#capstone" class="toc-link">Capstone</a>
+            </nav>
+
+            <!-- Home Section -->
+            <section id="home" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">Methods and Algorithms</h1>
+                    <p class="section-subtitle">Master core ML algorithms and develop a systematic approach to choosing the right method for data-driven decision making in finance and business contexts.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Lectures</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Slide Decks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Notebooks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">45</div>
+                        <div class="stat-label">Quiz Questions</div>
+                    </div>
+                </div>
+
+                <h3 id="course-info">Course Information</h3>
+                <p><strong>Program:</strong> MSc Data Science<br>
+                <strong>Sessions:</strong> 6 x 3 hours<br>
+                <strong>Prerequisites:</strong> Python, Statistics, Linear Algebra<br>
+                <strong>Domain Focus:</strong> Finance and Banking</p>
+
+                <h3 id="pmsp">PMSP Framework</h3>
+                <p>Each lecture follows the PMSP framework:</p>
+                <p><strong>Problem</strong> (15 min) - Real finance use case<br>
+                <strong>Method</strong> (45 min) - Algorithm theory and mathematics<br>
+                <strong>Solution</strong> (45 min) - Implementation and results<br>
+                <strong>Practice</strong> (75 min) - Hands-on notebook exercises</p>
+            </section>
+
+            <!-- L01: Introduction & Linear Regression -->
+            <section id="l01" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Introduction & Linear Regression</h2>
+                    <p class="section-subtitle">OLS, Gradient Descent, Regularization</p>
+                </div>
+
+                <p>Learn the fundamentals of linear regression including Ordinary Least Squares, gradient descent optimization, and regularization techniques (Ridge, Lasso). Apply these to house price prediction and factor models in finance.</p>
+
+                <h3 id="l01-materials">Materials</h3>
                 <div class="materials-grid">
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L01_Introduction_Linear_Regression/L01_overview.pdf" class="material-link" onclick="trackDownload('slides', 'L01_overview')">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L01_Introduction_Linear_Regression/L01_overview.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Overview Slides</div>
                             <div class="material-desc">10 slides - Key concepts</div>
                         </div>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L01_Introduction_Linear_Regression/L01_deepdive.pdf" class="material-link" onclick="trackDownload('slides', 'L01_deepdive')">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L01_Introduction_Linear_Regression/L01_deepdive.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Deep Dive Slides</div>
                             <div class="material-desc">30 slides - Full theory</div>
                         </div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L01_linear_regression.ipynb" class="material-link" target="_blank">
+                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L01_linear_regression.ipynb" class="material-card" target="_blank">
                         <div class="material-icon notebook">NB</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Colab Notebook</div>
                             <div class="material-desc">Hands-on exercises</div>
                         </div>
                         <span class="colab-badge">Open in Colab</span>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/housing_synthetic.csv" class="material-link" download>
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/housing_synthetic.csv" class="material-card" download>
                         <div class="material-icon dataset">CSV</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Dataset</div>
                             <div class="material-desc">housing_synthetic.csv</div>
                         </div>
                     </a>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- L02: Logistic Regression -->
-        <div class="lecture-card">
-            <div class="lecture-header" tabindex="0" role="button" aria-expanded="false">
-                <div class="lecture-number">02</div>
-                <div class="lecture-info">
-                    <div class="lecture-title">Logistic Regression</div>
-                    <div class="lecture-subtitle">Classification, ROC/AUC, Cross-Entropy</div>
+            <!-- L02: Logistic Regression -->
+            <section id="l02" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Logistic Regression</h2>
+                    <p class="section-subtitle">Classification, ROC/AUC, Cross-Entropy</p>
                 </div>
-                <span class="toggle-icon">&#9660;</span>
-            </div>
-            <div class="lecture-content">
+
+                <p>Master binary classification using logistic regression. Understand maximum likelihood estimation, cross-entropy loss, and model evaluation with ROC curves and AUC. Apply to credit scoring and default prediction.</p>
+
+                <h3 id="l02-materials">Materials</h3>
                 <div class="materials-grid">
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L02_Logistic_Regression/L02_overview.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L02_Logistic_Regression/L02_overview.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Overview Slides</div>
                             <div class="material-desc">10 slides - Key concepts</div>
                         </div>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L02_Logistic_Regression/L02_deepdive.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L02_Logistic_Regression/L02_deepdive.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Deep Dive Slides</div>
                             <div class="material-desc">30 slides - Full theory</div>
                         </div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L02_logistic_regression.ipynb" class="material-link" target="_blank">
+                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L02_logistic_regression.ipynb" class="material-card" target="_blank">
                         <div class="material-icon notebook">NB</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Colab Notebook</div>
                             <div class="material-desc">Hands-on exercises</div>
                         </div>
                         <span class="colab-badge">Open in Colab</span>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/credit_synthetic.csv" class="material-link" download>
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/credit_synthetic.csv" class="material-card" download>
                         <div class="material-icon dataset">CSV</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Dataset</div>
                             <div class="material-desc">credit_synthetic.csv</div>
                         </div>
                     </a>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- L03: KNN & K-Means -->
-        <div class="lecture-card">
-            <div class="lecture-header" tabindex="0" role="button" aria-expanded="false">
-                <div class="lecture-number">03</div>
-                <div class="lecture-info">
-                    <div class="lecture-title">KNN & K-Means Clustering</div>
-                    <div class="lecture-subtitle">Distance Metrics, Clustering, Elbow Method</div>
+            <!-- L03: KNN & K-Means -->
+            <section id="l03" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">KNN & K-Means Clustering</h2>
+                    <p class="section-subtitle">Distance Metrics, Clustering, Elbow Method</p>
                 </div>
-                <span class="toggle-icon">&#9660;</span>
-            </div>
-            <div class="lecture-content">
+
+                <p>Explore instance-based learning with K-Nearest Neighbors and unsupervised clustering with K-Means. Learn distance metrics, the curse of dimensionality, and cluster validation. Apply to customer segmentation and anomaly detection.</p>
+
+                <h3 id="l03-materials">Materials</h3>
                 <div class="materials-grid">
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L03_KNN_KMeans/L03_overview.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L03_KNN_KMeans/L03_overview.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Overview Slides</div>
                             <div class="material-desc">10 slides - Key concepts</div>
                         </div>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L03_KNN_KMeans/L03_deepdive.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L03_KNN_KMeans/L03_deepdive.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Deep Dive Slides</div>
                             <div class="material-desc">30 slides - Full theory</div>
                         </div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L03_knn_kmeans.ipynb" class="material-link" target="_blank">
+                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L03_knn_kmeans.ipynb" class="material-card" target="_blank">
                         <div class="material-icon notebook">NB</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Colab Notebook</div>
                             <div class="material-desc">Hands-on exercises</div>
                         </div>
                         <span class="colab-badge">Open in Colab</span>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/customers_synthetic.csv" class="material-link" download>
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/customers_synthetic.csv" class="material-card" download>
                         <div class="material-icon dataset">CSV</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Dataset</div>
                             <div class="material-desc">customers_synthetic.csv</div>
                         </div>
                     </a>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- L04: Random Forests -->
-        <div class="lecture-card">
-            <div class="lecture-header" tabindex="0" role="button" aria-expanded="false">
-                <div class="lecture-number">04</div>
-                <div class="lecture-info">
-                    <div class="lecture-title">Random Forests</div>
-                    <div class="lecture-subtitle">Ensemble Methods, Feature Importance, OOB</div>
+            <!-- L04: Random Forests -->
+            <section id="l04" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Random Forests</h2>
+                    <p class="section-subtitle">Ensemble Methods, Feature Importance, OOB</p>
                 </div>
-                <span class="toggle-icon">&#9660;</span>
-            </div>
-            <div class="lecture-content">
+
+                <p>Understand ensemble learning through bagging and random forests. Learn about decision trees, feature importance, out-of-bag error estimation, and hyperparameter tuning. Apply to fraud detection scenarios.</p>
+
+                <h3 id="l04-materials">Materials</h3>
                 <div class="materials-grid">
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L04_Random_Forests/L04_overview.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L04_Random_Forests/L04_overview.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Overview Slides</div>
                             <div class="material-desc">10 slides - Key concepts</div>
                         </div>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L04_Random_Forests/L04_deepdive.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L04_Random_Forests/L04_deepdive.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Deep Dive Slides</div>
                             <div class="material-desc">30 slides - Full theory</div>
                         </div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L04_random_forests.ipynb" class="material-link" target="_blank">
+                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L04_random_forests.ipynb" class="material-card" target="_blank">
                         <div class="material-icon notebook">NB</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Colab Notebook</div>
                             <div class="material-desc">Hands-on exercises</div>
                         </div>
                         <span class="colab-badge">Open in Colab</span>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/transactions_synthetic.csv" class="material-link" download>
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/transactions_synthetic.csv" class="material-card" download>
                         <div class="material-icon dataset">CSV</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Dataset</div>
                             <div class="material-desc">transactions_synthetic.csv</div>
                         </div>
                     </a>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- L05: PCA & t-SNE -->
-        <div class="lecture-card">
-            <div class="lecture-header" tabindex="0" role="button" aria-expanded="false">
-                <div class="lecture-number">05</div>
-                <div class="lecture-info">
-                    <div class="lecture-title">PCA & t-SNE</div>
-                    <div class="lecture-subtitle">Dimensionality Reduction, Visualization</div>
+            <!-- L05: PCA & t-SNE -->
+            <section id="l05" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">PCA & t-SNE</h2>
+                    <p class="section-subtitle">Dimensionality Reduction, Visualization</p>
                 </div>
-                <span class="toggle-icon">&#9660;</span>
-            </div>
-            <div class="lecture-content">
+
+                <p>Master dimensionality reduction techniques including Principal Component Analysis and t-SNE. Understand eigenvalue decomposition, variance explained, and non-linear manifold learning. Apply to portfolio risk decomposition and data visualization.</p>
+
+                <h3 id="l05-materials">Materials</h3>
                 <div class="materials-grid">
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L05_PCA_tSNE/L05_overview.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L05_PCA_tSNE/L05_overview.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Overview Slides</div>
                             <div class="material-desc">10 slides - Key concepts</div>
                         </div>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L05_PCA_tSNE/L05_deepdive.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L05_PCA_tSNE/L05_deepdive.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Deep Dive Slides</div>
                             <div class="material-desc">24 slides - Full theory</div>
                         </div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L05_pca_tsne.ipynb" class="material-link" target="_blank">
+                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L05_pca_tsne.ipynb" class="material-card" target="_blank">
                         <div class="material-icon notebook">NB</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Colab Notebook</div>
                             <div class="material-desc">Hands-on exercises</div>
                         </div>
                         <span class="colab-badge">Open in Colab</span>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/portfolio_synthetic.csv" class="material-link" download>
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/portfolio_synthetic.csv" class="material-card" download>
                         <div class="material-icon dataset">CSV</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Dataset</div>
                             <div class="material-desc">portfolio_synthetic.csv</div>
                         </div>
                     </a>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- L06: Embeddings & RL -->
-        <div class="lecture-card">
-            <div class="lecture-header" tabindex="0" role="button" aria-expanded="false">
-                <div class="lecture-number">06</div>
-                <div class="lecture-info">
-                    <div class="lecture-title">Embeddings & Reinforcement Learning</div>
-                    <div class="lecture-subtitle">Word2Vec, Q-Learning, Trading Strategies</div>
+            <!-- L06: Embeddings & RL -->
+            <section id="l06" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Embeddings & Reinforcement Learning</h2>
+                    <p class="section-subtitle">Word2Vec, Q-Learning, Trading Strategies</p>
                 </div>
-                <span class="toggle-icon">&#9660;</span>
-            </div>
-            <div class="lecture-content">
+
+                <p>Explore word embeddings (Word2Vec, GloVe) for text representation and reinforcement learning fundamentals (Q-learning, policy gradients). Apply to sentiment analysis and algorithmic trading strategies.</p>
+
+                <h3 id="l06-materials">Materials</h3>
                 <div class="materials-grid">
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L06_Embeddings_RL/L06_overview.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L06_Embeddings_RL/L06_overview.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Overview Slides</div>
                             <div class="material-desc">10 slides - Key concepts</div>
                         </div>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L06_Embeddings_RL/L06_deepdive.pdf" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/slides/L06_Embeddings_RL/L06_deepdive.pdf" class="material-card">
                         <div class="material-icon pdf">PDF</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Deep Dive Slides</div>
                             <div class="material-desc">26 slides - Full theory</div>
                         </div>
                     </a>
-                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L06_embeddings_rl.ipynb" class="material-link" target="_blank">
+                    <a href="https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L06_embeddings_rl.ipynb" class="material-card" target="_blank">
                         <div class="material-icon notebook">NB</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Colab Notebook</div>
                             <div class="material-desc">Hands-on exercises</div>
                         </div>
                         <span class="colab-badge">Open in Colab</span>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/text_corpus_synthetic.json" class="material-link" download>
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/datasets/text_corpus_synthetic.json" class="material-card" download>
                         <div class="material-icon dataset">JSON</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Dataset</div>
                             <div class="material-desc">text_corpus_synthetic.json</div>
                         </div>
                     </a>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Quizzes Section -->
-        <h2 class="section-title">Quizzes</h2>
-
-        <div class="quiz-card">
-            <div class="quiz-number">1</div>
-            <div class="quiz-info">
-                <div class="quiz-title">Quiz 1: Regression Methods</div>
-                <div class="quiz-topics">Topics: Linear Regression, Logistic Regression</div>
-            </div>
-            <div class="quiz-meta">
-                <div>15 questions</div>
-                <div>30 min</div>
-            </div>
-        </div>
-
-        <div class="quiz-card">
-            <div class="quiz-number">2</div>
-            <div class="quiz-info">
-                <div class="quiz-title">Quiz 2: Classification & Ensembles</div>
-                <div class="quiz-topics">Topics: KNN, K-Means, Random Forests</div>
-            </div>
-            <div class="quiz-meta">
-                <div>15 questions</div>
-                <div>30 min</div>
-            </div>
-        </div>
-
-        <div class="quiz-card">
-            <div class="quiz-number">3</div>
-            <div class="quiz-info">
-                <div class="quiz-title">Quiz 3: Advanced Topics</div>
-                <div class="quiz-topics">Topics: PCA, t-SNE, Embeddings, RL</div>
-            </div>
-            <div class="quiz-meta">
-                <div>15 questions</div>
-                <div>30 min</div>
-            </div>
-        </div>
-
-        <!-- Capstone Section -->
-        <h2 class="section-title">Capstone Project</h2>
-
-        <div class="lecture-card">
-            <div class="lecture-header" tabindex="0" role="button" aria-expanded="false">
-                <div class="lecture-number">CP</div>
-                <div class="lecture-info">
-                    <div class="lecture-title">Capstone Project Materials</div>
-                    <div class="lecture-subtitle">Specification, Template, Rubric</div>
+            <!-- Quizzes Section -->
+            <section id="quizzes" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Quizzes</h2>
+                    <p class="section-subtitle">Assessment materials for each module</p>
                 </div>
-                <span class="toggle-icon">&#9660;</span>
-            </div>
-            <div class="lecture-content">
-                <div class="materials-grid">
-                    <a href="https://github.com/Digital-AI-Finance/methods-algorithms/blob/master/capstone/specification.md" class="material-link" target="_blank">
-                        <div class="material-icon pdf">MD</div>
-                        <div class="material-text">
+
+                <p>Three quizzes covering the course material. Each quiz has 15 questions and a 30-minute time limit.</p>
+
+                <div class="quiz-grid">
+                    <div class="quiz-card">
+                        <div class="quiz-number">1</div>
+                        <div class="quiz-info">
+                            <div class="quiz-title">Quiz 1: Regression Methods</div>
+                            <div class="quiz-topics">Topics: Linear Regression, Logistic Regression</div>
+                        </div>
+                        <div class="quiz-meta">
+                            <div>15 questions</div>
+                            <div>30 min</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-card">
+                        <div class="quiz-number">2</div>
+                        <div class="quiz-info">
+                            <div class="quiz-title">Quiz 2: Classification & Ensembles</div>
+                            <div class="quiz-topics">Topics: KNN, K-Means, Random Forests</div>
+                        </div>
+                        <div class="quiz-meta">
+                            <div>15 questions</div>
+                            <div>30 min</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-card">
+                        <div class="quiz-number">3</div>
+                        <div class="quiz-info">
+                            <div class="quiz-title">Quiz 3: Advanced Topics</div>
+                            <div class="quiz-topics">Topics: PCA, t-SNE, Embeddings, RL</div>
+                        </div>
+                        <div class="quiz-meta">
+                            <div>15 questions</div>
+                            <div>30 min</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Capstone Section -->
+            <section id="capstone" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Capstone Project</h2>
+                    <p class="section-subtitle">Specification, Template, Rubric</p>
+                </div>
+
+                <p>The capstone project is an open-ended assignment where you apply the methods learned in class to a real-world finance problem. You will submit a written report (no code submission required).</p>
+
+                <h3 id="capstone-materials">Materials</h3>
+                <div class="capstone-grid">
+                    <a href="https://github.com/Digital-AI-Finance/methods-algorithms/blob/master/capstone/specification.md" class="material-card" target="_blank">
+                        <div class="material-icon quiz">MD</div>
+                        <div class="material-info">
                             <div class="material-title">Project Specification</div>
                             <div class="material-desc">Requirements & guidelines</div>
                         </div>
                     </a>
-                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/capstone/report_template.tex" class="material-link">
+                    <a href="https://raw.githubusercontent.com/Digital-AI-Finance/methods-algorithms/master/capstone/report_template.tex" class="material-card">
                         <div class="material-icon notebook">TEX</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Report Template</div>
                             <div class="material-desc">LaTeX template</div>
                         </div>
                     </a>
-                    <a href="https://github.com/Digital-AI-Finance/methods-algorithms/blob/master/rubrics/capstone_rubric.md" class="material-link" target="_blank">
+                    <a href="https://github.com/Digital-AI-Finance/methods-algorithms/blob/master/rubrics/capstone_rubric.md" class="material-card" target="_blank">
                         <div class="material-icon quiz">MD</div>
-                        <div class="material-text">
+                        <div class="material-info">
                             <div class="material-title">Grading Rubric</div>
                             <div class="material-desc">100 points total</div>
                         </div>
                     </a>
                 </div>
-            </div>
-        </div>
+            </section>
 
-    </main>
+            <!-- Footer -->
+            <footer class="footer">
+                <p>Methods and Algorithms - MSc Data Science</p>
+                <p>Last updated: January 2026</p>
+            </footer>
+        </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p>Methods and Algorithms - MSc Data Science</p>
-        <p>Last updated: January 2026</p>
-    </footer>
+        <!-- Right TOC Sidebar -->
+        <aside class="toc-sidebar">
+            <div class="toc-title">On this page</div>
+            <ul class="toc-list">
+                <li class="toc-item"><a href="#home" class="toc-link active">Home</a></li>
+                <li class="toc-item"><a href="#l01" class="toc-link">L01: Linear Regression</a></li>
+                <li class="toc-item"><a href="#l02" class="toc-link">L02: Logistic Regression</a></li>
+                <li class="toc-item"><a href="#l03" class="toc-link">L03: KNN & K-Means</a></li>
+                <li class="toc-item"><a href="#l04" class="toc-link">L04: Random Forests</a></li>
+                <li class="toc-item"><a href="#l05" class="toc-link">L05: PCA & t-SNE</a></li>
+                <li class="toc-item"><a href="#l06" class="toc-link">L06: Embeddings & RL</a></li>
+                <li class="toc-item"><a href="#quizzes" class="toc-link">Quizzes</a></li>
+                <li class="toc-item"><a href="#capstone" class="toc-link">Capstone</a></li>
+            </ul>
+        </aside>
+    </div>
 
     <script src="js/main.js"></script>
 </body>
