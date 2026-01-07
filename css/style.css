@@ -1,0 +1,370 @@
+/* Methods and Algorithms - Course Hub Styles */
+/* MSc Data Science - ML Purple/Blue Palette */
+
+:root {
+    --ml-purple: #3333B2;
+    --ml-blue: #0066CC;
+    --ml-lavender: #ADADE0;
+    --ml-green: #2CA02C;
+    --ml-orange: #FF7F0E;
+    --ml-red: #D62728;
+    --bg-dark: #1a1a2e;
+    --bg-card: #16213e;
+    --bg-section: #0f3460;
+    --text-primary: #ffffff;
+    --text-secondary: #b8b8d1;
+    --border-color: #2a2a4a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, #0f0f23 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(90deg, var(--ml-purple) 0%, var(--ml-blue) 100%);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.header .subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+/* Stats Bar */
+.stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.stat-item {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+}
+
+.stat-item strong {
+    color: var(--ml-lavender);
+}
+
+/* Main Container */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Section Headers */
+.section-title {
+    font-size: 1.4rem;
+    color: var(--ml-lavender);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--ml-purple);
+}
+
+/* Collapsible Lecture Sections */
+.lecture-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.3s ease;
+}
+
+.lecture-card:hover {
+    box-shadow: 0 4px 20px rgba(51, 51, 178, 0.2);
+}
+
+.lecture-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    background: var(--bg-section);
+    transition: background 0.2s ease;
+}
+
+.lecture-header:hover {
+    background: rgba(15, 52, 96, 0.8);
+}
+
+.lecture-number {
+    background: var(--ml-purple);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.lecture-info {
+    flex-grow: 1;
+}
+
+.lecture-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.lecture-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.toggle-icon {
+    font-size: 1.5rem;
+    color: var(--ml-lavender);
+    transition: transform 0.3s ease;
+}
+
+.lecture-card.open .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Lecture Content */
+.lecture-content {
+    display: none;
+    padding: 1.5rem;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+}
+
+.lecture-card.open .lecture-content {
+    display: block;
+}
+
+/* Material Links */
+.materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.material-link {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.material-link:hover {
+    background: rgba(51, 51, 178, 0.2);
+    border-color: var(--ml-purple);
+    transform: translateY(-2px);
+}
+
+.material-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.8rem;
+    font-size: 1rem;
+}
+
+.material-icon.pdf {
+    background: linear-gradient(135deg, #D62728 0%, #a61c1c 100%);
+}
+
+.material-icon.notebook {
+    background: linear-gradient(135deg, #FF7F0E 0%, #cc6600 100%);
+}
+
+.material-icon.dataset {
+    background: linear-gradient(135deg, #2CA02C 0%, #1f7a1f 100%);
+}
+
+.material-icon.quiz {
+    background: linear-gradient(135deg, var(--ml-blue) 0%, #004c99 100%);
+}
+
+.material-text {
+    flex-grow: 1;
+}
+
+.material-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.material-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Colab Badge */
+.colab-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #F9AB00;
+    color: #000;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+/* Quizzes Section */
+.quiz-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.quiz-card:hover {
+    border-color: var(--ml-blue);
+    box-shadow: 0 4px 15px rgba(0, 102, 204, 0.15);
+}
+
+.quiz-number {
+    background: var(--ml-blue);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-right: 1rem;
+}
+
+.quiz-info {
+    flex-grow: 1;
+}
+
+.quiz-title {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.quiz-topics {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.quiz-meta {
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.footer a {
+    color: var(--ml-lavender);
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.6rem;
+    }
+
+    .stats-bar {
+        gap: 0.8rem;
+    }
+
+    .stat-item {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    .materials-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lecture-header {
+        padding: 0.8rem 1rem;
+    }
+
+    .lecture-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+
+    .lecture-title {
+        font-size: 1rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.lecture-card {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.lecture-card:nth-child(1) { animation-delay: 0.1s; }
+.lecture-card:nth-child(2) { animation-delay: 0.15s; }
+.lecture-card:nth-child(3) { animation-delay: 0.2s; }
+.lecture-card:nth-child(4) { animation-delay: 0.25s; }
+.lecture-card:nth-child(5) { animation-delay: 0.3s; }
+.lecture-card:nth-child(6) { animation-delay: 0.35s; }
