@@ -1,0 +1,510 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\definecolor{mlpurple}{HTML}{3333B2}
+\definecolor{mlblue}{HTML}{0066CC}
+\definecolor{mlgreen}{HTML}{2CA02C}
+\definecolor{mlred}{HTML}{D62728}
+\definecolor{mlorange}{HTML}{FF7F0E}
+
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textcolor{gray}{#1}}
+
+\title[L04: Random Forests Deep Dive]{L04: Random Forests}
+\subtitle{Deep Dive: Theory, Implementation, and Applications}
+\author{Methods and Algorithms -- MSc Data Science}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+%% PART 1: DECISION TREES FOUNDATIONS
+\begin{frame}[t]{Part 1: Decision Tree Foundations}
+\textbf{From Rules to Trees}
+\begin{itemize}
+\item Decision trees encode if-then-else rules
+\item Each node splits data based on a feature threshold
+\item Leaves contain predictions (class or value)
+\end{itemize}
+\vspace{0.5em}
+\textbf{Key Questions}
+\begin{itemize}
+\item How to choose the best split?
+\item When to stop splitting?
+\item How to make predictions?
+\end{itemize}
+\bottomnote{Decision trees: the building blocks of Random Forests}
+\end{frame}
+
+\begin{frame}[t]{Splitting Criteria: Gini Impurity}
+\textbf{Gini Impurity} measures class mixture at a node:
+\[
+G = 1 - \sum_{k=1}^{K} p_k^2
+\]
+where $p_k$ is the proportion of class $k$ samples.
+
+\vspace{0.5em}
+\textbf{Properties:}
+\begin{itemize}
+\item $G = 0$: pure node (all samples same class)
+\item $G = 0.5$: maximum impurity for binary classification
+\item Lower Gini = better split
+\end{itemize}
+\bottomnote{Gini impurity: probability of misclassifying a random sample}
+\end{frame}
+
+\begin{frame}[t]{Splitting Criteria: Information Gain}
+\textbf{Entropy} measures disorder:
+\[
+H = -\sum_{k=1}^{K} p_k \log_2(p_k)
+\]
+
+\textbf{Information Gain}:
+\[
+IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
+\]
+
+\vspace{0.5em}
+\textbf{Comparison:}
+\begin{itemize}
+\item Gini: faster to compute, tends to isolate most frequent class
+\item Entropy: more balanced trees, slightly slower
+\item In practice: similar performance
+\end{itemize}
+\bottomnote{Both criteria aim to create pure child nodes}
+\end{frame}
+
+\begin{frame}[t]{Regression Trees: MSE Criterion}
+\textbf{For regression}, use Mean Squared Error:
+\[
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \bar{y})^2
+\]
+
+\textbf{Split quality}:
+\[
+\text{Reduction} = \text{MSE}(\text{parent}) - \sum_{j} \frac{n_j}{n} \text{MSE}(\text{child}_j)
+\]
+
+\textbf{Leaf prediction}: mean of samples in leaf
+\bottomnote{Trees can handle both classification and regression tasks}
+\end{frame}
+
+\begin{frame}[t]{Decision Tree Algorithm}
+\textbf{Recursive Partitioning:}
+\begin{enumerate}
+\item Start with all samples at root
+\item For each feature and threshold:
+    \begin{itemize}
+    \item Calculate impurity reduction
+    \item Select split with maximum reduction
+    \end{itemize}
+\item Create child nodes with split samples
+\item Recurse until stopping criterion met
+\end{enumerate}
+
+\textbf{Stopping Criteria:}
+\begin{itemize}
+\item Maximum depth reached
+\item Minimum samples per leaf
+\item No improvement in impurity
+\end{itemize}
+\bottomnote{Greedy algorithm: locally optimal splits at each step}
+\end{frame}
+
+\begin{frame}[t]{Decision Tree: Fraud Detection Example}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{01_decision_tree/chart.pdf}
+\end{center}
+\bottomnote{Each path through the tree represents a fraud detection rule}
+\end{frame}
+
+%% PART 2: ENSEMBLE METHODS
+\begin{frame}[t]{Part 2: Why Ensembles?}
+\textbf{Problem with Single Trees:}
+\begin{itemize}
+\item High variance: small data changes $\rightarrow$ very different trees
+\item Prone to overfitting
+\item Unstable predictions
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Ensemble Solution:}
+\begin{itemize}
+\item Train multiple diverse models
+\item Combine predictions
+\item Reduce variance while maintaining low bias
+\end{itemize}
+\bottomnote{``Wisdom of crowds'': aggregate many weak learners into strong learner}
+\end{frame}
+
+\begin{frame}[t]{Bootstrap Sampling}
+\textbf{Bootstrap}: sample with replacement from original data
+
+\vspace{0.5em}
+\textbf{Properties:}
+\begin{itemize}
+\item Each sample: same size as original ($n$ observations)
+\item Expected unique samples: $\approx 63.2\%$ (probability $1 - (1-1/n)^n$)
+\item Remaining $\sim 37\%$: out-of-bag (OOB) samples
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Effect:}
+\begin{itemize}
+\item Each tree sees different data subset
+\item Creates diversity among trees
+\item OOB samples provide validation
+\end{itemize}
+\bottomnote{Bootstrap: key ingredient for reducing variance through aggregation}
+\end{frame}
+
+\begin{frame}[t]{Bagging Visualization}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{03_bootstrap/chart.pdf}
+\end{center}
+\bottomnote{Bootstrap Aggregating: train on random samples, aggregate predictions}
+\end{frame}
+
+\begin{frame}[t]{Bagging: Mathematical Foundation}
+\textbf{Variance Reduction by Averaging}
+
+For $B$ independent predictions with variance $\sigma^2$:
+\[
+\text{Var}\left(\frac{1}{B}\sum_{b=1}^{B} \hat{f}_b(x)\right) = \frac{\sigma^2}{B}
+\]
+
+\textbf{With correlation $\rho$}:
+\[
+\text{Var} = \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2
+\]
+
+\textbf{Key insight}: Reduce correlation between trees to maximize variance reduction
+\bottomnote{Lower correlation between trees = greater ensemble benefit}
+\end{frame}
+
+%% PART 3: RANDOM FORESTS
+\begin{frame}[t]{Part 3: Random Forests Algorithm}
+\textbf{Two Sources of Randomness:}
+\begin{enumerate}
+\item \textbf{Bootstrap sampling}: each tree trained on random sample
+\item \textbf{Feature randomization}: each split considers random subset
+\end{enumerate}
+
+\vspace{0.5em}
+\textbf{Feature Subset Size} (at each split):
+\begin{itemize}
+\item Classification: $\sqrt{p}$ features (default)
+\item Regression: $p/3$ features (default)
+\item Decorrelates trees more than bagging alone
+\end{itemize}
+\bottomnote{Feature randomization: Breiman's key innovation over bagging}
+\end{frame}
+
+\begin{frame}[t]{Random Forest Algorithm}
+\small
+\textbf{Training:}
+\begin{enumerate}
+\item For $b = 1$ to $B$ trees:
+    \begin{itemize}
+    \item Draw bootstrap sample of size $n$
+    \item Grow tree:
+        \begin{itemize}
+        \item At each node, select $m$ features randomly
+        \item Find best split among $m$ features
+        \item Split until stopping criterion
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Prediction:}
+\begin{itemize}
+\item Classification: majority vote across trees
+\item Regression: average predictions
+\end{itemize}
+\bottomnote{Typical: 100-500 trees, but more trees never hurts (just slower)}
+\end{frame}
+
+\begin{frame}[t]{Feature Importance}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{02_feature_importance/chart.pdf}
+\end{center}
+\bottomnote{Mean Decrease in Impurity: sum of impurity reductions from splits on feature}
+\end{frame}
+
+\begin{frame}[t]{Feature Importance Methods}
+\textbf{1. Mean Decrease in Impurity (MDI):}
+\begin{itemize}
+\item Sum of Gini/entropy reductions from splits on feature
+\item Fast to compute (comes free from training)
+\item Bias toward high-cardinality features
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{2. Permutation Importance:}
+\begin{itemize}
+\item Permute feature values, measure accuracy drop
+\item More reliable, less biased
+\item Slower (requires re-evaluation)
+\end{itemize}
+\bottomnote{Permutation importance preferred for final feature selection}
+\end{frame}
+
+\begin{frame}[t]{Out-of-Bag Error}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{04_oob_error/chart.pdf}
+\end{center}
+\bottomnote{OOB error: free cross-validation using samples not in bootstrap}
+\end{frame}
+
+\begin{frame}[t]{Out-of-Bag Error: How It Works}
+\textbf{For each observation $i$:}
+\begin{enumerate}
+\item Identify trees where $i$ was OOB (not in bootstrap sample)
+\item Aggregate predictions from only those trees
+\item Compare to true label
+\end{enumerate}
+
+\vspace{0.5em}
+\textbf{Benefits:}
+\begin{itemize}
+\item No separate validation set needed
+\item Uses $\sim 37\%$ of trees per sample
+\item Unbiased estimate of generalization error
+\end{itemize}
+\bottomnote{OOB error converges to leave-one-out cross-validation error}
+\end{frame}
+
+\begin{frame}[t]{Ensemble Voting}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{05_ensemble_voting/chart.pdf}
+\end{center}
+\bottomnote{Classification: majority vote. Regression: average prediction}
+\end{frame}
+
+%% PART 4: BIAS-VARIANCE AND TUNING
+\begin{frame}[t]{Part 4: Bias-Variance Decomposition}
+\textbf{Expected Prediction Error:}
+\[
+\mathbb{E}[(y - \hat{f}(x))^2] = \text{Bias}^2 + \text{Variance} + \text{Irreducible Error}
+\]
+
+\textbf{Single Tree:}
+\begin{itemize}
+\item Low bias (can fit complex patterns)
+\item High variance (sensitive to training data)
+\end{itemize}
+
+\textbf{Random Forest:}
+\begin{itemize}
+\item Bias: similar to single tree
+\item Variance: reduced by $\approx$ factor of $1/B$ (with decorrelation)
+\end{itemize}
+\bottomnote{Ensembles reduce variance without increasing bias}
+\end{frame}
+
+\begin{frame}[t]{Bias-Variance: Visualization}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{06_bias_variance/chart.pdf}
+\end{center}
+\bottomnote{Averaging decorrelated trees dramatically reduces prediction variance}
+\end{frame}
+
+\begin{frame}[t]{Hyperparameters: Number of Trees}
+\textbf{n\_estimators} (number of trees):
+\begin{itemize}
+\item More trees = lower variance, never overfits
+\item Diminishing returns after 100-500 trees
+\item Cost: linear increase in training/prediction time
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Guidelines:}
+\begin{itemize}
+\item Start with 100, increase if OOB error still decreasing
+\item For production: balance accuracy vs. latency
+\item More trees always better (if time permits)
+\end{itemize}
+\bottomnote{Unlike most hyperparameters, more trees cannot hurt accuracy}
+\end{frame}
+
+\begin{frame}[t]{Hyperparameters: Tree Complexity}
+\textbf{max\_depth}: Maximum tree depth
+\begin{itemize}
+\item Deeper = more complex patterns, higher variance
+\item Default: unlimited (grow full trees)
+\end{itemize}
+
+\textbf{min\_samples\_split}: Minimum samples to split
+\begin{itemize}
+\item Higher = simpler trees, more regularization
+\item Default: 2 (full trees)
+\end{itemize}
+
+\textbf{min\_samples\_leaf}: Minimum samples in leaf
+\begin{itemize}
+\item Higher = smoother predictions
+\item Default: 1 (full trees)
+\end{itemize}
+\bottomnote{Full trees (default) often work well due to bagging's variance reduction}
+\end{frame}
+
+\begin{frame}[t]{Hyperparameters: Feature Randomization}
+\textbf{max\_features}: Features considered at each split
+\begin{itemize}
+\item Lower = more decorrelated trees, higher bias
+\item Higher = less decorrelated, lower bias
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Defaults:}
+\begin{itemize}
+\item Classification: $\sqrt{p}$ (e.g., 10 features $\rightarrow$ 3)
+\item Regression: $p/3$ (e.g., 30 features $\rightarrow$ 10)
+\end{itemize}
+
+\textbf{Tuning:}
+\begin{itemize}
+\item Try: $\sqrt{p}$, $\log_2(p)$, $p/3$
+\item Cross-validate to find optimal
+\end{itemize}
+\bottomnote{Feature randomization is key differentiator from bagged trees}
+\end{frame}
+
+%% PART 5: PRACTICAL CONSIDERATIONS
+\begin{frame}[t]{Part 5: Practical Considerations}
+\textbf{Advantages:}
+\begin{itemize}
+\item Excellent accuracy out-of-the-box
+\item Handles mixed feature types
+\item Built-in feature importance
+\item Robust to outliers and missing values
+\item Parallelizable (trees independent)
+\end{itemize}
+
+\textbf{Limitations:}
+\begin{itemize}
+\item Less interpretable than single tree
+\item Memory intensive (stores all trees)
+\item Slower prediction than linear models
+\item Cannot extrapolate beyond training range
+\end{itemize}
+\bottomnote{Random Forests: excellent default choice for tabular data}
+\end{frame}
+
+\begin{frame}[t]{Comparison: Random Forest vs. Others}
+\begin{center}
+\small
+\begin{tabular}{l|ccccc}
+\toprule
+\textbf{Aspect} & \textbf{RF} & \textbf{Single Tree} & \textbf{Logistic} & \textbf{KNN} \\
+\midrule
+Accuracy & High & Medium & Medium & Medium \\
+Interpretability & Medium & High & High & Low \\
+Training Speed & Medium & Fast & Fast & Fast \\
+Feature Importance & Yes & Yes & Yes & No \\
+Non-linear & Yes & Yes & No & Yes \\
+\bottomrule
+\end{tabular}
+\end{center}
+\bottomnote{RF trades some interpretability for significant accuracy gains}
+\end{frame}
+
+\begin{frame}[t]{When to Use Random Forests}
+\textbf{Use When:}
+\begin{itemize}
+\item Tabular data with mixed feature types
+\item Non-linear relationships expected
+\item Feature importance needed
+\item Out-of-the-box performance matters
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Consider Alternatives When:}
+\begin{itemize}
+\item Need fully interpretable model (use single tree)
+\item Very high-dimensional sparse data (use linear models)
+\item Extrapolation required (use parametric models)
+\item Need fastest prediction (use linear/shallow tree)
+\end{itemize}
+\bottomnote{Random Forest: often the first model to try on tabular data}
+\end{frame}
+
+\begin{frame}[t]{Decision Framework}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+\bottomnote{Start with Random Forest; switch if specific constraints require it}
+\end{frame}
+
+\begin{frame}[t,fragile]{Implementation: scikit-learn}
+\textbf{Classification:}
+\small
+\begin{verbatim}
+from sklearn.ensemble import RandomForestClassifier
+rf = RandomForestClassifier(n_estimators=100, max_features='sqrt',
+                            oob_score=True, random_state=42)
+rf.fit(X_train, y_train)
+print(f"OOB Score: {rf.oob_score_:.3f}")
+\end{verbatim}
+\normalsize
+
+\textbf{Key Parameters:}
+\begin{itemize}
+\item \texttt{n\_estimators}: number of trees
+\item \texttt{max\_features}: features per split
+\item \texttt{oob\_score}: compute OOB error
+\item \texttt{n\_jobs}: parallel trees (-1 for all cores)
+\end{itemize}
+\bottomnote{Set random\_state for reproducibility}
+\end{frame}
+
+\begin{frame}[t]{Summary: Random Forests}
+\textbf{Core Concepts:}
+\begin{itemize}
+\item Ensemble of decision trees with bootstrap + feature randomization
+\item Reduces variance while maintaining low bias
+\item OOB error provides free cross-validation
+\end{itemize}
+
+\textbf{Practical Takeaways:}
+\begin{itemize}
+\item Excellent default for tabular data
+\item Feature importance aids interpretation
+\item More trees never hurts (just slower)
+\item Hyperparameter tuning usually optional
+\end{itemize}
+\bottomnote{Next: PCA and t-SNE for dimensionality reduction}
+\end{frame}
+
+\begin{frame}[t]{References}
+\small
+\textbf{Textbooks:}
+\begin{itemize}
+\item James et al. (2021). \textit{ISLR}, Chapter 8: Tree-Based Methods
+\item Hastie et al. (2009). \textit{ESL}, Chapter 15: Random Forests
+\end{itemize}
+
+\textbf{Original Papers:}
+\begin{itemize}
+\item Breiman, L. (2001). Random Forests. \textit{Machine Learning}, 45(1), 5-32.
+\item Breiman, L. (1996). Bagging Predictors. \textit{Machine Learning}, 24(2), 123-140.
+\end{itemize}
+
+\textbf{Documentation:}
+\begin{itemize}
+\item scikit-learn: \texttt{sklearn.ensemble.RandomForestClassifier}
+\end{itemize}
+\bottomnote{Breiman's 2001 paper: one of the most cited in ML}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,107 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+
+\definecolor{mlpurple}{HTML}{3333B2}
+\definecolor{mlblue}{HTML}{0066CC}
+\definecolor{mlgreen}{HTML}{2CA02C}
+\definecolor{mlred}{HTML}{D62728}
+\definecolor{mlorange}{HTML}{FF7F0E}
+
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textcolor{gray}{#1}}
+
+\title[L05: PCA \& t-SNE]{L05: PCA \& t-SNE}
+\subtitle{Dimensionality Reduction for Visualization and Preprocessing}
+\author{Methods and Algorithms -- MSc Data Science}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}[t]{Learning Objectives}
+\textbf{By the end of this lecture, you will be able to:}
+\begin{enumerate}
+\item Apply PCA for dimensionality reduction and feature extraction
+\item Interpret variance explained and choose number of components
+\item Use t-SNE for visualization of high-dimensional data
+\item Compare linear (PCA) vs non-linear (t-SNE) methods
+\end{enumerate}
+\vspace{1em}
+\textbf{Finance Application:} Portfolio risk decomposition, asset clustering
+\bottomnote{From many features to meaningful low-dimensional representations}
+\end{frame}
+
+\begin{frame}[t]{The Business Problem}
+\textbf{Curse of Dimensionality}
+\begin{itemize}
+\item Portfolio with 100+ assets: hard to visualize relationships
+\item Customer data with dozens of features: redundant information
+\item High dimensions cause sparsity and computational issues
+\end{itemize}
+\vspace{0.5em}
+\textbf{Solutions}
+\begin{itemize}
+\item \textbf{PCA}: Linear projection preserving maximum variance
+\item \textbf{t-SNE}: Non-linear embedding preserving local structure
+\end{itemize}
+\bottomnote{Reduce dimensions while preserving important information}
+\end{frame}
+
+\begin{frame}[t]{Scree Plot: Choosing Components}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{01_scree_plot/chart.pdf}
+\end{center}
+\bottomnote{Choose k components capturing 80-95\% of variance, or at the ``elbow''}
+\end{frame}
+
+\begin{frame}[t]{Principal Components}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{02_principal_components/chart.pdf}
+\end{center}
+\bottomnote{Principal components are orthogonal directions of maximum variance}
+\end{frame}
+
+\begin{frame}[t]{Reconstruction Error}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{03_reconstruction/chart.pdf}
+\end{center}
+\bottomnote{More components = lower error, but diminishing returns after elbow}
+\end{frame}
+
+\begin{frame}[t]{t-SNE: Perplexity Effect}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{04_tsne_perplexity/chart.pdf}
+\end{center}
+\bottomnote{Perplexity controls local vs global structure preservation (try 5-50)}
+\end{frame}
+
+\begin{frame}[t]{PCA vs t-SNE}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{05_pca_vs_tsne/chart.pdf}
+\end{center}
+\bottomnote{PCA: linear projections. t-SNE: non-linear manifold unfolding}
+\end{frame}
+
+\begin{frame}[t]{Cluster Preservation}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{06_cluster_preservation/chart.pdf}
+\end{center}
+\bottomnote{t-SNE better preserves cluster structure for visualization}
+\end{frame}
+
+\begin{frame}[t]{Decision Framework}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+\bottomnote{PCA for preprocessing/speed, t-SNE for visualization only}
+\end{frame}
+
+\end{document}

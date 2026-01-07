@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="category">
+    <category>
+      <text>$course$/Methods and Algorithms/Quiz 3 - PCA, t-SNE, Embeddings, and Reinforcement Learning</text>
+    </category>
+  </question>
+
+  <!-- Question 1: PCA Objective -->
+  <question type="multichoice">
+    <name>
+      <text>PCA Objective</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What does Principal Component Analysis (PCA) maximize?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Variance captured along each principal component</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! PCA finds directions that maximize variance in the data.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Distance between data points</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. PCA focuses on variance, not distances.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Classification accuracy</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. PCA is unsupervised and doesn't optimize for classification.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Number of clusters in the data</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. PCA is for dimensionality reduction, not clustering.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 2: Principal Components -->
+  <question type="multichoice">
+    <name>
+      <text>Principal Components Properties</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Which statement about principal components is correct?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Principal components are orthogonal (uncorrelated) to each other</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! PCs are eigenvectors of the covariance matrix and are mutually orthogonal.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>All principal components explain equal variance</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. PC1 explains most variance, PC2 second most, etc.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Principal components are always aligned with original features</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. PCs are linear combinations of original features, typically rotated.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The number of principal components equals the number of samples</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Number of PCs equals min(features, samples-1).</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 3: Scree Plot -->
+  <question type="multichoice">
+    <name>
+      <text>Scree Plot Interpretation</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>A scree plot shows variance explained by each principal component. How do you choose the number of components to keep?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Keep components before the "elbow" where variance explained levels off</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! The elbow indicates where additional components add little information.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Always keep exactly half of the original features</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The number depends on variance explained, not a fixed ratio.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Keep only the first component</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Usually multiple components are needed to capture sufficient variance.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Keep all components to avoid losing information</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The purpose of PCA is to reduce dimensions, keeping all defeats this.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 4: PCA Preprocessing -->
+  <question type="multichoice">
+    <name>
+      <text>PCA Preprocessing</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Why should data be standardized (zero mean, unit variance) before applying PCA?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>To prevent features with larger scales from dominating the principal components</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Without standardization, high-variance features dominate regardless of importance.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>To make PCA run faster</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Standardization is about correctness, not speed.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>To ensure principal components are positive</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. PC directions can be positive or negative regardless of standardization.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>PCA only works on standardized data mathematically</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. PCA works without standardization but may give misleading results.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 5: t-SNE Purpose -->
+  <question type="multichoice">
+    <name>
+      <text>t-SNE Purpose</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What is t-SNE primarily used for?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Visualizing high-dimensional data in 2D or 3D while preserving local structure</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! t-SNE excels at revealing clusters and local patterns for visualization.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Feature extraction for machine learning pipelines</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. t-SNE is for visualization; use PCA for feature extraction.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Speeding up training of neural networks</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. t-SNE is slow and used for visualization, not training speed.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Reconstructing original data from reduced dimensions</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. t-SNE doesn't support inverse transformation like PCA does.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 6: Perplexity -->
+  <question type="multichoice">
+    <name>
+      <text>t-SNE Perplexity Parameter</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What does the perplexity parameter in t-SNE control?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>The effective number of neighbors considered for each point (local vs global focus)</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Perplexity balances attention between local and global data structure.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The number of output dimensions</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Output dimensions are set separately (typically 2 or 3).</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The convergence threshold</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Perplexity is about neighborhood size, not convergence.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The random seed for reproducibility</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Perplexity affects the algorithm's behavior, not randomization.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 7: PCA vs t-SNE -->
+  <question type="multichoice">
+    <name>
+      <text>PCA vs t-SNE Comparison</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Which statement correctly compares PCA and t-SNE?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>PCA preserves global structure and variance; t-SNE preserves local neighborhood structure</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! PCA is linear and global; t-SNE is non-linear and local.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>t-SNE is always better than PCA for dimensionality reduction</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. PCA is often preferred for preprocessing; t-SNE is for visualization.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>PCA is non-linear; t-SNE is linear</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. It's the opposite: PCA is linear, t-SNE is non-linear.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Both methods produce the same results on any dataset</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. They use different approaches and often produce very different visualizations.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 8: Word Embeddings -->
+  <question type="multichoice">
+    <name>
+      <text>Word Embeddings Purpose</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What problem do word embeddings (like Word2Vec) solve compared to one-hot encoding?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>They capture semantic similarity - similar words have similar vectors</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Embeddings place semantically similar words close together in vector space.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>They require less memory than one-hot encoding</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. While true, the main advantage is semantic representation, not just size.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>They make text classification impossible</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Embeddings improve text classification by capturing semantics.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>They convert words to binary values</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Embeddings produce dense continuous vectors, not binary.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 9: Word2Vec Skip-gram -->
+  <question type="multichoice">
+    <name>
+      <text>Word2Vec Skip-gram</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>In the Skip-gram architecture of Word2Vec, what is the training objective?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Predict surrounding context words given a target word</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Skip-gram uses the center word to predict its context neighbors.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Predict a target word given its surrounding context words</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That describes CBOW (Continuous Bag of Words), not Skip-gram.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Predict the next word in a sequence</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That describes language modeling, not Skip-gram specifically.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Classify words into parts of speech</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Skip-gram learns embeddings, not POS classification.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 10: Cosine Similarity -->
+  <question type="multichoice">
+    <name>
+      <text>Cosine Similarity</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Why is cosine similarity preferred over Euclidean distance for comparing word embeddings?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Cosine similarity measures directional similarity regardless of vector magnitude</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Direction captures semantic meaning better than magnitude in embeddings.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Cosine similarity is faster to compute</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Speed is similar; the advantage is in what it measures.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Euclidean distance cannot be computed for text data</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Euclidean can be computed but may not capture semantic similarity well.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Cosine similarity always returns positive values</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Cosine similarity ranges from -1 to 1.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 11: RL Framework -->
+  <question type="multichoice">
+    <name>
+      <text>Reinforcement Learning Components</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>In reinforcement learning, what is the role of the "reward" signal?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>It provides feedback on how good an action was in a given state</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Rewards guide the agent toward learning optimal behavior.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>It determines what action the agent should take next</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The policy determines actions; rewards provide learning signals.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>It specifies the next state after an action</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The environment/transition function determines next states.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>It stores the agent's memory of past experiences</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Experience replay stores memories; rewards are feedback signals.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 12: Markov Property -->
+  <question type="multichoice">
+    <name>
+      <text>Markov Property in MDP</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What does the Markov property state in a Markov Decision Process?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>The future state depends only on the current state and action, not on the history</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! "The future is independent of the past given the present."</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>All states must be visited at least once</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That describes exploration, not the Markov property.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Rewards must be positive</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Rewards can be positive, negative, or zero.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The agent must take random actions</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Policies can be deterministic or stochastic; this isn't the Markov property.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 13: Q-Learning Update -->
+  <question type="multichoice">
+    <name>
+      <text>Q-Learning Update Rule</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>In Q-learning, what does Q(s,a) represent?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Expected cumulative reward from taking action a in state s and following optimal policy thereafter</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Q-values estimate long-term value of state-action pairs.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Immediate reward for taking action a in state s</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Q includes expected future rewards, not just immediate reward.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Probability of transitioning to the next state</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Transition probabilities are part of the environment, not Q-values.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Quality of the current state regardless of action</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That describes V(s), the state value. Q(s,a) includes the action.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 14: Exploration vs Exploitation -->
+  <question type="multichoice">
+    <name>
+      <text>Exploration vs Exploitation</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>In epsilon-greedy exploration, what does epsilon (epsilon) control?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>The probability of taking a random action instead of the greedy action</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! With probability epsilon, explore randomly; otherwise exploit the best known action.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The learning rate for Q-value updates</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The learning rate is a separate parameter (usually alpha).</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The discount factor for future rewards</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The discount factor is gamma, not epsilon.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The number of neighbors to consider</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That's K in KNN, not epsilon in RL.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 15: Discount Factor -->
+  <question type="multichoice">
+    <name>
+      <text>Discount Factor Gamma</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What happens when the discount factor gamma is close to 0 in reinforcement learning?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>The agent becomes "myopic" - prioritizing immediate rewards over future rewards</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Low gamma heavily discounts future rewards, focusing on immediate gains.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The agent explores more</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Exploration is controlled by epsilon, not gamma.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Learning becomes faster</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Gamma affects time horizon, not learning speed.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The agent considers infinite future time steps equally</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Gamma close to 1 weighs future equally; gamma close to 0 ignores future.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+</quiz>

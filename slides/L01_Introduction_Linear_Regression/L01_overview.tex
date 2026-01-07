@@ -1,0 +1,288 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+
+% Theme
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+% Custom colors (ML palette)
+\definecolor{MLPurple}{RGB}{51,51,178}
+\definecolor{MLBlue}{RGB}{0,102,204}
+\definecolor{MLOrange}{RGB}{255,127,14}
+\definecolor{MLGreen}{RGB}{44,160,44}
+\definecolor{MLRed}{RGB}{214,39,40}
+
+% Apply colors
+\setbeamercolor{structure}{fg=MLPurple}
+\setbeamercolor{title}{fg=MLPurple}
+\setbeamercolor{frametitle}{fg=MLPurple}
+
+% Footer customization
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}Methods and Algorithms
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}MSc Data Science
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Custom commands
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textit{#1}}
+\newcommand{\highlight}[1]{\textcolor{MLOrange}{\textbf{#1}}}
+
+% Title information
+\title[Linear Regression]{Introduction \& Linear Regression}
+\subtitle{Overview}
+\author{Methods and Algorithms}
+\institute{MSc Data Science}
+\date{Spring 2026}
+
+\begin{document}
+
+% Slide 1: Title
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Slide 2: Learning Objectives
+\begin{frame}[t]{Learning Objectives}
+  By the end of this session, you will be able to:
+
+  \begin{enumerate}
+    \item \textbf{Understand} the ordinary least squares (OLS) framework
+    \item \textbf{Apply} gradient descent for parameter optimization
+    \item \textbf{Interpret} regression coefficients in business contexts
+  \end{enumerate}
+
+  \vspace{1em}
+  \textbf{Finance Application:} House price prediction, factor models
+
+  \bottomnote{Foundation for all supervised learning methods}
+\end{frame}
+
+% Slide 3: The Business Problem
+\begin{frame}[t]{The Business Problem}
+  \textbf{Finance Use Case: Predicting House Prices}
+
+  \begin{itemize}
+    \item Banks need accurate property valuations for mortgages
+    \item Insurance companies assess property risk
+    \item Investors evaluate real estate portfolios
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{The Question:} Given features (size, location, age), what price?
+
+  \vspace{0.5em}
+  \textbf{Why Linear Regression?}
+  \begin{itemize}
+    \item Interpretable coefficients (price per square meter)
+    \item Fast, well-understood method
+    \item Strong baseline for comparison
+  \end{itemize}
+
+  \bottomnote{Linear regression: the ``hello world'' of machine learning}
+\end{frame}
+
+% Slide 4: What is Linear Regression?
+\begin{frame}[t]{What is Linear Regression?}
+  \textbf{Core Idea:} Model the relationship between inputs and a continuous output
+
+  \vspace{0.5em}
+  \begin{equation}
+    y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
+  \end{equation}
+
+  \begin{itemize}
+    \item $y$: Target variable (house price)
+    \item $x_1, \ldots, x_p$: Features (size, bedrooms, age)
+    \item $\beta_0, \ldots, \beta_p$: Coefficients to learn
+    \item $\varepsilon$: Random error term
+  \end{itemize}
+
+  \bottomnote{Goal: Find coefficients that minimize prediction error}
+\end{frame}
+
+% Slide 5: The Optimization Problem
+\begin{frame}[t]{The Optimization Problem}
+  \textbf{Objective:} Minimize the sum of squared errors (SSE)
+
+  \begin{equation}
+    \min_{\boldsymbol{\beta}} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \min_{\boldsymbol{\beta}} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2
+  \end{equation}
+
+  \textbf{Why Squared Errors?}
+  \begin{itemize}
+    \item Penalizes large errors more than small errors
+    \item Differentiable (enables gradient-based optimization)
+    \item Leads to closed-form solution
+  \end{itemize}
+
+  \bottomnote{This objective function defines ``ordinary least squares'' (OLS)}
+\end{frame}
+
+% Slide 6: Two Solution Approaches
+\begin{frame}[t]{Two Solution Approaches}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{1. Closed-Form (Normal Equation)}
+      \begin{equation}
+        \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
+      \end{equation}
+
+      \textcolor{MLGreen}{Pros:}
+      \begin{itemize}
+        \item Exact solution
+        \item One computation
+      \end{itemize}
+
+      \textcolor{MLRed}{Cons:}
+      \begin{itemize}
+        \item Slow for large $p$
+        \item Memory intensive
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{2. Gradient Descent}
+      \begin{equation}
+        \boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \alpha \nabla L(\boldsymbol{\beta}_t)
+      \end{equation}
+
+      \textcolor{MLGreen}{Pros:}
+      \begin{itemize}
+        \item Scales to big data
+        \item Memory efficient
+      \end{itemize}
+
+      \textcolor{MLRed}{Cons:}
+      \begin{itemize}
+        \item Requires tuning $\alpha$
+        \item Iterative process
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \bottomnote{Both methods yield the same solution for OLS}
+\end{frame}
+
+% Slide 7: Interpreting Coefficients
+\begin{frame}[t]{Interpreting Coefficients}
+  \textbf{Example:} House price model
+
+  \vspace{0.3em}
+  \begin{equation}
+    \text{Price} = 50,000 + 200 \times \text{Size} + 15,000 \times \text{Bedrooms} - 1,000 \times \text{Age}
+  \end{equation}
+
+  \textbf{Interpretation:}
+  \begin{itemize}
+    \item $\beta_0 = 50,000$: Base price (all features = 0)
+    \item $\beta_1 = 200$: Each extra sqm adds \$200
+    \item $\beta_2 = 15,000$: Each bedroom adds \$15,000
+    \item $\beta_3 = -1,000$: Each year of age subtracts \$1,000
+  \end{itemize}
+
+  \bottomnote{Coefficients show marginal effect, holding others constant}
+\end{frame}
+
+% Slide 8: Model Evaluation
+\begin{frame}[t]{Model Evaluation}
+  \textbf{Key Metrics:}
+
+  \begin{itemize}
+    \item \textbf{$R^2$ (Coefficient of Determination):} Variance explained
+    \begin{equation}
+      R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
+    \end{equation}
+
+    \item \textbf{RMSE (Root Mean Squared Error):} Prediction accuracy
+    \begin{equation}
+      \text{RMSE} = \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}
+    \end{equation}
+  \end{itemize}
+
+  \vspace{0.3em}
+  \textbf{In Practice:} $R^2 = 0.75$ means model explains 75\% of price variance
+
+  \bottomnote{Always evaluate on held-out test data}
+\end{frame}
+
+% Slide 9: Decision Framework
+\begin{frame}[t]{When to Use Linear Regression}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{\textcolor{MLGreen}{Use When:}}
+      \begin{itemize}
+        \item Target is continuous
+        \item Linear relationships expected
+        \item Interpretability matters
+        \item Fast inference needed
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\textcolor{MLRed}{Avoid When:}}
+      \begin{itemize}
+        \item Target is categorical
+        \item Strong non-linearities
+        \item High multicollinearity
+        \item Many outliers present
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.5em}
+  \begin{table}
+    \centering
+    \small
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Pros} & \textbf{Cons} \\
+      \midrule
+      Interpretable & Assumes linearity \\
+      Fast training & Sensitive to outliers \\
+      Well-understood & Limited flexibility \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+% Slide 10: Key Takeaways
+\begin{frame}[t]{Key Takeaways}
+  \begin{enumerate}
+    \item Linear regression models continuous outcomes as weighted sum of features
+    \item OLS minimizes sum of squared errors
+    \item Solve via normal equation (small data) or gradient descent (big data)
+    \item Coefficients are directly interpretable as marginal effects
+    \item Evaluate using $R^2$ (variance explained) and RMSE (prediction error)
+  \end{enumerate}
+
+  \vspace{1em}
+  \textbf{Next:} Deep dive into mathematics and implementation
+
+  \vspace{0.5em}
+  \textbf{References:}
+  \begin{itemize}
+    \footnotesize
+    \item ISLR Chapter 3: Linear Regression
+    \item ESL Chapter 3: Linear Methods for Regression
+  \end{itemize}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="category">
+    <category>
+      <text>$course$/Methods and Algorithms/Quiz 1 - Linear and Logistic Regression</text>
+    </category>
+  </question>
+
+  <!-- Question 1: Linear Regression Basics -->
+  <question type="multichoice">
+    <name>
+      <text>OLS Objective Function</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What does Ordinary Least Squares (OLS) minimize when fitting a linear regression model?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Sum of squared residuals (SSR)</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! OLS minimizes the sum of squared differences between observed and predicted values.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Sum of absolute residuals</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Minimizing absolute residuals is used in Least Absolute Deviations (LAD), not OLS.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Maximum likelihood</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. While OLS and MLE are equivalent under normality assumptions, OLS explicitly minimizes SSR.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Variance of predictions</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. OLS does not directly minimize prediction variance.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 2: R-squared Interpretation -->
+  <question type="multichoice">
+    <name>
+      <text>R-squared Interpretation</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>A linear regression model has R² = 0.85. What is the correct interpretation?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>85% of the variance in the dependent variable is explained by the model</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! R² represents the proportion of variance explained by the independent variables.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The model correctly predicts 85% of observations</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. R² is not about prediction accuracy in terms of correct/incorrect.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>85% of independent variables are significant</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. R² does not indicate variable significance.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The correlation between X and Y is 0.85</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The correlation would be sqrt(0.85) ≈ 0.92 in simple regression.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 3: Gradient Descent -->
+  <question type="multichoice">
+    <name>
+      <text>Gradient Descent Learning Rate</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What happens if the learning rate (α) in gradient descent is set too high?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>The algorithm may overshoot the minimum and diverge</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! A high learning rate causes large jumps that can miss the minimum entirely.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The algorithm converges faster with no drawbacks</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. While larger steps can speed up convergence, too high causes instability.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The algorithm gets stuck in local minima</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Getting stuck is more related to low learning rates. High rates cause overshooting.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The model automatically adjusts to optimal α</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Standard gradient descent does not adapt the learning rate automatically.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 4: Ridge vs Lasso -->
+  <question type="multichoice">
+    <name>
+      <text>Ridge vs Lasso Regularization</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Which statement correctly describes the difference between Ridge and Lasso regression?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Lasso can set coefficients exactly to zero (feature selection), while Ridge shrinks them toward zero</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Lasso (L1) performs automatic feature selection, Ridge (L2) only shrinks coefficients.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Ridge uses L1 penalty, Lasso uses L2 penalty</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. It's the opposite: Ridge uses L2 (squared), Lasso uses L1 (absolute).</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Ridge is better for high-dimensional data than Lasso</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Lasso is often preferred for high-dimensional data due to feature selection.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>They produce identical results with the same lambda value</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Different penalty functions lead to different coefficient estimates.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 5: Multicollinearity -->
+  <question type="multichoice">
+    <name>
+      <text>Multicollinearity Effects</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Which problem does multicollinearity cause in linear regression?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Inflated standard errors making coefficient estimates unstable</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Multicollinearity increases variance of coefficient estimates, making them unreliable.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Biased coefficient estimates</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. OLS estimates remain unbiased even with multicollinearity; only variance increases.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Lower R-squared values</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Multicollinearity does not directly affect R-squared.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Heteroscedasticity in residuals</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. These are separate issues; multicollinearity concerns correlation among predictors.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 6: Bias-Variance Tradeoff -->
+  <question type="multichoice">
+    <name>
+      <text>Bias-Variance Tradeoff</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>As model complexity increases in linear regression (e.g., adding polynomial features), what typically happens?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Bias decreases but variance increases</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! More complex models fit training data better (lower bias) but are more sensitive to data variations (higher variance).</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Both bias and variance decrease</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. This would be ideal but does not happen; there's always a tradeoff.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Bias increases but variance decreases</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. This is the opposite of what happens.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Both bias and variance increase</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Increased complexity reduces bias while increasing variance.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 7: RMSE vs MAE -->
+  <question type="multichoice">
+    <name>
+      <text>RMSE vs MAE</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Compared to Mean Absolute Error (MAE), Root Mean Squared Error (RMSE):</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Penalizes large errors more heavily</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! RMSE squares errors before averaging, giving more weight to large deviations.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Is more robust to outliers</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. MAE is more robust to outliers because it doesn't square errors.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Always produces smaller values than MAE</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. RMSE is typically larger than or equal to MAE.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Is measured in squared units of the target variable</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. RMSE (after taking square root) is in the same units as the target, like MAE.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 8: Logistic Regression Output -->
+  <question type="multichoice">
+    <name>
+      <text>Logistic Regression Output</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What does logistic regression directly output before applying a threshold?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Probability of belonging to the positive class</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! The sigmoid function maps the linear combination to a probability between 0 and 1.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Binary class label (0 or 1)</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Binary labels require applying a threshold to the probability output.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Distance from the decision boundary</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. While related, the direct output is a probability, not a distance.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Log-odds (logit) value</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The log-odds is the linear combination before the sigmoid; the output is the probability.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 9: Sigmoid Function -->
+  <question type="multichoice">
+    <name>
+      <text>Sigmoid Function Properties</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>The sigmoid function σ(z) = 1/(1+e<sup>-z</sup>) has which property?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>σ(0) = 0.5 and output is always between 0 and 1</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! At z=0, σ(0)=0.5, and the function is bounded between 0 and 1.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>σ(0) = 0 and output can be any real number</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. σ(0) = 0.5 and output is bounded between 0 and 1.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The function is linear for small values of z</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. While approximately linear near z=0, the sigmoid is fundamentally non-linear.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>σ(-z) = σ(z) (symmetric around origin)</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The correct symmetry is σ(-z) = 1 - σ(z).</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 10: Cross-Entropy Loss -->
+  <question type="multichoice">
+    <name>
+      <text>Cross-Entropy Loss</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Why is cross-entropy (log loss) used instead of MSE for logistic regression?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Cross-entropy creates a convex optimization problem with the sigmoid function</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! MSE with sigmoid creates non-convex loss surface; cross-entropy ensures convexity.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Cross-entropy is easier to compute than MSE</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Computational complexity is not the main reason; convexity is.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>MSE cannot be used for classification problems</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. MSE can technically be used but leads to optimization issues.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Cross-entropy always produces smaller loss values</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The magnitude of loss is not the reason for choosing cross-entropy.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 11: ROC Curve -->
+  <question type="multichoice">
+    <name>
+      <text>ROC Curve Interpretation</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What does the Area Under the ROC Curve (AUC) measure?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Probability that a randomly chosen positive is ranked higher than a randomly chosen negative</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! AUC represents the model's ability to distinguish between classes.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The accuracy of the model at the optimal threshold</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. AUC is threshold-independent and measures overall discriminative ability.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The proportion of correctly classified observations</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That describes accuracy, not AUC.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The false positive rate at 50% true positive rate</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. AUC is an aggregate measure, not a single point on the curve.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 12: Precision vs Recall -->
+  <question type="multichoice">
+    <name>
+      <text>Precision vs Recall Tradeoff</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>In a fraud detection system where missing fraud is very costly, which metric should be prioritized?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Recall (sensitivity)</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! High recall minimizes false negatives, catching more actual fraud cases.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Precision</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. High precision minimizes false positives but may miss actual fraud.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Accuracy</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Accuracy can be misleading with imbalanced classes like fraud detection.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Specificity</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Specificity measures true negative rate, not fraud detection.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 13: Confusion Matrix -->
+  <question type="multichoice">
+    <name>
+      <text>Confusion Matrix Elements</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>In a confusion matrix, a Type I error (false positive) occurs when:</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>The model predicts positive but the actual class is negative</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! False positive = predicted positive when actually negative (Type I error).</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The model predicts negative but the actual class is positive</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That describes a false negative (Type II error).</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The model correctly predicts the positive class</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That describes a true positive, not an error.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The model's probability output is exactly 0.5</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The probability value doesn't define error types.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 14: Class Imbalance -->
+  <question type="multichoice">
+    <name>
+      <text>Handling Class Imbalance</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Which technique is commonly used to handle class imbalance in logistic regression?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Adjusting class weights inversely proportional to class frequencies</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Weighting minority class higher helps the model pay more attention to rare events.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Always using a threshold of 0.5 for classification</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. With imbalanced classes, the optimal threshold often differs from 0.5.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Removing all minority class samples</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. This would make the problem worse, not better.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Using R-squared as the evaluation metric</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. R-squared is for regression; classification uses AUC, F1, etc.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 15: Coefficient Interpretation -->
+  <question type="multichoice">
+    <name>
+      <text>Logistic Regression Coefficient Interpretation</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>In logistic regression, if a coefficient β₁ = 0.5, what does this mean?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>A 1-unit increase in X₁ increases the log-odds by 0.5 (odds multiply by e<sup>0.5</sup> ≈ 1.65)</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Coefficients represent changes in log-odds; exp(β) gives the odds ratio.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>A 1-unit increase in X₁ increases the probability by 0.5</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The relationship between X and probability is non-linear in logistic regression.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>X₁ explains 50% of the variance in Y</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. This interpretation applies to R-squared in linear regression, not logistic coefficients.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The correlation between X₁ and Y is 0.5</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Coefficients are not the same as correlations.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+</quiz>

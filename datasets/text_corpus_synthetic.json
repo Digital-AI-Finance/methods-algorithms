@@ -1,0 +1,47 @@
+{
+  "financial_news": [
+    {"text": "Apple stock surged 5% after strong quarterly earnings beat analyst expectations.", "sentiment": "positive", "sector": "tech"},
+    {"text": "Tesla shares plummeted following disappointing delivery numbers and production concerns.", "sentiment": "negative", "sector": "tech"},
+    {"text": "JPMorgan reports record profits driven by trading revenue amid market volatility.", "sentiment": "positive", "sector": "finance"},
+    {"text": "Bank of America faces regulatory scrutiny over lending practices.", "sentiment": "negative", "sector": "finance"},
+    {"text": "Federal Reserve signals potential rate hike in upcoming meeting.", "sentiment": "neutral", "sector": "macro"},
+    {"text": "Oil prices rally as OPEC announces production cuts.", "sentiment": "positive", "sector": "energy"},
+    {"text": "Amazon announces massive layoffs affecting 10,000 employees.", "sentiment": "negative", "sector": "tech"},
+    {"text": "Microsoft cloud revenue exceeds expectations, driving stock to all-time high.", "sentiment": "positive", "sector": "tech"},
+    {"text": "Goldman Sachs downgrades retail sector citing consumer spending concerns.", "sentiment": "negative", "sector": "consumer"},
+    {"text": "Nvidia beats earnings estimates on strong AI chip demand.", "sentiment": "positive", "sector": "tech"},
+    {"text": "Healthcare stocks decline amid drug pricing legislation concerns.", "sentiment": "negative", "sector": "healthcare"},
+    {"text": "Meta announces new AI features, stock jumps 8% in after-hours trading.", "sentiment": "positive", "sector": "tech"},
+    {"text": "Inflation data comes in higher than expected, markets react negatively.", "sentiment": "negative", "sector": "macro"},
+    {"text": "Disney reports streaming subscriber growth, reversing previous declines.", "sentiment": "positive", "sector": "consumer"},
+    {"text": "Cryptocurrency market faces another selloff as regulatory concerns mount.", "sentiment": "negative", "sector": "crypto"},
+    {"text": "Boeing receives major order from United Airlines for new aircraft.", "sentiment": "positive", "sector": "industrial"},
+    {"text": "Unemployment claims fall to multi-decade low, signaling strong labor market.", "sentiment": "positive", "sector": "macro"},
+    {"text": "Energy sector rallies on geopolitical tensions and supply concerns.", "sentiment": "neutral", "sector": "energy"},
+    {"text": "Pfizer announces promising trial results for new cancer treatment.", "sentiment": "positive", "sector": "healthcare"},
+    {"text": "Ford recalls 500,000 vehicles due to safety concerns.", "sentiment": "negative", "sector": "industrial"},
+    {"text": "Google parent Alphabet announces stock buyback program.", "sentiment": "positive", "sector": "tech"},
+    {"text": "Real estate market shows signs of cooling as mortgage rates rise.", "sentiment": "negative", "sector": "real_estate"},
+    {"text": "Visa and Mastercard report strong transaction volumes.", "sentiment": "positive", "sector": "finance"},
+    {"text": "Supply chain disruptions continue to impact manufacturing sector.", "sentiment": "negative", "sector": "industrial"},
+    {"text": "Consumer confidence index rises to highest level in six months.", "sentiment": "positive", "sector": "macro"},
+    {"text": "Netflix loses subscribers for third consecutive quarter.", "sentiment": "negative", "sector": "tech"},
+    {"text": "Chevron announces increased dividend following strong oil profits.", "sentiment": "positive", "sector": "energy"},
+    {"text": "Retail sales data disappoints, raising recession fears.", "sentiment": "negative", "sector": "consumer"},
+    {"text": "Berkshire Hathaway increases stake in major tech companies.", "sentiment": "positive", "sector": "finance"},
+    {"text": "Semiconductor shortage expected to ease in coming quarters.", "sentiment": "positive", "sector": "tech"}
+  ],
+  "vocabulary": {
+    "positive_words": ["surge", "rally", "beat", "strong", "growth", "profit", "gain", "rise", "bullish", "optimistic", "exceed", "record", "boost"],
+    "negative_words": ["plummet", "decline", "fall", "drop", "loss", "concern", "fear", "selloff", "bearish", "disappoint", "cut", "layoff", "crisis"],
+    "finance_terms": ["stock", "equity", "bond", "dividend", "earnings", "revenue", "trading", "market", "portfolio", "investment", "hedge", "risk"],
+    "action_words": ["buy", "sell", "hold", "trade", "invest", "acquire", "divest", "short", "long"]
+  },
+  "word_pairs": [
+    {"word1": "stock", "word2": "equity", "expected_similarity": 0.85},
+    {"word1": "buy", "word2": "sell", "expected_similarity": 0.72},
+    {"word1": "bullish", "word2": "bearish", "expected_similarity": 0.70},
+    {"word1": "profit", "word2": "loss", "expected_similarity": 0.65},
+    {"word1": "stock", "word2": "banana", "expected_similarity": 0.10}
+  ]
+}

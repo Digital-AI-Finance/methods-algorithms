@@ -1,0 +1,625 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+
+% Theme
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+% Custom colors
+\definecolor{MLPurple}{RGB}{51,51,178}
+\definecolor{MLBlue}{RGB}{0,102,204}
+\definecolor{MLOrange}{RGB}{255,127,14}
+\definecolor{MLGreen}{RGB}{44,160,44}
+\definecolor{MLRed}{RGB}{214,39,40}
+
+% Apply colors
+\setbeamercolor{structure}{fg=MLPurple}
+\setbeamercolor{title}{fg=MLPurple}
+\setbeamercolor{frametitle}{fg=MLPurple}
+
+% Footer
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}Methods and Algorithms
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}MSc Data Science
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\setbeamertemplate{navigation symbols}{}
+
+% Commands
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textit{#1}}
+\newcommand{\highlight}[1]{\textcolor{MLOrange}{\textbf{#1}}}
+
+% Title
+\title[Linear Regression]{Introduction \& Linear Regression}
+\subtitle{Deep Dive: Mathematics and Implementation}
+\author{Methods and Algorithms}
+\institute{MSc Data Science}
+\date{Spring 2026}
+
+\begin{document}
+
+% ============================================
+% TITLE AND OUTLINE
+% ============================================
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+% ============================================
+% SECTION 1: MATHEMATICAL FOUNDATIONS
+% ============================================
+\section{Mathematical Foundations}
+
+\begin{frame}[t]{Matrix Notation}
+  \textbf{The Model in Matrix Form}
+
+  \begin{equation}
+    \mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}
+  \end{equation}
+
+  \begin{itemize}
+    \item $\mathbf{y} \in \mathbb{R}^n$: Response vector
+    \item $\mathbf{X} \in \mathbb{R}^{n \times (p+1)}$: Design matrix (with intercept column)
+    \item $\boldsymbol{\beta} \in \mathbb{R}^{p+1}$: Coefficient vector
+    \item $\boldsymbol{\varepsilon} \in \mathbb{R}^n$: Error vector
+  \end{itemize}
+
+  \bottomnote{Matrix notation enables elegant derivations and efficient computation}
+\end{frame}
+
+\begin{frame}[t]{Design Matrix Structure}
+  \textbf{The Design Matrix $\mathbf{X}$}
+
+  \begin{equation}
+    \mathbf{X} = \begin{bmatrix}
+      1 & x_{11} & x_{12} & \cdots & x_{1p} \\
+      1 & x_{21} & x_{22} & \cdots & x_{2p} \\
+      \vdots & \vdots & \vdots & \ddots & \vdots \\
+      1 & x_{n1} & x_{n2} & \cdots & x_{np}
+    \end{bmatrix}
+  \end{equation}
+
+  \begin{itemize}
+    \item First column of 1s for intercept $\beta_0$
+    \item Each row is one observation
+    \item Each column (after first) is one feature
+  \end{itemize}
+
+  \bottomnote{$n$ observations, $p$ features, $p+1$ parameters}
+\end{frame}
+
+\begin{frame}[t]{OLS Assumptions}
+  \textbf{Classical Assumptions for Valid Inference}
+
+  \begin{enumerate}
+    \item \textbf{Linearity}: $E[y|X] = X\beta$ (correct functional form)
+    \item \textbf{Exogeneity}: $E[\varepsilon|X] = 0$ (no omitted variables)
+    \item \textbf{Homoscedasticity}: $\text{Var}(\varepsilon|X) = \sigma^2 I$ (constant variance)
+    \item \textbf{No multicollinearity}: $\text{rank}(X) = p+1$ (full rank)
+    \item \textbf{Normality} (for inference): $\varepsilon \sim N(0, \sigma^2 I)$
+  \end{enumerate}
+
+  \vspace{0.5em}
+  \textbf{Violations?} Robust standard errors, transformations, regularization
+
+  \bottomnote{Assumptions 1-4 needed for unbiased estimates; 5 for t-tests and CIs}
+\end{frame}
+
+\begin{frame}[t]{The Loss Function}
+  \textbf{Sum of Squared Residuals (SSR)}
+
+  \begin{equation}
+    L(\boldsymbol{\beta}) = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\top (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})
+  \end{equation}
+
+  \textbf{Expanding:}
+  \begin{equation}
+    L(\boldsymbol{\beta}) = \mathbf{y}^\top\mathbf{y} - 2\boldsymbol{\beta}^\top\mathbf{X}^\top\mathbf{y} + \boldsymbol{\beta}^\top\mathbf{X}^\top\mathbf{X}\boldsymbol{\beta}
+  \end{equation}
+
+  \bottomnote{Quadratic function in $\boldsymbol{\beta}$ -- has unique minimum (if $X$ full rank)}
+\end{frame}
+
+\begin{frame}[t]{Deriving the Normal Equation}
+  \textbf{Taking the Derivative}
+
+  \begin{equation}
+    \frac{\partial L}{\partial \boldsymbol{\beta}} = -2\mathbf{X}^\top\mathbf{y} + 2\mathbf{X}^\top\mathbf{X}\boldsymbol{\beta}
+  \end{equation}
+
+  \textbf{Setting to Zero:}
+  \begin{align}
+    \mathbf{X}^\top\mathbf{X}\hat{\boldsymbol{\beta}} &= \mathbf{X}^\top\mathbf{y} \\
+    \hat{\boldsymbol{\beta}} &= (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}
+  \end{align}
+
+  \bottomnote{This is the closed-form OLS solution -- the ``normal equation''}
+\end{frame}
+
+\begin{frame}[t]{Simple Regression Visualization}
+  \begin{center}
+    \includegraphics[width=0.65\textwidth]{01_simple_regression/chart.pdf}
+  \end{center}
+
+  \bottomnote{The fitted line minimizes vertical distances squared}
+\end{frame}
+
+\begin{frame}[t]{Multiple Regression Surface}
+  \begin{center}
+    \includegraphics[width=0.65\textwidth]{02_multiple_regression_3d/chart.pdf}
+  \end{center}
+
+  \bottomnote{With 2 features, we fit a plane; with $p$ features, a hyperplane}
+\end{frame}
+
+% ============================================
+% SECTION 2: GRADIENT DESCENT
+% ============================================
+\section{Gradient Descent}
+
+\begin{frame}[t]{Why Gradient Descent?}
+  \textbf{Normal Equation Limitations}
+
+  \begin{itemize}
+    \item Computing $(\mathbf{X}^\top\mathbf{X})^{-1}$ is $O(p^3)$
+    \item Memory: Need to store $p \times p$ matrix
+    \item For large $p$ (millions of features): infeasible
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Gradient Descent Advantages}
+
+  \begin{itemize}
+    \item Memory efficient: process one sample at a time
+    \item Scales to big data (SGD)
+    \item Generalizes to non-linear models
+  \end{itemize}
+
+  \bottomnote{For $p > 10{,}000$, gradient descent usually faster}
+\end{frame}
+
+\begin{frame}[t]{The Gradient}
+  \textbf{Gradient of the Loss Function}
+
+  \begin{equation}
+    \nabla L(\boldsymbol{\beta}) = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) = -2\mathbf{X}^\top\mathbf{r}
+  \end{equation}
+
+  where $\mathbf{r} = \mathbf{y} - \mathbf{X}\boldsymbol{\beta}$ is the residual vector.
+
+  \vspace{0.5em}
+  \textbf{Intuition:}
+  \begin{itemize}
+    \item Gradient points in direction of steepest ascent
+    \item We move opposite to gradient (steepest descent)
+    \item Scale by learning rate $\alpha$
+  \end{itemize}
+
+  \bottomnote{Gradient is a $p+1$ dimensional vector}
+\end{frame}
+
+\begin{frame}[t]{Gradient Descent Algorithm}
+  \textbf{Update Rule}
+
+  \begin{equation}
+    \boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L(\boldsymbol{\beta}^{(t)})
+  \end{equation}
+
+  \textbf{Algorithm:}
+  \begin{enumerate}
+    \item Initialize $\boldsymbol{\beta}^{(0)}$ (often zeros or random)
+    \item Compute gradient $\nabla L(\boldsymbol{\beta}^{(t)})$
+    \item Update: $\boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L$
+    \item Repeat until convergence
+  \end{enumerate}
+
+  \bottomnote{Convergence: $\|\boldsymbol{\beta}^{(t+1)} - \boldsymbol{\beta}^{(t)}\| < \epsilon$ or max iterations}
+\end{frame}
+
+\begin{frame}[t]{Gradient Descent Visualization}
+  \begin{center}
+    \includegraphics[width=0.65\textwidth]{04_gradient_descent/chart.pdf}
+  \end{center}
+
+  \bottomnote{Contours show loss surface; path shows optimization trajectory}
+\end{frame}
+
+\begin{frame}[t]{Learning Rate Selection}
+  \textbf{The Critical Hyperparameter}
+
+  \begin{itemize}
+    \item \textbf{Too small}: Slow convergence, many iterations
+    \item \textbf{Too large}: Divergence, oscillation
+    \item \textbf{Just right}: Fast, stable convergence
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Practical Approaches:}
+  \begin{itemize}
+    \item Start with $\alpha = 0.01$ or $0.001$
+    \item Learning rate schedules (decay over time)
+    \item Adaptive methods: Adam, AdaGrad, RMSprop
+  \end{itemize}
+
+  \bottomnote{For OLS, optimal $\alpha = 1/\lambda_{\max}(X^\top X)$}
+\end{frame}
+
+\begin{frame}[t]{Stochastic Gradient Descent (SGD)}
+  \textbf{Mini-Batch Gradient Descent}
+
+  Instead of full gradient:
+  \begin{equation}
+    \nabla L(\boldsymbol{\beta}) = -\frac{2}{n}\mathbf{X}^\top\mathbf{r}
+  \end{equation}
+
+  Use mini-batch of size $m$:
+  \begin{equation}
+    \nabla L_B(\boldsymbol{\beta}) = -\frac{2}{m}\mathbf{X}_B^\top\mathbf{r}_B
+  \end{equation}
+
+  \begin{itemize}
+    \item $m = 1$: Stochastic GD (noisy but fast)
+    \item $m = n$: Batch GD (stable but slow)
+    \item $m \in [32, 256]$: Mini-batch (good tradeoff)
+  \end{itemize}
+
+  \bottomnote{SGD: Process data once per epoch, update many times}
+\end{frame}
+
+% ============================================
+% SECTION 3: MODEL EVALUATION
+% ============================================
+\section{Model Evaluation}
+
+\begin{frame}[t]{R-Squared ($R^2$)}
+  \textbf{Coefficient of Determination}
+
+  \begin{equation}
+    R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}} = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
+  \end{equation}
+
+  \textbf{Interpretation:}
+  \begin{itemize}
+    \item Proportion of variance explained by model
+    \item $R^2 = 0$: Model no better than mean
+    \item $R^2 = 1$: Perfect fit
+    \item $R^2 = 0.7$: 70\% of variance explained
+  \end{itemize}
+
+  \bottomnote{$R^2$ always increases with more features -- use Adjusted $R^2$}
+\end{frame}
+
+\begin{frame}[t]{Adjusted R-Squared}
+  \textbf{Penalizing Model Complexity}
+
+  \begin{equation}
+    R^2_{\text{adj}} = 1 - \frac{(1-R^2)(n-1)}{n-p-1}
+  \end{equation}
+
+  \textbf{Properties:}
+  \begin{itemize}
+    \item Adjusts for number of predictors $p$
+    \item Can decrease when adding irrelevant features
+    \item Better for model comparison
+  \end{itemize}
+
+  \bottomnote{Use $R^2_{\text{adj}}$ when comparing models with different $p$}
+\end{frame}
+
+\begin{frame}[t]{RMSE and MAE}
+  \textbf{Error Metrics in Original Units}
+
+  \begin{align}
+    \text{RMSE} &= \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2} \\
+    \text{MAE} &= \frac{1}{n}\sum|y_i - \hat{y}_i|
+  \end{align}
+
+  \textbf{Comparison:}
+  \begin{itemize}
+    \item RMSE: Penalizes large errors more (sensitive to outliers)
+    \item MAE: More robust, easier to interpret
+    \item Units: Same as target variable (e.g., dollars)
+  \end{itemize}
+
+  \bottomnote{Report both for comprehensive evaluation}
+\end{frame}
+
+\begin{frame}[t]{Residual Analysis}
+  \begin{center}
+    \includegraphics[width=0.65\textwidth]{03_residual_plots/chart.pdf}
+  \end{center}
+
+  \bottomnote{Good: random scatter. Bad: patterns indicate model misspecification}
+\end{frame}
+
+\begin{frame}[t]{Train-Test Split}
+  \textbf{Evaluating Generalization}
+
+  \begin{itemize}
+    \item Never evaluate on training data alone
+    \item Split: 70-80\% train, 20-30\% test
+    \item Report test set metrics
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Cross-Validation (K-Fold):}
+  \begin{itemize}
+    \item Split into $K$ folds (typically $K=5$ or $10$)
+    \item Train on $K-1$ folds, validate on 1
+    \item Repeat $K$ times, average results
+  \end{itemize}
+
+  \bottomnote{CV gives more reliable estimate with limited data}
+\end{frame}
+
+\begin{frame}[t]{Learning Curves}
+  \begin{center}
+    \includegraphics[width=0.65\textwidth]{05_learning_curves/chart.pdf}
+  \end{center}
+
+  \bottomnote{Gap between curves indicates overfitting; convergence shows saturation}
+\end{frame}
+
+% ============================================
+% SECTION 4: REGULARIZATION
+% ============================================
+\section{Regularization}
+
+\begin{frame}[t]{The Overfitting Problem}
+  \textbf{When Models Memorize Instead of Learn}
+
+  \begin{itemize}
+    \item High-dimensional data ($p \approx n$ or $p > n$)
+    \item Coefficients become very large
+    \item Perfect fit on training data, poor generalization
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Solution: Add Penalty to Loss Function}
+  \begin{equation}
+    L_{\text{reg}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \cdot \text{penalty}(\boldsymbol{\beta})
+  \end{equation}
+
+  \bottomnote{$\lambda$ controls strength of regularization}
+\end{frame}
+
+\begin{frame}[t]{Ridge Regression (L2)}
+  \textbf{L2 Penalty: Sum of Squared Coefficients}
+
+  \begin{equation}
+    L_{\text{ridge}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \|\boldsymbol{\beta}\|_2^2
+  \end{equation}
+
+  \textbf{Closed-Form Solution:}
+  \begin{equation}
+    \hat{\boldsymbol{\beta}}_{\text{ridge}} = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}
+  \end{equation}
+
+  \begin{itemize}
+    \item Shrinks all coefficients toward zero
+    \item Never sets coefficients exactly to zero
+    \item Always invertible (even when $p > n$)
+  \end{itemize}
+
+  \bottomnote{Ridge adds $\lambda$ to diagonal -- stabilizes inversion}
+\end{frame}
+
+\begin{frame}[t]{Lasso Regression (L1)}
+  \textbf{L1 Penalty: Sum of Absolute Coefficients}
+
+  \begin{equation}
+    L_{\text{lasso}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \|\boldsymbol{\beta}\|_1
+  \end{equation}
+
+  \textbf{Properties:}
+  \begin{itemize}
+    \item Produces sparse solutions (some $\beta_j = 0$)
+    \item Automatic feature selection
+    \item No closed-form solution (use coordinate descent)
+  \end{itemize}
+
+  \bottomnote{Lasso: Least Absolute Shrinkage and Selection Operator}
+\end{frame}
+
+\begin{frame}[t]{Ridge vs Lasso Comparison}
+  \begin{center}
+    \includegraphics[width=0.65\textwidth]{06_regularization_comparison/chart.pdf}
+  \end{center}
+
+  \bottomnote{Ridge: smooth shrinkage. Lasso: sparse (feature selection)}
+\end{frame}
+
+\begin{frame}[t]{Elastic Net}
+  \textbf{Combining L1 and L2 Penalties}
+
+  \begin{equation}
+    L_{\text{elastic}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda_1 \|\boldsymbol{\beta}\|_1 + \lambda_2 \|\boldsymbol{\beta}\|_2^2
+  \end{equation}
+
+  \textbf{Benefits:}
+  \begin{itemize}
+    \item Sparsity from L1
+    \item Stability from L2 (handles correlated features)
+    \item Two hyperparameters to tune
+  \end{itemize}
+
+  \bottomnote{Often best of both worlds for correlated features}
+\end{frame}
+
+\begin{frame}[t]{Choosing Lambda}
+  \textbf{Cross-Validation for Hyperparameter Tuning}
+
+  \begin{enumerate}
+    \item Define grid of $\lambda$ values (e.g., $10^{-4}$ to $10^{4}$)
+    \item For each $\lambda$, perform K-fold CV
+    \item Select $\lambda$ with lowest CV error
+    \item Refit on full training data
+  \end{enumerate}
+
+  \vspace{0.5em}
+  \textbf{In Practice:}
+  \begin{itemize}
+    \item \texttt{sklearn.linear\_model.RidgeCV}
+    \item \texttt{sklearn.linear\_model.LassoCV}
+  \end{itemize}
+
+  \bottomnote{Larger $\lambda$ = more regularization = simpler model}
+\end{frame}
+
+% ============================================
+% SECTION 5: BIAS-VARIANCE TRADEOFF
+% ============================================
+\section{Bias-Variance Tradeoff}
+
+\begin{frame}[t]{Decomposing Prediction Error}
+  \textbf{Expected Prediction Error}
+
+  \begin{equation}
+    E[(y - \hat{f}(x))^2] = \text{Bias}^2(\hat{f}) + \text{Var}(\hat{f}) + \sigma^2
+  \end{equation}
+
+  \begin{itemize}
+    \item \textbf{Bias}: Error from wrong assumptions (underfitting)
+    \item \textbf{Variance}: Error from sensitivity to training data (overfitting)
+    \item \textbf{$\sigma^2$}: Irreducible noise in data
+  \end{itemize}
+
+  \bottomnote{We can't reduce irreducible error -- focus on bias and variance}
+\end{frame}
+
+\begin{frame}[t]{The Tradeoff Illustrated}
+  \begin{center}
+    \includegraphics[width=0.65\textwidth]{07_bias_variance/chart.pdf}
+  \end{center}
+
+  \bottomnote{Optimal complexity minimizes total error}
+\end{frame}
+
+\begin{frame}[t]{Regularization and Bias-Variance}
+  \textbf{How Regularization Helps}
+
+  \begin{itemize}
+    \item Increasing $\lambda$: \highlight{increases bias}, \highlight{decreases variance}
+    \item Decreasing $\lambda$: decreases bias, increases variance
+    \item Optimal $\lambda$: minimizes total error
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{In Practice:}
+  \begin{itemize}
+    \item Use CV to find optimal $\lambda$
+    \item Regularization almost always helps when $p$ is large
+  \end{itemize}
+
+  \bottomnote{Regularization trades a little bias for a lot of variance reduction}
+\end{frame}
+
+% ============================================
+% SECTION 6: DECISION FRAMEWORK
+% ============================================
+\section{Decision Framework}
+
+\begin{frame}[t]{Algorithm Selection Guide}
+  \begin{center}
+    \includegraphics[width=0.60\textwidth]{08_decision_flowchart/chart.pdf}
+  \end{center}
+
+  \bottomnote{Use this framework when choosing regression methods}
+\end{frame}
+
+\begin{frame}[t]{Linear Regression: When and Why}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{\textcolor{MLGreen}{Use When:}}
+      \begin{itemize}
+        \item Continuous target variable
+        \item Approximate linear relationships
+        \item Interpretability is critical
+        \item Inference on coefficients needed
+        \item Fast prediction required
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\textcolor{MLRed}{Avoid When:}}
+      \begin{itemize}
+        \item Target is categorical
+        \item Strong non-linear patterns
+        \item Many outliers present
+        \item Features highly correlated
+        \item Prediction accuracy paramount
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \bottomnote{When in doubt, linear regression is a strong baseline}
+\end{frame}
+
+% ============================================
+% SUMMARY
+% ============================================
+\section{Summary}
+
+\begin{frame}[t]{Key Equations Summary}
+  \small
+  \begin{align}
+    \text{Model:} \quad & \mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon} \\
+    \text{OLS Solution:} \quad & \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y} \\
+    \text{Gradient:} \quad & \nabla L = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) \\
+    \text{GD Update:} \quad & \boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L \\
+    \text{Ridge:} \quad & \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y} \\
+    R^2: \quad & 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
+  \end{align}
+\end{frame}
+
+\begin{frame}[t]{Key Takeaways}
+  \begin{enumerate}
+    \item Linear regression minimizes squared error -- closed form or GD
+    \item Matrix notation enables efficient computation
+    \item Gradient descent scales to large datasets
+    \item Regularization (Ridge/Lasso) prevents overfitting
+    \item The bias-variance tradeoff guides model complexity
+    \item Always evaluate on held-out test data
+  \end{enumerate}
+
+  \vspace{0.5em}
+  \textbf{Next Session:} Logistic Regression for Classification
+\end{frame}
+
+\begin{frame}[t]{References}
+  \footnotesize
+  \begin{itemize}
+    \item James, Witten, Hastie, Tibshirani (2021). \textit{Introduction to Statistical Learning}. Chapter 3.
+    \item Hastie, Tibshirani, Friedman (2009). \textit{Elements of Statistical Learning}. Chapter 3.
+    \item Bishop (2006). \textit{Pattern Recognition and Machine Learning}. Chapter 3.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Online Resources:}
+  \begin{itemize}
+    \item scikit-learn: \url{https://scikit-learn.org/stable/modules/linear_model.html}
+    \item Stanford CS229: \url{https://cs229.stanford.edu/}
+  \end{itemize}
+\end{frame}
+
+\end{document}

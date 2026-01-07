@@ -1,0 +1,582 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Packages
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% Colors
+\definecolor{mlpurple}{HTML}{3333B2}
+\definecolor{mlblue}{HTML}{0066CC}
+\definecolor{mlgreen}{HTML}{2CA02C}
+\definecolor{mlred}{HTML}{D62728}
+\definecolor{mlorange}{HTML}{FF7F0E}
+
+% Custom commands
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textcolor{gray}{#1}}
+
+% Title
+\title[L02: Logistic Regression Deep Dive]{L02: Logistic Regression}
+\subtitle{Mathematical Foundations and Implementation}
+\author{Methods and Algorithms -- MSc Data Science}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+%% PART 1: MATHEMATICAL FOUNDATIONS (Slides 2-8)
+\section{Mathematical Foundations}
+
+\begin{frame}[t]{From Linear to Logistic}
+\textbf{The Classification Problem}
+\begin{itemize}
+\item Given features $\mathbf{x} \in \mathbb{R}^p$, predict $y \in \{0, 1\}$
+\item Linear regression: $\hat{y} = \mathbf{w}^T\mathbf{x} + b$ (unbounded)
+\item Need: $P(y=1|\mathbf{x}) \in [0, 1]$
+\end{itemize}
+\vspace{0.5em}
+\textbf{Solution: The Logistic Function}
+$$P(y=1|\mathbf{x}) = \sigma(\mathbf{w}^T\mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^T\mathbf{x} + b)}}$$
+\bottomnote{The logistic function is also called the sigmoid function}
+\end{frame}
+
+\begin{frame}[t]{The Sigmoid Function}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{01_sigmoid_function/chart.pdf}
+\end{center}
+\textbf{Key Properties:}
+\begin{itemize}
+\item Range: $(0, 1)$ -- perfect for probabilities
+\item $\sigma(0) = 0.5$ -- threshold for classification
+\item $\sigma'(z) = \sigma(z)(1 - \sigma(z))$ -- simple gradient
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Odds and Log-Odds}
+\textbf{Understanding the Model}
+\begin{itemize}
+\item Odds: $\frac{P(y=1)}{P(y=0)} = \frac{p}{1-p}$
+\item Log-odds (logit): $\log\left(\frac{p}{1-p}\right) = \mathbf{w}^T\mathbf{x} + b$
+\end{itemize}
+\vspace{0.5em}
+\textbf{Coefficient Interpretation}
+\begin{itemize}
+\item $w_j$: change in log-odds per unit increase in $x_j$
+\item $e^{w_j}$: odds ratio -- multiplicative effect on odds
+\item Example: $w_{\text{income}} = 0.5 \Rightarrow$ each unit increase in income multiplies odds by $e^{0.5} \approx 1.65$
+\end{itemize}
+\bottomnote{Log-odds interpretation is key for regulatory compliance in banking}
+\end{frame}
+
+\begin{frame}[t]{Maximum Likelihood Estimation}
+\textbf{The Likelihood Function}
+
+For observations $(x_i, y_i)$, the likelihood is:
+$$L(\mathbf{w}) = \prod_{i=1}^{n} p_i^{y_i}(1-p_i)^{1-y_i}$$
+where $p_i = \sigma(\mathbf{w}^T\mathbf{x}_i + b)$
+\vspace{0.5em}
+
+\textbf{Log-Likelihood (easier to optimize)}
+$$\ell(\mathbf{w}) = \sum_{i=1}^{n} \left[ y_i \log(p_i) + (1-y_i)\log(1-p_i) \right]$$
+\bottomnote{Maximize log-likelihood = minimize negative log-likelihood (cross-entropy)}
+\end{frame}
+
+\begin{frame}[t]{Binary Cross-Entropy Loss}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{03_log_loss/chart.pdf}
+\end{center}
+\textbf{Loss Function}
+$$\mathcal{L} = -\frac{1}{n}\sum_{i=1}^{n}\left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]$$
+\bottomnote{Cross-entropy loss is convex in the weights -- guaranteed global optimum}
+\end{frame}
+
+\begin{frame}[t]{Gradient Derivation}
+\textbf{Computing the Gradient}
+
+For a single sample:
+$$\frac{\partial \mathcal{L}}{\partial w_j} = (p - y) x_j$$
+\vspace{0.5em}
+\textbf{In Matrix Form}
+$$\nabla_{\mathbf{w}} \mathcal{L} = \frac{1}{n}\mathbf{X}^T(\mathbf{p} - \mathbf{y})$$
+where $\mathbf{p} = \sigma(\mathbf{X}\mathbf{w})$
+\vspace{0.5em}
+
+\textbf{Key Insight}: Same form as linear regression gradient!
+\bottomnote{The elegance of logistic regression: gradient has the same form as linear regression}
+\end{frame}
+
+\begin{frame}[t]{Gradient Descent Update}
+\textbf{Update Rule}
+$$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \eta \nabla_{\mathbf{w}} \mathcal{L}$$
+$$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \frac{\eta}{n}\mathbf{X}^T(\sigma(\mathbf{X}\mathbf{w}^{(t)}) - \mathbf{y})$$
+\vspace{0.5em}
+\textbf{Practical Considerations}
+\begin{itemize}
+\item Feature scaling: standardize inputs for faster convergence
+\item Learning rate: start with $\eta = 0.01$, use line search or decay
+\item Convergence: monitor loss, check gradient norm < tolerance
+\end{itemize}
+\bottomnote{No closed-form solution like normal equation -- must use iterative optimization}
+\end{frame}
+
+%% PART 2: DECISION BOUNDARIES (Slides 9-12)
+\section{Decision Boundaries}
+
+\begin{frame}[t]{Linear Decision Boundary}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{02_decision_boundary/chart.pdf}
+\end{center}
+\textbf{Decision Rule}: Predict $\hat{y} = 1$ if $\mathbf{w}^T\mathbf{x} + b \geq 0$
+\bottomnote{The decision boundary is always a hyperplane in the feature space}
+\end{frame}
+
+\begin{frame}[t]{Threshold Selection}
+\textbf{Default Threshold: 0.5}
+\begin{itemize}
+\item Predict 1 if $P(y=1|\mathbf{x}) \geq 0.5$
+\item Equivalent to: $\mathbf{w}^T\mathbf{x} + b \geq 0$
+\end{itemize}
+\vspace{0.5em}
+\textbf{Custom Thresholds}
+\begin{itemize}
+\item Lower threshold: more sensitive (higher recall)
+\item Higher threshold: more specific (higher precision)
+\item Choose based on business costs of FP vs FN
+\end{itemize}
+\vspace{0.5em}
+\textbf{Example: Fraud Detection}
+\begin{itemize}
+\item Cost of missing fraud (FN) >> Cost of false alarm (FP)
+\item Use lower threshold, e.g., 0.3
+\end{itemize}
+\bottomnote{Optimal threshold depends on the cost matrix of your application}
+\end{frame}
+
+\begin{frame}[t]{Non-Linear Boundaries via Features}
+\textbf{Polynomial Features}
+\begin{itemize}
+\item Original: $[x_1, x_2]$
+\item Expanded: $[x_1, x_2, x_1^2, x_2^2, x_1 x_2]$
+\item Creates curved decision boundaries
+\end{itemize}
+\vspace{0.5em}
+\textbf{Trade-offs}
+\begin{itemize}
+\item More features: more flexible boundaries
+\item Risk: overfitting to training data
+\item Solution: regularization
+\end{itemize}
+\bottomnote{Logistic regression is linear in parameters, but can model non-linear boundaries}
+\end{frame}
+
+\begin{frame}[t]{Multiclass Extension: Softmax}
+\textbf{One-vs-Rest (OvR)}
+\begin{itemize}
+\item Train $K$ binary classifiers
+\item Predict class with highest probability
+\end{itemize}
+\vspace{0.5em}
+\textbf{Multinomial (Softmax) Logistic Regression}
+$$P(y=k|\mathbf{x}) = \frac{e^{\mathbf{w}_k^T\mathbf{x}}}{\sum_{j=1}^{K}e^{\mathbf{w}_j^T\mathbf{x}}}$$
+\begin{itemize}
+\item Single model, probabilities sum to 1
+\item Loss: categorical cross-entropy
+\end{itemize}
+\bottomnote{scikit-learn: multi\_class='multinomial' for true softmax regression}
+\end{frame}
+
+%% PART 3: EVALUATION METRICS (Slides 13-20)
+\section{Evaluation Metrics}
+
+\begin{frame}[t]{Confusion Matrix}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{06_confusion_matrix/chart.pdf}
+\end{center}
+\bottomnote{Always start evaluation by examining the confusion matrix}
+\end{frame}
+
+\begin{frame}[t]{Classification Metrics}
+\textbf{From the Confusion Matrix}
+\begin{itemize}
+\item \textbf{Accuracy}: $\frac{TP + TN}{TP + TN + FP + FN}$ -- overall correctness
+\item \textbf{Precision}: $\frac{TP}{TP + FP}$ -- of predicted positives, how many correct?
+\item \textbf{Recall}: $\frac{TP}{TP + FN}$ -- of actual positives, how many found?
+\item \textbf{F1 Score}: $\frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$
+\end{itemize}
+\vspace{0.5em}
+\textbf{When Accuracy Fails}
+\begin{itemize}
+\item Imbalanced data: 99\% negative class
+\item Predicting all negatives gives 99\% accuracy!
+\end{itemize}
+\bottomnote{Accuracy is misleading for imbalanced datasets}
+\end{frame}
+
+\begin{frame}[t]{ROC Curve}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{04_roc_curve/chart.pdf}
+\end{center}
+\textbf{ROC = Receiver Operating Characteristic}
+\begin{itemize}
+\item X-axis: FPR (1 - Specificity)
+\item Y-axis: TPR (Recall/Sensitivity)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Area Under ROC (AUC)}
+\textbf{Interpretation}
+\begin{itemize}
+\item AUC = 0.5: random guessing
+\item AUC = 1.0: perfect classifier
+\item AUC = probability(random positive > random negative)
+\end{itemize}
+\vspace{0.5em}
+\textbf{Guidelines}
+\begin{itemize}
+\item 0.9--1.0: Excellent
+\item 0.8--0.9: Good
+\item 0.7--0.8: Fair
+\item 0.6--0.7: Poor
+\item 0.5--0.6: Fail
+\end{itemize}
+\bottomnote{AUC is threshold-independent -- summarizes performance across all thresholds}
+\end{frame}
+
+\begin{frame}[t]{Precision-Recall Curve}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{05_precision_recall/chart.pdf}
+\end{center}
+\bottomnote{Use PR curves for imbalanced datasets where positive class is rare}
+\end{frame}
+
+\begin{frame}[t]{ROC vs Precision-Recall}
+\textbf{When to Use ROC}
+\begin{itemize}
+\item Balanced classes
+\item Care equally about both classes
+\item Comparing models at specific FPR
+\end{itemize}
+\vspace{0.5em}
+\textbf{When to Use Precision-Recall}
+\begin{itemize}
+\item Imbalanced classes (fraud, disease)
+\item Positive class is more important
+\item High precision required
+\end{itemize}
+\bottomnote{ROC can be overly optimistic with imbalanced data}
+\end{frame}
+
+\begin{frame}[t]{Calibration}
+\textbf{What is Calibration?}
+\begin{itemize}
+\item Predicted 70\% probability should mean 70\% actually positive
+\item Well-calibrated: predicted probabilities match observed frequencies
+\end{itemize}
+\vspace{0.5em}
+\textbf{Checking Calibration}
+\begin{itemize}
+\item Reliability diagram (calibration plot)
+\item Brier score: $\frac{1}{n}\sum(p_i - y_i)^2$
+\end{itemize}
+\vspace{0.5em}
+\textbf{Logistic Regression Advantage}
+\begin{itemize}
+\item Naturally well-calibrated (MLE property)
+\item Unlike trees/random forests that may need calibration
+\end{itemize}
+\bottomnote{Calibration is crucial when probabilities are used for decision-making}
+\end{frame}
+
+%% PART 4: REGULARIZATION (Slides 21-24)
+\section{Regularization}
+
+\begin{frame}[t]{Regularization Motivation}
+\textbf{The Overfitting Problem}
+\begin{itemize}
+\item Many features, limited data
+\item Model fits noise, not signal
+\item Perfect training accuracy, poor test performance
+\end{itemize}
+\vspace{0.5em}
+\textbf{Solution: Penalize Large Coefficients}
+$$\mathcal{L}_{\text{regularized}} = \mathcal{L} + \lambda \cdot \text{penalty}(\mathbf{w})$$
+\begin{itemize}
+\item $\lambda$: regularization strength (hyperparameter)
+\item Larger $\lambda$ = simpler model
+\end{itemize}
+\bottomnote{Regularization trades bias for variance}
+\end{frame}
+
+\begin{frame}[t]{L1 vs L2 Regularization}
+\textbf{L2 (Ridge)}
+$$\mathcal{L}_{\text{Ridge}} = \mathcal{L} + \lambda \sum_{j=1}^{p} w_j^2$$
+\begin{itemize}
+\item Shrinks coefficients toward zero
+\item Keeps all features, reduces magnitude
+\end{itemize}
+\vspace{0.3em}
+\textbf{L1 (Lasso)}
+$$\mathcal{L}_{\text{Lasso}} = \mathcal{L} + \lambda \sum_{j=1}^{p} |w_j|$$
+\begin{itemize}
+\item Some coefficients exactly zero
+\item Automatic feature selection
+\end{itemize}
+\bottomnote{L1 for sparse models, L2 when all features likely relevant}
+\end{frame}
+
+\begin{frame}[t]{Elastic Net}
+\textbf{Best of Both Worlds}
+$$\mathcal{L}_{\text{ElasticNet}} = \mathcal{L} + \lambda_1 \sum |w_j| + \lambda_2 \sum w_j^2$$
+\vspace{0.5em}
+\textbf{Advantages}
+\begin{itemize}
+\item Handles correlated features better than Lasso alone
+\item Can select groups of correlated features
+\item More stable feature selection
+\end{itemize}
+\vspace{0.5em}
+\textbf{In scikit-learn}
+\begin{itemize}
+\item \texttt{LogisticRegression(penalty='elasticnet', solver='saga', l1\_ratio=0.5)}
+\end{itemize}
+\bottomnote{Elastic Net: l1\_ratio = 1 is pure L1, l1\_ratio = 0 is pure L2}
+\end{frame}
+
+\begin{frame}[t]{Choosing $\lambda$}
+\textbf{Cross-Validation}
+\begin{itemize}
+\item Try grid of $\lambda$ values: [0.001, 0.01, 0.1, 1, 10, 100]
+\item Use k-fold CV to estimate test performance
+\item Select $\lambda$ with best CV score
+\end{itemize}
+\vspace{0.5em}
+\textbf{scikit-learn Convenience}
+\begin{itemize}
+\item \texttt{LogisticRegressionCV}: automatic $\lambda$ search
+\item \texttt{Cs}: inverse of $\lambda$ (larger C = less regularization)
+\end{itemize}
+\bottomnote{LogisticRegressionCV does cross-validation internally}
+\end{frame}
+
+%% PART 5: IMPLEMENTATION (Slides 25-29)
+\section{Implementation}
+
+\begin{frame}[t]{Algorithm: Gradient Descent}
+\begin{algorithmic}[1]
+\STATE \textbf{Input}: $\mathbf{X}$, $\mathbf{y}$, learning rate $\eta$, max iterations $T$
+\STATE Initialize $\mathbf{w} = \mathbf{0}$
+\FOR{$t = 1$ to $T$}
+\STATE $\mathbf{p} = \sigma(\mathbf{X}\mathbf{w})$
+\STATE $\nabla = \frac{1}{n}\mathbf{X}^T(\mathbf{p} - \mathbf{y})$
+\STATE $\mathbf{w} = \mathbf{w} - \eta \nabla$
+\IF{$\|\nabla\| < \epsilon$}
+\STATE \textbf{break}
+\ENDIF
+\ENDFOR
+\STATE \textbf{return} $\mathbf{w}$
+\end{algorithmic}
+\bottomnote{In practice, use quasi-Newton methods (L-BFGS) for faster convergence}
+\end{frame}
+
+\begin{frame}[t]{scikit-learn Implementation}
+\textbf{Basic Usage}
+\begin{itemize}
+\item \texttt{from sklearn.linear\_model import LogisticRegression}
+\item \texttt{model = LogisticRegression()}
+\item \texttt{model.fit(X\_train, y\_train)}
+\item \texttt{y\_pred = model.predict(X\_test)}
+\item \texttt{y\_proba = model.predict\_proba(X\_test)}
+\end{itemize}
+\vspace{0.5em}
+\textbf{Key Parameters}
+\begin{itemize}
+\item \texttt{C}: inverse regularization strength (default=1.0)
+\item \texttt{penalty}: 'l1', 'l2', 'elasticnet', 'none'
+\item \texttt{solver}: 'lbfgs', 'liblinear', 'saga'
+\item \texttt{class\_weight}: 'balanced' for imbalanced data
+\end{itemize}
+\bottomnote{predict\_proba returns [P(y=0), P(y=1)] -- use [:, 1] for positive class}
+\end{frame}
+
+\begin{frame}[t]{Handling Class Imbalance}
+\textbf{The Problem}
+\begin{itemize}
+\item 99\% negatives, 1\% positives
+\item Model predicts all negatives: 99\% accuracy!
+\end{itemize}
+\vspace{0.5em}
+\textbf{Solutions}
+\begin{itemize}
+\item \textbf{Class weights}: \texttt{class\_weight='balanced'}
+\item \textbf{Oversampling}: SMOTE, random oversampling
+\item \textbf{Undersampling}: random undersampling
+\item \textbf{Threshold tuning}: optimize for F1 or business metric
+\end{itemize}
+\vspace{0.3em}
+\textbf{Weighted Loss}
+$$\mathcal{L}_{\text{weighted}} = -\sum_i w_{y_i}[y_i\log p_i + (1-y_i)\log(1-p_i)]$$
+\bottomnote{class\_weight='balanced' sets $w_k \propto 1/n_k$}
+\end{frame}
+
+\begin{frame}[t]{Feature Engineering Tips}
+\textbf{For Logistic Regression}
+\begin{itemize}
+\item \textbf{Standardization}: mean=0, std=1 for all features
+\item \textbf{Missing values}: impute or create indicator variable
+\item \textbf{Categorical}: one-hot encoding (drop one level)
+\item \textbf{Interactions}: $x_1 \times x_2$ if domain suggests
+\item \textbf{Non-linearity}: binning or polynomial features
+\end{itemize}
+\vspace{0.5em}
+\textbf{Credit Scoring Example}
+\begin{itemize}
+\item Age: may have non-linear effect (bin into groups)
+\item Debt-to-income ratio: interaction of two features
+\item Employment length: indicator for < 2 years
+\end{itemize}
+\bottomnote{Feature engineering often matters more than model selection}
+\end{frame}
+
+\begin{frame}[t]{Model Interpretation}
+\textbf{Coefficient Analysis}
+\begin{itemize}
+\item Sign: direction of effect
+\item Magnitude: strength (after standardization)
+\item Odds ratio $e^{w_j}$: multiplicative effect
+\end{itemize}
+\vspace{0.5em}
+\textbf{Example Interpretation}
+\begin{itemize}
+\item $w_{\text{income}} = 0.5$: each \$1000 income increase multiplies odds of approval by $e^{0.5} = 1.65$
+\item $w_{\text{debt\_ratio}} = -1.2$: each 0.1 increase in debt ratio multiplies odds by $e^{-0.12} = 0.89$ (11\% decrease)
+\end{itemize}
+\bottomnote{This interpretability makes logistic regression preferred in regulated industries}
+\end{frame}
+
+%% PART 6: PRACTICAL CONSIDERATIONS (Slides 30-33)
+\section{Practical Considerations}
+
+\begin{frame}[t]{Solver Selection}
+\textbf{Available Solvers in scikit-learn}
+\begin{itemize}
+\item \texttt{lbfgs}: default, works for L2 and no penalty
+\item \texttt{liblinear}: fast for small data, supports L1
+\item \texttt{saga}: supports all penalties, works for large data
+\item \texttt{newton-cg}: similar to lbfgs
+\item \texttt{sag}: stochastic, for very large data
+\end{itemize}
+\vspace{0.5em}
+\textbf{Guidelines}
+\begin{itemize}
+\item L1 penalty: use liblinear or saga
+\item Large data: saga or sag
+\item Default (L2): lbfgs
+\end{itemize}
+\bottomnote{solver='saga' is the most versatile but may be slower for small datasets}
+\end{frame}
+
+\begin{frame}[t]{Convergence Issues}
+\textbf{Warning: ``Convergence Warning''}
+\begin{itemize}
+\item Model did not converge in max\_iter iterations
+\item May mean poor solution
+\end{itemize}
+\vspace{0.5em}
+\textbf{Solutions}
+\begin{itemize}
+\item Increase \texttt{max\_iter} (default=100)
+\item Standardize features
+\item Increase regularization (smaller C)
+\item Use different solver
+\end{itemize}
+\bottomnote{Always check for convergence warnings in production code}
+\end{frame}
+
+\begin{frame}[t]{Logistic vs Other Classifiers}
+\textbf{Strengths of Logistic Regression}
+\begin{itemize}
+\item Interpretable coefficients
+\item Well-calibrated probabilities
+\item Fast training and prediction
+\item Works well with few samples
+\end{itemize}
+\vspace{0.3em}
+\textbf{Limitations}
+\begin{itemize}
+\item Linear decision boundary
+\item May underfit complex patterns
+\item Sensitive to outliers (compared to trees)
+\end{itemize}
+\vspace{0.3em}
+\textbf{When to Choose Alternatives}
+\begin{itemize}
+\item Complex patterns: Random Forests, Gradient Boosting
+\item High-dimensional: SVM with RBF kernel
+\item Interpretability not required: Neural Networks
+\end{itemize}
+\bottomnote{Start with logistic regression as baseline, then try more complex models}
+\end{frame}
+
+\begin{frame}[t]{Decision Framework}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+\bottomnote{Logistic regression: first choice for binary classification with interpretability}
+\end{frame}
+
+%% SUMMARY (Slides 34-35)
+\section{Summary}
+
+\begin{frame}[t]{Key Takeaways}
+\textbf{Mathematical Foundation}
+\begin{itemize}
+\item Sigmoid function maps linear combination to probability
+\item Maximum likelihood estimation via gradient descent
+\item Cross-entropy loss is convex, guaranteed global optimum
+\end{itemize}
+\vspace{0.5em}
+\textbf{Evaluation}
+\begin{itemize}
+\item Use confusion matrix, precision, recall, F1
+\item ROC/AUC for balanced data, PR curve for imbalanced
+\item Calibration matters when using probabilities
+\end{itemize}
+\vspace{0.5em}
+\textbf{Practice}
+\begin{itemize}
+\item Regularization prevents overfitting
+\item Class weights handle imbalance
+\item Coefficients are directly interpretable
+\end{itemize}
+\bottomnote{Logistic regression: simple, fast, interpretable, and often competitive}
+\end{frame}
+
+\begin{frame}[t]{References}
+\textbf{Textbooks}
+\begin{itemize}
+\item James et al. (2021). \textit{ISLR}, Chapter 4: Classification
+\item Hastie et al. (2009). \textit{ESL}, Chapter 4: Linear Methods
+\end{itemize}
+\vspace{0.5em}
+\textbf{Documentation}
+\begin{itemize}
+\item scikit-learn: LogisticRegression user guide
+\item statsmodels: Logit for statistical inference
+\end{itemize}
+\vspace{0.5em}
+\textbf{Next Lecture}
+\begin{itemize}
+\item L03: KNN and K-Means
+\item From parametric to non-parametric methods
+\end{itemize}
+\end{frame}
+
+\end{document}

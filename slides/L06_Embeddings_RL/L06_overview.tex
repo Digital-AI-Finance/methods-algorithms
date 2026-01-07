@@ -1,0 +1,107 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+
+\definecolor{mlpurple}{HTML}{3333B2}
+\definecolor{mlblue}{HTML}{0066CC}
+\definecolor{mlgreen}{HTML}{2CA02C}
+\definecolor{mlred}{HTML}{D62728}
+\definecolor{mlorange}{HTML}{FF7F0E}
+
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textcolor{gray}{#1}}
+
+\title[L06: Embeddings \& RL]{L06: Embeddings \& RL}
+\subtitle{Text Representations and Sequential Decision Making}
+\author{Methods and Algorithms -- MSc Data Science}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}[t]{Learning Objectives}
+\textbf{By the end of this lecture, you will be able to:}
+\begin{enumerate}
+\item Explain word embeddings and their applications
+\item Apply pre-trained embeddings for text analysis
+\item Understand the reinforcement learning framework
+\item Implement basic Q-learning for decision problems
+\end{enumerate}
+\vspace{1em}
+\textbf{Finance Applications:} Sentiment analysis, algorithmic trading
+\bottomnote{From text to numbers, from decisions to optimal policies}
+\end{frame}
+
+\begin{frame}[t]{The Business Problem}
+\textbf{Text Data Challenge}
+\begin{itemize}
+\item Financial news, reports, social media contain valuable signals
+\item Text is unstructured---how to feed it to ML models?
+\item Need to capture semantic meaning (``bullish'' similar to ``positive'')
+\end{itemize}
+\vspace{0.5em}
+\textbf{Sequential Decision Challenge}
+\begin{itemize}
+\item Trading requires sequences of buy/sell/hold decisions
+\item Actions have delayed consequences (profit realized later)
+\end{itemize}
+\bottomnote{Embeddings solve text, RL solves sequential decisions}
+\end{frame}
+
+\begin{frame}[t]{Word Embedding Space}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{01_word_embedding_space/chart.pdf}
+\end{center}
+\bottomnote{Similar words cluster together in embedding space}
+\end{frame}
+
+\begin{frame}[t]{Embedding Similarity}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{02_similarity_heatmap/chart.pdf}
+\end{center}
+\bottomnote{Cosine similarity captures semantic relationships}
+\end{frame}
+
+\begin{frame}[t]{RL: Agent-Environment Loop}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{03_rl_loop/chart.pdf}
+\end{center}
+\bottomnote{Agent takes actions, receives rewards, learns optimal policy}
+\end{frame}
+
+\begin{frame}[t]{Q-Learning: Value Function}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{04_q_learning_grid/chart.pdf}
+\end{center}
+\bottomnote{Q-values indicate expected future reward from each state-action}
+\end{frame}
+
+\begin{frame}[t]{Learning Progress}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{05_reward_curves/chart.pdf}
+\end{center}
+\bottomnote{RL agents improve through exploration and exploitation}
+\end{frame}
+
+\begin{frame}[t]{Learned Trading Policy}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{06_policy_viz/chart.pdf}
+\end{center}
+\bottomnote{Policy maps states to actions (when to buy/sell/hold)}
+\end{frame}
+
+\begin{frame}[t]{Decision Framework}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+\bottomnote{Embeddings for text, RL for sequential decisions with delayed rewards}
+\end{frame}
+
+\end{document}

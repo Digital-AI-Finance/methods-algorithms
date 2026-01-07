@@ -1,0 +1,432 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+
+\definecolor{mlpurple}{HTML}{3333B2}
+\definecolor{mlblue}{HTML}{0066CC}
+\definecolor{mlgreen}{HTML}{2CA02C}
+\definecolor{mlred}{HTML}{D62728}
+\definecolor{mlorange}{HTML}{FF7F0E}
+
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textcolor{gray}{#1}}
+
+\title[L06: Embeddings \& RL Deep Dive]{L06: Embeddings \& RL}
+\subtitle{Deep Dive: Theory, Implementation, and Applications}
+\author{Methods and Algorithms -- MSc Data Science}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+%% PART 1: WORD EMBEDDINGS
+\begin{frame}[t]{Part 1: Word Embeddings Introduction}
+\textbf{The Problem with One-Hot Encoding}
+\begin{itemize}
+\item Vocabulary of 10,000 words $\rightarrow$ 10,000-dim sparse vectors
+\item No semantic similarity: ``king'' and ``queen'' equally distant from ``car''
+\item Curse of dimensionality
+\end{itemize}
+\vspace{0.5em}
+\textbf{Solution: Dense Embeddings}
+\begin{itemize}
+\item Map words to dense vectors (50-300 dimensions)
+\item Similar words $\rightarrow$ similar vectors
+\item Learn from context (distributional hypothesis)
+\end{itemize}
+\bottomnote{``You shall know a word by the company it keeps'' -- Firth, 1957}
+\end{frame}
+
+\begin{frame}[t]{Word2Vec: Skip-gram}
+\textbf{Objective:} Predict context words given target word
+\[
+P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in V} \exp(v_w^T v_{target})}
+\]
+
+\textbf{Training:}
+\begin{itemize}
+\item Slide window over text corpus
+\item For each word, predict surrounding words
+\item Update embeddings via gradient descent
+\end{itemize}
+\bottomnote{Skip-gram works well for rare words; CBOW better for frequent words}
+\end{frame}
+
+\begin{frame}[t]{Word Embedding Space}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{01_word_embedding_space/chart.pdf}
+\end{center}
+\bottomnote{Finance terms cluster by semantic category in embedding space}
+\end{frame}
+
+\begin{frame}[t]{Word Analogies}
+\textbf{Famous Example:}
+\[
+\vec{king} - \vec{man} + \vec{woman} \approx \vec{queen}
+\]
+
+\textbf{Finance Examples:}
+\begin{itemize}
+\item $\vec{stock} - \vec{equity} + \vec{debt} \approx \vec{bond}$
+\item $\vec{CEO} - \vec{company} + \vec{country} \approx \vec{president}$
+\end{itemize}
+\vspace{0.5em}
+\textbf{How it works:}
+\begin{itemize}
+\item Vector arithmetic in embedding space
+\item Relationships encoded as directions
+\end{itemize}
+\bottomnote{Embeddings capture relational structure, not just similarity}
+\end{frame}
+
+\begin{frame}[t]{Similarity Measures}
+\textbf{Cosine Similarity:}
+\[
+\text{sim}(u, v) = \frac{u \cdot v}{||u|| \cdot ||v||} = \cos(\theta)
+\]
+\begin{itemize}
+\item Range: $[-1, 1]$
+\item 1 = identical direction, 0 = orthogonal, -1 = opposite
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.35\textwidth]{02_similarity_heatmap/chart.pdf}
+\end{center}
+\bottomnote{Cosine similarity ignores magnitude, focuses on direction}
+\end{frame}
+
+\begin{frame}[t]{Pre-trained Embeddings}
+\textbf{Popular Options:}
+\begin{itemize}
+\item \textbf{Word2Vec}: Google, 300-dim, 3M words
+\item \textbf{GloVe}: Stanford, trained on Wikipedia + Common Crawl
+\item \textbf{FastText}: Facebook, handles subwords (OOV robust)
+\end{itemize}
+\vspace{0.5em}
+\textbf{Domain-Specific:}
+\begin{itemize}
+\item FinBERT: Pre-trained on financial text
+\item BioBERT: Biomedical domain
+\end{itemize}
+\bottomnote{Fine-tuning pre-trained embeddings usually outperforms training from scratch}
+\end{frame}
+
+\begin{frame}[t]{Embeddings in Finance}
+\textbf{Applications:}
+\begin{itemize}
+\item \textbf{Sentiment Analysis}: News $\rightarrow$ embedding $\rightarrow$ positive/negative
+\item \textbf{Document Similarity}: Find similar SEC filings
+\item \textbf{Named Entity Recognition}: Extract company names
+\item \textbf{Event Detection}: Identify earnings announcements
+\end{itemize}
+\vspace{0.5em}
+\textbf{Sentence Embeddings:}
+\begin{itemize}
+\item Average word vectors (simple baseline)
+\item Doc2Vec (paragraph vectors)
+\item Sentence-BERT (state-of-the-art)
+\end{itemize}
+\bottomnote{Aggregate word embeddings to represent documents}
+\end{frame}
+
+%% PART 2: REINFORCEMENT LEARNING
+\begin{frame}[t]{Part 2: Reinforcement Learning Framework}
+\textbf{Key Components:}
+\begin{itemize}
+\item \textbf{Agent}: Learner/decision-maker
+\item \textbf{Environment}: What agent interacts with
+\item \textbf{State} $s$: Current situation
+\item \textbf{Action} $a$: What agent can do
+\item \textbf{Reward} $r$: Feedback signal
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{03_rl_loop/chart.pdf}
+\end{center}
+\bottomnote{RL: Learning from interaction, not from labeled examples}
+\end{frame}
+
+\begin{frame}[t]{Markov Decision Process}
+\textbf{MDP Tuple:} $(S, A, P, R, \gamma)$
+\begin{itemize}
+\item $S$: Set of states
+\item $A$: Set of actions
+\item $P(s'|s, a)$: Transition probability
+\item $R(s, a, s')$: Reward function
+\item $\gamma \in [0,1]$: Discount factor
+\end{itemize}
+\vspace{0.5em}
+\textbf{Markov Property:}
+\[
+P(s_{t+1} | s_t, a_t, s_{t-1}, ...) = P(s_{t+1} | s_t, a_t)
+\]
+\bottomnote{Future depends only on current state, not history}
+\end{frame}
+
+\begin{frame}[t]{Policy and Value Functions}
+\textbf{Policy:} $\pi(a|s) = P(A_t = a | S_t = s)$
+\begin{itemize}
+\item Maps states to action probabilities
+\item Goal: Find optimal policy $\pi^*$
+\end{itemize}
+\vspace{0.5em}
+\textbf{Value Function:}
+\[
+V^\pi(s) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s \right]
+\]
+
+\textbf{Q-Function (Action-Value):}
+\[
+Q^\pi(s, a) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s, A_0 = a \right]
+\]
+\bottomnote{Q-function: expected return starting from state s, taking action a}
+\end{frame}
+
+\begin{frame}[t]{Bellman Equation}
+\textbf{Optimal Q-Function:}
+\[
+Q^*(s, a) = \mathbb{E} \left[ R + \gamma \max_{a'} Q^*(s', a') \right]
+\]
+\vspace{0.5em}
+\textbf{Interpretation:}
+\begin{itemize}
+\item Value = immediate reward + discounted future value
+\item Recursive definition enables dynamic programming
+\end{itemize}
+\vspace{0.5em}
+\textbf{Optimal Policy:}
+\[
+\pi^*(s) = \arg\max_a Q^*(s, a)
+\]
+\bottomnote{Bellman equation: foundation of all value-based RL methods}
+\end{frame}
+
+\begin{frame}[t]{Q-Learning Algorithm}
+\textbf{Update Rule:}
+\[
+Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
+\]
+\vspace{0.5em}
+\textbf{Algorithm:}
+\begin{enumerate}
+\item Initialize $Q(s,a)$ arbitrarily
+\item For each episode:
+\begin{itemize}
+\item Observe state $s$
+\item Choose action $a$ ($\epsilon$-greedy)
+\item Execute $a$, observe $r$, $s'$
+\item Update $Q(s, a)$
+\end{itemize}
+\end{enumerate}
+\bottomnote{Q-learning is off-policy: learns optimal Q regardless of policy followed}
+\end{frame}
+
+\begin{frame}[t]{Q-Values Visualization}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{04_q_learning_grid/chart.pdf}
+\end{center}
+\bottomnote{Arrows show policy; colors show Q-values (green=high, red=negative)}
+\end{frame}
+
+\begin{frame}[t]{Exploration vs Exploitation}
+\textbf{The Dilemma:}
+\begin{itemize}
+\item \textbf{Exploit}: Choose best known action (greedy)
+\item \textbf{Explore}: Try new actions (discover better options)
+\end{itemize}
+\vspace{0.5em}
+\textbf{$\epsilon$-Greedy Strategy:}
+\[
+a = \begin{cases}
+\arg\max_a Q(s,a) & \text{with probability } 1-\epsilon \\
+\text{random action} & \text{with probability } \epsilon
+\end{cases}
+\]
+\vspace{0.5em}
+\textbf{Decay Schedule:}
+\begin{itemize}
+\item Start with high $\epsilon$ (explore more)
+\item Decay $\epsilon$ over time (exploit more)
+\end{itemize}
+\bottomnote{Balance: too much exploration wastes time; too little misses optima}
+\end{frame}
+
+\begin{frame}[t]{Learning Curves}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{05_reward_curves/chart.pdf}
+\end{center}
+\bottomnote{Reward improves as agent learns; DQN often outperforms tabular Q-learning}
+\end{frame}
+
+%% PART 3: RL IN FINANCE
+\begin{frame}[t]{Part 3: RL for Trading}
+\textbf{Formulation:}
+\begin{itemize}
+\item \textbf{State}: Price history, portfolio, technical indicators
+\item \textbf{Action}: Buy, sell, hold (+ position size)
+\item \textbf{Reward}: Profit/loss, risk-adjusted return
+\end{itemize}
+\vspace{0.5em}
+\textbf{Challenges:}
+\begin{itemize}
+\item Non-stationary environment
+\item High noise, low signal-to-noise ratio
+\item Transaction costs
+\item Partial observability
+\end{itemize}
+\bottomnote{RL for trading is active research area; not solved problem}
+\end{frame}
+
+\begin{frame}[t]{Trading Policy}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{06_policy_viz/chart.pdf}
+\end{center}
+\bottomnote{Learned policy: buy when oversold/high momentum, sell when overbought}
+\end{frame}
+
+\begin{frame}[t]{Deep Q-Networks (DQN)}
+\textbf{Idea}: Use neural network to approximate Q-function
+\[
+Q(s, a; \theta) \approx Q^*(s, a)
+\]
+\vspace{0.5em}
+\textbf{Key Innovations:}
+\begin{itemize}
+\item \textbf{Experience Replay}: Store transitions, sample randomly
+\item \textbf{Target Network}: Separate network for stability
+\item \textbf{Function Approximation}: Handle large state spaces
+\end{itemize}
+\bottomnote{DQN: breakthrough for RL on Atari games (Mnih et al., 2015)}
+\end{frame}
+
+\begin{frame}[t]{Policy Gradient Methods}
+\textbf{Direct Policy Optimization:}
+\[
+\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log \pi_\theta(a|s) \cdot Q^{\pi_\theta}(s, a) \right]
+\]
+\vspace{0.5em}
+\textbf{Algorithms:}
+\begin{itemize}
+\item REINFORCE (vanilla policy gradient)
+\item Actor-Critic (combine value and policy)
+\item PPO (Proximal Policy Optimization)
+\item A3C (Asynchronous Advantage Actor-Critic)
+\end{itemize}
+\bottomnote{Policy gradient: directly optimize policy, can handle continuous actions}
+\end{frame}
+
+%% PART 4: COMPARISON
+\begin{frame}[t]{Part 4: When to Use What}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+\bottomnote{Embeddings for text/categorical; RL for sequential decisions}
+\end{frame}
+
+\begin{frame}[t]{Comparison Table}
+\begin{center}
+\small
+\begin{tabular}{l|cc}
+\toprule
+\textbf{Aspect} & \textbf{Embeddings} & \textbf{RL} \\
+\midrule
+Input & Text, categorical & State sequence \\
+Output & Dense vectors & Actions/policy \\
+Learning & Unsupervised/supervised & Trial and error \\
+Signal & Context (words) & Rewards \\
+Key challenge & Semantics & Credit assignment \\
+Finance use & Sentiment & Trading \\
+\bottomrule
+\end{tabular}
+\end{center}
+\bottomnote{Both transform complex inputs into learnable representations}
+\end{frame}
+
+%% PART 5: IMPLEMENTATION
+\begin{frame}[t,fragile]{Part 5: Implementation}
+\textbf{Embeddings in Python:}
+\small
+\begin{itemize}
+\item \texttt{gensim.models.Word2Vec}: Train your own
+\item \texttt{gensim.downloader.load('glove-wiki-gigaword-100')}: Pre-trained
+\item \texttt{transformers.BertModel}: BERT embeddings
+\end{itemize}
+\normalsize
+\vspace{0.5em}
+\textbf{RL Libraries:}
+\small
+\begin{itemize}
+\item \texttt{gymnasium}: Environment interface (formerly OpenAI Gym)
+\item \texttt{stable-baselines3}: Pre-implemented algorithms
+\item \texttt{ray[rllib]}: Scalable RL
+\end{itemize}
+\bottomnote{Start with pre-trained embeddings; use stable-baselines3 for RL}
+\end{frame}
+
+\begin{frame}[t]{Practical Tips}
+\textbf{Embeddings:}
+\begin{itemize}
+\item Start with pre-trained, fine-tune if needed
+\item Check domain match (general vs financial)
+\item Visualize with t-SNE/UMAP to verify quality
+\end{itemize}
+\vspace{0.5em}
+\textbf{RL:}
+\begin{itemize}
+\item Start simple (tabular Q-learning before DQN)
+\item Reward shaping is crucial (sparse rewards are hard)
+\item Normalize observations
+\item Use established environments first (Gym, FinRL)
+\end{itemize}
+\bottomnote{Both domains: start simple, iterate, validate thoroughly}
+\end{frame}
+
+\begin{frame}[t]{Summary}
+\textbf{Embeddings:}
+\begin{itemize}
+\item Dense vector representations of text/categories
+\item Capture semantic similarity
+\item Use pre-trained (Word2Vec, GloVe, BERT)
+\end{itemize}
+
+\textbf{Reinforcement Learning:}
+\begin{itemize}
+\item Agent learns from environment interaction
+\item Q-learning: value-based, tabular or deep (DQN)
+\item Applications: trading, portfolio optimization
+\end{itemize}
+
+\textbf{Key Takeaway:} Different tools for different problems
+\bottomnote{Course complete! Apply these methods in your capstone project}
+\end{frame}
+
+\begin{frame}[t]{References}
+\small
+\textbf{Embeddings:}
+\begin{itemize}
+\item Mikolov et al. (2013). Word2Vec
+\item Pennington et al. (2014). GloVe
+\item Devlin et al. (2019). BERT
+\end{itemize}
+
+\textbf{Reinforcement Learning:}
+\begin{itemize}
+\item Sutton \& Barto (2018). RL: An Introduction (free online)
+\item Mnih et al. (2015). DQN (Atari)
+\item Schulman et al. (2017). PPO
+\end{itemize}
+
+\textbf{Finance Applications:}
+\begin{itemize}
+\item Liu et al. (2021). FinRL: Deep RL for Trading
+\item Araci (2019). FinBERT
+\end{itemize}
+\bottomnote{Sutton \& Barto: the definitive RL textbook (free at incompleteideas.net)}
+\end{frame}
+
+\end{document}

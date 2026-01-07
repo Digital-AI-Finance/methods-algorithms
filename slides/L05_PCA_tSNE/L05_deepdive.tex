@@ -1,0 +1,388 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+
+\definecolor{mlpurple}{HTML}{3333B2}
+\definecolor{mlblue}{HTML}{0066CC}
+\definecolor{mlgreen}{HTML}{2CA02C}
+\definecolor{mlred}{HTML}{D62728}
+\definecolor{mlorange}{HTML}{FF7F0E}
+
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textcolor{gray}{#1}}
+
+\title[L05: PCA \& t-SNE Deep Dive]{L05: PCA \& t-SNE}
+\subtitle{Deep Dive: Theory, Implementation, and Applications}
+\author{Methods and Algorithms -- MSc Data Science}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+%% PART 1: PCA FOUNDATIONS
+\begin{frame}[t]{Part 1: PCA Foundations}
+\textbf{Principal Component Analysis (PCA)}
+\begin{itemize}
+\item Find orthogonal directions of maximum variance
+\item Project data onto these directions
+\item Reduce dimensions while preserving information
+\end{itemize}
+\vspace{0.5em}
+\textbf{Key Properties:}
+\begin{itemize}
+\item Linear transformation
+\item Components are uncorrelated
+\item Reversible (can reconstruct original data)
+\end{itemize}
+\bottomnote{PCA: one of the most fundamental tools in data science}
+\end{frame}
+
+\begin{frame}[t]{Mathematical Foundation}
+\textbf{Covariance Matrix:}
+\[
+\Sigma = \frac{1}{n-1} X^T X \quad \text{(centered data)}
+\]
+
+\textbf{Eigendecomposition:}
+\[
+\Sigma v = \lambda v
+\]
+where $v$ = eigenvector (principal direction), $\lambda$ = eigenvalue (variance)
+
+\textbf{Projection:}
+\[
+Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
+\]
+\bottomnote{Eigenvalues tell us how much variance each component captures}
+\end{frame}
+
+\begin{frame}[t]{Variance Explained}
+\textbf{Proportion of Variance:}
+\[
+\text{Explained Variance Ratio}_i = \frac{\lambda_i}{\sum_{j=1}^{p} \lambda_j}
+\]
+
+\textbf{Cumulative Variance:}
+\[
+\text{Cumulative}_k = \sum_{i=1}^{k} \frac{\lambda_i}{\sum_{j=1}^{p} \lambda_j}
+\]
+\vspace{0.5em}
+\textbf{Rules of thumb for choosing k:}
+\begin{itemize}
+\item Keep 80-95\% of total variance
+\item Use scree plot ``elbow'' method
+\item Kaiser criterion: keep components with $\lambda > 1$
+\end{itemize}
+\bottomnote{Balance dimensionality reduction with information preservation}
+\end{frame}
+
+\begin{frame}[t]{Scree Plot}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{01_scree_plot/chart.pdf}
+\end{center}
+\bottomnote{Look for the ``elbow'' where variance explained drops off}
+\end{frame}
+
+\begin{frame}[t]{Principal Components Visualization}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{02_principal_components/chart.pdf}
+\end{center}
+\bottomnote{PC1 captures the dominant trend, PC2 the residual variation}
+\end{frame}
+
+\begin{frame}[t]{Reconstruction}
+\textbf{From k components back to original space:}
+\[
+\hat{X} = Z W_k^T = X W_k W_k^T
+\]
+
+\textbf{Reconstruction Error:}
+\[
+\text{Error} = ||X - \hat{X}||_F^2 = \sum_{i=k+1}^{p} \lambda_i
+\]
+\bottomnote{Reconstruction error = sum of discarded eigenvalues}
+\end{frame}
+
+\begin{frame}[t]{Reconstruction Error vs Components}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{03_reconstruction/chart.pdf}
+\end{center}
+\bottomnote{Adding more components always reduces error (but diminishing returns)}
+\end{frame}
+
+%% PART 2: PCA APPLICATIONS
+\begin{frame}[t]{Part 2: PCA in Finance}
+\textbf{Portfolio Risk Decomposition:}
+\begin{itemize}
+\item PC1 often represents ``market factor''
+\item PC2-3 may capture sector/size factors
+\item Higher PCs: idiosyncratic risk
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Applications:}
+\begin{itemize}
+\item Risk factor modeling
+\item Dimensionality reduction for trading signals
+\item Noise reduction in time series
+\item Feature extraction for ML models
+\end{itemize}
+\bottomnote{PCA reveals latent structure in financial data}
+\end{frame}
+
+\begin{frame}[t]{PCA Limitations}
+\textbf{When PCA Falls Short:}
+\begin{itemize}
+\item Non-linear relationships (curved manifolds)
+\item Cluster structure not aligned with variance
+\item Discrete or categorical data
+\item Outliers heavily influence results
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Solutions:}
+\begin{itemize}
+\item Kernel PCA (non-linear)
+\item Robust PCA (outlier-resistant)
+\item t-SNE/UMAP (for visualization)
+\end{itemize}
+\bottomnote{PCA assumes linear structure and Gaussian-like distributions}
+\end{frame}
+
+%% PART 3: t-SNE
+\begin{frame}[t]{Part 3: t-SNE Introduction}
+\textbf{t-Distributed Stochastic Neighbor Embedding}
+\begin{itemize}
+\item Non-linear dimensionality reduction
+\item Optimized for visualization (2D/3D)
+\item Preserves local neighborhood structure
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Key Idea:}
+\begin{itemize}
+\item Convert distances to probabilities
+\item In high-D: Gaussian similarities
+\item In low-D: t-distribution similarities
+\item Minimize KL divergence between distributions
+\end{itemize}
+\bottomnote{t-SNE: visualization method, NOT for preprocessing}
+\end{frame}
+
+\begin{frame}[t]{t-SNE: Mathematical Formulation}
+\textbf{High-dimensional similarity:}
+\[
+p_{j|i} = \frac{\exp(-||x_i - x_j||^2 / 2\sigma_i^2)}{\sum_{k \neq i} \exp(-||x_i - x_k||^2 / 2\sigma_i^2)}
+\]
+
+\textbf{Low-dimensional similarity (t-distribution):}
+\[
+q_{ij} = \frac{(1 + ||y_i - y_j||^2)^{-1}}{\sum_{k \neq l} (1 + ||y_k - y_l||^2)^{-1}}
+\]
+
+\textbf{Objective: Minimize KL divergence}
+\[
+KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
+\]
+\bottomnote{t-distribution has heavier tails, allowing better separation in low-D}
+\end{frame}
+
+\begin{frame}[t]{Perplexity Parameter}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{04_tsne_perplexity/chart.pdf}
+\end{center}
+\bottomnote{Perplexity $\approx$ effective number of neighbors (try 5-50)}
+\end{frame}
+
+\begin{frame}[t]{Perplexity Guidelines}
+\textbf{Perplexity} controls the balance between local and global structure:
+\begin{itemize}
+\item Low perplexity (5-10): Focus on very local structure
+\item Medium perplexity (30-50): Balanced (default)
+\item High perplexity (100+): More global structure
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Guidelines:}
+\begin{itemize}
+\item Should be smaller than number of points
+\item Larger datasets can use higher perplexity
+\item Run multiple perplexities to validate findings
+\end{itemize}
+\bottomnote{Results can vary significantly with perplexity choice}
+\end{frame}
+
+\begin{frame}[t]{t-SNE Caveats}
+\textbf{Important Limitations:}
+\begin{itemize}
+\item Non-deterministic (run multiple times)
+\item Cluster sizes are not meaningful
+\item Distances between clusters are not meaningful
+\item Slow for large datasets (O($n^2$))
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Best Practices:}
+\begin{itemize}
+\item Use PCA first to reduce to 30-50 dims
+\item Run multiple times with different seeds
+\item Don't over-interpret cluster sizes/distances
+\item Use for exploration, not final conclusions
+\end{itemize}
+\bottomnote{t-SNE shows IF clusters exist, not HOW they relate}
+\end{frame}
+
+%% PART 4: COMPARISON
+\begin{frame}[t]{Part 4: PCA vs t-SNE}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{05_pca_vs_tsne/chart.pdf}
+\end{center}
+\bottomnote{PCA: global structure, linear. t-SNE: local structure, non-linear}
+\end{frame}
+
+\begin{frame}[t]{Comparison Table}
+\begin{center}
+\small
+\begin{tabular}{l|cc}
+\toprule
+\textbf{Aspect} & \textbf{PCA} & \textbf{t-SNE} \\
+\midrule
+Type & Linear & Non-linear \\
+Speed & Fast $O(np^2)$ & Slow $O(n^2)$ \\
+Deterministic & Yes & No \\
+Preserves & Global variance & Local neighbors \\
+Reversible & Yes & No \\
+Use for ML & Yes (preprocessing) & No \\
+Visualization & Okay & Excellent \\
+\bottomrule
+\end{tabular}
+\end{center}
+\bottomnote{Use PCA for preprocessing, t-SNE for visualization only}
+\end{frame}
+
+\begin{frame}[t]{Cluster Preservation}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{06_cluster_preservation/chart.pdf}
+\end{center}
+\bottomnote{t-SNE often reveals cluster structure better than PCA}
+\end{frame}
+
+\begin{frame}[t]{When to Use Which}
+\textbf{Use PCA When:}
+\begin{itemize}
+\item Preprocessing for ML (reduce features)
+\item Linear relationships expected
+\item Need reversibility (reconstruction)
+\item Speed matters
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Use t-SNE When:}
+\begin{itemize}
+\item Visualizing high-dimensional data
+\item Looking for cluster structure
+\item Non-linear manifolds expected
+\item Exploratory analysis
+\end{itemize}
+\bottomnote{Often use both: PCA first to 30-50 dims, then t-SNE for visualization}
+\end{frame}
+
+\begin{frame}[t]{Decision Framework}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+\bottomnote{Consider purpose: preprocessing (PCA) vs visualization (t-SNE)}
+\end{frame}
+
+%% PART 5: IMPLEMENTATION
+\begin{frame}[t]{Part 5: Implementation}
+\textbf{PCA in scikit-learn:}
+\small
+\begin{itemize}
+\item \texttt{PCA(n\_components=k)}: Keep k components
+\item \texttt{PCA(n\_components=0.95)}: Keep 95\% variance
+\item \texttt{pca.explained\_variance\_ratio\_}: Variance per component
+\item \texttt{pca.inverse\_transform()}: Reconstruct original
+\end{itemize}
+\normalsize
+
+\vspace{0.5em}
+\textbf{t-SNE in scikit-learn:}
+\small
+\begin{itemize}
+\item \texttt{TSNE(n\_components=2, perplexity=30)}
+\item Always normalize data first
+\item Consider PCA preprocessing for speed
+\end{itemize}
+\bottomnote{Standardize data before PCA; normalize before t-SNE}
+\end{frame}
+
+\begin{frame}[t]{UMAP: Modern Alternative}
+\textbf{Uniform Manifold Approximation and Projection}
+\begin{itemize}
+\item Faster than t-SNE
+\item Better preserves global structure
+\item Can embed new points (unlike t-SNE)
+\item Hyperparameters: n\_neighbors, min\_dist
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{When to use UMAP:}
+\begin{itemize}
+\item Large datasets (faster than t-SNE)
+\item Need to embed new data points
+\item Want more preserved global structure
+\end{itemize}
+\bottomnote{UMAP often preferred over t-SNE in modern practice}
+\end{frame}
+
+\begin{frame}[t]{Summary}
+\textbf{PCA:}
+\begin{itemize}
+\item Linear, fast, reversible
+\item Use for preprocessing and feature extraction
+\item Choose k by variance explained or elbow
+\end{itemize}
+
+\textbf{t-SNE:}
+\begin{itemize}
+\item Non-linear, slow, visualization-only
+\item Excellent for exploring cluster structure
+\item Don't interpret distances or sizes literally
+\end{itemize}
+
+\textbf{Common Pipeline:} Standardize $\rightarrow$ PCA (30-50) $\rightarrow$ t-SNE (2D)
+\bottomnote{Next: Embeddings and Reinforcement Learning}
+\end{frame}
+
+\begin{frame}[t]{References}
+\small
+\textbf{Textbooks:}
+\begin{itemize}
+\item James et al. (2021). \textit{ISLR}, Chapter 12: Unsupervised Learning
+\item Hastie et al. (2009). \textit{ESL}, Chapter 14: Unsupervised Learning
+\end{itemize}
+
+\textbf{Original Papers:}
+\begin{itemize}
+\item Pearson (1901). On Lines and Planes of Closest Fit
+\item van der Maaten \& Hinton (2008). Visualizing Data using t-SNE
+\item McInnes et al. (2018). UMAP
+\end{itemize}
+
+\textbf{Documentation:}
+\begin{itemize}
+\item scikit-learn: \texttt{sklearn.decomposition.PCA}
+\item scikit-learn: \texttt{sklearn.manifold.TSNE}
+\end{itemize}
+\bottomnote{t-SNE paper: one of the most influential visualization papers}
+\end{frame}
+
+\end{document}

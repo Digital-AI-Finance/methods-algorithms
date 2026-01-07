@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Moodle Quiz XML Template -->
+<!-- Course: Methods and Algorithms - MSc Data Science -->
+<quiz>
+  <!-- Example Multiple Choice Question -->
+  <question type="multichoice">
+    <name>
+      <text>Example Question Name</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>What is the primary goal of linear regression?</p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+
+    <!-- Correct answer: fraction="100" -->
+    <answer fraction="100" format="html">
+      <text><![CDATA[To model the relationship between a dependent variable and independent variables]]></text>
+      <feedback format="html">
+        <text><![CDATA[Correct! Linear regression models the linear relationship between variables.]]></text>
+      </feedback>
+    </answer>
+
+    <!-- Incorrect answers: fraction="0" -->
+    <answer fraction="0" format="html">
+      <text><![CDATA[To classify data into categories]]></text>
+      <feedback format="html">
+        <text><![CDATA[Incorrect. Classification is the goal of logistic regression, not linear regression.]]></text>
+      </feedback>
+    </answer>
+
+    <answer fraction="0" format="html">
+      <text><![CDATA[To cluster similar data points]]></text>
+      <feedback format="html">
+        <text><![CDATA[Incorrect. Clustering is performed by algorithms like K-Means.]]></text>
+      </feedback>
+    </answer>
+
+    <answer fraction="0" format="html">
+      <text><![CDATA[To reduce the dimensionality of data]]></text>
+      <feedback format="html">
+        <text><![CDATA[Incorrect. Dimensionality reduction is performed by PCA or t-SNE.]]></text>
+      </feedback>
+    </answer>
+
+    <generalfeedback format="html">
+      <text><![CDATA[
+        <p>Linear regression is a supervised learning method for predicting continuous outcomes
+        by modeling the linear relationship between features and the target variable.</p>
+      ]]></text>
+    </generalfeedback>
+  </question>
+
+  <!-- Add more questions following the same structure -->
+
+</quiz>

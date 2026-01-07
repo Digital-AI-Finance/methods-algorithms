@@ -1,0 +1,229 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Methods and Algorithms - Capstone Project}
+\lhead{\leftmark}
+\rfoot{Page \thepage}
+
+% Code listing style
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4
+}
+
+% Title formatting
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\begin{document}
+
+% Title Page
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\LARGE\bfseries Methods and Algorithms\\[0.3cm]}
+    {\Large MSc Data Science - Capstone Project\\[2cm]}
+
+    {\Huge\bfseries [Your Project Title Here]\\[2cm]}
+
+    {\Large\itshape [Your Name]\\[0.5cm]}
+    {\large Student ID: [Your ID]\\[2cm]}
+
+    \vfill
+
+    {\large Submitted: [Date]\\[1cm]}
+
+    \vspace{1cm}
+\end{titlepage}
+
+% Table of Contents
+\tableofcontents
+\newpage
+
+% Executive Summary
+\section{Executive Summary}
+
+[Write 1 page maximum. Include:]
+\begin{itemize}
+    \item Problem statement (2-3 sentences)
+    \item Methods used
+    \item Key findings
+    \item Main recommendation/business implication
+\end{itemize}
+
+\textit{Example: This project predicts customer churn for a retail bank using logistic regression and random forest models. Analysis of 10,000 customer records reveals that account balance and tenure are the strongest predictors of churn. The random forest model achieves 0.85 AUC, outperforming logistic regression (0.78 AUC). Targeting customers with low balances and short tenure could reduce churn by 15\%.}
+
+\newpage
+
+% Problem Definition
+\section{Problem Definition}
+
+\subsection{Business Context}
+
+[Describe the business setting and why this problem matters. What organization would benefit from solving this problem?]
+
+\subsection{Problem Statement}
+
+[Clearly state the question you are answering. What are you predicting or analyzing?]
+
+\subsection{Success Criteria}
+
+[How will you measure success? What metrics matter for this problem?]
+
+% Data Description
+\section{Data Description}
+
+\subsection{Data Source}
+
+[Describe where the data comes from. If synthetic, explain how you generated it.]
+
+\subsection{Dataset Overview}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Attribute} & \textbf{Value} \\
+\midrule
+Number of observations & [X] \\
+Number of features & [Y] \\
+Target variable & [Name and type] \\
+Class balance (if classification) & [Percentage] \\
+\bottomrule
+\end{tabular}
+\caption{Dataset summary statistics}
+\end{table}
+
+\subsection{Feature Description}
+
+[List and describe key features. Include data types and any notable characteristics.]
+
+\subsection{Data Quality and Preprocessing}
+
+[Describe any data quality issues (missing values, outliers) and how you addressed them.]
+
+% Methodology
+\section{Methodology}
+
+\subsection{Method Selection}
+
+[Explain why you chose the methods you did. Use the decision framework from the course.]
+
+\textit{Example: I chose logistic regression as a baseline because the target is binary and interpretability is important. I then compared with random forest to capture potential non-linear relationships.}
+
+\subsection{Preprocessing}
+
+[Describe feature engineering, scaling, encoding of categorical variables, etc.]
+
+\subsection{Model Training}
+
+[Explain your train/test split, cross-validation strategy, and hyperparameter tuning.]
+
+\subsection{Evaluation Metrics}
+
+[Justify which metrics you use and why they are appropriate for this problem.]
+
+% Results
+\section{Results and Interpretation}
+
+\subsection{Model Performance}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{Accuracy} & \textbf{AUC} & \textbf{F1 Score} \\
+\midrule
+Logistic Regression & [X] & [X] & [X] \\
+Random Forest & [X] & [X] & [X] \\
+\bottomrule
+\end{tabular}
+\caption{Model comparison on test set}
+\end{table}
+
+\subsection{Feature Importance}
+
+[Include feature importance analysis with visualization if applicable.]
+
+\begin{figure}[h]
+\centering
+% \includegraphics[width=0.8\textwidth]{feature_importance.pdf}
+\caption{Feature importance from random forest model}
+\end{figure}
+
+\subsection{Business Interpretation}
+
+[What do these results mean in business terms? What actionable insights emerge?]
+
+% Limitations
+\section{Limitations and Future Work}
+
+\subsection{Assumptions and Limitations}
+
+[What assumptions did you make? What could be improved?]
+
+\subsection{Future Work}
+
+[What would you do next if this were a real project?]
+
+% References
+\section{References}
+
+\begin{enumerate}
+    \item Course materials: Methods and Algorithms, MSc Data Science
+    \item [Add any external sources you used]
+\end{enumerate}
+
+\newpage
+\appendix
+
+% Appendix
+\section{Code Snippets}
+
+[Include key code snippets, not entire notebooks]
+
+\begin{lstlisting}[caption={Model training example}]
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train model
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+
+# Evaluate
+y_pred = rf.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, y_pred):.3f}")
+\end{lstlisting}
+
+\section{Additional Figures}
+
+[Include any additional visualizations that support your analysis]
+
+\end{document}

@@ -1,0 +1,131 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Packages
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+
+% Colors
+\definecolor{mlpurple}{HTML}{3333B2}
+\definecolor{mlblue}{HTML}{0066CC}
+\definecolor{mlgreen}{HTML}{2CA02C}
+\definecolor{mlred}{HTML}{D62728}
+\definecolor{mlorange}{HTML}{FF7F0E}
+
+% Custom commands
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textcolor{gray}{#1}}
+
+% Title
+\title[L02: Logistic Regression]{L02: Logistic Regression}
+\subtitle{Classification with Probability Estimates}
+\author{Methods and Algorithms -- MSc Data Science}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+% Slide 2: Learning Objectives
+\begin{frame}[t]{Learning Objectives}
+\textbf{By the end of this lecture, you will be able to:}
+\begin{enumerate}
+\item Explain how logistic regression models binary outcomes
+\item Derive the maximum likelihood estimation for logistic regression
+\item Interpret classification metrics (precision, recall, AUC)
+\item Apply logistic regression for credit scoring decisions
+\end{enumerate}
+\vspace{1em}
+\textbf{Finance Application:} Credit default prediction
+\bottomnote{These objectives span Bloom's levels: Understand, Apply, Analyze}
+\end{frame}
+
+% Slide 3: Motivation
+\begin{frame}[t]{Why Logistic Regression?}
+\textbf{The Business Problem}
+\begin{itemize}
+\item Banks must decide: approve or reject loan applications
+\item Need probability of default, not just yes/no prediction
+\item Regulatory requirement: interpretable, auditable models
+\end{itemize}
+\vspace{0.5em}
+\textbf{Why Not Linear Regression?}
+\begin{itemize}
+\item Linear regression can predict values outside [0,1]
+\item Binary outcomes need probability-based approach
+\item Logistic regression outputs calibrated probabilities
+\end{itemize}
+\bottomnote{Logistic regression: the industry standard for credit scoring since 1980s}
+\end{frame}
+
+% Slide 4: The Sigmoid Function
+\begin{frame}[t]{The Sigmoid Function}
+\textbf{From Linear to Probability}
+\begin{itemize}
+\item Maps any real number to (0, 1) range
+\item Smooth, differentiable, interpretable
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{01_sigmoid_function/chart.pdf}
+\end{center}
+\bottomnote{$\sigma(z) = 1/(1+e^{-z})$ transforms linear combination to probability}
+\end{frame}
+
+% Slide 5: Decision Boundary
+\begin{frame}[t]{Decision Boundary}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{02_decision_boundary/chart.pdf}
+\end{center}
+\bottomnote{The decision boundary is where $P(y=1|x) = 0.5$, i.e., $w'x + b = 0$}
+\end{frame}
+
+% Slide 6: Loss Function
+\begin{frame}[t]{Binary Cross-Entropy Loss}
+\textbf{Why Not MSE?}
+\begin{itemize}
+\item MSE with sigmoid creates non-convex loss landscape
+\item Cross-entropy is convex, guarantees global optimum
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{03_log_loss/chart.pdf}
+\end{center}
+\bottomnote{Heavily penalizes confident wrong predictions}
+\end{frame}
+
+% Slide 7: Model Evaluation
+\begin{frame}[t]{ROC Curve and AUC}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{04_roc_curve/chart.pdf}
+\end{center}
+\bottomnote{AUC = probability that random positive ranks higher than random negative}
+\end{frame}
+
+% Slide 8: Precision-Recall
+\begin{frame}[t]{Precision-Recall Trade-off}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{05_precision_recall/chart.pdf}
+\end{center}
+\bottomnote{Use PR curve when classes are imbalanced (common in fraud detection)}
+\end{frame}
+
+% Slide 9: Confusion Matrix
+\begin{frame}[t]{Confusion Matrix: Reading the Results}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{06_confusion_matrix/chart.pdf}
+\end{center}
+\bottomnote{FP = approve bad loans (costly), FN = reject good customers (lost revenue)}
+\end{frame}
+
+% Slide 10: Decision Framework
+\begin{frame}[t]{When to Use Logistic Regression}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+\bottomnote{Key strengths: interpretable coefficients, probability outputs, fast training}
+\end{frame}
+
+\end{document}

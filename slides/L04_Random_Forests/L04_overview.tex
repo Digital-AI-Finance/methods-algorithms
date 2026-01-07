@@ -1,0 +1,108 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+
+\definecolor{mlpurple}{HTML}{3333B2}
+\definecolor{mlblue}{HTML}{0066CC}
+\definecolor{mlgreen}{HTML}{2CA02C}
+\definecolor{mlred}{HTML}{D62728}
+\definecolor{mlorange}{HTML}{FF7F0E}
+
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textcolor{gray}{#1}}
+
+\title[L04: Random Forests]{L04: Random Forests}
+\subtitle{Ensemble Learning for Robust Predictions}
+\author{Methods and Algorithms -- MSc Data Science}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}[t]{Learning Objectives}
+\textbf{By the end of this lecture, you will be able to:}
+\begin{enumerate}
+\item Explain how decision trees partition feature space
+\item Implement Random Forests using bagging and feature randomization
+\item Interpret feature importance and out-of-bag error
+\item Apply ensemble methods to fraud detection problems
+\end{enumerate}
+\vspace{1em}
+\textbf{Finance Application:} Fraud detection with interpretable feature importance
+\bottomnote{From single models to ensemble methods that combine many weak learners}
+\end{frame}
+
+\begin{frame}[t]{The Business Problem}
+\textbf{Fraud Detection Challenge}
+\begin{itemize}
+\item Need high accuracy: fraudulent transactions cost millions
+\item Need interpretability: explain why transaction flagged
+\item Complex patterns: fraud evolves and adapts
+\end{itemize}
+\vspace{0.5em}
+\textbf{Why Random Forests?}
+\begin{itemize}
+\item Combines many trees for robust predictions
+\item Built-in feature importance ranking
+\item Handles non-linear relationships naturally
+\end{itemize}
+\bottomnote{Ensemble methods: ``wisdom of crowds'' for machine learning}
+\end{frame}
+
+\begin{frame}[t]{Decision Tree Structure}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{01_decision_tree/chart.pdf}
+\end{center}
+\bottomnote{Trees split data using simple rules at each node until reaching a prediction}
+\end{frame}
+
+\begin{frame}[t]{Feature Importance}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{02_feature_importance/chart.pdf}
+\end{center}
+\bottomnote{Random Forests automatically rank which features matter most for prediction}
+\end{frame}
+
+\begin{frame}[t]{Bootstrap Aggregating (Bagging)}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{03_bootstrap/chart.pdf}
+\end{center}
+\bottomnote{Each tree trains on a different random sample, reducing overfitting}
+\end{frame}
+
+\begin{frame}[t]{Out-of-Bag Error}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{04_oob_error/chart.pdf}
+\end{center}
+\bottomnote{OOB error provides free cross-validation without held-out test set}
+\end{frame}
+
+\begin{frame}[t]{Ensemble Voting}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{05_ensemble_voting/chart.pdf}
+\end{center}
+\bottomnote{Final prediction combines votes from all trees (majority for classification)}
+\end{frame}
+
+\begin{frame}[t]{Bias-Variance Tradeoff}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{06_bias_variance/chart.pdf}
+\end{center}
+\bottomnote{Averaging many high-variance trees produces low-variance ensemble}
+\end{frame}
+
+\begin{frame}[t]{Decision Framework}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+\bottomnote{Random Forests excel when accuracy and feature importance both matter}
+\end{frame}
+
+\end{document}

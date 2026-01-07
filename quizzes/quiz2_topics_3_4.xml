@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="category">
+    <category>
+      <text>$course$/Methods and Algorithms/Quiz 2 - KNN, K-Means, and Random Forests</text>
+    </category>
+  </question>
+
+  <!-- Question 1: KNN Algorithm -->
+  <question type="multichoice">
+    <name>
+      <text>KNN Classification Mechanism</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>How does K-Nearest Neighbors (KNN) make predictions for a new data point?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>By majority vote of the K closest training examples</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! KNN finds the K nearest neighbors and assigns the most common class among them.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>By fitting a linear decision boundary</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. KNN is a non-parametric method that doesn't fit a decision boundary.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>By computing cluster centroids</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That describes K-Means clustering, not KNN classification.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>By learning weights through gradient descent</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. KNN is a lazy learner; it doesn't learn weights during training.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 2: Choosing K -->
+  <question type="multichoice">
+    <name>
+      <text>Effect of K Value in KNN</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What happens when you increase the value of K in KNN?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Decision boundary becomes smoother; model becomes less sensitive to noise</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Larger K averages more neighbors, reducing variance but potentially increasing bias.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Model always achieves higher accuracy</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Too large K can oversimplify and miss local patterns.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Training time increases significantly</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. KNN has no training phase; prediction time increases slightly with larger K.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The model memorizes training data more</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Smaller K leads to more memorization; larger K leads to more generalization.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 3: Distance Metrics -->
+  <question type="multichoice">
+    <name>
+      <text>Distance Metrics in KNN</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Which statement about distance metrics in KNN is correct?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Features should be scaled before computing Euclidean distance</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Without scaling, features with larger ranges dominate the distance calculation.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Manhattan distance is always better than Euclidean distance</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The best distance metric depends on the data characteristics.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Distance metrics don't affect KNN performance</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The choice of distance metric significantly impacts results.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Euclidean distance works well for text data</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Cosine similarity is typically preferred for text/high-dimensional sparse data.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 4: Curse of Dimensionality -->
+  <question type="multichoice">
+    <name>
+      <text>Curse of Dimensionality</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>How does the "curse of dimensionality" affect KNN?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>In high dimensions, all points become roughly equidistant, making nearest neighbors less meaningful</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Distance-based methods struggle when distances become uniformly large in high dimensions.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>KNN becomes faster in high dimensions</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. KNN becomes slower and less effective in high dimensions.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>It only affects regression, not classification</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The curse affects both KNN classification and regression.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Using larger K values solves the problem</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Larger K doesn't address the fundamental distance problem in high dimensions.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 5: K-Means Objective -->
+  <question type="multichoice">
+    <name>
+      <text>K-Means Objective Function</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What does the K-Means algorithm minimize?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Within-cluster sum of squared distances to centroids (inertia)</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! K-Means minimizes the total squared distance from each point to its cluster centroid.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Between-cluster distances</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. K-Means focuses on within-cluster distances, not between-cluster.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Number of clusters</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. K is a hyperparameter chosen beforehand, not optimized by the algorithm.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Silhouette score</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Silhouette score is an evaluation metric, not the objective function.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 6: K-Means Initialization -->
+  <question type="multichoice">
+    <name>
+      <text>K-Means Initialization</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Why is K-Means++ initialization preferred over random initialization?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>It spreads initial centroids apart, leading to better convergence</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! K-Means++ selects centroids probabilistically to be far from existing ones.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>It automatically determines the optimal number of clusters</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. K must still be specified; K-Means++ only improves initial centroid placement.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>It guarantees finding the global optimum</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. K-Means++ improves results but doesn't guarantee global optimum.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>It reduces memory usage</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. K-Means++ is about initialization quality, not memory efficiency.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 7: Elbow Method -->
+  <question type="multichoice">
+    <name>
+      <text>Elbow Method for K Selection</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>In the elbow method for choosing K in K-Means, what should you look for?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>The point where adding more clusters provides diminishing returns in reducing inertia</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! The "elbow" is where the rate of inertia decrease slows significantly.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The minimum inertia value</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Minimum inertia would suggest K = n (each point is its own cluster).</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The maximum silhouette score</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. That's a different method; the elbow method uses inertia.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The point where inertia becomes zero</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Inertia only reaches zero when K equals number of data points.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 8: Silhouette Score -->
+  <question type="multichoice">
+    <name>
+      <text>Silhouette Score Interpretation</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>A silhouette score close to +1 indicates:</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Points are well-matched to their own cluster and poorly matched to neighboring clusters</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! High silhouette means good cluster cohesion and separation.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Points are likely assigned to the wrong cluster</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Negative silhouette values suggest wrong assignment, not positive ones.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The number of clusters should be increased</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. High silhouette scores indicate good clustering, no need to change K.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>K-Means has converged</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Silhouette measures quality, not convergence status.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 9: Random Forest Bagging -->
+  <question type="multichoice">
+    <name>
+      <text>Random Forest Bagging</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What is "bagging" (bootstrap aggregating) in Random Forests?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Training each tree on a random sample (with replacement) of the data</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Each tree sees a different bootstrap sample, reducing variance through averaging.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Combining predictions by taking the median</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Bagging refers to the sampling process, not the aggregation method.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Selecting the best tree from the forest</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. All trees contribute to the final prediction, not just the best one.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Pruning trees to prevent overfitting</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Bagging is about data sampling, not tree pruning.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 10: Feature Randomization -->
+  <question type="multichoice">
+    <name>
+      <text>Feature Randomization in Random Forests</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Why does Random Forest randomly select a subset of features at each split?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>To decorrelate trees and reduce variance of the ensemble</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Feature randomization prevents all trees from making similar splits, improving ensemble diversity.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>To speed up training by using fewer features</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Speed is a side benefit; the main reason is reducing correlation between trees.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>To automatically select the best features</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Feature importance is measured, but random selection serves decorrelation.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>To reduce memory usage during training</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. The primary purpose is statistical, not computational.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 11: Out-of-Bag Error -->
+  <question type="multichoice">
+    <name>
+      <text>Out-of-Bag (OOB) Error</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What is the Out-of-Bag (OOB) error in Random Forests?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Error estimated using samples not included in each tree's bootstrap sample</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Each tree is validated on ~37% of data not in its bootstrap sample.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Error on the training set</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. OOB uses held-out samples, providing a validation-like estimate.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Error on a separate test set</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. OOB doesn't require a separate test set; it uses bootstrap leftovers.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Error from trees that were pruned</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. OOB refers to data samples, not trees.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 12: Feature Importance -->
+  <question type="multichoice">
+    <name>
+      <text>Random Forest Feature Importance</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>How does Random Forest typically measure feature importance?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>By measuring the decrease in impurity (Gini or entropy) when splitting on each feature</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Features that reduce impurity more are considered more important.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>By counting how often each feature appears in the forest</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Frequency alone doesn't measure importance; impurity reduction does.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>By computing correlation with the target variable</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Random Forest uses tree-based importance, not correlation.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>By the order in which features were added to the model</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. All features are available from the start; order doesn't determine importance.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 13: Gini Impurity -->
+  <question type="multichoice">
+    <name>
+      <text>Gini Impurity</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>What does a Gini impurity of 0 indicate for a node?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>All samples in the node belong to the same class (pure node)</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Gini = 0 means perfect purity; all samples share the same label.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Samples are equally distributed across all classes</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Equal distribution gives maximum Gini (0.5 for binary), not 0.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The node cannot be split further</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. While pure nodes typically aren't split, Gini = 0 describes purity, not splitting ability.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>The feature is not informative</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Gini describes node purity, not feature informativeness.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 14: Random Forest vs Single Tree -->
+  <question type="multichoice">
+    <name>
+      <text>Random Forest vs Decision Tree</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Why does Random Forest typically outperform a single decision tree?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>Averaging multiple diverse trees reduces overfitting (lower variance)</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! Ensemble averaging reduces variance while maintaining similar bias.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Each tree in the forest is deeper and more complex</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Trees in Random Forest can be simpler; the power comes from averaging.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Random Forest uses a different splitting criterion</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Both can use Gini or entropy; the difference is in ensemble averaging.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>Random Forest trains faster than a single tree</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. Random Forest is slower (trains many trees), but more accurate.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+  <!-- Question 15: Hyperparameters -->
+  <question type="multichoice">
+    <name>
+      <text>Random Forest Hyperparameters</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p>Which hyperparameter controls the number of features considered at each split in Random Forest?</p>]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.3333333</penalty>
+    <hidden>0</hidden>
+    <single>true</single>
+    <shuffleanswers>true</shuffleanswers>
+    <answernumbering>abc</answernumbering>
+    <answer fraction="100" format="html">
+      <text><![CDATA[<p>max_features</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Correct! max_features controls how many features are considered for each split decision.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>n_estimators</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. n_estimators controls the number of trees, not features per split.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>max_depth</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. max_depth limits tree depth, not the number of features considered.</p>]]></text>
+      </feedback>
+    </answer>
+    <answer fraction="0" format="html">
+      <text><![CDATA[<p>min_samples_split</p>]]></text>
+      <feedback format="html">
+        <text><![CDATA[<p>Incorrect. min_samples_split controls when to stop splitting based on sample count.</p>]]></text>
+      </feedback>
+    </answer>
+  </question>
+
+</quiz>
