@@ -141,7 +141,6 @@ body {
     grid-column: 2;
     margin-left: var(--sidebar-width);
     padding: 40px 40px;
-    max-width: 900px;
 }
 
 /* Right TOC Sidebar */

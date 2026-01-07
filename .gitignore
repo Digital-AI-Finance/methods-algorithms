@@ -45,6 +45,7 @@ CLAUDE.md
 *.pdf
 !templates/*.pdf
 !docs/assets/*.pdf
+!slides/**/*.pdf
 
 # Temporary files
 *.tmp
