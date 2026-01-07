@@ -1,438 +1,502 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="author" content="Methods and Algorithms – MSc Data Science">
-  <title>L03: KNN &amp; K-Means</title>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reveal.css">
-  <style>
-    .reveal .sourceCode {  /* see #7635 */
-      overflow: visible;
-    }
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-  </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css" id="theme">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="pandoc + custom post-processor">
+    <meta name="author" content="Methods and Algorithms – MSc Data Science">
+    <title>L03: KNN & K-Means</title>
+
+    <!-- Reveal.js core -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css" id="theme">
+
+    <!-- Custom ML theme -->
+    <link rel="stylesheet" href="css/ml-theme.css">
+
+    <!-- Menu plugin CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js-menu@2.1.0/menu.css">
+
+    <!-- Chalkboard plugin CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js-plugins@latest/chalkboard/style.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Additional inline styles */
+        .reveal .sourceCode {
+            overflow: visible;
+        }
+        code {
+            white-space: pre-wrap;
+        }
+        span.smallcaps {
+            font-variant: small-caps;
+        }
+        div.columns {
+            display: flex;
+            gap: min(4vw, 1.5em);
+        }
+        div.column {
+            flex: auto;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
-  <div class="reveal">
-    <div class="slides">
-
-<section id="title-slide">
-  <h1 class="title">L03: KNN &amp; K-Means</h1>
-  <p class="subtitle">Mathematical Foundations and Implementation</p>
-  <p class="author">Methods and Algorithms – MSc Data Science</p>
+    <div class="reveal">
+        <div class="slides">
+            <section id="title-slide">
+<h1 class="title">L03: KNN &amp; K-Means</h1>
+<p class="subtitle">Mathematical Foundations and Implementation</p>
+<p class="author">Methods and Algorithms – MSc Data Science</p>
 </section>
 
-<section class="slide level2">
+<section>
+<h2>KNN: The Lazy Learner</h2>
 
-<div class="frame">
-
-</div>
-</section>
-<section id="k-nearest-neighbors" class="title-slide slide level1">
-<h1>K-Nearest Neighbors</h1>
-<div class="frame">
-<p><span>KNN: The Lazy Learner</span> <strong>Key Insight</strong></p>
+<p> <strong>Key Insight</strong></p>
 <ul>
-<li><p>No explicit model training (store all data)</p></li>
-<li><p>Classification by majority vote of K nearest neighbors</p></li>
-<li><p>“Lazy” because work is done at prediction time</p></li>
+<li class="fragment"><p>No explicit model training (store all data)</p></li>
+<li class="fragment"><p>Classification by majority vote of K nearest neighbors</p></li>
+<li class="fragment"><p>“Lazy” because work is done at prediction time</p></li>
 </ul>
 <p><strong>The Algorithm</strong></p>
 <ol>
-<li><p>Store all training examples</p></li>
-<li><p>For new query <span class="math inline">\(\mathbf{x}\)</span>:
+<li class="fragment"><p>Store all training examples</p></li>
+<li class="fragment"><p>For new query <span class="math inline">\(\mathbf{x}\)</span>:
 find K nearest training points</p></li>
-<li><p>Return majority class among neighbors</p></li>
+<li class="fragment"><p>Return majority class among neighbors</p></li>
 </ol>
 <p><span style="color: gray">Instance-based learning: the training data
 IS the model</span></p>
-</div>
-<div class="frame">
-<p><span>Distance Metrics</span></p>
+
+</section>
+
+<section>
+<h2>Distance Metrics</h2>
+
+
 <div class="center">
-<p><embed data-src="02_distance_metrics/chart.pdf"
-style="width:55.0%" /></p>
+<p><embed data-src="02_distance_metrics/chart.pdf" style="width:55.0%"/></p>
 </div>
 <p><strong>Common Metrics</strong></p>
 <ul>
-<li><p>Euclidean: <span class="math inline">\(d = \sqrt{\sum_i(x_i -
+<li class="fragment"><p>Euclidean: <span class="math inline">\(d = \sqrt{\sum_i(x_i -
 y_i)^2}\)</span> (straight line)</p></li>
-<li><p>Manhattan: <span class="math inline">\(d = \sum_i|x_i -
+<li class="fragment"><p>Manhattan: <span class="math inline">\(d = \sum_i|x_i -
 y_i|\)</span> (city block)</p></li>
 </ul>
-</div>
-<div class="frame">
-<p><span>Distance Metrics: Minkowski Family</span> <strong>Minkowski
+
+</section>
+
+<section>
+<h2>Distance Metrics: Minkowski Family</h2>
+
+<p> <strong>Minkowski
 Distance</strong> <span class="math display">\[d_p(\mathbf{x},
 \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i -
 y_i|^p\right)^{1/p}\]</span></p>
 <ul>
-<li><p><span class="math inline">\(p=1\)</span>: Manhattan (L1)</p></li>
-<li><p><span class="math inline">\(p=2\)</span>: Euclidean (L2)</p></li>
-<li><p><span class="math inline">\(p=\infty\)</span>: Chebyshev (max
+<li class="fragment"><p><span class="math inline">\(p=1\)</span>: Manhattan (L1)</p></li>
+<li class="fragment"><p><span class="math inline">\(p=2\)</span>: Euclidean (L2)</p></li>
+<li class="fragment"><p><span class="math inline">\(p=\infty\)</span>: Chebyshev (max
 absolute difference)</p></li>
 </ul>
 <p><strong>Choosing p</strong></p>
 <ul>
-<li><p><span class="math inline">\(p=2\)</span>: Default, works well in
+<li class="fragment"><p><span class="math inline">\(p=2\)</span>: Default, works well in
 most cases</p></li>
-<li><p><span class="math inline">\(p=1\)</span>: More robust to
+<li class="fragment"><p><span class="math inline">\(p=1\)</span>: More robust to
 outliers</p></li>
-<li><p>Higher <span class="math inline">\(p\)</span>: Sensitive to large
+<li class="fragment"><p>Higher <span class="math inline">\(p\)</span>: Sensitive to large
 single differences</p></li>
 </ul>
 <p><span style="color: gray">In high dimensions, all distances become
 similar (curse of dimensionality)</span></p>
-</div>
-<div class="frame">
-<p><span>KNN Decision Boundaries</span></p>
+
+</section>
+
+<section>
+<h2>KNN Decision Boundaries</h2>
+
+
 <div class="center">
-<p><embed data-src="01_knn_boundaries/chart.pdf"
-style="width:55.0%" /></p>
+<p><embed data-src="01_knn_boundaries/chart.pdf" style="width:55.0%"/></p>
 </div>
 <p><strong>Boundary Properties</strong></p>
 <ul>
-<li><p>Non-linear, locally adaptive</p></li>
-<li><p>Small K: complex boundary, may overfit</p></li>
-<li><p>Large K: smoother boundary, may underfit</p></li>
+<li class="fragment"><p>Non-linear, locally adaptive</p></li>
+<li class="fragment"><p>Small K: complex boundary, may overfit</p></li>
+<li class="fragment"><p>Large K: smoother boundary, may underfit</p></li>
 </ul>
-</div>
-<div class="frame">
-<p><span>Choosing K</span> <strong>The Bias-Variance
+
+</section>
+
+<section>
+<h2>Choosing K</h2>
+
+<p> <strong>The Bias-Variance
 Trade-off</strong></p>
 <ul>
-<li><p><span class="math inline">\(K=1\)</span>: High variance, low bias
+<li class="fragment"><p><span class="math inline">\(K=1\)</span>: High variance, low bias
 (very flexible)</p></li>
-<li><p><span class="math inline">\(K=n\)</span>: High bias, low variance
+<li class="fragment"><p><span class="math inline">\(K=n\)</span>: High bias, low variance
 (always predicts majority class)</p></li>
 </ul>
 <p><strong>Practical Guidelines</strong></p>
 <ul>
-<li><p>Start with <span class="math inline">\(K = \sqrt{n}\)</span>
+<li class="fragment"><p>Start with <span class="math inline">\(K = \sqrt{n}\)</span>
 where <span class="math inline">\(n\)</span> is training size</p></li>
-<li><p>Use odd K for binary classification (avoid ties)</p></li>
-<li><p>Cross-validation to find optimal K</p></li>
+<li class="fragment"><p>Use odd K for binary classification (avoid ties)</p></li>
+<li class="fragment"><p>Cross-validation to find optimal K</p></li>
 </ul>
 <p><strong>Common Choices</strong>: <span class="math inline">\(K \in
 \{3, 5, 7, 11\}\)</span> <span style="color: gray">Small K for complex
 patterns, larger K for noisy data</span></p>
-</div>
-<div class="frame">
-<p><span>Weighted KNN</span> <strong>Problem with Equal
+
+</section>
+
+<section>
+<h2>Weighted KNN</h2>
+
+<p> <strong>Problem with Equal
 Voting</strong></p>
 <ul>
-<li><p>All K neighbors have equal influence</p></li>
-<li><p>A distant neighbor counts as much as closest neighbor</p></li>
+<li class="fragment"><p>All K neighbors have equal influence</p></li>
+<li class="fragment"><p>A distant neighbor counts as much as closest neighbor</p></li>
 </ul>
-<p><strong>Solution: Distance Weighting</strong> <span
-class="math display">\[w_i = \frac{1}{d(\mathbf{x},
+<p><strong>Solution: Distance Weighting</strong> <span class="math display">\[w_i = \frac{1}{d(\mathbf{x},
 \mathbf{x}_i)^2}\]</span></p>
 <ul>
-<li><p>Closer neighbors get higher weight</p></li>
-<li><p>Reduces sensitivity to K choice</p></li>
+<li class="fragment"><p>Closer neighbors get higher weight</p></li>
+<li class="fragment"><p>Reduces sensitivity to K choice</p></li>
 </ul>
 <p><strong>In scikit-learn</strong></p>
 <ul>
-<li><p><code>weights=’uniform’</code>: equal weights (default)</p></li>
-<li><p><code>weights=’distance’</code>: inverse distance
+<li class="fragment"><p><code>weights=’uniform’</code>: equal weights (default)</p></li>
+<li class="fragment"><p><code>weights=’distance’</code>: inverse distance
 weighting</p></li>
 </ul>
 <p><span style="color: gray">Distance weighting often improves
 performance</span></p>
-</div>
-<div class="frame">
-<p><span>Feature Scaling for KNN</span> <strong>Why Scaling
+
+</section>
+
+<section>
+<h2>Feature Scaling for KNN</h2>
+
+<p> <strong>Why Scaling
 Matters</strong></p>
 <p>Without scaling:</p>
 <ul>
-<li><p>Income: ranges 20,000–200,000</p></li>
-<li><p>Age: ranges 20–80</p></li>
-<li><p>Distance dominated by income (larger scale)!</p></li>
+<li class="fragment"><p>Income: ranges 20,000–200,000</p></li>
+<li class="fragment"><p>Age: ranges 20–80</p></li>
+<li class="fragment"><p>Distance dominated by income (larger scale)!</p></li>
 </ul>
 <p><strong>Scaling Methods</strong></p>
 <ul>
-<li><p><strong>Standardization</strong>: <span class="math inline">\(z =
+<li class="fragment"><p><strong>Standardization</strong>: <span class="math inline">\(z =
 \frac{x - \mu}{\sigma}\)</span> (mean=0, std=1)</p></li>
-<li><p><strong>Min-Max</strong>: <span class="math inline">\(x&#39; =
+<li class="fragment"><p><strong>Min-Max</strong>: <span class="math inline">\(x' =
 \frac{x - x_{min}}{x_{max} - x_{min}}\)</span> (range [0,1])</p></li>
 </ul>
 <p><strong>Rule</strong>: Always scale features for distance-based
 methods! <span style="color: gray">StandardScaler for Gaussian-like
 features, MinMaxScaler for bounded</span></p>
-</div>
-<div class="frame">
-<p><span>KNN: Curse of Dimensionality</span> <strong>The
+
+</section>
+
+<section>
+<h2>KNN: Curse of Dimensionality</h2>
+
+<p> <strong>The
 Problem</strong></p>
 <p>In high dimensions:</p>
 <ul>
-<li><p>All points become approximately equidistant</p></li>
-<li><p>“Nearest neighbor” becomes meaningless</p></li>
-<li><p>Exponentially more data needed</p></li>
+<li class="fragment"><p>All points become approximately equidistant</p></li>
+<li class="fragment"><p>“Nearest neighbor” becomes meaningless</p></li>
+<li class="fragment"><p>Exponentially more data needed</p></li>
 </ul>
 <p><strong>Solutions</strong></p>
 <ul>
-<li><p><strong>Dimensionality reduction</strong>: PCA before
+<li class="fragment"><p><strong>Dimensionality reduction</strong>: PCA before
 KNN</p></li>
-<li><p><strong>Feature selection</strong>: keep only relevant
+<li class="fragment"><p><strong>Feature selection</strong>: keep only relevant
 features</p></li>
-<li><p><strong>Use domain knowledge</strong>: select meaningful
+<li class="fragment"><p><strong>Use domain knowledge</strong>: select meaningful
 features</p></li>
 </ul>
 <p><span style="color: gray">KNN works best with moderate number of
 features (&lt;20)</span></p>
-</div>
-<div class="frame">
-<p><span>KNN: Computational Considerations</span> <strong>Time
+
+</section>
+
+<section>
+<h2>KNN: Computational Considerations</h2>
+
+<p> <strong>Time
 Complexity</strong></p>
 <ul>
-<li><p>Training: <span class="math inline">\(O(1)\)</span> – just store
+<li class="fragment"><p>Training: <span class="math inline">\(O(1)\)</span> – just store
 data!</p></li>
-<li><p>Prediction: <span class="math inline">\(O(nd)\)</span> for brute
-force (<span class="math inline">\(n\)</span> samples, <span
-class="math inline">\(d\)</span> features)</p></li>
+<li class="fragment"><p>Prediction: <span class="math inline">\(O(nd)\)</span> for brute
+force (<span class="math inline">\(n\)</span> samples, <span class="math inline">\(d\)</span> features)</p></li>
 </ul>
 <p><strong>Acceleration Techniques</strong></p>
 <ul>
-<li><p><strong>KD-Tree</strong>: <span class="math inline">\(O(d \log
-n)\)</span> average for low <span
-class="math inline">\(d\)</span></p></li>
-<li><p><strong>Ball Tree</strong>: Works better in higher
+<li class="fragment"><p><strong>KD-Tree</strong>: <span class="math inline">\(O(d \log
+n)\)</span> average for low <span class="math inline">\(d\)</span></p></li>
+<li class="fragment"><p><strong>Ball Tree</strong>: Works better in higher
 dimensions</p></li>
-<li><p><strong>Approximate NN</strong>: Trade accuracy for
+<li class="fragment"><p><strong>Approximate NN</strong>: Trade accuracy for
 speed</p></li>
 </ul>
 <p><strong>In scikit-learn</strong></p>
 <ul>
-<li><p><code>algorithm=’auto’</code>: automatically chooses
+<li class="fragment"><p><code>algorithm=’auto’</code>: automatically chooses
 best</p></li>
-<li><p><code>algorithm=’brute’</code>: force brute force</p></li>
+<li class="fragment"><p><code>algorithm=’brute’</code>: force brute force</p></li>
 </ul>
 <p><span style="color: gray">For large datasets: consider approximate
 methods or trees</span></p>
-</div>
-<div class="frame">
-<p><span>KNN: scikit-learn Implementation</span>
+
+</section>
+
+<section>
+<h2>KNN: scikit-learn Implementation</h2>
+
+<p>
 <strong>Classification</strong></p>
 <ul>
-<li><p><code>from sklearn.neighbors import KNeighborsClassifier</code></p></li>
-<li><p><code>knn = KNeighborsClassifier(n_neighbors=5)</code></p></li>
-<li><p><code>knn.fit(X_train, y_train)</code></p></li>
-<li><p><code>y_pred = knn.predict(X_test)</code></p></li>
+<li class="fragment"><p><code>from sklearn.neighbors import KNeighborsClassifier</code></p></li>
+<li class="fragment"><p><code>knn = KNeighborsClassifier(n_neighbors=5)</code></p></li>
+<li class="fragment"><p><code>knn.fit(X_train, y_train)</code></p></li>
+<li class="fragment"><p><code>y_pred = knn.predict(X_test)</code></p></li>
 </ul>
 <p><strong>Key Parameters</strong></p>
 <ul>
-<li><p><code>n_neighbors</code>: K value</p></li>
-<li><p><code>weights</code>: ’uniform’ or ’distance’</p></li>
-<li><p><code>metric</code>: ’euclidean’, ’manhattan’, etc.</p></li>
-<li><p><code>algorithm</code>: ’auto’, ’ball_tree’, ’kd_tree’,
+<li class="fragment"><p><code>n_neighbors</code>: K value</p></li>
+<li class="fragment"><p><code>weights</code>: ’uniform’ or ’distance’</p></li>
+<li class="fragment"><p><code>metric</code>: ’euclidean’, ’manhattan’, etc.</p></li>
+<li class="fragment"><p><code>algorithm</code>: ’auto’, ’ball_tree’, ’kd_tree’,
 ’brute’</p></li>
 </ul>
 <p><span style="color: gray">Also available: KNeighborsRegressor for
 regression tasks</span></p>
-</div>
+
 </section>
 
-<section id="k-means-clustering" class="title-slide slide level1">
-<h1>K-Means Clustering</h1>
-<div class="frame">
-<p><span>K-Means: The Idea</span> <strong>Goal</strong>: Partition <span
-class="math inline">\(n\)</span> points into <span
-class="math inline">\(K\)</span> clusters</p>
+<section>
+<h2>K-Means: The Idea</h2>
+
+<p> <strong>Goal</strong>: Partition <span class="math inline">\(n\)</span> points into <span class="math inline">\(K\)</span> clusters</p>
 <p><strong>Objective</strong>: Minimize within-cluster sum of squares
 (WCSS) <span class="math display">\[\sum_{k=1}^{K}\sum_{\mathbf{x} \in
-C_k}\|\mathbf{x} - \mu_k\|^2\]</span> where <span
-class="math inline">\(\mu_k\)</span> is the centroid of cluster <span
-class="math inline">\(C_k\)</span></p>
+C_k}\|\mathbf{x} - \mu_k\|^2\]</span> where <span class="math inline">\(\mu_k\)</span> is the centroid of cluster <span class="math inline">\(C_k\)</span></p>
 <p><strong>Key Insight</strong></p>
 <ul>
-<li><p>Each point assigned to nearest centroid</p></li>
-<li><p>Centroids are cluster means</p></li>
-<li><p>Iterative refinement until convergence</p></li>
+<li class="fragment"><p>Each point assigned to nearest centroid</p></li>
+<li class="fragment"><p>Centroids are cluster means</p></li>
+<li class="fragment"><p>Iterative refinement until convergence</p></li>
 </ul>
 <p><span style="color: gray">K-Means finds locally optimal solution (not
 guaranteed global)</span></p>
-</div>
-<div class="frame">
-<p><span>K-Means Algorithm</span></p>
+
+</section>
+
+<section>
+<h2>K-Means Algorithm</h2>
+
+
 <div class="algorithmic">
-<p><strong>Input</strong>: Data <span
-class="math inline">\(\mathbf{X}\)</span>, number of clusters <span
-class="math inline">\(K\)</span> Initialize <span
-class="math inline">\(K\)</span> centroids randomly
+<p><strong>Input</strong>: Data <span class="math inline">\(\mathbf{X}\)</span>, number of clusters <span class="math inline">\(K\)</span> Initialize <span class="math inline">\(K\)</span> centroids randomly
 <strong>Assignment</strong>: assign each point to nearest centroid
 <strong>Update</strong>: recompute centroids as cluster means
 <strong>return</strong> cluster assignments, centroids</p>
 </div>
 <p><strong>Convergence</strong></p>
 <ul>
-<li><p>Guaranteed to converge (WCSS decreases each iteration)</p></li>
-<li><p>May converge to local optimum</p></li>
+<li class="fragment"><p>Guaranteed to converge (WCSS decreases each iteration)</p></li>
+<li class="fragment"><p>May converge to local optimum</p></li>
 </ul>
-<p><span style="color: gray">Each iteration: <span
-class="math inline">\(O(nKd)\)</span> where <span
-class="math inline">\(n\)</span> = samples, <span
-class="math inline">\(K\)</span> = clusters, <span
-class="math inline">\(d\)</span> = features</span></p>
-</div>
-<div class="frame">
-<p><span>K-Means: Visualization</span></p>
+<p><span style="color: gray">Each iteration: <span class="math inline">\(O(nKd)\)</span> where <span class="math inline">\(n\)</span> = samples, <span class="math inline">\(K\)</span> = clusters, <span class="math inline">\(d\)</span> = features</span></p>
+
+</section>
+
+<section>
+<h2>K-Means: Visualization</h2>
+
+
 <div class="center">
-<p><embed data-src="03_kmeans_iteration/chart.pdf"
-style="width:55.0%" /></p>
+<p><embed data-src="03_kmeans_iteration/chart.pdf" style="width:55.0%"/></p>
 </div>
 <p><span style="color: gray">Final state after convergence: points
 colored by cluster, X marks centroids</span></p>
-</div>
-<div class="frame">
-<p><span>Initialization Strategies</span> <strong>Random
+
+</section>
+
+<section>
+<h2>Initialization Strategies</h2>
+
+<p> <strong>Random
 Initialization</strong></p>
 <ul>
-<li><p>Pick K random points as initial centroids</p></li>
-<li><p>Sensitive to choice, may get poor solution</p></li>
-<li><p>Run multiple times, keep best result</p></li>
+<li class="fragment"><p>Pick K random points as initial centroids</p></li>
+<li class="fragment"><p>Sensitive to choice, may get poor solution</p></li>
+<li class="fragment"><p>Run multiple times, keep best result</p></li>
 </ul>
 <p><strong>K-Means++ (Default in scikit-learn)</strong></p>
 <ul>
-<li><p>Smart initialization: spread out initial centroids</p></li>
-<li><p>First centroid: random</p></li>
-<li><p>Next centroids: probability proportional to squared
+<li class="fragment"><p>Smart initialization: spread out initial centroids</p></li>
+<li class="fragment"><p>First centroid: random</p></li>
+<li class="fragment"><p>Next centroids: probability proportional to squared
 distance</p></li>
 </ul>
 <p><strong>Result</strong>: Much better starting point, fewer iterations
 <span style="color: gray">K-Means++ gives provably better initialization
 with theoretical guarantees</span></p>
-</div>
-<div class="frame">
-<p><span>Choosing K: Elbow Method</span></p>
+
+</section>
+
+<section>
+<h2>Choosing K: Elbow Method</h2>
+
+
 <div class="center">
-<p><embed data-src="04_elbow_method/chart.pdf"
-style="width:55.0%" /></p>
+<p><embed data-src="04_elbow_method/chart.pdf" style="width:55.0%"/></p>
 </div>
 <p><strong>Interpretation</strong>: Look for the “elbow” where WCSS
 stops dropping sharply</p>
-</div>
-<div class="frame">
-<p><span>Choosing K: Silhouette Score</span> <strong>For each point
+
+</section>
+
+<section>
+<h2>Choosing K: Silhouette Score</h2>
+
+<p> <strong>For each point
 <span class="math inline">\(i\)</span></strong></p>
 <ul>
-<li><p><span class="math inline">\(a(i)\)</span>: average distance to
+<li class="fragment"><p><span class="math inline">\(a(i)\)</span>: average distance to
 points in same cluster</p></li>
-<li><p><span class="math inline">\(b(i)\)</span>: average distance to
+<li class="fragment"><p><span class="math inline">\(b(i)\)</span>: average distance to
 points in nearest other cluster</p></li>
 </ul>
 <p><strong>Silhouette score</strong> <span class="math display">\[s(i) =
 \frac{b(i) - a(i)}{\max(a(i), b(i))}\]</span></p>
 <ul>
-<li><p>Range: <span class="math inline">\([-1, 1]\)</span></p></li>
-<li><p><span class="math inline">\(s \approx 1\)</span>: point is
+<li class="fragment"><p>Range: <span class="math inline">\([-1, 1]\)</span></p></li>
+<li class="fragment"><p><span class="math inline">\(s \approx 1\)</span>: point is
 well-matched to cluster</p></li>
-<li><p><span class="math inline">\(s \approx 0\)</span>: point is on
+<li class="fragment"><p><span class="math inline">\(s \approx 0\)</span>: point is on
 boundary</p></li>
-<li><p><span class="math inline">\(s &lt; 0\)</span>: point may be in
+<li class="fragment"><p><span class="math inline">\(s &lt; 0\)</span>: point may be in
 wrong cluster</p></li>
 </ul>
 <p><span style="color: gray">Average silhouette score summarizes overall
 clustering quality</span></p>
-</div>
-<div class="frame">
-<p><span>Silhouette Plot</span></p>
+
+</section>
+
+<section>
+<h2>Silhouette Plot</h2>
+
+
 <div class="center">
-<p><embed data-src="05_silhouette/chart.pdf" style="width:55.0%" /></p>
+<p><embed data-src="05_silhouette/chart.pdf" style="width:55.0%"/></p>
 </div>
 <p><span style="color: gray">All clusters should have similar width and
 scores above average line</span></p>
-</div>
-<div class="frame">
-<p><span>K-Means: Decision Regions</span></p>
+
+</section>
+
+<section>
+<h2>K-Means: Decision Regions</h2>
+
+
 <div class="center">
-<p><embed data-src="06_voronoi/chart.pdf" style="width:55.0%" /></p>
+<p><embed data-src="06_voronoi/chart.pdf" style="width:55.0%"/></p>
 </div>
 <p><span style="color: gray">K-Means creates Voronoi tessellation around
 centroids</span></p>
-</div>
-<div class="frame">
-<p><span>K-Means Assumptions</span> <strong>What K-Means
+
+</section>
+
+<section>
+<h2>K-Means Assumptions</h2>
+
+<p> <strong>What K-Means
 Assumes</strong></p>
 <ul>
-<li><p>Clusters are spherical (isotropic)</p></li>
-<li><p>Clusters have similar sizes</p></li>
-<li><p>Clusters have similar densities</p></li>
+<li class="fragment"><p>Clusters are spherical (isotropic)</p></li>
+<li class="fragment"><p>Clusters have similar sizes</p></li>
+<li class="fragment"><p>Clusters have similar densities</p></li>
 </ul>
 <p><strong>When K-Means Fails</strong></p>
 <ul>
-<li><p>Non-convex shapes (e.g., crescents)</p></li>
-<li><p>Very different cluster sizes</p></li>
-<li><p>Different densities</p></li>
-<li><p>Outliers (pull centroids away)</p></li>
+<li class="fragment"><p>Non-convex shapes (e.g., crescents)</p></li>
+<li class="fragment"><p>Very different cluster sizes</p></li>
+<li class="fragment"><p>Different densities</p></li>
+<li class="fragment"><p>Outliers (pull centroids away)</p></li>
 </ul>
 <p><span style="color: gray">Consider DBSCAN or Gaussian Mixture Models
 for these cases</span></p>
-</div>
-<div class="frame">
-<p><span>K-Means Variants</span> <strong>Mini-Batch K-Means</strong></p>
+
+</section>
+
+<section>
+<h2>K-Means Variants</h2>
+
+<p> <strong>Mini-Batch K-Means</strong></p>
 <ul>
-<li><p>Uses random subsets for updates</p></li>
-<li><p>Much faster for large datasets</p></li>
-<li><p>Slightly worse results</p></li>
+<li class="fragment"><p>Uses random subsets for updates</p></li>
+<li class="fragment"><p>Much faster for large datasets</p></li>
+<li class="fragment"><p>Slightly worse results</p></li>
 </ul>
 <p><strong>K-Medoids</strong></p>
 <ul>
-<li><p>Centroids must be actual data points</p></li>
-<li><p>More robust to outliers</p></li>
-<li><p>Slower than K-Means</p></li>
+<li class="fragment"><p>Centroids must be actual data points</p></li>
+<li class="fragment"><p>More robust to outliers</p></li>
+<li class="fragment"><p>Slower than K-Means</p></li>
 </ul>
 <p><strong>K-Means for Mixed Data</strong></p>
 <ul>
-<li><p>K-Modes: for categorical data</p></li>
-<li><p>K-Prototypes: mixed continuous and categorical</p></li>
+<li class="fragment"><p>K-Modes: for categorical data</p></li>
+<li class="fragment"><p>K-Prototypes: mixed continuous and categorical</p></li>
 </ul>
 <p><span style="color: gray">Mini-Batch K-Means: good for &gt;10k
 samples</span></p>
-</div>
-<div class="frame">
-<p><span>K-Means: scikit-learn</span> <strong>Basic Usage</strong></p>
+
+</section>
+
+<section>
+<h2>K-Means: scikit-learn</h2>
+
+<p> <strong>Basic Usage</strong></p>
 <ul>
-<li><p><code>from sklearn.cluster import KMeans</code></p></li>
-<li><p><code>kmeans = KMeans(n_clusters=3, random_state=42)</code></p></li>
-<li><p><code>labels = kmeans.fit_predict(X)</code></p></li>
-<li><p><code>centroids = kmeans.cluster_centers_</code></p></li>
+<li class="fragment"><p><code>from sklearn.cluster import KMeans</code></p></li>
+<li class="fragment"><p><code>kmeans = KMeans(n_clusters=3, random_state=42)</code></p></li>
+<li class="fragment"><p><code>labels = kmeans.fit_predict(X)</code></p></li>
+<li class="fragment"><p><code>centroids = kmeans.cluster_centers_</code></p></li>
 </ul>
 <p><strong>Key Parameters</strong></p>
 <ul>
-<li><p><code>n_clusters</code>: K (required)</p></li>
-<li><p><code>init</code>: ’k-means++’ (default) or ’random’</p></li>
-<li><p><code>n_init</code>: number of runs (default 10)</p></li>
-<li><p><code>max_iter</code>: max iterations per run</p></li>
+<li class="fragment"><p><code>n_clusters</code>: K (required)</p></li>
+<li class="fragment"><p><code>init</code>: ’k-means++’ (default) or ’random’</p></li>
+<li class="fragment"><p><code>n_init</code>: number of runs (default 10)</p></li>
+<li class="fragment"><p><code>max_iter</code>: max iterations per run</p></li>
 </ul>
 <p><span style="color: gray">inertia_ attribute gives WCSS after
 fitting</span></p>
-</div>
+
 </section>
 
-<section id="comparison-and-applications"
-class="title-slide slide level1">
-<h1>Comparison and Applications</h1>
-<div class="frame">
-<p><span>KNN vs K-Means: Key Differences</span></p>
+<section>
+<h2>KNN vs K-Means: Key Differences</h2>
+
+
 <div class="center">
 <table>
 <thead>
@@ -478,321 +542,315 @@ class="title-slide slide level1">
 </div>
 <p><span style="color: gray">The “K” in KNN and K-Means mean completely
 different things!</span></p>
-</div>
-<div class="frame">
-<p><span>Finance Application: Customer Segmentation</span>
+
+</section>
+
+<section>
+<h2>Finance Application: Customer Segmentation</h2>
+
+<p>
 <strong>Problem</strong>: Group customers for targeted marketing</p>
 <p><strong>Features</strong></p>
 <ul>
-<li><p>Transaction frequency</p></li>
-<li><p>Average transaction amount</p></li>
-<li><p>Account balance</p></li>
-<li><p>Product holdings</p></li>
+<li class="fragment"><p>Transaction frequency</p></li>
+<li class="fragment"><p>Average transaction amount</p></li>
+<li class="fragment"><p>Account balance</p></li>
+<li class="fragment"><p>Product holdings</p></li>
 </ul>
 <p><strong>K-Means Solution</strong></p>
 <ul>
-<li><p>Cluster into segments (e.g., K=4)</p></li>
-<li><p>Profile each segment</p></li>
-<li><p>Tailor offerings to segment needs</p></li>
+<li class="fragment"><p>Cluster into segments (e.g., K=4)</p></li>
+<li class="fragment"><p>Profile each segment</p></li>
+<li class="fragment"><p>Tailor offerings to segment needs</p></li>
 </ul>
 <p><span style="color: gray">Example segments: High-value frequent,
 Dormant, New/Growing, Price-sensitive</span></p>
-</div>
-<div class="frame">
-<p><span>Finance Application: Fraud Detection</span>
+
+</section>
+
+<section>
+<h2>Finance Application: Fraud Detection</h2>
+
+<p>
 <strong>Problem</strong>: Flag suspicious transactions</p>
 <p><strong>KNN Approach</strong></p>
 <ul>
-<li><p>Features: amount, time, location, merchant category</p></li>
-<li><p>Find K similar past transactions</p></li>
-<li><p>If most neighbors are fraud, flag as suspicious</p></li>
+<li class="fragment"><p>Features: amount, time, location, merchant category</p></li>
+<li class="fragment"><p>Find K similar past transactions</p></li>
+<li class="fragment"><p>If most neighbors are fraud, flag as suspicious</p></li>
 </ul>
 <p><strong>K-Means Approach</strong></p>
 <ul>
-<li><p>Cluster “normal” transactions</p></li>
-<li><p>New transaction far from all centroids = anomaly</p></li>
-<li><p>Combined with distance threshold</p></li>
+<li class="fragment"><p>Cluster “normal” transactions</p></li>
+<li class="fragment"><p>New transaction far from all centroids = anomaly</p></li>
+<li class="fragment"><p>Combined with distance threshold</p></li>
 </ul>
 <p><span style="color: gray">KNN needs labeled fraud examples, K-Means
 detects deviation from normal</span></p>
-</div>
-<div class="frame">
-<p><span>When to Use What</span> <strong>Use KNN When</strong></p>
+
+</section>
+
+<section>
+<h2>When to Use What</h2>
+
+<p> <strong>Use KNN When</strong></p>
 <ul>
-<li><p>You have labeled training data</p></li>
-<li><p>Local patterns matter (non-linear boundaries)</p></li>
-<li><p>Interpretability: “similar to these examples”</p></li>
-<li><p>Moderate dataset size</p></li>
+<li class="fragment"><p>You have labeled training data</p></li>
+<li class="fragment"><p>Local patterns matter (non-linear boundaries)</p></li>
+<li class="fragment"><p>Interpretability: “similar to these examples”</p></li>
+<li class="fragment"><p>Moderate dataset size</p></li>
 </ul>
 <p><strong>Use K-Means When</strong></p>
 <ul>
-<li><p>No labels available</p></li>
-<li><p>Looking for natural groupings</p></li>
-<li><p>Clusters are roughly spherical</p></li>
-<li><p>Need fast clustering of large data</p></li>
+<li class="fragment"><p>No labels available</p></li>
+<li class="fragment"><p>Looking for natural groupings</p></li>
+<li class="fragment"><p>Clusters are roughly spherical</p></li>
+<li class="fragment"><p>Need fast clustering of large data</p></li>
 </ul>
 <p><span style="color: gray">K-Means often used as preprocessing before
 supervised learning</span></p>
-</div>
-<div class="frame">
-<p><span>Decision Framework</span></p>
+
+</section>
+
+<section>
+<h2>Decision Framework</h2>
+
+
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf"
-style="width:60.0%" /></p>
+<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:60.0%"/></p>
 </div>
 <p><span style="color: gray">Start with KNN for classification, K-Means
 for clustering</span></p>
-</div>
-<div class="frame">
-<p><span>Alternatives to Consider</span> <strong>Instead of
+
+</section>
+
+<section>
+<h2>Alternatives to Consider</h2>
+
+<p> <strong>Instead of
 KNN</strong></p>
 <ul>
-<li><p>Large data: use ball tree or approximate NN</p></li>
-<li><p>Need probability: logistic regression</p></li>
-<li><p>Many features: random forest</p></li>
+<li class="fragment"><p>Large data: use ball tree or approximate NN</p></li>
+<li class="fragment"><p>Need probability: logistic regression</p></li>
+<li class="fragment"><p>Many features: random forest</p></li>
 </ul>
 <p><strong>Instead of K-Means</strong></p>
 <ul>
-<li><p>Unknown K: DBSCAN (density-based)</p></li>
-<li><p>Hierarchical structure: agglomerative clustering</p></li>
-<li><p>Soft assignments: Gaussian Mixture Models</p></li>
-<li><p>Non-spherical: spectral clustering</p></li>
+<li class="fragment"><p>Unknown K: DBSCAN (density-based)</p></li>
+<li class="fragment"><p>Hierarchical structure: agglomerative clustering</p></li>
+<li class="fragment"><p>Soft assignments: Gaussian Mixture Models</p></li>
+<li class="fragment"><p>Non-spherical: spectral clustering</p></li>
 </ul>
 <p><span style="color: gray">DBSCAN automatically determines number of
 clusters</span></p>
-</div>
+
 </section>
 
-<section id="summary" class="title-slide slide level1">
-<h1>Summary</h1>
-<div class="frame">
-<p><span>Key Takeaways</span> <strong>K-Nearest Neighbors</strong></p>
+<section>
+<h2>Key Takeaways</h2>
+
+<p> <strong>K-Nearest Neighbors</strong></p>
 <ul>
-<li><p>Instance-based, lazy learner</p></li>
-<li><p>Scale features, choose K via cross-validation</p></li>
-<li><p>Works best with moderate features, moderate data size</p></li>
+<li class="fragment"><p>Instance-based, lazy learner</p></li>
+<li class="fragment"><p>Scale features, choose K via cross-validation</p></li>
+<li class="fragment"><p>Works best with moderate features, moderate data size</p></li>
 </ul>
 <p><strong>K-Means</strong></p>
 <ul>
-<li><p>Iterative: assign points, update centroids</p></li>
-<li><p>K-Means++ for initialization, elbow/silhouette for K</p></li>
-<li><p>Assumes spherical, similar-size clusters</p></li>
+<li class="fragment"><p>Iterative: assign points, update centroids</p></li>
+<li class="fragment"><p>K-Means++ for initialization, elbow/silhouette for K</p></li>
+<li class="fragment"><p>Assumes spherical, similar-size clusters</p></li>
 </ul>
 <p><strong>Common Considerations</strong></p>
 <ul>
-<li><p>Feature scaling is critical for both</p></li>
-<li><p>“K” means different things in each algorithm</p></li>
+<li class="fragment"><p>Feature scaling is critical for both</p></li>
+<li class="fragment"><p>“K” means different things in each algorithm</p></li>
 </ul>
 <p><span style="color: gray">Both are foundational algorithms: simple,
 interpretable, widely used</span></p>
-</div>
-<div class="frame">
-<p><span>References</span> <strong>Textbooks</strong></p>
+
+</section>
+
+<section>
+<h2>References</h2>
+
+<p> <strong>Textbooks</strong></p>
 <ul>
-<li><p>James et al. (2021). <em>ISLR</em>, Chapters 2, 12</p></li>
-<li><p>Hastie et al. (2009). <em>ESL</em>, Chapters 13, 14</p></li>
+<li class="fragment"><p>James et al. (2021). <em>ISLR</em>, Chapters 2, 12</p></li>
+<li class="fragment"><p>Hastie et al. (2009). <em>ESL</em>, Chapters 13, 14</p></li>
 </ul>
 <p><strong>Key Papers</strong></p>
 <ul>
-<li><p>Arthur &amp; Vassilvitskii (2007). K-Means++</p></li>
-<li><p>Cover &amp; Hart (1967). Nearest Neighbor Pattern
+<li class="fragment"><p>Arthur &amp; Vassilvitskii (2007). K-Means++</p></li>
+<li class="fragment"><p>Cover &amp; Hart (1967). Nearest Neighbor Pattern
 Classification</p></li>
 </ul>
 <p><strong>Next Lecture</strong></p>
 <ul>
-<li><p>L04: Random Forests</p></li>
-<li><p>Ensemble methods and feature importance</p></li>
+<li class="fragment"><p>L04: Random Forests</p></li>
+<li class="fragment"><p>Ensemble methods and feature importance</p></li>
 </ul>
-</div>
+
 </section>
+        </div>
+
+        <!-- Custom footer -->
+        <div class="slide-footer">
+            <div class="footer-left">Methods and Algorithms</div>
+            <div class="footer-center">MSc Data Science</div>
+            <div class="footer-right"></div>
+        </div>
     </div>
-  </div>
 
-  <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
+    <!-- Reveal.js core -->
+    <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
 
-  <!-- reveal.js plugins -->
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
+    <!-- Reveal.js plugins -->
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
 
-  <script>
+    <!-- Menu plugin -->
+    <script src="https://unpkg.com/reveal.js-menu@2.1.0/menu.js"></script>
 
-      // Full list of configuration options available at:
-      // https://revealjs.com/config/
-      Reveal.initialize({
-        // Display controls in the bottom right corner
-        controls: true,
+    <!-- Chalkboard plugin -->
+    <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
-        // Help the user learn the controls by providing hints, for example by
-        // bouncing the down arrow when they first encounter a vertical slide
-        controlsTutorial: true,
+    <script>
+        Reveal.initialize({
+            // Display settings
+            controls: true,
+            controlsTutorial: true,
+            controlsLayout: 'bottom-right',
+            progress: true,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            hash: true,
+            history: true,
 
-        // Determines where controls appear, "edges" or "bottom-right"
-        controlsLayout: 'bottom-right',
+            // Navigation
+            keyboard: true,
+            overview: true,
+            touch: true,
+            loop: false,
+            navigationMode: 'default',
 
-        // Visibility rule for backwards navigation arrows; "faded", "hidden"
-        // or "visible"
-        controlsBackArrows: 'faded',
+            // Transitions
+            transition: 'slide',
+            transitionSpeed: 'default',
+            backgroundTransition: 'fade',
 
-        // Display a presentation progress bar
-        progress: true,
+            // Sizing (16:9 aspect ratio)
+            width: 1600,
+            height: 900,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            center: false,
 
-        // Display the page number of the current slide
-        slideNumber: true,
+            // Fragments
+            fragments: true,
+            fragmentInURL: false,
 
-        // 'all', 'print', or 'speaker'
-        showSlideNumber: 'all',
+            // Auto-slide (disabled)
+            autoSlide: 0,
 
-        // Add the current slide number to the URL hash so that reloading the
-        // page/copying the URL will return you to the same slide
-        hash: true,
+            // Math configuration
+            math: {
+                mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+                config: 'TeX-AMS_HTML-full',
+                tex: {
+                    inlineMath: [['\\(', '\\)']],
+                    displayMath: [['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                options: {
+                    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                }
+            },
 
-        // Start with 1 for the hash rather than 0
-        hashOneBasedIndex: false,
+            // Menu plugin configuration
+            menu: {
+                side: 'left',
+                width: 'normal',
+                numbers: true,
+                titleSelector: 'h1, h2',
+                useTextContentForMissingTitles: true,
+                hideMissingTitles: false,
+                markers: true,
+                custom: false,
+                themes: [
+                    { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
+                    { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
+                    { name: 'White', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css' }
+                ],
+                transitions: true,
+                openButton: true,
+                openSlideNumber: false,
+                keyboard: true,
+                sticky: false,
+                autoOpen: true
+            },
 
-        // Flags if we should monitor the hash and change slides accordingly
-        respondToHashChanges: true,
+            // Chalkboard plugin configuration
+            chalkboard: {
+                boardmarkerWidth: 3,
+                chalkWidth: 4,
+                chalkEffect: 0.5,
+                storage: null,
+                src: null,
+                readOnly: false,
+                toggleChalkboardButton: { left: "30px", bottom: "30px", top: "auto", right: "auto" },
+                toggleNotesButton: { left: "70px", bottom: "30px", top: "auto", right: "auto" },
+                colorButtons: true,
+                boardHandle: true,
+                transition: 800,
+                theme: "chalkboard"
+            },
 
-        // Push each slide change to the browser history
-        history: false,
+            // Plugins to load
+            plugins: [
+                RevealMath,
+                RevealNotes,
+                RevealSearch,
+                RevealZoom,
+                RevealHighlight,
+                RevealMenu,
+                RevealChalkboard
+            ]
+        });
 
-        // Enable keyboard shortcuts for navigation
-        keyboard: true,
+        // Update footer with slide number
+        Reveal.on('slidechanged', event => {
+            const footer = document.querySelector('.slide-footer .footer-right');
+            if (footer) {
+                const current = event.indexh + 1;
+                const total = Reveal.getTotalSlides();
+                footer.textContent = `${current} / ${total}`;
+            }
+        });
 
-        // Enable the slide overview mode
-        overview: true,
+        // Initial footer update
+        Reveal.on('ready', event => {
+            const footer = document.querySelector('.slide-footer .footer-right');
+            if (footer) {
+                const total = Reveal.getTotalSlides();
+                footer.textContent = `1 / ${total}`;
+            }
+        });
 
-        // Disables the default reveal.js slide layout (scaling and centering)
-        // so that you can use custom CSS layout
-        disableLayout: false,
-
-        // Vertical centering of slides
-        center: true,
-
-        // Enables touch navigation on devices with touch input
-        touch: true,
-
-        // Loop the presentation
-        loop: false,
-
-        // Change the presentation direction to be RTL
-        rtl: false,
-
-        // see https://revealjs.com/vertical-slides/#navigation-mode
-        navigationMode: 'default',
-
-        // Randomizes the order of slides each time the presentation loads
-        shuffle: false,
-
-        // Turns fragments on and off globally
-        fragments: true,
-
-        // Flags whether to include the current fragment in the URL,
-        // so that reloading brings you to the same fragment position
-        fragmentInURL: true,
-
-        // Flags if the presentation is running in an embedded mode,
-        // i.e. contained within a limited portion of the screen
-        embedded: false,
-
-        // Flags if we should show a help overlay when the questionmark
-        // key is pressed
-        help: true,
-
-        // Flags if it should be possible to pause the presentation (blackout)
-        pause: true,
-
-        // Flags if speaker notes should be visible to all viewers
-        showNotes: false,
-
-        // Global override for autoplaying embedded media (null/true/false)
-        autoPlayMedia: null,
-
-        // Global override for preloading lazy-loaded iframes (null/true/false)
-        preloadIframes: null,
-
-        // Number of milliseconds between automatically proceeding to the
-        // next slide, disabled when set to 0, this value can be overwritten
-        // by using a data-autoslide attribute on your slides
-        autoSlide: 0,
-
-        // Stop auto-sliding after user input
-        autoSlideStoppable: true,
-
-        // Use this method for navigation when auto-sliding
-        autoSlideMethod: null,
-
-        // Specify the average time in seconds that you think you will spend
-        // presenting each slide. This is used to show a pacing timer in the
-        // speaker view
-        defaultTiming: null,
-
-        // Enable slide navigation via mouse wheel
-        mouseWheel: false,
-
-        // The display mode that will be used to show slides
-        display: 'block',
-
-        // Hide cursor if inactive
-        hideInactiveCursor: true,
-
-        // Time before the cursor is hidden (in ms)
-        hideCursorTime: 5000,
-
-        // Opens links in an iframe preview overlay
-        previewLinks: false,
-
-        // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'slide',
-
-        // Transition speed (default/fast/slow)
-        transitionSpeed: 'default',
-
-        // Transition style for full page slide backgrounds
-        // (none/fade/slide/convex/concave/zoom)
-        backgroundTransition: 'fade',
-
-        // Number of slides away from the current that are visible
-        viewDistance: 3,
-
-        // Number of slides away from the current that are visible on mobile
-        // devices. It is advisable to set this to a lower number than
-        // viewDistance in order to save resources.
-        mobileViewDistance: 2,
-
-        // The "normal" size of the presentation, aspect ratio will be preserved
-        // when the presentation is scaled to fit different resolutions. Can be
-        // specified using percentage units.
-        width: 1600,
-
-        height: 900,
-
-        math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
-          config: 'TeX-AMS_HTML-full',
-          tex2jax: {
-            inlineMath: [['\\(','\\)']],
-            displayMath: [['\\[','\\]']],
-            balanceBraces: true,
-            processEscapes: false,
-            processRefs: true,
-            processEnvironments: true,
-            preview: 'TeX',
-            skipTags: ['script','noscript','style','textarea','pre','code'],
-            ignoreClass: 'tex2jax_ignore',
-            processClass: 'tex2jax_process'
-          },
-        },
-
-        // reveal.js plugins
-        plugins: [
-          RevealMath,
-          RevealNotes,
-          RevealSearch,
-          RevealZoom
-        ]
-      });
+        // Keyboard shortcuts info
+        console.log('Keyboard shortcuts:');
+        console.log('  S - Speaker notes');
+        console.log('  B - Chalkboard');
+        console.log('  C - Canvas (draw on slide)');
+        console.log('  M - Menu');
+        console.log('  O - Overview');
+        console.log('  F - Fullscreen');
+        console.log('  ? - Help');
     </script>
-    </body>
+</body>
 </html>

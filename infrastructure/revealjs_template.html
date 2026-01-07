@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="pandoc + custom post-processor">
-    <meta name="author" content="Methods and Algorithms – MSc Data Science">
-    <title>L04: Random Forests</title>
+    <meta name="author" content="{{AUTHOR}}">
+    <title>{{TITLE}}</title>
 
     <!-- Reveal.js core -->
     <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
@@ -48,135 +48,7 @@
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide">
-<h1 class="title">L04: Random Forests</h1>
-<p class="subtitle">Ensemble Learning for Robust Predictions</p>
-<p class="author">Methods and Algorithms – MSc Data Science</p>
-</section>
-
-<section>
-<h2>Learning Objectives</h2>
-
-<p> <strong>By the end of this lecture,
-you will be able to:</strong></p>
-<ol>
-<li class="fragment"><p>Explain how decision trees partition feature space</p></li>
-<li class="fragment"><p>Implement Random Forests using bagging and feature
-randomization</p></li>
-<li class="fragment"><p>Interpret feature importance and out-of-bag error</p></li>
-<li class="fragment"><p>Apply ensemble methods to fraud detection problems</p></li>
-</ol>
-<p><strong>Finance Application:</strong> Fraud detection with
-interpretable feature importance <span style="color: gray">From single
-models to ensemble methods that combine many weak learners</span></p>
-
-</section>
-
-<section>
-<h2>The Business Problem</h2>
-
-<p> <strong>Fraud Detection
-Challenge</strong></p>
-<ul>
-<li class="fragment"><p>Need high accuracy: fraudulent transactions cost
-millions</p></li>
-<li class="fragment"><p>Need interpretability: explain why transaction flagged</p></li>
-<li class="fragment"><p>Complex patterns: fraud evolves and adapts</p></li>
-</ul>
-<p><strong>Why Random Forests?</strong></p>
-<ul>
-<li class="fragment"><p>Combines many trees for robust predictions</p></li>
-<li class="fragment"><p>Built-in feature importance ranking</p></li>
-<li class="fragment"><p>Handles non-linear relationships naturally</p></li>
-</ul>
-<p><span style="color: gray">Ensemble methods: “wisdom of crowds” for
-machine learning</span></p>
-
-</section>
-
-<section>
-<h2>Decision Tree Structure</h2>
-
-
-<div class="center">
-<p><embed data-src="01_decision_tree/chart.pdf" style="width:60.0%"/></p>
-</div>
-<p><span style="color: gray">Trees split data using simple rules at each
-node until reaching a prediction</span></p>
-
-</section>
-
-<section>
-<h2>Feature Importance</h2>
-
-
-<div class="center">
-<p><embed data-src="02_feature_importance/chart.pdf" style="width:60.0%"/></p>
-</div>
-<p><span style="color: gray">Random Forests automatically rank which
-features matter most for prediction</span></p>
-
-</section>
-
-<section>
-<h2>Bootstrap Aggregating (Bagging)</h2>
-
-
-<div class="center">
-<p><embed data-src="03_bootstrap/chart.pdf" style="width:60.0%"/></p>
-</div>
-<p><span style="color: gray">Each tree trains on a different random
-sample, reducing overfitting</span></p>
-
-</section>
-
-<section>
-<h2>Out-of-Bag Error</h2>
-
-
-<div class="center">
-<p><embed data-src="04_oob_error/chart.pdf" style="width:60.0%"/></p>
-</div>
-<p><span style="color: gray">OOB error provides free cross-validation
-without held-out test set</span></p>
-
-</section>
-
-<section>
-<h2>Ensemble Voting</h2>
-
-
-<div class="center">
-<p><embed data-src="05_ensemble_voting/chart.pdf" style="width:55.0%"/></p>
-</div>
-<p><span style="color: gray">Final prediction combines votes from all
-trees (majority for classification)</span></p>
-
-</section>
-
-<section>
-<h2>Bias-Variance Tradeoff</h2>
-
-
-<div class="center">
-<p><embed data-src="06_bias_variance/chart.pdf" style="width:65.0%"/></p>
-</div>
-<p><span style="color: gray">Averaging many high-variance trees produces
-low-variance ensemble</span></p>
-
-</section>
-
-<section>
-<h2>Decision Framework</h2>
-
-
-<div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:65.0%"/></p>
-</div>
-<p><span style="color: gray">Random Forests excel when accuracy and
-feature importance both matter</span></p>
-
-</section>
+            {{SLIDES_CONTENT}}
         </div>
 
         <!-- Custom footer -->

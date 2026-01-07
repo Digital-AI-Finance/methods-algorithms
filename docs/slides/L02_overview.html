@@ -1,345 +1,350 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="author" content="Methods and Algorithms – MSc Data Science">
-  <title>L02: Logistic Regression</title>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reveal.css">
-  <style>
-    .reveal .sourceCode {  /* see #7635 */
-      overflow: visible;
-    }
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-  </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css" id="theme">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="pandoc + custom post-processor">
+    <meta name="author" content="Methods and Algorithms – MSc Data Science">
+    <title>L02: Logistic Regression</title>
+
+    <!-- Reveal.js core -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css" id="theme">
+
+    <!-- Custom ML theme -->
+    <link rel="stylesheet" href="css/ml-theme.css">
+
+    <!-- Menu plugin CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js-menu@2.1.0/menu.css">
+
+    <!-- Chalkboard plugin CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js-plugins@latest/chalkboard/style.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Additional inline styles */
+        .reveal .sourceCode {
+            overflow: visible;
+        }
+        code {
+            white-space: pre-wrap;
+        }
+        span.smallcaps {
+            font-variant: small-caps;
+        }
+        div.columns {
+            display: flex;
+            gap: min(4vw, 1.5em);
+        }
+        div.column {
+            flex: auto;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
-  <div class="reveal">
-    <div class="slides">
-
-<section id="title-slide">
-  <h1 class="title">L02: Logistic Regression</h1>
-  <p class="subtitle">Classification with Probability Estimates</p>
-  <p class="author">Methods and Algorithms – MSc Data Science</p>
+    <div class="reveal">
+        <div class="slides">
+            <section id="title-slide">
+<h1 class="title">L02: Logistic Regression</h1>
+<p class="subtitle">Classification with Probability Estimates</p>
+<p class="author">Methods and Algorithms – MSc Data Science</p>
 </section>
 
-<section class="slide level2">
+<section>
+<h2>Learning Objectives</h2>
 
-<div class="frame">
-
-</div>
-<div class="frame">
-<p><span>Learning Objectives</span> <strong>By the end of this lecture,
+<p> <strong>By the end of this lecture,
 you will be able to:</strong></p>
 <ol>
-<li><p>Explain how logistic regression models binary outcomes</p></li>
-<li><p>Derive the maximum likelihood estimation for logistic
+<li class="fragment"><p>Explain how logistic regression models binary outcomes</p></li>
+<li class="fragment"><p>Derive the maximum likelihood estimation for logistic
 regression</p></li>
-<li><p>Interpret classification metrics (precision, recall,
+<li class="fragment"><p>Interpret classification metrics (precision, recall,
 AUC)</p></li>
-<li><p>Apply logistic regression for credit scoring decisions</p></li>
+<li class="fragment"><p>Apply logistic regression for credit scoring decisions</p></li>
 </ol>
-<p><strong>Finance Application:</strong> Credit default prediction <span
-style="color: gray">These objectives span Bloom’s levels: Understand,
+<p><strong>Finance Application:</strong> Credit default prediction <span style="color: gray">These objectives span Bloom’s levels: Understand,
 Apply, Analyze</span></p>
-</div>
-<div class="frame">
-<p><span>Why Logistic Regression?</span> <strong>The Business
+
+</section>
+
+<section>
+<h2>Why Logistic Regression?</h2>
+
+<p> <strong>The Business
 Problem</strong></p>
 <ul>
-<li><p>Banks must decide: approve or reject loan applications</p></li>
-<li><p>Need probability of default, not just yes/no prediction</p></li>
-<li><p>Regulatory requirement: interpretable, auditable models</p></li>
+<li class="fragment"><p>Banks must decide: approve or reject loan applications</p></li>
+<li class="fragment"><p>Need probability of default, not just yes/no prediction</p></li>
+<li class="fragment"><p>Regulatory requirement: interpretable, auditable models</p></li>
 </ul>
 <p><strong>Why Not Linear Regression?</strong></p>
 <ul>
-<li><p>Linear regression can predict values outside [0,1]</p></li>
-<li><p>Binary outcomes need probability-based approach</p></li>
-<li><p>Logistic regression outputs calibrated probabilities</p></li>
+<li class="fragment"><p>Linear regression can predict values outside [0,1]</p></li>
+<li class="fragment"><p>Binary outcomes need probability-based approach</p></li>
+<li class="fragment"><p>Logistic regression outputs calibrated probabilities</p></li>
 </ul>
 <p><span style="color: gray">Logistic regression: the industry standard
 for credit scoring since 1980s</span></p>
-</div>
-<div class="frame">
-<p><span>The Sigmoid Function</span> <strong>From Linear to
+
+</section>
+
+<section>
+<h2>The Sigmoid Function</h2>
+
+<p> <strong>From Linear to
 Probability</strong></p>
 <ul>
-<li><p>Maps any real number to (0, 1) range</p></li>
-<li><p>Smooth, differentiable, interpretable</p></li>
+<li class="fragment"><p>Maps any real number to (0, 1) range</p></li>
+<li class="fragment"><p>Smooth, differentiable, interpretable</p></li>
 </ul>
 <div class="center">
-<p><embed data-src="01_sigmoid_function/chart.pdf"
-style="width:55.0%" /></p>
+<p><embed data-src="01_sigmoid_function/chart.pdf" style="width:55.0%"/></p>
 </div>
 <p><span style="color: gray"><span class="math inline">\(\sigma(z) =
 1/(1+e^{-z})\)</span> transforms linear combination to
 probability</span></p>
-</div>
-<div class="frame">
-<p><span>Decision Boundary</span></p>
+
+</section>
+
+<section>
+<h2>Decision Boundary</h2>
+
+
 <div class="center">
-<p><embed data-src="02_decision_boundary/chart.pdf"
-style="width:65.0%" /></p>
+<p><embed data-src="02_decision_boundary/chart.pdf" style="width:65.0%"/></p>
 </div>
-<p><span style="color: gray">The decision boundary is where <span
-class="math inline">\(P(y=1|x) = 0.5\)</span>, i.e., <span
-class="math inline">\(w&#39;x + b = 0\)</span></span></p>
-</div>
-<div class="frame">
-<p><span>Binary Cross-Entropy Loss</span> <strong>Why Not
+<p><span style="color: gray">The decision boundary is where <span class="math inline">\(P(y=1|x) = 0.5\)</span>, i.e., <span class="math inline">\(w'x + b = 0\)</span></span></p>
+
+</section>
+
+<section>
+<h2>Binary Cross-Entropy Loss</h2>
+
+<p> <strong>Why Not
 MSE?</strong></p>
 <ul>
-<li><p>MSE with sigmoid creates non-convex loss landscape</p></li>
-<li><p>Cross-entropy is convex, guarantees global optimum</p></li>
+<li class="fragment"><p>MSE with sigmoid creates non-convex loss landscape</p></li>
+<li class="fragment"><p>Cross-entropy is convex, guarantees global optimum</p></li>
 </ul>
 <div class="center">
-<p><embed data-src="03_log_loss/chart.pdf" style="width:55.0%" /></p>
+<p><embed data-src="03_log_loss/chart.pdf" style="width:55.0%"/></p>
 </div>
 <p><span style="color: gray">Heavily penalizes confident wrong
 predictions</span></p>
-</div>
-<div class="frame">
-<p><span>ROC Curve and AUC</span></p>
+
+</section>
+
+<section>
+<h2>ROC Curve and AUC</h2>
+
+
 <div class="center">
-<p><embed data-src="04_roc_curve/chart.pdf" style="width:60.0%" /></p>
+<p><embed data-src="04_roc_curve/chart.pdf" style="width:60.0%"/></p>
 </div>
 <p><span style="color: gray">AUC = probability that random positive
 ranks higher than random negative</span></p>
-</div>
-<div class="frame">
-<p><span>Precision-Recall Trade-off</span></p>
+
+</section>
+
+<section>
+<h2>Precision-Recall Trade-off</h2>
+
+
 <div class="center">
-<p><embed data-src="05_precision_recall/chart.pdf"
-style="width:60.0%" /></p>
+<p><embed data-src="05_precision_recall/chart.pdf" style="width:60.0%"/></p>
 </div>
 <p><span style="color: gray">Use PR curve when classes are imbalanced
 (common in fraud detection)</span></p>
-</div>
-<div class="frame">
-<p><span>Confusion Matrix: Reading the Results</span></p>
+
+</section>
+
+<section>
+<h2>Confusion Matrix: Reading the Results</h2>
+
+
 <div class="center">
-<p><embed data-src="06_confusion_matrix/chart.pdf"
-style="width:60.0%" /></p>
+<p><embed data-src="06_confusion_matrix/chart.pdf" style="width:60.0%"/></p>
 </div>
 <p><span style="color: gray">FP = approve bad loans (costly), FN =
 reject good customers (lost revenue)</span></p>
-</div>
-<div class="frame">
-<p><span>When to Use Logistic Regression</span></p>
+
+</section>
+
+<section>
+<h2>When to Use Logistic Regression</h2>
+
+
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf"
-style="width:65.0%" /></p>
+<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:65.0%"/></p>
 </div>
 <p><span style="color: gray">Key strengths: interpretable coefficients,
 probability outputs, fast training</span></p>
-</div>
+
 </section>
+        </div>
+
+        <!-- Custom footer -->
+        <div class="slide-footer">
+            <div class="footer-left">Methods and Algorithms</div>
+            <div class="footer-center">MSc Data Science</div>
+            <div class="footer-right"></div>
+        </div>
     </div>
-  </div>
 
-  <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
+    <!-- Reveal.js core -->
+    <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
 
-  <!-- reveal.js plugins -->
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
+    <!-- Reveal.js plugins -->
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
 
-  <script>
+    <!-- Menu plugin -->
+    <script src="https://unpkg.com/reveal.js-menu@2.1.0/menu.js"></script>
 
-      // Full list of configuration options available at:
-      // https://revealjs.com/config/
-      Reveal.initialize({
-        // Display controls in the bottom right corner
-        controls: true,
+    <!-- Chalkboard plugin -->
+    <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
-        // Help the user learn the controls by providing hints, for example by
-        // bouncing the down arrow when they first encounter a vertical slide
-        controlsTutorial: true,
+    <script>
+        Reveal.initialize({
+            // Display settings
+            controls: true,
+            controlsTutorial: true,
+            controlsLayout: 'bottom-right',
+            progress: true,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            hash: true,
+            history: true,
 
-        // Determines where controls appear, "edges" or "bottom-right"
-        controlsLayout: 'bottom-right',
+            // Navigation
+            keyboard: true,
+            overview: true,
+            touch: true,
+            loop: false,
+            navigationMode: 'default',
 
-        // Visibility rule for backwards navigation arrows; "faded", "hidden"
-        // or "visible"
-        controlsBackArrows: 'faded',
+            // Transitions
+            transition: 'slide',
+            transitionSpeed: 'default',
+            backgroundTransition: 'fade',
 
-        // Display a presentation progress bar
-        progress: true,
+            // Sizing (16:9 aspect ratio)
+            width: 1600,
+            height: 900,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            center: false,
 
-        // Display the page number of the current slide
-        slideNumber: true,
+            // Fragments
+            fragments: true,
+            fragmentInURL: false,
 
-        // 'all', 'print', or 'speaker'
-        showSlideNumber: 'all',
+            // Auto-slide (disabled)
+            autoSlide: 0,
 
-        // Add the current slide number to the URL hash so that reloading the
-        // page/copying the URL will return you to the same slide
-        hash: true,
+            // Math configuration
+            math: {
+                mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+                config: 'TeX-AMS_HTML-full',
+                tex: {
+                    inlineMath: [['\\(', '\\)']],
+                    displayMath: [['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                options: {
+                    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                }
+            },
 
-        // Start with 1 for the hash rather than 0
-        hashOneBasedIndex: false,
+            // Menu plugin configuration
+            menu: {
+                side: 'left',
+                width: 'normal',
+                numbers: true,
+                titleSelector: 'h1, h2',
+                useTextContentForMissingTitles: true,
+                hideMissingTitles: false,
+                markers: true,
+                custom: false,
+                themes: [
+                    { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
+                    { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
+                    { name: 'White', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css' }
+                ],
+                transitions: true,
+                openButton: true,
+                openSlideNumber: false,
+                keyboard: true,
+                sticky: false,
+                autoOpen: true
+            },
 
-        // Flags if we should monitor the hash and change slides accordingly
-        respondToHashChanges: true,
+            // Chalkboard plugin configuration
+            chalkboard: {
+                boardmarkerWidth: 3,
+                chalkWidth: 4,
+                chalkEffect: 0.5,
+                storage: null,
+                src: null,
+                readOnly: false,
+                toggleChalkboardButton: { left: "30px", bottom: "30px", top: "auto", right: "auto" },
+                toggleNotesButton: { left: "70px", bottom: "30px", top: "auto", right: "auto" },
+                colorButtons: true,
+                boardHandle: true,
+                transition: 800,
+                theme: "chalkboard"
+            },
 
-        // Push each slide change to the browser history
-        history: false,
+            // Plugins to load
+            plugins: [
+                RevealMath,
+                RevealNotes,
+                RevealSearch,
+                RevealZoom,
+                RevealHighlight,
+                RevealMenu,
+                RevealChalkboard
+            ]
+        });
 
-        // Enable keyboard shortcuts for navigation
-        keyboard: true,
+        // Update footer with slide number
+        Reveal.on('slidechanged', event => {
+            const footer = document.querySelector('.slide-footer .footer-right');
+            if (footer) {
+                const current = event.indexh + 1;
+                const total = Reveal.getTotalSlides();
+                footer.textContent = `${current} / ${total}`;
+            }
+        });
 
-        // Enable the slide overview mode
-        overview: true,
+        // Initial footer update
+        Reveal.on('ready', event => {
+            const footer = document.querySelector('.slide-footer .footer-right');
+            if (footer) {
+                const total = Reveal.getTotalSlides();
+                footer.textContent = `1 / ${total}`;
+            }
+        });
 
-        // Disables the default reveal.js slide layout (scaling and centering)
-        // so that you can use custom CSS layout
-        disableLayout: false,
-
-        // Vertical centering of slides
-        center: true,
-
-        // Enables touch navigation on devices with touch input
-        touch: true,
-
-        // Loop the presentation
-        loop: false,
-
-        // Change the presentation direction to be RTL
-        rtl: false,
-
-        // see https://revealjs.com/vertical-slides/#navigation-mode
-        navigationMode: 'default',
-
-        // Randomizes the order of slides each time the presentation loads
-        shuffle: false,
-
-        // Turns fragments on and off globally
-        fragments: true,
-
-        // Flags whether to include the current fragment in the URL,
-        // so that reloading brings you to the same fragment position
-        fragmentInURL: true,
-
-        // Flags if the presentation is running in an embedded mode,
-        // i.e. contained within a limited portion of the screen
-        embedded: false,
-
-        // Flags if we should show a help overlay when the questionmark
-        // key is pressed
-        help: true,
-
-        // Flags if it should be possible to pause the presentation (blackout)
-        pause: true,
-
-        // Flags if speaker notes should be visible to all viewers
-        showNotes: false,
-
-        // Global override for autoplaying embedded media (null/true/false)
-        autoPlayMedia: null,
-
-        // Global override for preloading lazy-loaded iframes (null/true/false)
-        preloadIframes: null,
-
-        // Number of milliseconds between automatically proceeding to the
-        // next slide, disabled when set to 0, this value can be overwritten
-        // by using a data-autoslide attribute on your slides
-        autoSlide: 0,
-
-        // Stop auto-sliding after user input
-        autoSlideStoppable: true,
-
-        // Use this method for navigation when auto-sliding
-        autoSlideMethod: null,
-
-        // Specify the average time in seconds that you think you will spend
-        // presenting each slide. This is used to show a pacing timer in the
-        // speaker view
-        defaultTiming: null,
-
-        // Enable slide navigation via mouse wheel
-        mouseWheel: false,
-
-        // The display mode that will be used to show slides
-        display: 'block',
-
-        // Hide cursor if inactive
-        hideInactiveCursor: true,
-
-        // Time before the cursor is hidden (in ms)
-        hideCursorTime: 5000,
-
-        // Opens links in an iframe preview overlay
-        previewLinks: false,
-
-        // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'slide',
-
-        // Transition speed (default/fast/slow)
-        transitionSpeed: 'default',
-
-        // Transition style for full page slide backgrounds
-        // (none/fade/slide/convex/concave/zoom)
-        backgroundTransition: 'fade',
-
-        // Number of slides away from the current that are visible
-        viewDistance: 3,
-
-        // Number of slides away from the current that are visible on mobile
-        // devices. It is advisable to set this to a lower number than
-        // viewDistance in order to save resources.
-        mobileViewDistance: 2,
-
-        // The "normal" size of the presentation, aspect ratio will be preserved
-        // when the presentation is scaled to fit different resolutions. Can be
-        // specified using percentage units.
-        width: 1600,
-
-        height: 900,
-
-        math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
-          config: 'TeX-AMS_HTML-full',
-          tex2jax: {
-            inlineMath: [['\\(','\\)']],
-            displayMath: [['\\[','\\]']],
-            balanceBraces: true,
-            processEscapes: false,
-            processRefs: true,
-            processEnvironments: true,
-            preview: 'TeX',
-            skipTags: ['script','noscript','style','textarea','pre','code'],
-            ignoreClass: 'tex2jax_ignore',
-            processClass: 'tex2jax_process'
-          },
-        },
-
-        // reveal.js plugins
-        plugins: [
-          RevealMath,
-          RevealNotes,
-          RevealSearch,
-          RevealZoom
-        ]
-      });
+        // Keyboard shortcuts info
+        console.log('Keyboard shortcuts:');
+        console.log('  S - Speaker notes');
+        console.log('  B - Chalkboard');
+        console.log('  C - Canvas (draw on slide)');
+        console.log('  M - Menu');
+        console.log('  O - Overview');
+        console.log('  F - Fullscreen');
+        console.log('  ? - Help');
     </script>
-    </body>
+</body>
 </html>
