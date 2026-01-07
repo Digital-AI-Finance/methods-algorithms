@@ -1,337 +1,345 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="author" content="Methods and Algorithms – MSc Data Science">
-  <title>L05: PCA &amp; t-SNE</title>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reveal.css">
-  <style>
-    .reveal .sourceCode {  /* see #7635 */
-      overflow: visible;
-    }
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-  </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css" id="theme">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="pandoc + custom post-processor">
+    <meta name="author" content="Methods and Algorithms – MSc Data Science">
+    <title>L05: PCA & t-SNE</title>
+
+    <!-- Reveal.js core -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css" id="theme">
+
+    <!-- Custom ML theme -->
+    <link rel="stylesheet" href="css/ml-theme.css">
+
+    <!-- Menu plugin CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js-menu@2.1.0/menu.css">
+
+    <!-- Chalkboard plugin CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js-plugins@latest/chalkboard/style.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Additional inline styles */
+        .reveal .sourceCode {
+            overflow: visible;
+        }
+        code {
+            white-space: pre-wrap;
+        }
+        span.smallcaps {
+            font-variant: small-caps;
+        }
+        div.columns {
+            display: flex;
+            gap: min(4vw, 1.5em);
+        }
+        div.column {
+            flex: auto;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
-  <div class="reveal">
-    <div class="slides">
-
-<section id="title-slide">
-  <h1 class="title">L05: PCA &amp; t-SNE</h1>
-  <p class="subtitle">Dimensionality Reduction for Visualization and
+    <div class="reveal">
+        <div class="slides">
+            <section id="title-slide">
+<h1 class="title">L05: PCA &amp; t-SNE</h1>
+<p class="subtitle">Dimensionality Reduction for Visualization and
 Preprocessing</p>
-  <p class="author">Methods and Algorithms – MSc Data Science</p>
+<p class="author">Methods and Algorithms – MSc Data Science</p>
 </section>
 
-<section class="slide level2">
+<section>
+<h2>Learning Objectives</h2>
 
-<div class="frame">
-
-</div>
-<div class="frame">
-<p><span>Learning Objectives</span> <strong>By the end of this lecture,
+<p> <strong>By the end of this lecture,
 you will be able to:</strong></p>
 <ol>
-<li><p>Apply PCA for dimensionality reduction and feature
+<li class="fragment"><p>Apply PCA for dimensionality reduction and feature
 extraction</p></li>
-<li><p>Interpret variance explained and choose number of
+<li class="fragment"><p>Interpret variance explained and choose number of
 components</p></li>
-<li><p>Use t-SNE for visualization of high-dimensional data</p></li>
-<li><p>Compare linear (PCA) vs non-linear (t-SNE) methods</p></li>
+<li class="fragment"><p>Use t-SNE for visualization of high-dimensional data</p></li>
+<li class="fragment"><p>Compare linear (PCA) vs non-linear (t-SNE) methods</p></li>
 </ol>
 <p><strong>Finance Application:</strong> Portfolio risk decomposition,
 asset clustering <span style="color: gray">From many features to
 meaningful low-dimensional representations</span></p>
-</div>
-<div class="frame">
-<p><span>The Business Problem</span> <strong>Curse of
+
+</section>
+
+<section>
+<h2>The Business Problem</h2>
+
+<p> <strong>Curse of
 Dimensionality</strong></p>
 <ul>
-<li><p>Portfolio with 100+ assets: hard to visualize
+<li class="fragment"><p>Portfolio with 100+ assets: hard to visualize
 relationships</p></li>
-<li><p>Customer data with dozens of features: redundant
+<li class="fragment"><p>Customer data with dozens of features: redundant
 information</p></li>
-<li><p>High dimensions cause sparsity and computational issues</p></li>
+<li class="fragment"><p>High dimensions cause sparsity and computational issues</p></li>
 </ul>
 <p><strong>Solutions</strong></p>
 <ul>
-<li><p><strong>PCA</strong>: Linear projection preserving maximum
+<li class="fragment"><p><strong>PCA</strong>: Linear projection preserving maximum
 variance</p></li>
-<li><p><strong>t-SNE</strong>: Non-linear embedding preserving local
+<li class="fragment"><p><strong>t-SNE</strong>: Non-linear embedding preserving local
 structure</p></li>
 </ul>
 <p><span style="color: gray">Reduce dimensions while preserving
 important information</span></p>
-</div>
-<div class="frame">
-<p><span>Scree Plot: Choosing Components</span></p>
+
+</section>
+
+<section>
+<h2>Scree Plot: Choosing Components</h2>
+
+
 <div class="center">
-<p><embed data-src="01_scree_plot/chart.pdf" style="width:60.0%" /></p>
+<p><embed data-src="01_scree_plot/chart.pdf" style="width:60.0%"/></p>
 </div>
 <p><span style="color: gray">Choose k components capturing 80-95% of
 variance, or at the “elbow”</span></p>
-</div>
-<div class="frame">
-<p><span>Principal Components</span></p>
+
+</section>
+
+<section>
+<h2>Principal Components</h2>
+
+
 <div class="center">
-<p><embed data-src="02_principal_components/chart.pdf"
-style="width:50.0%" /></p>
+<p><embed data-src="02_principal_components/chart.pdf" style="width:50.0%"/></p>
 </div>
 <p><span style="color: gray">Principal components are orthogonal
 directions of maximum variance</span></p>
-</div>
-<div class="frame">
-<p><span>Reconstruction Error</span></p>
+
+</section>
+
+<section>
+<h2>Reconstruction Error</h2>
+
+
 <div class="center">
-<p><embed data-src="03_reconstruction/chart.pdf"
-style="width:60.0%" /></p>
+<p><embed data-src="03_reconstruction/chart.pdf" style="width:60.0%"/></p>
 </div>
 <p><span style="color: gray">More components = lower error, but
 diminishing returns after elbow</span></p>
-</div>
-<div class="frame">
-<p><span>t-SNE: Perplexity Effect</span></p>
+
+</section>
+
+<section>
+<h2>t-SNE: Perplexity Effect</h2>
+
+
 <div class="center">
-<p><embed data-src="04_tsne_perplexity/chart.pdf"
-style="width:65.0%" /></p>
+<p><embed data-src="04_tsne_perplexity/chart.pdf" style="width:65.0%"/></p>
 </div>
 <p><span style="color: gray">Perplexity controls local vs global
 structure preservation (try 5-50)</span></p>
-</div>
-<div class="frame">
-<p><span>PCA vs t-SNE</span></p>
+
+</section>
+
+<section>
+<h2>PCA vs t-SNE</h2>
+
+
 <div class="center">
-<p><embed data-src="05_pca_vs_tsne/chart.pdf" style="width:65.0%" /></p>
+<p><embed data-src="05_pca_vs_tsne/chart.pdf" style="width:65.0%"/></p>
 </div>
 <p><span style="color: gray">PCA: linear projections. t-SNE: non-linear
 manifold unfolding</span></p>
-</div>
-<div class="frame">
-<p><span>Cluster Preservation</span></p>
+
+</section>
+
+<section>
+<h2>Cluster Preservation</h2>
+
+
 <div class="center">
-<p><embed data-src="06_cluster_preservation/chart.pdf"
-style="width:65.0%" /></p>
+<p><embed data-src="06_cluster_preservation/chart.pdf" style="width:65.0%"/></p>
 </div>
 <p><span style="color: gray">t-SNE better preserves cluster structure
 for visualization</span></p>
-</div>
-<div class="frame">
-<p><span>Decision Framework</span></p>
+
+</section>
+
+<section>
+<h2>Decision Framework</h2>
+
+
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf"
-style="width:50.0%" /></p>
+<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:50.0%"/></p>
 </div>
 <p><span style="color: gray">PCA for preprocessing/speed, t-SNE for
 visualization only</span></p>
-</div>
+
 </section>
+        </div>
+
+        <!-- Custom footer -->
+        <div class="slide-footer">
+            <div class="footer-left">Methods and Algorithms</div>
+            <div class="footer-center">MSc Data Science</div>
+            <div class="footer-right"></div>
+        </div>
     </div>
-  </div>
 
-  <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
+    <!-- Reveal.js core -->
+    <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
 
-  <!-- reveal.js plugins -->
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
+    <!-- Reveal.js plugins -->
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
 
-  <script>
+    <!-- Menu plugin -->
+    <script src="https://unpkg.com/reveal.js-menu@2.1.0/menu.js"></script>
 
-      // Full list of configuration options available at:
-      // https://revealjs.com/config/
-      Reveal.initialize({
-        // Display controls in the bottom right corner
-        controls: true,
+    <!-- Chalkboard plugin -->
+    <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
-        // Help the user learn the controls by providing hints, for example by
-        // bouncing the down arrow when they first encounter a vertical slide
-        controlsTutorial: true,
+    <script>
+        Reveal.initialize({
+            // Display settings
+            controls: true,
+            controlsTutorial: true,
+            controlsLayout: 'bottom-right',
+            progress: true,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            hash: true,
+            history: true,
 
-        // Determines where controls appear, "edges" or "bottom-right"
-        controlsLayout: 'bottom-right',
+            // Navigation
+            keyboard: true,
+            overview: true,
+            touch: true,
+            loop: false,
+            navigationMode: 'default',
 
-        // Visibility rule for backwards navigation arrows; "faded", "hidden"
-        // or "visible"
-        controlsBackArrows: 'faded',
+            // Transitions
+            transition: 'slide',
+            transitionSpeed: 'default',
+            backgroundTransition: 'fade',
 
-        // Display a presentation progress bar
-        progress: true,
+            // Sizing (16:9 aspect ratio)
+            width: 1600,
+            height: 900,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            center: false,
 
-        // Display the page number of the current slide
-        slideNumber: true,
+            // Fragments
+            fragments: true,
+            fragmentInURL: false,
 
-        // 'all', 'print', or 'speaker'
-        showSlideNumber: 'all',
+            // Auto-slide (disabled)
+            autoSlide: 0,
 
-        // Add the current slide number to the URL hash so that reloading the
-        // page/copying the URL will return you to the same slide
-        hash: true,
+            // Math configuration
+            math: {
+                mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+                config: 'TeX-AMS_HTML-full',
+                tex: {
+                    inlineMath: [['\\(', '\\)']],
+                    displayMath: [['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                options: {
+                    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                }
+            },
 
-        // Start with 1 for the hash rather than 0
-        hashOneBasedIndex: false,
+            // Menu plugin configuration
+            menu: {
+                side: 'left',
+                width: 'normal',
+                numbers: true,
+                titleSelector: 'h1, h2',
+                useTextContentForMissingTitles: true,
+                hideMissingTitles: false,
+                markers: true,
+                custom: false,
+                themes: [
+                    { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
+                    { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
+                    { name: 'White', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css' }
+                ],
+                transitions: true,
+                openButton: true,
+                openSlideNumber: false,
+                keyboard: true,
+                sticky: false,
+                autoOpen: true
+            },
 
-        // Flags if we should monitor the hash and change slides accordingly
-        respondToHashChanges: true,
+            // Chalkboard plugin configuration
+            chalkboard: {
+                boardmarkerWidth: 3,
+                chalkWidth: 4,
+                chalkEffect: 0.5,
+                storage: null,
+                src: null,
+                readOnly: false,
+                toggleChalkboardButton: { left: "30px", bottom: "30px", top: "auto", right: "auto" },
+                toggleNotesButton: { left: "70px", bottom: "30px", top: "auto", right: "auto" },
+                colorButtons: true,
+                boardHandle: true,
+                transition: 800,
+                theme: "chalkboard"
+            },
 
-        // Push each slide change to the browser history
-        history: false,
+            // Plugins to load
+            plugins: [
+                RevealMath,
+                RevealNotes,
+                RevealSearch,
+                RevealZoom,
+                RevealHighlight,
+                RevealMenu,
+                RevealChalkboard
+            ]
+        });
 
-        // Enable keyboard shortcuts for navigation
-        keyboard: true,
+        // Update footer with slide number
+        Reveal.on('slidechanged', event => {
+            const footer = document.querySelector('.slide-footer .footer-right');
+            if (footer) {
+                const current = event.indexh + 1;
+                const total = Reveal.getTotalSlides();
+                footer.textContent = `${current} / ${total}`;
+            }
+        });
 
-        // Enable the slide overview mode
-        overview: true,
+        // Initial footer update
+        Reveal.on('ready', event => {
+            const footer = document.querySelector('.slide-footer .footer-right');
+            if (footer) {
+                const total = Reveal.getTotalSlides();
+                footer.textContent = `1 / ${total}`;
+            }
+        });
 
-        // Disables the default reveal.js slide layout (scaling and centering)
-        // so that you can use custom CSS layout
-        disableLayout: false,
-
-        // Vertical centering of slides
-        center: true,
-
-        // Enables touch navigation on devices with touch input
-        touch: true,
-
-        // Loop the presentation
-        loop: false,
-
-        // Change the presentation direction to be RTL
-        rtl: false,
-
-        // see https://revealjs.com/vertical-slides/#navigation-mode
-        navigationMode: 'default',
-
-        // Randomizes the order of slides each time the presentation loads
-        shuffle: false,
-
-        // Turns fragments on and off globally
-        fragments: true,
-
-        // Flags whether to include the current fragment in the URL,
-        // so that reloading brings you to the same fragment position
-        fragmentInURL: true,
-
-        // Flags if the presentation is running in an embedded mode,
-        // i.e. contained within a limited portion of the screen
-        embedded: false,
-
-        // Flags if we should show a help overlay when the questionmark
-        // key is pressed
-        help: true,
-
-        // Flags if it should be possible to pause the presentation (blackout)
-        pause: true,
-
-        // Flags if speaker notes should be visible to all viewers
-        showNotes: false,
-
-        // Global override for autoplaying embedded media (null/true/false)
-        autoPlayMedia: null,
-
-        // Global override for preloading lazy-loaded iframes (null/true/false)
-        preloadIframes: null,
-
-        // Number of milliseconds between automatically proceeding to the
-        // next slide, disabled when set to 0, this value can be overwritten
-        // by using a data-autoslide attribute on your slides
-        autoSlide: 0,
-
-        // Stop auto-sliding after user input
-        autoSlideStoppable: true,
-
-        // Use this method for navigation when auto-sliding
-        autoSlideMethod: null,
-
-        // Specify the average time in seconds that you think you will spend
-        // presenting each slide. This is used to show a pacing timer in the
-        // speaker view
-        defaultTiming: null,
-
-        // Enable slide navigation via mouse wheel
-        mouseWheel: false,
-
-        // The display mode that will be used to show slides
-        display: 'block',
-
-        // Hide cursor if inactive
-        hideInactiveCursor: true,
-
-        // Time before the cursor is hidden (in ms)
-        hideCursorTime: 5000,
-
-        // Opens links in an iframe preview overlay
-        previewLinks: false,
-
-        // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'slide',
-
-        // Transition speed (default/fast/slow)
-        transitionSpeed: 'default',
-
-        // Transition style for full page slide backgrounds
-        // (none/fade/slide/convex/concave/zoom)
-        backgroundTransition: 'fade',
-
-        // Number of slides away from the current that are visible
-        viewDistance: 3,
-
-        // Number of slides away from the current that are visible on mobile
-        // devices. It is advisable to set this to a lower number than
-        // viewDistance in order to save resources.
-        mobileViewDistance: 2,
-
-        // The "normal" size of the presentation, aspect ratio will be preserved
-        // when the presentation is scaled to fit different resolutions. Can be
-        // specified using percentage units.
-        width: 1600,
-
-        height: 900,
-
-        math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
-          config: 'TeX-AMS_HTML-full',
-          tex2jax: {
-            inlineMath: [['\\(','\\)']],
-            displayMath: [['\\[','\\]']],
-            balanceBraces: true,
-            processEscapes: false,
-            processRefs: true,
-            processEnvironments: true,
-            preview: 'TeX',
-            skipTags: ['script','noscript','style','textarea','pre','code'],
-            ignoreClass: 'tex2jax_ignore',
-            processClass: 'tex2jax_process'
-          },
-        },
-
-        // reveal.js plugins
-        plugins: [
-          RevealMath,
-          RevealNotes,
-          RevealSearch,
-          RevealZoom
-        ]
-      });
+        // Keyboard shortcuts info
+        console.log('Keyboard shortcuts:');
+        console.log('  S - Speaker notes');
+        console.log('  B - Chalkboard');
+        console.log('  C - Canvas (draw on slide)');
+        console.log('  M - Menu');
+        console.log('  O - Overview');
+        console.log('  F - Fullscreen');
+        console.log('  ? - Help');
     </script>
-    </body>
+</body>
 </html>

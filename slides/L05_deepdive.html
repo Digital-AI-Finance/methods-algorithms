@@ -1,259 +1,315 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="pandoc">
-  <meta name="author" content="Methods and Algorithms – MSc Data Science">
-  <title>L05: PCA &amp; t-SNE</title>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reveal.css">
-  <style>
-    .reveal .sourceCode {  /* see #7635 */
-      overflow: visible;
-    }
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-  </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css" id="theme">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="pandoc + custom post-processor">
+    <meta name="author" content="Methods and Algorithms – MSc Data Science">
+    <title>L05: PCA & t-SNE</title>
+
+    <!-- Reveal.js core -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css" id="theme">
+
+    <!-- Custom ML theme -->
+    <link rel="stylesheet" href="css/ml-theme.css">
+
+    <!-- Menu plugin CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js-menu@2.1.0/menu.css">
+
+    <!-- Chalkboard plugin CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js-plugins@latest/chalkboard/style.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Additional inline styles */
+        .reveal .sourceCode {
+            overflow: visible;
+        }
+        code {
+            white-space: pre-wrap;
+        }
+        span.smallcaps {
+            font-variant: small-caps;
+        }
+        div.columns {
+            display: flex;
+            gap: min(4vw, 1.5em);
+        }
+        div.column {
+            flex: auto;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
-  <div class="reveal">
-    <div class="slides">
-
-<section id="title-slide">
-  <h1 class="title">L05: PCA &amp; t-SNE</h1>
-  <p class="subtitle">Deep Dive: Theory, Implementation, and
+    <div class="reveal">
+        <div class="slides">
+            <section id="title-slide">
+<h1 class="title">L05: PCA &amp; t-SNE</h1>
+<p class="subtitle">Deep Dive: Theory, Implementation, and
 Applications</p>
-  <p class="author">Methods and Algorithms – MSc Data Science</p>
+<p class="author">Methods and Algorithms – MSc Data Science</p>
 </section>
 
-<section class="slide level2">
+<section>
+<h2>Part 1: PCA Foundations</h2>
 
-<div class="frame">
-
-</div>
-<div class="frame">
-<p><span>Part 1: PCA Foundations</span> <strong>Principal Component
+<p> <strong>Principal Component
 Analysis (PCA)</strong></p>
 <ul>
-<li><p>Find orthogonal directions of maximum variance</p></li>
-<li><p>Project data onto these directions</p></li>
-<li><p>Reduce dimensions while preserving information</p></li>
+<li class="fragment"><p>Find orthogonal directions of maximum variance</p></li>
+<li class="fragment"><p>Project data onto these directions</p></li>
+<li class="fragment"><p>Reduce dimensions while preserving information</p></li>
 </ul>
 <p><strong>Key Properties:</strong></p>
 <ul>
-<li><p>Linear transformation</p></li>
-<li><p>Components are uncorrelated</p></li>
-<li><p>Reversible (can reconstruct original data)</p></li>
+<li class="fragment"><p>Linear transformation</p></li>
+<li class="fragment"><p>Components are uncorrelated</p></li>
+<li class="fragment"><p>Reversible (can reconstruct original data)</p></li>
 </ul>
 <p><span style="color: gray">PCA: one of the most fundamental tools in
 data science</span></p>
-</div>
-<div class="frame">
-<p><span>Mathematical Foundation</span> <strong>Covariance
+
+</section>
+
+<section>
+<h2>Mathematical Foundation</h2>
+
+<p> <strong>Covariance
 Matrix:</strong> <span class="math display">\[\Sigma = \frac{1}{n-1} X^T
 X \quad \text{(centered data)}\]</span></p>
-<p><strong>Eigendecomposition:</strong> <span
-class="math display">\[\Sigma v = \lambda v\]</span> where <span
-class="math inline">\(v\)</span> = eigenvector (principal direction),
+<p><strong>Eigendecomposition:</strong> <span class="math display">\[\Sigma v = \lambda v\]</span> where <span class="math inline">\(v\)</span> = eigenvector (principal direction),
 <span class="math inline">\(\lambda\)</span> = eigenvalue (variance)</p>
 <p><strong>Projection:</strong> <span class="math display">\[Z = X W_k
-\quad \text{where } W_k = [v_1, v_2, \ldots, v_k]\]</span> <span
-style="color: gray">Eigenvalues tell us how much variance each component
+\quad \text{where } W_k = [v_1, v_2, \ldots, v_k]\]</span> <span style="color: gray">Eigenvalues tell us how much variance each component
 captures</span></p>
-</div>
-<div class="frame">
-<p><span>Variance Explained</span> <strong>Proportion of
+
+</section>
+
+<section>
+<h2>Variance Explained</h2>
+
+<p> <strong>Proportion of
 Variance:</strong> <span class="math display">\[\text{Explained Variance
 Ratio}_i = \frac{\lambda_i}{\sum_{j=1}^{p} \lambda_j}\]</span></p>
-<p><strong>Cumulative Variance:</strong> <span
-class="math display">\[\text{Cumulative}_k = \sum_{i=1}^{k}
+<p><strong>Cumulative Variance:</strong> <span class="math display">\[\text{Cumulative}_k = \sum_{i=1}^{k}
 \frac{\lambda_i}{\sum_{j=1}^{p} \lambda_j}\]</span> <strong>Rules of
 thumb for choosing k:</strong></p>
 <ul>
-<li><p>Keep 80-95% of total variance</p></li>
-<li><p>Use scree plot “elbow” method</p></li>
-<li><p>Kaiser criterion: keep components with <span
-class="math inline">\(\lambda &gt; 1\)</span></p></li>
+<li class="fragment"><p>Keep 80-95% of total variance</p></li>
+<li class="fragment"><p>Use scree plot “elbow” method</p></li>
+<li class="fragment"><p>Kaiser criterion: keep components with <span class="math inline">\(\lambda &gt; 1\)</span></p></li>
 </ul>
 <p><span style="color: gray">Balance dimensionality reduction with
 information preservation</span></p>
-</div>
-<div class="frame">
-<p><span>Scree Plot</span></p>
+
+</section>
+
+<section>
+<h2>Scree Plot</h2>
+
+
 <div class="center">
-<p><embed data-src="01_scree_plot/chart.pdf" style="width:60.0%" /></p>
+<p><embed data-src="01_scree_plot/chart.pdf" style="width:60.0%"/></p>
 </div>
 <p><span style="color: gray">Look for the “elbow” where variance
 explained drops off</span></p>
-</div>
-<div class="frame">
-<p><span>Principal Components Visualization</span></p>
+
+</section>
+
+<section>
+<h2>Principal Components Visualization</h2>
+
+
 <div class="center">
-<p><embed data-src="02_principal_components/chart.pdf"
-style="width:50.0%" /></p>
+<p><embed data-src="02_principal_components/chart.pdf" style="width:50.0%"/></p>
 </div>
 <p><span style="color: gray">PC1 captures the dominant trend, PC2 the
 residual variation</span></p>
-</div>
-<div class="frame">
-<p><span>Reconstruction</span> <strong>From k components back to
+
+</section>
+
+<section>
+<h2>Reconstruction</h2>
+
+<p> <strong>From k components back to
 original space:</strong> <span class="math display">\[\hat{X} = Z W_k^T
 = X W_k W_k^T\]</span></p>
-<p><strong>Reconstruction Error:</strong> <span
-class="math display">\[\text{Error} = ||X - \hat{X}||_F^2 =
-\sum_{i=k+1}^{p} \lambda_i\]</span> <span
-style="color: gray">Reconstruction error = sum of discarded
+<p><strong>Reconstruction Error:</strong> <span class="math display">\[\text{Error} = ||X - \hat{X}||_F^2 =
+\sum_{i=k+1}^{p} \lambda_i\]</span> <span style="color: gray">Reconstruction error = sum of discarded
 eigenvalues</span></p>
-</div>
-<div class="frame">
-<p><span>Reconstruction Error vs Components</span></p>
+
+</section>
+
+<section>
+<h2>Reconstruction Error vs Components</h2>
+
+
 <div class="center">
-<p><embed data-src="03_reconstruction/chart.pdf"
-style="width:60.0%" /></p>
+<p><embed data-src="03_reconstruction/chart.pdf" style="width:60.0%"/></p>
 </div>
 <p><span style="color: gray">Adding more components always reduces error
 (but diminishing returns)</span></p>
-</div>
-<div class="frame">
-<p><span>Part 2: PCA in Finance</span> <strong>Portfolio Risk
+
+</section>
+
+<section>
+<h2>Part 2: PCA in Finance</h2>
+
+<p> <strong>Portfolio Risk
 Decomposition:</strong></p>
 <ul>
-<li><p>PC1 often represents “market factor”</p></li>
-<li><p>PC2-3 may capture sector/size factors</p></li>
-<li><p>Higher PCs: idiosyncratic risk</p></li>
+<li class="fragment"><p>PC1 often represents “market factor”</p></li>
+<li class="fragment"><p>PC2-3 may capture sector/size factors</p></li>
+<li class="fragment"><p>Higher PCs: idiosyncratic risk</p></li>
 </ul>
 <p><strong>Applications:</strong></p>
 <ul>
-<li><p>Risk factor modeling</p></li>
-<li><p>Dimensionality reduction for trading signals</p></li>
-<li><p>Noise reduction in time series</p></li>
-<li><p>Feature extraction for ML models</p></li>
+<li class="fragment"><p>Risk factor modeling</p></li>
+<li class="fragment"><p>Dimensionality reduction for trading signals</p></li>
+<li class="fragment"><p>Noise reduction in time series</p></li>
+<li class="fragment"><p>Feature extraction for ML models</p></li>
 </ul>
 <p><span style="color: gray">PCA reveals latent structure in financial
 data</span></p>
-</div>
-<div class="frame">
-<p><span>PCA Limitations</span> <strong>When PCA Falls
+
+</section>
+
+<section>
+<h2>PCA Limitations</h2>
+
+<p> <strong>When PCA Falls
 Short:</strong></p>
 <ul>
-<li><p>Non-linear relationships (curved manifolds)</p></li>
-<li><p>Cluster structure not aligned with variance</p></li>
-<li><p>Discrete or categorical data</p></li>
-<li><p>Outliers heavily influence results</p></li>
+<li class="fragment"><p>Non-linear relationships (curved manifolds)</p></li>
+<li class="fragment"><p>Cluster structure not aligned with variance</p></li>
+<li class="fragment"><p>Discrete or categorical data</p></li>
+<li class="fragment"><p>Outliers heavily influence results</p></li>
 </ul>
 <p><strong>Solutions:</strong></p>
 <ul>
-<li><p>Kernel PCA (non-linear)</p></li>
-<li><p>Robust PCA (outlier-resistant)</p></li>
-<li><p>t-SNE/UMAP (for visualization)</p></li>
+<li class="fragment"><p>Kernel PCA (non-linear)</p></li>
+<li class="fragment"><p>Robust PCA (outlier-resistant)</p></li>
+<li class="fragment"><p>t-SNE/UMAP (for visualization)</p></li>
 </ul>
 <p><span style="color: gray">PCA assumes linear structure and
 Gaussian-like distributions</span></p>
-</div>
-<div class="frame">
-<p><span>Part 3: t-SNE Introduction</span> <strong>t-Distributed
+
+</section>
+
+<section>
+<h2>Part 3: t-SNE Introduction</h2>
+
+<p> <strong>t-Distributed
 Stochastic Neighbor Embedding</strong></p>
 <ul>
-<li><p>Non-linear dimensionality reduction</p></li>
-<li><p>Optimized for visualization (2D/3D)</p></li>
-<li><p>Preserves local neighborhood structure</p></li>
+<li class="fragment"><p>Non-linear dimensionality reduction</p></li>
+<li class="fragment"><p>Optimized for visualization (2D/3D)</p></li>
+<li class="fragment"><p>Preserves local neighborhood structure</p></li>
 </ul>
 <p><strong>Key Idea:</strong></p>
 <ul>
-<li><p>Convert distances to probabilities</p></li>
-<li><p>In high-D: Gaussian similarities</p></li>
-<li><p>In low-D: t-distribution similarities</p></li>
-<li><p>Minimize KL divergence between distributions</p></li>
+<li class="fragment"><p>Convert distances to probabilities</p></li>
+<li class="fragment"><p>In high-D: Gaussian similarities</p></li>
+<li class="fragment"><p>In low-D: t-distribution similarities</p></li>
+<li class="fragment"><p>Minimize KL divergence between distributions</p></li>
 </ul>
 <p><span style="color: gray">t-SNE: visualization method, NOT for
 preprocessing</span></p>
-</div>
-<div class="frame">
-<p><span>t-SNE: Mathematical Formulation</span> <strong>High-dimensional
+
+</section>
+
+<section>
+<h2>t-SNE: Mathematical Formulation</h2>
+
+<p> <strong>High-dimensional
 similarity:</strong> <span class="math display">\[p_{j|i} =
 \frac{\exp(-||x_i - x_j||^2 / 2\sigma_i^2)}{\sum_{k \neq i} \exp(-||x_i
 - x_k||^2 / 2\sigma_i^2)}\]</span></p>
-<p><strong>Low-dimensional similarity (t-distribution):</strong> <span
-class="math display">\[q_{ij} = \frac{(1 + ||y_i -
+<p><strong>Low-dimensional similarity (t-distribution):</strong> <span class="math display">\[q_{ij} = \frac{(1 + ||y_i -
 y_j||^2)^{-1}}{\sum_{k \neq l} (1 + ||y_k - y_l||^2)^{-1}}\]</span></p>
-<p><strong>Objective: Minimize KL divergence</strong> <span
-class="math display">\[KL(P||Q) = \sum_{i \neq j} p_{ij} \log
+<p><strong>Objective: Minimize KL divergence</strong> <span class="math display">\[KL(P||Q) = \sum_{i \neq j} p_{ij} \log
 \frac{p_{ij}}{q_{ij}}\]</span> <span style="color: gray">t-distribution
 has heavier tails, allowing better separation in low-D</span></p>
-</div>
-<div class="frame">
-<p><span>Perplexity Parameter</span></p>
+
+</section>
+
+<section>
+<h2>Perplexity Parameter</h2>
+
+
 <div class="center">
-<p><embed data-src="04_tsne_perplexity/chart.pdf"
-style="width:65.0%" /></p>
+<p><embed data-src="04_tsne_perplexity/chart.pdf" style="width:65.0%"/></p>
 </div>
-<p><span style="color: gray">Perplexity <span
-class="math inline">\(\approx\)</span> effective number of neighbors
+<p><span style="color: gray">Perplexity <span class="math inline">\(\approx\)</span> effective number of neighbors
 (try 5-50)</span></p>
-</div>
-<div class="frame">
-<p><span>Perplexity Guidelines</span> <strong>Perplexity</strong>
+
+</section>
+
+<section>
+<h2>Perplexity Guidelines</h2>
+
+<p> <strong>Perplexity</strong>
 controls the balance between local and global structure:</p>
 <ul>
-<li><p>Low perplexity (5-10): Focus on very local structure</p></li>
-<li><p>Medium perplexity (30-50): Balanced (default)</p></li>
-<li><p>High perplexity (100+): More global structure</p></li>
+<li class="fragment"><p>Low perplexity (5-10): Focus on very local structure</p></li>
+<li class="fragment"><p>Medium perplexity (30-50): Balanced (default)</p></li>
+<li class="fragment"><p>High perplexity (100+): More global structure</p></li>
 </ul>
 <p><strong>Guidelines:</strong></p>
 <ul>
-<li><p>Should be smaller than number of points</p></li>
-<li><p>Larger datasets can use higher perplexity</p></li>
-<li><p>Run multiple perplexities to validate findings</p></li>
+<li class="fragment"><p>Should be smaller than number of points</p></li>
+<li class="fragment"><p>Larger datasets can use higher perplexity</p></li>
+<li class="fragment"><p>Run multiple perplexities to validate findings</p></li>
 </ul>
 <p><span style="color: gray">Results can vary significantly with
 perplexity choice</span></p>
-</div>
-<div class="frame">
-<p><span>t-SNE Caveats</span> <strong>Important
+
+</section>
+
+<section>
+<h2>t-SNE Caveats</h2>
+
+<p> <strong>Important
 Limitations:</strong></p>
 <ul>
-<li><p>Non-deterministic (run multiple times)</p></li>
-<li><p>Cluster sizes are not meaningful</p></li>
-<li><p>Distances between clusters are not meaningful</p></li>
-<li><p>Slow for large datasets (O(<span
-class="math inline">\(n^2\)</span>))</p></li>
+<li class="fragment"><p>Non-deterministic (run multiple times)</p></li>
+<li class="fragment"><p>Cluster sizes are not meaningful</p></li>
+<li class="fragment"><p>Distances between clusters are not meaningful</p></li>
+<li class="fragment"><p>Slow for large datasets (O(<span class="math inline">\(n^2\)</span>))</p></li>
 </ul>
 <p><strong>Best Practices:</strong></p>
 <ul>
-<li><p>Use PCA first to reduce to 30-50 dims</p></li>
-<li><p>Run multiple times with different seeds</p></li>
-<li><p>Don’t over-interpret cluster sizes/distances</p></li>
-<li><p>Use for exploration, not final conclusions</p></li>
+<li class="fragment"><p>Use PCA first to reduce to 30-50 dims</p></li>
+<li class="fragment"><p>Run multiple times with different seeds</p></li>
+<li class="fragment"><p>Don’t over-interpret cluster sizes/distances</p></li>
+<li class="fragment"><p>Use for exploration, not final conclusions</p></li>
 </ul>
 <p><span style="color: gray">t-SNE shows IF clusters exist, not HOW they
 relate</span></p>
-</div>
-<div class="frame">
-<p><span>Part 4: PCA vs t-SNE</span></p>
+
+</section>
+
+<section>
+<h2>Part 4: PCA vs t-SNE</h2>
+
+
 <div class="center">
-<p><embed data-src="05_pca_vs_tsne/chart.pdf" style="width:65.0%" /></p>
+<p><embed data-src="05_pca_vs_tsne/chart.pdf" style="width:65.0%"/></p>
 </div>
 <p><span style="color: gray">PCA: global structure, linear. t-SNE: local
 structure, non-linear</span></p>
-</div>
-<div class="frame">
-<p><span>Comparison Table</span></p>
+
+</section>
+
+<section>
+<h2>Comparison Table</h2>
+
+
 <div class="center">
 <table>
 <thead>
@@ -271,10 +327,8 @@ structure, non-linear</span></p>
 </tr>
 <tr>
 <td style="text-align: left;">Speed</td>
-<td style="text-align: center;">Fast <span
-class="math inline">\(O(np^2)\)</span></td>
-<td style="text-align: center;">Slow <span
-class="math inline">\(O(n^2)\)</span></td>
+<td style="text-align: center;">Fast <span class="math inline">\(O(np^2)\)</span></td>
+<td style="text-align: center;">Slow <span class="math inline">\(O(n^2)\)</span></td>
 </tr>
 <tr>
 <td style="text-align: left;">Deterministic</td>
@@ -306,312 +360,306 @@ class="math inline">\(O(n^2)\)</span></td>
 </div>
 <p><span style="color: gray">Use PCA for preprocessing, t-SNE for
 visualization only</span></p>
-</div>
-<div class="frame">
-<p><span>Cluster Preservation</span></p>
+
+</section>
+
+<section>
+<h2>Cluster Preservation</h2>
+
+
 <div class="center">
-<p><embed data-src="06_cluster_preservation/chart.pdf"
-style="width:65.0%" /></p>
+<p><embed data-src="06_cluster_preservation/chart.pdf" style="width:65.0%"/></p>
 </div>
 <p><span style="color: gray">t-SNE often reveals cluster structure
 better than PCA</span></p>
-</div>
-<div class="frame">
-<p><span>When to Use Which</span> <strong>Use PCA When:</strong></p>
+
+</section>
+
+<section>
+<h2>When to Use Which</h2>
+
+<p> <strong>Use PCA When:</strong></p>
 <ul>
-<li><p>Preprocessing for ML (reduce features)</p></li>
-<li><p>Linear relationships expected</p></li>
-<li><p>Need reversibility (reconstruction)</p></li>
-<li><p>Speed matters</p></li>
+<li class="fragment"><p>Preprocessing for ML (reduce features)</p></li>
+<li class="fragment"><p>Linear relationships expected</p></li>
+<li class="fragment"><p>Need reversibility (reconstruction)</p></li>
+<li class="fragment"><p>Speed matters</p></li>
 </ul>
 <p><strong>Use t-SNE When:</strong></p>
 <ul>
-<li><p>Visualizing high-dimensional data</p></li>
-<li><p>Looking for cluster structure</p></li>
-<li><p>Non-linear manifolds expected</p></li>
-<li><p>Exploratory analysis</p></li>
+<li class="fragment"><p>Visualizing high-dimensional data</p></li>
+<li class="fragment"><p>Looking for cluster structure</p></li>
+<li class="fragment"><p>Non-linear manifolds expected</p></li>
+<li class="fragment"><p>Exploratory analysis</p></li>
 </ul>
 <p><span style="color: gray">Often use both: PCA first to 30-50 dims,
 then t-SNE for visualization</span></p>
-</div>
-<div class="frame">
-<p><span>Decision Framework</span></p>
+
+</section>
+
+<section>
+<h2>Decision Framework</h2>
+
+
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf"
-style="width:50.0%" /></p>
+<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:50.0%"/></p>
 </div>
 <p><span style="color: gray">Consider purpose: preprocessing (PCA) vs
 visualization (t-SNE)</span></p>
-</div>
-<div class="frame">
-<p><span>Part 5: Implementation</span> <strong>PCA in
+
+</section>
+
+<section>
+<h2>Part 5: Implementation</h2>
+
+<p> <strong>PCA in
 scikit-learn:</strong></p>
 <ul>
-<li><p><code>PCA(n_components=k)</code>: Keep k components</p></li>
-<li><p><code>PCA(n_components=0.95)</code>: Keep 95% variance</p></li>
-<li><p><code>pca.explained_variance_ratio_</code>: Variance per
+<li class="fragment"><p><code>PCA(n_components=k)</code>: Keep k components</p></li>
+<li class="fragment"><p><code>PCA(n_components=0.95)</code>: Keep 95% variance</p></li>
+<li class="fragment"><p><code>pca.explained_variance_ratio_</code>: Variance per
 component</p></li>
-<li><p><code>pca.inverse_transform()</code>: Reconstruct
+<li class="fragment"><p><code>pca.inverse_transform()</code>: Reconstruct
 original</p></li>
 </ul>
 <p><strong>t-SNE in scikit-learn:</strong></p>
 <ul>
-<li><p><code>TSNE(n_components=2, perplexity=30)</code></p></li>
-<li><p>Always normalize data first</p></li>
-<li><p>Consider PCA preprocessing for speed</p></li>
+<li class="fragment"><p><code>TSNE(n_components=2, perplexity=30)</code></p></li>
+<li class="fragment"><p>Always normalize data first</p></li>
+<li class="fragment"><p>Consider PCA preprocessing for speed</p></li>
 </ul>
 <p><span style="color: gray">Standardize data before PCA; normalize
 before t-SNE</span></p>
-</div>
-<div class="frame">
-<p><span>UMAP: Modern Alternative</span> <strong>Uniform Manifold
+
+</section>
+
+<section>
+<h2>UMAP: Modern Alternative</h2>
+
+<p> <strong>Uniform Manifold
 Approximation and Projection</strong></p>
 <ul>
-<li><p>Faster than t-SNE</p></li>
-<li><p>Better preserves global structure</p></li>
-<li><p>Can embed new points (unlike t-SNE)</p></li>
-<li><p>Hyperparameters: n_neighbors, min_dist</p></li>
+<li class="fragment"><p>Faster than t-SNE</p></li>
+<li class="fragment"><p>Better preserves global structure</p></li>
+<li class="fragment"><p>Can embed new points (unlike t-SNE)</p></li>
+<li class="fragment"><p>Hyperparameters: n_neighbors, min_dist</p></li>
 </ul>
 <p><strong>When to use UMAP:</strong></p>
 <ul>
-<li><p>Large datasets (faster than t-SNE)</p></li>
-<li><p>Need to embed new data points</p></li>
-<li><p>Want more preserved global structure</p></li>
+<li class="fragment"><p>Large datasets (faster than t-SNE)</p></li>
+<li class="fragment"><p>Need to embed new data points</p></li>
+<li class="fragment"><p>Want more preserved global structure</p></li>
 </ul>
 <p><span style="color: gray">UMAP often preferred over t-SNE in modern
 practice</span></p>
-</div>
-<div class="frame">
-<p><span>Summary</span> <strong>PCA:</strong></p>
+
+</section>
+
+<section>
+<h2>Summary</h2>
+
+<p> <strong>PCA:</strong></p>
 <ul>
-<li><p>Linear, fast, reversible</p></li>
-<li><p>Use for preprocessing and feature extraction</p></li>
-<li><p>Choose k by variance explained or elbow</p></li>
+<li class="fragment"><p>Linear, fast, reversible</p></li>
+<li class="fragment"><p>Use for preprocessing and feature extraction</p></li>
+<li class="fragment"><p>Choose k by variance explained or elbow</p></li>
 </ul>
 <p><strong>t-SNE:</strong></p>
 <ul>
-<li><p>Non-linear, slow, visualization-only</p></li>
-<li><p>Excellent for exploring cluster structure</p></li>
-<li><p>Don’t interpret distances or sizes literally</p></li>
+<li class="fragment"><p>Non-linear, slow, visualization-only</p></li>
+<li class="fragment"><p>Excellent for exploring cluster structure</p></li>
+<li class="fragment"><p>Don’t interpret distances or sizes literally</p></li>
 </ul>
-<p><strong>Common Pipeline:</strong> Standardize <span
-class="math inline">\(\rightarrow\)</span> PCA (30-50) <span
-class="math inline">\(\rightarrow\)</span> t-SNE (2D) <span
-style="color: gray">Next: Embeddings and Reinforcement
+<p><strong>Common Pipeline:</strong> Standardize <span class="math inline">\(\rightarrow\)</span> PCA (30-50) <span class="math inline">\(\rightarrow\)</span> t-SNE (2D) <span style="color: gray">Next: Embeddings and Reinforcement
 Learning</span></p>
-</div>
-<div class="frame">
-<p><span>References</span> <strong>Textbooks:</strong></p>
+
+</section>
+
+<section>
+<h2>References</h2>
+
+<p> <strong>Textbooks:</strong></p>
 <ul>
-<li><p>James et al. (2021). <em>ISLR</em>, Chapter 12: Unsupervised
+<li class="fragment"><p>James et al. (2021). <em>ISLR</em>, Chapter 12: Unsupervised
 Learning</p></li>
-<li><p>Hastie et al. (2009). <em>ESL</em>, Chapter 14: Unsupervised
+<li class="fragment"><p>Hastie et al. (2009). <em>ESL</em>, Chapter 14: Unsupervised
 Learning</p></li>
 </ul>
 <p><strong>Original Papers:</strong></p>
 <ul>
-<li><p>Pearson (1901). On Lines and Planes of Closest Fit</p></li>
-<li><p>van der Maaten &amp; Hinton (2008). Visualizing Data using
+<li class="fragment"><p>Pearson (1901). On Lines and Planes of Closest Fit</p></li>
+<li class="fragment"><p>van der Maaten &amp; Hinton (2008). Visualizing Data using
 t-SNE</p></li>
-<li><p>McInnes et al. (2018). UMAP</p></li>
+<li class="fragment"><p>McInnes et al. (2018). UMAP</p></li>
 </ul>
 <p><strong>Documentation:</strong></p>
 <ul>
-<li><p>scikit-learn: <code>sklearn.decomposition.PCA</code></p></li>
-<li><p>scikit-learn: <code>sklearn.manifold.TSNE</code></p></li>
+<li class="fragment"><p>scikit-learn: <code>sklearn.decomposition.PCA</code></p></li>
+<li class="fragment"><p>scikit-learn: <code>sklearn.manifold.TSNE</code></p></li>
 </ul>
 <p><span style="color: gray">t-SNE paper: one of the most influential
 visualization papers</span></p>
-</div>
+
 </section>
+        </div>
+
+        <!-- Custom footer -->
+        <div class="slide-footer">
+            <div class="footer-left">Methods and Algorithms</div>
+            <div class="footer-center">MSc Data Science</div>
+            <div class="footer-right"></div>
+        </div>
     </div>
-  </div>
 
-  <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
+    <!-- Reveal.js core -->
+    <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
 
-  <!-- reveal.js plugins -->
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
+    <!-- Reveal.js plugins -->
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
+    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
 
-  <script>
+    <!-- Menu plugin -->
+    <script src="https://unpkg.com/reveal.js-menu@2.1.0/menu.js"></script>
 
-      // Full list of configuration options available at:
-      // https://revealjs.com/config/
-      Reveal.initialize({
-        // Display controls in the bottom right corner
-        controls: true,
+    <!-- Chalkboard plugin -->
+    <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
-        // Help the user learn the controls by providing hints, for example by
-        // bouncing the down arrow when they first encounter a vertical slide
-        controlsTutorial: true,
+    <script>
+        Reveal.initialize({
+            // Display settings
+            controls: true,
+            controlsTutorial: true,
+            controlsLayout: 'bottom-right',
+            progress: true,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            hash: true,
+            history: true,
 
-        // Determines where controls appear, "edges" or "bottom-right"
-        controlsLayout: 'bottom-right',
+            // Navigation
+            keyboard: true,
+            overview: true,
+            touch: true,
+            loop: false,
+            navigationMode: 'default',
 
-        // Visibility rule for backwards navigation arrows; "faded", "hidden"
-        // or "visible"
-        controlsBackArrows: 'faded',
+            // Transitions
+            transition: 'slide',
+            transitionSpeed: 'default',
+            backgroundTransition: 'fade',
 
-        // Display a presentation progress bar
-        progress: true,
+            // Sizing (16:9 aspect ratio)
+            width: 1600,
+            height: 900,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            center: false,
 
-        // Display the page number of the current slide
-        slideNumber: true,
+            // Fragments
+            fragments: true,
+            fragmentInURL: false,
 
-        // 'all', 'print', or 'speaker'
-        showSlideNumber: 'all',
+            // Auto-slide (disabled)
+            autoSlide: 0,
 
-        // Add the current slide number to the URL hash so that reloading the
-        // page/copying the URL will return you to the same slide
-        hash: true,
+            // Math configuration
+            math: {
+                mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+                config: 'TeX-AMS_HTML-full',
+                tex: {
+                    inlineMath: [['\\(', '\\)']],
+                    displayMath: [['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                options: {
+                    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                }
+            },
 
-        // Start with 1 for the hash rather than 0
-        hashOneBasedIndex: false,
+            // Menu plugin configuration
+            menu: {
+                side: 'left',
+                width: 'normal',
+                numbers: true,
+                titleSelector: 'h1, h2',
+                useTextContentForMissingTitles: true,
+                hideMissingTitles: false,
+                markers: true,
+                custom: false,
+                themes: [
+                    { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
+                    { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
+                    { name: 'White', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css' }
+                ],
+                transitions: true,
+                openButton: true,
+                openSlideNumber: false,
+                keyboard: true,
+                sticky: false,
+                autoOpen: true
+            },
 
-        // Flags if we should monitor the hash and change slides accordingly
-        respondToHashChanges: true,
+            // Chalkboard plugin configuration
+            chalkboard: {
+                boardmarkerWidth: 3,
+                chalkWidth: 4,
+                chalkEffect: 0.5,
+                storage: null,
+                src: null,
+                readOnly: false,
+                toggleChalkboardButton: { left: "30px", bottom: "30px", top: "auto", right: "auto" },
+                toggleNotesButton: { left: "70px", bottom: "30px", top: "auto", right: "auto" },
+                colorButtons: true,
+                boardHandle: true,
+                transition: 800,
+                theme: "chalkboard"
+            },
 
-        // Push each slide change to the browser history
-        history: false,
+            // Plugins to load
+            plugins: [
+                RevealMath,
+                RevealNotes,
+                RevealSearch,
+                RevealZoom,
+                RevealHighlight,
+                RevealMenu,
+                RevealChalkboard
+            ]
+        });
 
-        // Enable keyboard shortcuts for navigation
-        keyboard: true,
+        // Update footer with slide number
+        Reveal.on('slidechanged', event => {
+            const footer = document.querySelector('.slide-footer .footer-right');
+            if (footer) {
+                const current = event.indexh + 1;
+                const total = Reveal.getTotalSlides();
+                footer.textContent = `${current} / ${total}`;
+            }
+        });
 
-        // Enable the slide overview mode
-        overview: true,
+        // Initial footer update
+        Reveal.on('ready', event => {
+            const footer = document.querySelector('.slide-footer .footer-right');
+            if (footer) {
+                const total = Reveal.getTotalSlides();
+                footer.textContent = `1 / ${total}`;
+            }
+        });
 
-        // Disables the default reveal.js slide layout (scaling and centering)
-        // so that you can use custom CSS layout
-        disableLayout: false,
-
-        // Vertical centering of slides
-        center: true,
-
-        // Enables touch navigation on devices with touch input
-        touch: true,
-
-        // Loop the presentation
-        loop: false,
-
-        // Change the presentation direction to be RTL
-        rtl: false,
-
-        // see https://revealjs.com/vertical-slides/#navigation-mode
-        navigationMode: 'default',
-
-        // Randomizes the order of slides each time the presentation loads
-        shuffle: false,
-
-        // Turns fragments on and off globally
-        fragments: true,
-
-        // Flags whether to include the current fragment in the URL,
-        // so that reloading brings you to the same fragment position
-        fragmentInURL: true,
-
-        // Flags if the presentation is running in an embedded mode,
-        // i.e. contained within a limited portion of the screen
-        embedded: false,
-
-        // Flags if we should show a help overlay when the questionmark
-        // key is pressed
-        help: true,
-
-        // Flags if it should be possible to pause the presentation (blackout)
-        pause: true,
-
-        // Flags if speaker notes should be visible to all viewers
-        showNotes: false,
-
-        // Global override for autoplaying embedded media (null/true/false)
-        autoPlayMedia: null,
-
-        // Global override for preloading lazy-loaded iframes (null/true/false)
-        preloadIframes: null,
-
-        // Number of milliseconds between automatically proceeding to the
-        // next slide, disabled when set to 0, this value can be overwritten
-        // by using a data-autoslide attribute on your slides
-        autoSlide: 0,
-
-        // Stop auto-sliding after user input
-        autoSlideStoppable: true,
-
-        // Use this method for navigation when auto-sliding
-        autoSlideMethod: null,
-
-        // Specify the average time in seconds that you think you will spend
-        // presenting each slide. This is used to show a pacing timer in the
-        // speaker view
-        defaultTiming: null,
-
-        // Enable slide navigation via mouse wheel
-        mouseWheel: false,
-
-        // The display mode that will be used to show slides
-        display: 'block',
-
-        // Hide cursor if inactive
-        hideInactiveCursor: true,
-
-        // Time before the cursor is hidden (in ms)
-        hideCursorTime: 5000,
-
-        // Opens links in an iframe preview overlay
-        previewLinks: false,
-
-        // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'slide',
-
-        // Transition speed (default/fast/slow)
-        transitionSpeed: 'default',
-
-        // Transition style for full page slide backgrounds
-        // (none/fade/slide/convex/concave/zoom)
-        backgroundTransition: 'fade',
-
-        // Number of slides away from the current that are visible
-        viewDistance: 3,
-
-        // Number of slides away from the current that are visible on mobile
-        // devices. It is advisable to set this to a lower number than
-        // viewDistance in order to save resources.
-        mobileViewDistance: 2,
-
-        // The "normal" size of the presentation, aspect ratio will be preserved
-        // when the presentation is scaled to fit different resolutions. Can be
-        // specified using percentage units.
-        width: 1600,
-
-        height: 900,
-
-        math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
-          config: 'TeX-AMS_HTML-full',
-          tex2jax: {
-            inlineMath: [['\\(','\\)']],
-            displayMath: [['\\[','\\]']],
-            balanceBraces: true,
-            processEscapes: false,
-            processRefs: true,
-            processEnvironments: true,
-            preview: 'TeX',
-            skipTags: ['script','noscript','style','textarea','pre','code'],
-            ignoreClass: 'tex2jax_ignore',
-            processClass: 'tex2jax_process'
-          },
-        },
-
-        // reveal.js plugins
-        plugins: [
-          RevealMath,
-          RevealNotes,
-          RevealSearch,
-          RevealZoom
-        ]
-      });
+        // Keyboard shortcuts info
+        console.log('Keyboard shortcuts:');
+        console.log('  S - Speaker notes');
+        console.log('  B - Chalkboard');
+        console.log('  C - Canvas (draw on slide)');
+        console.log('  M - Menu');
+        console.log('  O - Overview');
+        console.log('  F - Fullscreen');
+        console.log('  ? - Help');
     </script>
-    </body>
+</body>
 </html>
