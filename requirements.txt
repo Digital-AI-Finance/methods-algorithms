@@ -1,0 +1,28 @@
+# Methods and Algorithms - Python Dependencies
+
+# Core scientific computing
+numpy>=1.21.0
+pandas>=1.3.0
+scipy>=1.7.0
+
+# Machine learning
+scikit-learn>=1.0.0
+
+# Visualization
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Jupyter notebooks
+jupyter>=1.0.0
+nbformat>=5.0.0
+nbconvert>=6.0.0
+
+# Configuration
+pyyaml>=6.0
+
+# HTTP requests (for link validation)
+requests>=2.26.0
+
+# Optional: Deep learning (for L06)
+# torch>=1.10.0
+# gensim>=4.0.0  # For Word2Vec

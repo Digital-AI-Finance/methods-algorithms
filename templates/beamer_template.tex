@@ -1,0 +1,223 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+
+% Theme
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+% Custom colors (ML palette)
+\definecolor{MLPurple}{RGB}{51,51,178}
+\definecolor{MLBlue}{RGB}{0,102,204}
+\definecolor{MLOrange}{RGB}{255,127,14}
+\definecolor{MLGreen}{RGB}{44,160,44}
+\definecolor{MLRed}{RGB}{214,39,40}
+
+% Apply colors
+\setbeamercolor{structure}{fg=MLPurple}
+\setbeamercolor{title}{fg=MLPurple}
+\setbeamercolor{frametitle}{fg=MLPurple}
+
+% Footer customization
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}Methods and Algorithms
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}MSc Data Science
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Custom commands
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textit{#1}}
+\newcommand{\highlight}[1]{\textcolor{MLOrange}{\textbf{#1}}}
+\newcommand{\mathbold}[1]{\boldsymbol{#1}}
+
+% Title information
+\title[TOPIC\_SHORT]{TOPIC\_TITLE}
+\subtitle{SUBTITLE}
+\author{Methods and Algorithms}
+\institute{MSc Data Science}
+\date{Spring 2026}
+
+\begin{document}
+
+% Title slide
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Outline
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+% ============================================
+% SECTION: Problem (PMSP)
+% ============================================
+\section{Problem}
+
+\begin{frame}[t]{The Business Challenge}
+  \textbf{Finance Use Case: FINANCE\_CASE}
+  \begin{itemize}
+    \item First key point about the business problem
+    \item Second key point
+    \item Why existing methods fail
+  \end{itemize}
+
+  \begin{center}
+    % \includegraphics[width=0.55\textwidth]{01_chart_name/chart.pdf}
+  \end{center}
+
+  \bottomnote{Key insight or motivation for this topic}
+\end{frame}
+
+% ============================================
+% SECTION: Method (PMSP)
+% ============================================
+\section{Method}
+
+\begin{frame}[t]{Algorithm Overview}
+  \textbf{Key Concepts}
+  \begin{itemize}
+    \item Concept 1
+    \item Concept 2
+    \item Concept 3
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Mathematical Foundation}
+  \textbf{Core Equation}
+
+  \begin{equation}
+    % y = X\beta + \epsilon
+  \end{equation}
+
+  \begin{itemize}
+    \item Variable definitions
+    \item Assumptions
+  \end{itemize}
+\end{frame}
+
+% ============================================
+% SECTION: Solution (PMSP)
+% ============================================
+\section{Solution}
+
+\begin{frame}[t]{Implementation}
+  \textbf{Algorithm Steps}
+  \begin{enumerate}
+    \item Step 1
+    \item Step 2
+    \item Step 3
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[t]{Results Visualization}
+  \begin{center}
+    % \includegraphics[width=0.65\textwidth]{02_chart_name/chart.pdf}
+  \end{center}
+
+  \bottomnote{Interpretation of the results}
+\end{frame}
+
+% ============================================
+% SECTION: Practice (PMSP)
+% ============================================
+\section{Practice}
+
+\begin{frame}[t]{Hands-on Exercise}
+  \textbf{Open the Colab Notebook}
+
+  \begin{itemize}
+    \item Exercise 1: Implement from scratch
+    \item Exercise 2: Use scikit-learn
+    \item Exercise 3: Visualize results
+  \end{itemize}
+
+  \vspace{1em}
+  \textbf{Link:} \url{https://colab.research.google.com/...}
+\end{frame}
+
+% ============================================
+% SECTION: Decision Framework
+% ============================================
+\section{Decision Framework}
+
+\begin{frame}[t]{When to Use This Method}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{\textcolor{MLGreen}{When to Use}}
+      \begin{itemize}
+        \item Criterion 1
+        \item Criterion 2
+        \item Criterion 3
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\textcolor{MLRed}{When NOT to Use}}
+      \begin{itemize}
+        \item Criterion 1
+        \item Criterion 2
+        \item Criterion 3
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Pros and Cons}
+  \begin{table}
+    \centering
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{Pros} & \textbf{Cons} \\
+      \midrule
+      Pro 1 & Con 1 \\
+      Pro 2 & Con 2 \\
+      Pro 3 & Con 3 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+% ============================================
+% Summary
+% ============================================
+\section{Summary}
+
+\begin{frame}[t]{Key Takeaways}
+  \begin{enumerate}
+    \item Takeaway 1
+    \item Takeaway 2
+    \item Takeaway 3
+  \end{enumerate}
+
+  \vspace{1em}
+  \textbf{Next Session:} NEXT\_TOPIC
+\end{frame}
+
+\begin{frame}[t]{References}
+  \footnotesize
+  \begin{itemize}
+    \item James et al. (2021). \textit{Introduction to Statistical Learning}. \url{https://www.statlearning.com/}
+    \item Hastie et al. (2009). \textit{Elements of Statistical Learning}. \url{https://hastie.su.domains/ElemStatLearn/}
+  \end{itemize}
+\end{frame}
+
+\end{document}
