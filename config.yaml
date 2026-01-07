@@ -1,0 +1,115 @@
+# Methods and Algorithms - Course Configuration
+
+course:
+  id: methods-algorithms-2026
+  title: Methods and Algorithms
+  subtitle: MSc Data Science
+  version: 1.0.0
+  semester: Spring 2026
+
+  purpose: >
+    Master core ML algorithms and develop a systematic approach to choosing
+    the right method for data-driven decision making in finance and business contexts.
+
+  prerequisites:
+    - Python programming
+    - Statistics fundamentals
+    - Linear algebra basics
+
+  domain_focus: Finance and Banking
+
+pedagogy:
+  framework: Problem-Based Learning
+  lecture_structure: PMSP  # Problem-Method-Solution-Practice
+
+  pmsp_durations:
+    problem: 15  # minutes
+    method: 45
+    solution: 45
+    practice: 75
+
+  decision_framework:
+    - when_to_use
+    - when_not_to_use
+    - pros_cons_table
+    - decision_flowchart
+
+  bloom_levels:
+    - remember
+    - understand
+    - apply
+    - analyze
+    - evaluate
+    - create
+
+topics:
+  - id: L01
+    title: Introduction & Linear Regression
+    finance_case: House price prediction, factor models
+
+  - id: L02
+    title: Logistic Regression
+    finance_case: Credit scoring, default prediction
+
+  - id: L03
+    title: K-Nearest Neighbours & K-Means
+    finance_case: Customer segmentation, anomaly detection
+
+  - id: L04
+    title: Random Forests
+    finance_case: Fraud detection, feature importance
+
+  - id: L05
+    title: PCA & t-SNE
+    finance_case: Portfolio risk decomposition, visualization
+
+  - id: L06
+    title: Embeddings & Reinforcement Learning
+    finance_case: Sentiment analysis, trading strategies
+
+assessment:
+  quizzes:
+    count: 3
+    duration_minutes: 30
+    attempts: 1
+    format: moodle_xml
+
+  presentations:
+    count: 15
+    duration_minutes: 15
+    selection: before_session_1
+
+  capstone:
+    format: open_ended
+    deliverable: report_only
+    pages: 10-15
+    due: 2_weeks_after_session_6
+
+slides:
+  theme: Madrid
+  font_size: 8pt
+  overview_slides: 10
+  deepdive_slides: 30
+
+charts:
+  figsize: [10, 6]
+  font_size: 14
+  dpi: 150
+  colors:
+    primary: "#3333B2"
+    secondary: "#0066CC"
+    accent: "#FF7F0E"
+    success: "#2CA02C"
+    danger: "#D62728"
+
+github:
+  organization: Digital-AI-Finance
+  repository: methods-algorithms
+  visibility: private
+  pages: true
+
+validation:
+  latex_strict: true
+  check_links: true
+  execute_notebooks: true
+  regenerate_charts: true

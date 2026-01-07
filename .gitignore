@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.vrb
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+temp/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Build artifacts
+*.pdf
+!templates/*.pdf
+!docs/assets/*.pdf
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
