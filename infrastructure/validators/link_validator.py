@@ -140,7 +140,22 @@ def validate_html_links(html_file: str = None, check_external: bool = True) -> d
             resolved = html_path.parent / link
         resolved = resolved.resolve()
 
-        if resolved.exists():
+        # Check if link escapes docs/ folder (won't work on GitHub Pages)
+        try:
+            resolved.relative_to(docs_dir.resolve())
+            inside_docs = True
+        except ValueError:
+            inside_docs = False
+
+        if not inside_docs:
+            results["failed"].append({
+                "type": "local",
+                "link": link,
+                "error": "ESCAPES docs/ - won't work on GitHub Pages",
+                "resolved": str(resolved)
+            })
+            print(f"    [FAIL] {link} -> ESCAPES docs/ folder!")
+        elif resolved.exists():
             results["passed"].append({"type": "local", "link": link, "resolved": str(resolved)})
             print(f"    [PASS] {link}")
         else:
