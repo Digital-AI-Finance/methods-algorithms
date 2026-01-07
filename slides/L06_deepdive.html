@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Methods and Algorithms – MSc Data Science">
+  <title>L06: Embeddings &amp; RL</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">L06: Embeddings &amp; RL</h1>
+  <p class="subtitle">Deep Dive: Theory, Implementation, and
+Applications</p>
+  <p class="author">Methods and Algorithms – MSc Data Science</p>
+</section>
+
+<section class="slide level2">
+
+<div class="frame">
+
+</div>
+<div class="frame">
+<p><span>Part 1: Word Embeddings Introduction</span> <strong>The Problem
+with One-Hot Encoding</strong></p>
+<ul>
+<li><p>Vocabulary of 10,000 words <span
+class="math inline">\(\rightarrow\)</span> 10,000-dim sparse
+vectors</p></li>
+<li><p>No semantic similarity: “king” and “queen” equally distant from
+“car”</p></li>
+<li><p>Curse of dimensionality</p></li>
+</ul>
+<p><strong>Solution: Dense Embeddings</strong></p>
+<ul>
+<li><p>Map words to dense vectors (50-300 dimensions)</p></li>
+<li><p>Similar words <span class="math inline">\(\rightarrow\)</span>
+similar vectors</p></li>
+<li><p>Learn from context (distributional hypothesis)</p></li>
+</ul>
+<p><span style="color: gray">“You shall know a word by the company it
+keeps” – Firth, 1957</span></p>
+</div>
+<div class="frame">
+<p><span>Word2Vec: Skip-gram</span> <strong>Objective:</strong> Predict
+context words given target word <span
+class="math display">\[P(w_{context} | w_{target}) =
+\frac{\exp(v_{context}^T v_{target})}{\sum_{w \in V} \exp(v_w^T
+v_{target})}\]</span></p>
+<p><strong>Training:</strong></p>
+<ul>
+<li><p>Slide window over text corpus</p></li>
+<li><p>For each word, predict surrounding words</p></li>
+<li><p>Update embeddings via gradient descent</p></li>
+</ul>
+<p><span style="color: gray">Skip-gram works well for rare words; CBOW
+better for frequent words</span></p>
+</div>
+<div class="frame">
+<p><span>Word Embedding Space</span></p>
+<div class="center">
+<p><embed data-src="01_word_embedding_space/chart.pdf"
+style="width:55.0%" /></p>
+</div>
+<p><span style="color: gray">Finance terms cluster by semantic category
+in embedding space</span></p>
+</div>
+<div class="frame">
+<p><span>Word Analogies</span> <strong>Famous Example:</strong> <span
+class="math display">\[\vec{king} - \vec{man} + \vec{woman} \approx
+\vec{queen}\]</span></p>
+<p><strong>Finance Examples:</strong></p>
+<ul>
+<li><p><span class="math inline">\(\vec{stock} - \vec{equity} +
+\vec{debt} \approx \vec{bond}\)</span></p></li>
+<li><p><span class="math inline">\(\vec{CEO} - \vec{company} +
+\vec{country} \approx \vec{president}\)</span></p></li>
+</ul>
+<p><strong>How it works:</strong></p>
+<ul>
+<li><p>Vector arithmetic in embedding space</p></li>
+<li><p>Relationships encoded as directions</p></li>
+</ul>
+<p><span style="color: gray">Embeddings capture relational structure,
+not just similarity</span></p>
+</div>
+<div class="frame">
+<p><span>Similarity Measures</span> <strong>Cosine Similarity:</strong>
+<span class="math display">\[\text{sim}(u, v) = \frac{u \cdot v}{||u||
+\cdot ||v||} = \cos(\theta)\]</span></p>
+<ul>
+<li><p>Range: <span class="math inline">\([-1, 1]\)</span></p></li>
+<li><p>1 = identical direction, 0 = orthogonal, -1 = opposite</p></li>
+</ul>
+<div class="center">
+<p><embed data-src="02_similarity_heatmap/chart.pdf"
+style="width:35.0%" /></p>
+</div>
+<p><span style="color: gray">Cosine similarity ignores magnitude,
+focuses on direction</span></p>
+</div>
+<div class="frame">
+<p><span>Pre-trained Embeddings</span> <strong>Popular
+Options:</strong></p>
+<ul>
+<li><p><strong>Word2Vec</strong>: Google, 300-dim, 3M words</p></li>
+<li><p><strong>GloVe</strong>: Stanford, trained on Wikipedia + Common
+Crawl</p></li>
+<li><p><strong>FastText</strong>: Facebook, handles subwords (OOV
+robust)</p></li>
+</ul>
+<p><strong>Domain-Specific:</strong></p>
+<ul>
+<li><p>FinBERT: Pre-trained on financial text</p></li>
+<li><p>BioBERT: Biomedical domain</p></li>
+</ul>
+<p><span style="color: gray">Fine-tuning pre-trained embeddings usually
+outperforms training from scratch</span></p>
+</div>
+<div class="frame">
+<p><span>Embeddings in Finance</span> <strong>Applications:</strong></p>
+<ul>
+<li><p><strong>Sentiment Analysis</strong>: News <span
+class="math inline">\(\rightarrow\)</span> embedding <span
+class="math inline">\(\rightarrow\)</span> positive/negative</p></li>
+<li><p><strong>Document Similarity</strong>: Find similar SEC
+filings</p></li>
+<li><p><strong>Named Entity Recognition</strong>: Extract company
+names</p></li>
+<li><p><strong>Event Detection</strong>: Identify earnings
+announcements</p></li>
+</ul>
+<p><strong>Sentence Embeddings:</strong></p>
+<ul>
+<li><p>Average word vectors (simple baseline)</p></li>
+<li><p>Doc2Vec (paragraph vectors)</p></li>
+<li><p>Sentence-BERT (state-of-the-art)</p></li>
+</ul>
+<p><span style="color: gray">Aggregate word embeddings to represent
+documents</span></p>
+</div>
+<div class="frame">
+<p><span>Part 2: Reinforcement Learning Framework</span> <strong>Key
+Components:</strong></p>
+<ul>
+<li><p><strong>Agent</strong>: Learner/decision-maker</p></li>
+<li><p><strong>Environment</strong>: What agent interacts with</p></li>
+<li><p><strong>State</strong> <span class="math inline">\(s\)</span>:
+Current situation</p></li>
+<li><p><strong>Action</strong> <span class="math inline">\(a\)</span>:
+What agent can do</p></li>
+<li><p><strong>Reward</strong> <span class="math inline">\(r\)</span>:
+Feedback signal</p></li>
+</ul>
+<div class="center">
+<p><embed data-src="03_rl_loop/chart.pdf" style="width:40.0%" /></p>
+</div>
+<p><span style="color: gray">RL: Learning from interaction, not from
+labeled examples</span></p>
+</div>
+<div class="frame">
+<p><span>Markov Decision Process</span> <strong>MDP Tuple:</strong>
+<span class="math inline">\((S, A, P, R, \gamma)\)</span></p>
+<ul>
+<li><p><span class="math inline">\(S\)</span>: Set of states</p></li>
+<li><p><span class="math inline">\(A\)</span>: Set of actions</p></li>
+<li><p><span class="math inline">\(P(s&#39;|s, a)\)</span>: Transition
+probability</p></li>
+<li><p><span class="math inline">\(R(s, a, s&#39;)\)</span>: Reward
+function</p></li>
+<li><p><span class="math inline">\(\gamma \in [0,1]\)</span>: Discount
+factor</p></li>
+</ul>
+<p><strong>Markov Property:</strong> <span
+class="math display">\[P(s_{t+1} | s_t, a_t, s_{t-1}, ...) = P(s_{t+1} |
+s_t, a_t)\]</span> <span style="color: gray">Future depends only on
+current state, not history</span></p>
+</div>
+<div class="frame">
+<p><span>Policy and Value Functions</span> <strong>Policy:</strong>
+<span class="math inline">\(\pi(a|s) = P(A_t = a | S_t = s)\)</span></p>
+<ul>
+<li><p>Maps states to action probabilities</p></li>
+<li><p>Goal: Find optimal policy <span
+class="math inline">\(\pi^*\)</span></p></li>
+</ul>
+<p><strong>Value Function:</strong> <span
+class="math display">\[V^\pi(s) = \mathbb{E}_\pi \left[
+\sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s \right]\]</span></p>
+<p><strong>Q-Function (Action-Value):</strong> <span
+class="math display">\[Q^\pi(s, a) = \mathbb{E}_\pi \left[
+\sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s, A_0 = a \right]\]</span>
+<span style="color: gray">Q-function: expected return starting from
+state s, taking action a</span></p>
+</div>
+<div class="frame">
+<p><span>Bellman Equation</span> <strong>Optimal Q-Function:</strong>
+<span class="math display">\[Q^*(s, a) = \mathbb{E} \left[ R + \gamma
+\max_{a&#39;} Q^*(s&#39;, a&#39;) \right]\]</span>
+<strong>Interpretation:</strong></p>
+<ul>
+<li><p>Value = immediate reward + discounted future value</p></li>
+<li><p>Recursive definition enables dynamic programming</p></li>
+</ul>
+<p><strong>Optimal Policy:</strong> <span
+class="math display">\[\pi^*(s) = \arg\max_a Q^*(s, a)\]</span> <span
+style="color: gray">Bellman equation: foundation of all value-based RL
+methods</span></p>
+</div>
+<div class="frame">
+<p><span>Q-Learning Algorithm</span> <strong>Update Rule:</strong> <span
+class="math display">\[Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r +
+\gamma \max_{a&#39;} Q(s&#39;, a&#39;) - Q(s, a) \right]\]</span>
+<strong>Algorithm:</strong></p>
+<ol>
+<li><p>Initialize <span class="math inline">\(Q(s,a)\)</span>
+arbitrarily</p></li>
+<li><p>For each episode:</p>
+<ul>
+<li><p>Observe state <span class="math inline">\(s\)</span></p></li>
+<li><p>Choose action <span class="math inline">\(a\)</span> (<span
+class="math inline">\(\epsilon\)</span>-greedy)</p></li>
+<li><p>Execute <span class="math inline">\(a\)</span>, observe <span
+class="math inline">\(r\)</span>, <span
+class="math inline">\(s&#39;\)</span></p></li>
+<li><p>Update <span class="math inline">\(Q(s, a)\)</span></p></li>
+</ul></li>
+</ol>
+<p><span style="color: gray">Q-learning is off-policy: learns optimal Q
+regardless of policy followed</span></p>
+</div>
+<div class="frame">
+<p><span>Q-Values Visualization</span></p>
+<div class="center">
+<p><embed data-src="04_q_learning_grid/chart.pdf"
+style="width:45.0%" /></p>
+</div>
+<p><span style="color: gray">Arrows show policy; colors show Q-values
+(green=high, red=negative)</span></p>
+</div>
+<div class="frame">
+<p><span>Exploration vs Exploitation</span> <strong>The
+Dilemma:</strong></p>
+<ul>
+<li><p><strong>Exploit</strong>: Choose best known action
+(greedy)</p></li>
+<li><p><strong>Explore</strong>: Try new actions (discover better
+options)</p></li>
+</ul>
+<p><strong><span class="math inline">\(\epsilon\)</span>-Greedy
+Strategy:</strong> <span class="math display">\[a = \begin{cases}
+\arg\max_a Q(s,a) &amp; \text{with probability } 1-\epsilon \\
+\text{random action} &amp; \text{with probability } \epsilon
+\end{cases}\]</span> <strong>Decay Schedule:</strong></p>
+<ul>
+<li><p>Start with high <span class="math inline">\(\epsilon\)</span>
+(explore more)</p></li>
+<li><p>Decay <span class="math inline">\(\epsilon\)</span> over time
+(exploit more)</p></li>
+</ul>
+<p><span style="color: gray">Balance: too much exploration wastes time;
+too little misses optima</span></p>
+</div>
+<div class="frame">
+<p><span>Learning Curves</span></p>
+<div class="center">
+<p><embed data-src="05_reward_curves/chart.pdf"
+style="width:55.0%" /></p>
+</div>
+<p><span style="color: gray">Reward improves as agent learns; DQN often
+outperforms tabular Q-learning</span></p>
+</div>
+<div class="frame">
+<p><span>Part 3: RL for Trading</span> <strong>Formulation:</strong></p>
+<ul>
+<li><p><strong>State</strong>: Price history, portfolio, technical
+indicators</p></li>
+<li><p><strong>Action</strong>: Buy, sell, hold (+ position
+size)</p></li>
+<li><p><strong>Reward</strong>: Profit/loss, risk-adjusted
+return</p></li>
+</ul>
+<p><strong>Challenges:</strong></p>
+<ul>
+<li><p>Non-stationary environment</p></li>
+<li><p>High noise, low signal-to-noise ratio</p></li>
+<li><p>Transaction costs</p></li>
+<li><p>Partial observability</p></li>
+</ul>
+<p><span style="color: gray">RL for trading is active research area; not
+solved problem</span></p>
+</div>
+<div class="frame">
+<p><span>Trading Policy</span></p>
+<div class="center">
+<p><embed data-src="06_policy_viz/chart.pdf" style="width:55.0%" /></p>
+</div>
+<p><span style="color: gray">Learned policy: buy when oversold/high
+momentum, sell when overbought</span></p>
+</div>
+<div class="frame">
+<p><span>Deep Q-Networks (DQN)</span> <strong>Idea</strong>: Use neural
+network to approximate Q-function <span class="math display">\[Q(s, a;
+\theta) \approx Q^*(s, a)\]</span> <strong>Key Innovations:</strong></p>
+<ul>
+<li><p><strong>Experience Replay</strong>: Store transitions, sample
+randomly</p></li>
+<li><p><strong>Target Network</strong>: Separate network for
+stability</p></li>
+<li><p><strong>Function Approximation</strong>: Handle large state
+spaces</p></li>
+</ul>
+<p><span style="color: gray">DQN: breakthrough for RL on Atari games
+(Mnih et al., 2015)</span></p>
+</div>
+<div class="frame">
+<p><span>Policy Gradient Methods</span> <strong>Direct Policy
+Optimization:</strong> <span class="math display">\[\nabla_\theta
+J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log
+\pi_\theta(a|s) \cdot Q^{\pi_\theta}(s, a) \right]\]</span>
+<strong>Algorithms:</strong></p>
+<ul>
+<li><p>REINFORCE (vanilla policy gradient)</p></li>
+<li><p>Actor-Critic (combine value and policy)</p></li>
+<li><p>PPO (Proximal Policy Optimization)</p></li>
+<li><p>A3C (Asynchronous Advantage Actor-Critic)</p></li>
+</ul>
+<p><span style="color: gray">Policy gradient: directly optimize policy,
+can handle continuous actions</span></p>
+</div>
+<div class="frame">
+<p><span>Part 4: When to Use What</span></p>
+<div class="center">
+<p><embed data-src="07_decision_flowchart/chart.pdf"
+style="width:50.0%" /></p>
+</div>
+<p><span style="color: gray">Embeddings for text/categorical; RL for
+sequential decisions</span></p>
+</div>
+<div class="frame">
+<p><span>Comparison Table</span></p>
+<div class="center">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Aspect</strong></th>
+<th style="text-align: center;"><strong>Embeddings</strong></th>
+<th style="text-align: center;"><strong>RL</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Input</td>
+<td style="text-align: center;">Text, categorical</td>
+<td style="text-align: center;">State sequence</td>
+</tr>
+<tr>
+<td style="text-align: left;">Output</td>
+<td style="text-align: center;">Dense vectors</td>
+<td style="text-align: center;">Actions/policy</td>
+</tr>
+<tr>
+<td style="text-align: left;">Learning</td>
+<td style="text-align: center;">Unsupervised/supervised</td>
+<td style="text-align: center;">Trial and error</td>
+</tr>
+<tr>
+<td style="text-align: left;">Signal</td>
+<td style="text-align: center;">Context (words)</td>
+<td style="text-align: center;">Rewards</td>
+</tr>
+<tr>
+<td style="text-align: left;">Key challenge</td>
+<td style="text-align: center;">Semantics</td>
+<td style="text-align: center;">Credit assignment</td>
+</tr>
+<tr>
+<td style="text-align: left;">Finance use</td>
+<td style="text-align: center;">Sentiment</td>
+<td style="text-align: center;">Trading</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><span style="color: gray">Both transform complex inputs into
+learnable representations</span></p>
+</div>
+<div class="frame">
+<p><span>Part 5: Implementation</span> <strong>Embeddings in
+Python:</strong></p>
+<ul>
+<li><p><code>gensim.models.Word2Vec</code>: Train your own</p></li>
+<li><p><code>gensim.downloader.load(’glove-wiki-gigaword-100’)</code>:
+Pre-trained</p></li>
+<li><p><code>transformers.BertModel</code>: BERT embeddings</p></li>
+</ul>
+<p><strong>RL Libraries:</strong></p>
+<ul>
+<li><p><code>gymnasium</code>: Environment interface (formerly OpenAI
+Gym)</p></li>
+<li><p><code>stable-baselines3</code>: Pre-implemented
+algorithms</p></li>
+<li><p><code>ray[rllib]</code>: Scalable RL</p></li>
+</ul>
+<p><span style="color: gray">Start with pre-trained embeddings; use
+stable-baselines3 for RL</span></p>
+</div>
+<div class="frame">
+<p><span>Practical Tips</span> <strong>Embeddings:</strong></p>
+<ul>
+<li><p>Start with pre-trained, fine-tune if needed</p></li>
+<li><p>Check domain match (general vs financial)</p></li>
+<li><p>Visualize with t-SNE/UMAP to verify quality</p></li>
+</ul>
+<p><strong>RL:</strong></p>
+<ul>
+<li><p>Start simple (tabular Q-learning before DQN)</p></li>
+<li><p>Reward shaping is crucial (sparse rewards are hard)</p></li>
+<li><p>Normalize observations</p></li>
+<li><p>Use established environments first (Gym, FinRL)</p></li>
+</ul>
+<p><span style="color: gray">Both domains: start simple, iterate,
+validate thoroughly</span></p>
+</div>
+<div class="frame">
+<p><span>Summary</span> <strong>Embeddings:</strong></p>
+<ul>
+<li><p>Dense vector representations of text/categories</p></li>
+<li><p>Capture semantic similarity</p></li>
+<li><p>Use pre-trained (Word2Vec, GloVe, BERT)</p></li>
+</ul>
+<p><strong>Reinforcement Learning:</strong></p>
+<ul>
+<li><p>Agent learns from environment interaction</p></li>
+<li><p>Q-learning: value-based, tabular or deep (DQN)</p></li>
+<li><p>Applications: trading, portfolio optimization</p></li>
+</ul>
+<p><strong>Key Takeaway:</strong> Different tools for different problems
+<span style="color: gray">Course complete! Apply these methods in your
+capstone project</span></p>
+</div>
+<div class="frame">
+<p><span>References</span> <strong>Embeddings:</strong></p>
+<ul>
+<li><p>Mikolov et al. (2013). Word2Vec</p></li>
+<li><p>Pennington et al. (2014). GloVe</p></li>
+<li><p>Devlin et al. (2019). BERT</p></li>
+</ul>
+<p><strong>Reinforcement Learning:</strong></p>
+<ul>
+<li><p>Sutton &amp; Barto (2018). RL: An Introduction (free
+online)</p></li>
+<li><p>Mnih et al. (2015). DQN (Atari)</p></li>
+<li><p>Schulman et al. (2017). PPO</p></li>
+</ul>
+<p><strong>Finance Applications:</strong></p>
+<ul>
+<li><p>Liu et al. (2021). FinRL: Deep RL for Trading</p></li>
+<li><p>Araci (2019). FinBERT</p></li>
+</ul>
+<p><span style="color: gray">Sutton &amp; Barto: the definitive RL
+textbook (free at incompleteideas.net)</span></p>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 900,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
