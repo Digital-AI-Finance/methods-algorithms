@@ -111,11 +111,11 @@
 <p> By the end of this session, you will
 be able to:</p>
 <ol>
-<li class="fragment"><p><strong>Understand</strong> the ordinary least squares (OLS)
+<li><p><strong>Understand</strong> the ordinary least squares (OLS)
 framework</p></li>
-<li class="fragment"><p><strong>Apply</strong> gradient descent for parameter
+<li><p><strong>Apply</strong> gradient descent for parameter
 optimization</p></li>
-<li class="fragment"><p><strong>Interpret</strong> regression coefficients in business
+<li><p><strong>Interpret</strong> regression coefficients in business
 contexts</p></li>
 </ol>
 <p><strong>Finance Application:</strong> House price prediction, factor
@@ -130,17 +130,17 @@ models</p>
 <p> <strong>Finance Use Case:
 Predicting House Prices</strong></p>
 <ul>
-<li class="fragment"><p>Banks need accurate property valuations for mortgages</p></li>
-<li class="fragment"><p>Insurance companies assess property risk</p></li>
-<li class="fragment"><p>Investors evaluate real estate portfolios</p></li>
+<li><p>Banks need accurate property valuations for mortgages</p></li>
+<li><p>Insurance companies assess property risk</p></li>
+<li><p>Investors evaluate real estate portfolios</p></li>
 </ul>
 <p><strong>The Question:</strong> Given features (size, location, age),
 what price?</p>
 <p><strong>Why Linear Regression?</strong></p>
 <ul>
-<li class="fragment"><p>Interpretable coefficients (price per square meter)</p></li>
-<li class="fragment"><p>Fast, well-understood method</p></li>
-<li class="fragment"><p>Strong baseline for comparison</p></li>
+<li><p>Interpretable coefficients (price per square meter)</p></li>
+<li><p>Fast, well-understood method</p></li>
+<li><p>Strong baseline for comparison</p></li>
 </ul>
 <p><em>Linear regression: the “hello world” of machine learning</em></p>
 
@@ -154,13 +154,13 @@ Model the relationship between inputs and a continuous output</p>
 <p><span class="math display">\[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2
 + \cdots + \beta_p x_p + \varepsilon\]</span></p>
 <ul>
-<li class="fragment"><p><span class="math inline">\(y\)</span>: Target variable (house
+<li><p><span class="math inline">\(y\)</span>: Target variable (house
 price)</p></li>
-<li class="fragment"><p><span class="math inline">\(x_1, \ldots, x_p\)</span>: Features
+<li><p><span class="math inline">\(x_1, \ldots, x_p\)</span>: Features
 (size, bedrooms, age)</p></li>
-<li class="fragment"><p><span class="math inline">\(\beta_0, \ldots, \beta_p\)</span>:
+<li><p><span class="math inline">\(\beta_0, \ldots, \beta_p\)</span>:
 Coefficients to learn</p></li>
-<li class="fragment"><p><span class="math inline">\(\varepsilon\)</span>: Random error
+<li><p><span class="math inline">\(\varepsilon\)</span>: Random error
 term</p></li>
 </ul>
 <p><em>Goal: Find coefficients that minimize prediction error</em></p>
@@ -177,9 +177,9 @@ Minimize the sum of squared errors (SSE)</p>
 \mathbf{X}\boldsymbol{\beta} \|^2\]</span></p>
 <p><strong>Why Squared Errors?</strong></p>
 <ul>
-<li class="fragment"><p>Penalizes large errors more than small errors</p></li>
-<li class="fragment"><p>Differentiable (enables gradient-based optimization)</p></li>
-<li class="fragment"><p>Leads to closed-form solution</p></li>
+<li><p>Penalizes large errors more than small errors</p></li>
+<li><p>Differentiable (enables gradient-based optimization)</p></li>
+<li><p>Leads to closed-form solution</p></li>
 </ul>
 <p><em>This objective function defines “ordinary least squares”
 (OLS)</em></p>
@@ -197,26 +197,26 @@ Minimize the sum of squared errors (SSE)</p>
 \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}\]</span></p>
 <p><span style="color: #2CA02C">Pros:</span></p>
 <ul>
-<li class="fragment"><p>Exact solution</p></li>
-<li class="fragment"><p>One computation</p></li>
+<li><p>Exact solution</p></li>
+<li><p>One computation</p></li>
 </ul>
 <p><span style="color: #D62728">Cons:</span></p>
 <ul>
-<li class="fragment"><p>Slow for large <span class="math inline">\(p\)</span></p></li>
-<li class="fragment"><p>Memory intensive</p></li>
+<li><p>Slow for large <span class="math inline">\(p\)</span></p></li>
+<li><p>Memory intensive</p></li>
 </ul>
 </div><div class="column">
 <p> <strong>2. Gradient Descent</strong> <span class="math display">\[\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t -
 \alpha \nabla L(\boldsymbol{\beta}_t)\]</span></p>
 <p><span style="color: #2CA02C">Pros:</span></p>
 <ul>
-<li class="fragment"><p>Scales to big data</p></li>
-<li class="fragment"><p>Memory efficient</p></li>
+<li><p>Scales to big data</p></li>
+<li><p>Memory efficient</p></li>
 </ul>
 <p><span style="color: #D62728">Cons:</span></p>
 <ul>
-<li class="fragment"><p>Requires tuning <span class="math inline">\(\alpha\)</span></p></li>
-<li class="fragment"><p>Iterative process</p></li>
+<li><p>Requires tuning <span class="math inline">\(\alpha\)</span></p></li>
+<li><p>Iterative process</p></li>
 </ul>
 </div>
 </div>
@@ -234,13 +234,13 @@ House price model</p>
 \text{Age}\]</span></p>
 <p><strong>Interpretation:</strong></p>
 <ul>
-<li class="fragment"><p><span class="math inline">\(\beta_0 = 50,000\)</span>: Base price
+<li><p><span class="math inline">\(\beta_0 = 50,000\)</span>: Base price
 (all features = 0)</p></li>
-<li class="fragment"><p><span class="math inline">\(\beta_1 = 200\)</span>: Each extra
+<li><p><span class="math inline">\(\beta_1 = 200\)</span>: Each extra
 sqm adds $200</p></li>
-<li class="fragment"><p><span class="math inline">\(\beta_2 = 15,000\)</span>: Each
+<li><p><span class="math inline">\(\beta_2 = 15,000\)</span>: Each
 bedroom adds $15,000</p></li>
-<li class="fragment"><p><span class="math inline">\(\beta_3 = -1,000\)</span>: Each year
+<li><p><span class="math inline">\(\beta_3 = -1,000\)</span>: Each year
 of age subtracts $1,000</p></li>
 </ul>
 <p><em>Coefficients show marginal effect, holding others
@@ -253,10 +253,10 @@ constant</em></p>
 
 <p> <strong>Key Metrics:</strong></p>
 <ul>
-<li class="fragment"><p><strong><span class="math inline">\(R^2\)</span> (Coefficient of
+<li><p><strong><span class="math inline">\(R^2\)</span> (Coefficient of
 Determination):</strong> Variance explained <span class="math display">\[R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i
 - \bar{y})^2}\]</span></p></li>
-<li class="fragment"><p><strong>RMSE (Root Mean Squared Error):</strong> Prediction
+<li><p><strong>RMSE (Root Mean Squared Error):</strong> Prediction
 accuracy <span class="math display">\[\text{RMSE} =
 \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}\]</span></p></li>
 </ul>
@@ -275,19 +275,19 @@ accuracy <span class="math display">\[\text{RMSE} =
 <p> <strong><span style="color: #2CA02C">Use
 When:</span></strong></p>
 <ul>
-<li class="fragment"><p>Target is continuous</p></li>
-<li class="fragment"><p>Linear relationships expected</p></li>
-<li class="fragment"><p>Interpretability matters</p></li>
-<li class="fragment"><p>Fast inference needed</p></li>
+<li><p>Target is continuous</p></li>
+<li><p>Linear relationships expected</p></li>
+<li><p>Interpretability matters</p></li>
+<li><p>Fast inference needed</p></li>
 </ul>
 </div><div class="column">
 <p> <strong><span style="color: #D62728">Avoid
 When:</span></strong></p>
 <ul>
-<li class="fragment"><p>Target is categorical</p></li>
-<li class="fragment"><p>Strong non-linearities</p></li>
-<li class="fragment"><p>High multicollinearity</p></li>
-<li class="fragment"><p>Many outliers present</p></li>
+<li><p>Target is categorical</p></li>
+<li><p>Strong non-linearities</p></li>
+<li><p>High multicollinearity</p></li>
+<li><p>Many outliers present</p></li>
 </ul>
 </div>
 </div>

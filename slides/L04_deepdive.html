@@ -112,15 +112,15 @@ Applications</p>
 <p> <strong>From Rules to
 Trees</strong></p>
 <ul>
-<li class="fragment"><p>Decision trees encode if-then-else rules</p></li>
-<li class="fragment"><p>Each node splits data based on a feature threshold</p></li>
-<li class="fragment"><p>Leaves contain predictions (class or value)</p></li>
+<li><p>Decision trees encode if-then-else rules</p></li>
+<li><p>Each node splits data based on a feature threshold</p></li>
+<li><p>Leaves contain predictions (class or value)</p></li>
 </ul>
 <p><strong>Key Questions</strong></p>
 <ul>
-<li class="fragment"><p>How to choose the best split?</p></li>
-<li class="fragment"><p>When to stop splitting?</p></li>
-<li class="fragment"><p>How to make predictions?</p></li>
+<li><p>How to choose the best split?</p></li>
+<li><p>When to stop splitting?</p></li>
+<li><p>How to make predictions?</p></li>
 </ul>
 <p><span style="color: #666666">Decision trees: the building blocks of
 Random Forests</span></p>
@@ -134,11 +134,11 @@ Random Forests</span></p>
 Impurity</strong> measures class mixture at a node: <span class="math display">\[G = 1 - \sum_{k=1}^{K} p_k^2\]</span> where <span class="math inline">\(p_k\)</span> is the proportion of class <span class="math inline">\(k\)</span> samples.</p>
 <p><strong>Properties:</strong></p>
 <ul>
-<li class="fragment"><p><span class="math inline">\(G = 0\)</span>: pure node (all
+<li><p><span class="math inline">\(G = 0\)</span>: pure node (all
 samples same class)</p></li>
-<li class="fragment"><p><span class="math inline">\(G = 0.5\)</span>: maximum impurity
+<li><p><span class="math inline">\(G = 0.5\)</span>: maximum impurity
 for binary classification</p></li>
-<li class="fragment"><p>Lower Gini = better split</p></li>
+<li><p>Lower Gini = better split</p></li>
 </ul>
 <p><span style="color: #666666">Gini impurity: probability of
 misclassifying a random sample</span></p>
@@ -154,10 +154,10 @@ misclassifying a random sample</span></p>
 H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)\]</span></p>
 <p><strong>Comparison:</strong></p>
 <ul>
-<li class="fragment"><p>Gini: faster to compute, tends to isolate most frequent
+<li><p>Gini: faster to compute, tends to isolate most frequent
 class</p></li>
-<li class="fragment"><p>Entropy: more balanced trees, slightly slower</p></li>
-<li class="fragment"><p>In practice: similar performance</p></li>
+<li><p>Entropy: more balanced trees, slightly slower</p></li>
+<li><p>In practice: similar performance</p></li>
 </ul>
 <p><span style="color: #666666">Both criteria aim to create pure child
 nodes</span></p>
@@ -183,20 +183,20 @@ tasks</span></p>
 <p> <strong>Recursive
 Partitioning:</strong></p>
 <ol>
-<li class="fragment"><p>Start with all samples at root</p></li>
-<li class="fragment"><p>For each feature and threshold:</p>
+<li><p>Start with all samples at root</p></li>
+<li><p>For each feature and threshold:</p>
 <ul>
-<li class="fragment"><p>Calculate impurity reduction</p></li>
-<li class="fragment"><p>Select split with maximum reduction</p></li>
+<li><p>Calculate impurity reduction</p></li>
+<li><p>Select split with maximum reduction</p></li>
 </ul></li>
-<li class="fragment"><p>Create child nodes with split samples</p></li>
-<li class="fragment"><p>Recurse until stopping criterion met</p></li>
+<li><p>Create child nodes with split samples</p></li>
+<li><p>Recurse until stopping criterion met</p></li>
 </ol>
 <p><strong>Stopping Criteria:</strong></p>
 <ul>
-<li class="fragment"><p>Maximum depth reached</p></li>
-<li class="fragment"><p>Minimum samples per leaf</p></li>
-<li class="fragment"><p>No improvement in impurity</p></li>
+<li><p>Maximum depth reached</p></li>
+<li><p>Minimum samples per leaf</p></li>
+<li><p>No improvement in impurity</p></li>
 </ul>
 <p><span style="color: #666666">Greedy algorithm: locally optimal splits at
 each step</span></p>
@@ -221,15 +221,15 @@ fraud detection rule</span></p>
 <p> <strong>Problem with Single
 Trees:</strong></p>
 <ul>
-<li class="fragment"><p>High variance: small data changes <span class="math inline">\(\rightarrow\)</span> very different trees</p></li>
-<li class="fragment"><p>Prone to overfitting</p></li>
-<li class="fragment"><p>Unstable predictions</p></li>
+<li><p>High variance: small data changes <span class="math inline">\(\rightarrow\)</span> very different trees</p></li>
+<li><p>Prone to overfitting</p></li>
+<li><p>Unstable predictions</p></li>
 </ul>
 <p><strong>Ensemble Solution:</strong></p>
 <ul>
-<li class="fragment"><p>Train multiple diverse models</p></li>
-<li class="fragment"><p>Combine predictions</p></li>
-<li class="fragment"><p>Reduce variance while maintaining low bias</p></li>
+<li><p>Train multiple diverse models</p></li>
+<li><p>Combine predictions</p></li>
+<li><p>Reduce variance while maintaining low bias</p></li>
 </ul>
 <p><span style="color: #666666">“Wisdom of crowds”: aggregate many weak
 learners into strong learner</span></p>
@@ -243,18 +243,18 @@ learners into strong learner</span></p>
 with replacement from original data</p>
 <p><strong>Properties:</strong></p>
 <ul>
-<li class="fragment"><p>Each sample: same size as original (<span class="math inline">\(n\)</span> observations)</p></li>
-<li class="fragment"><p>Expected unique samples: <span class="math inline">\(\approx
+<li><p>Each sample: same size as original (<span class="math inline">\(n\)</span> observations)</p></li>
+<li><p>Expected unique samples: <span class="math inline">\(\approx
 63.2\%\)</span> (probability <span class="math inline">\(1 -
 (1-1/n)^n\)</span>)</p></li>
-<li class="fragment"><p>Remaining <span class="math inline">\(\sim 37\%\)</span>:
+<li><p>Remaining <span class="math inline">\(\sim 37\%\)</span>:
 out-of-bag (OOB) samples</p></li>
 </ul>
 <p><strong>Effect:</strong></p>
 <ul>
-<li class="fragment"><p>Each tree sees different data subset</p></li>
-<li class="fragment"><p>Creates diversity among trees</p></li>
-<li class="fragment"><p>OOB samples provide validation</p></li>
+<li><p>Each tree sees different data subset</p></li>
+<li><p>Creates diversity among trees</p></li>
+<li><p>OOB samples provide validation</p></li>
 </ul>
 <p><span style="color: #666666">Bootstrap: key ingredient for reducing
 variance through aggregation</span></p>
@@ -295,18 +295,18 @@ between trees = greater ensemble benefit</span></p>
 <p> <strong>Two Sources of
 Randomness:</strong></p>
 <ol>
-<li class="fragment"><p><strong>Bootstrap sampling</strong>: each tree trained on random
+<li><p><strong>Bootstrap sampling</strong>: each tree trained on random
 sample</p></li>
-<li class="fragment"><p><strong>Feature randomization</strong>: each split considers
+<li><p><strong>Feature randomization</strong>: each split considers
 random subset</p></li>
 </ol>
 <p><strong>Feature Subset Size</strong> (at each split):</p>
 <ul>
-<li class="fragment"><p>Classification: <span class="math inline">\(\sqrt{p}\)</span>
+<li><p>Classification: <span class="math inline">\(\sqrt{p}\)</span>
 features (default)</p></li>
-<li class="fragment"><p>Regression: <span class="math inline">\(p/3\)</span> features
+<li><p>Regression: <span class="math inline">\(p/3\)</span> features
 (default)</p></li>
-<li class="fragment"><p>Decorrelates trees more than bagging alone</p></li>
+<li><p>Decorrelates trees more than bagging alone</p></li>
 </ul>
 <p><span style="color: #666666">Feature randomization: Breiman’s key
 innovation over bagging</span></p>
@@ -318,23 +318,23 @@ innovation over bagging</span></p>
 
 <p> <strong>Training:</strong></p>
 <ol>
-<li class="fragment"><p>For <span class="math inline">\(b = 1\)</span> to <span class="math inline">\(B\)</span> trees:</p>
+<li><p>For <span class="math inline">\(b = 1\)</span> to <span class="math inline">\(B\)</span> trees:</p>
 <ul>
-<li class="fragment"><p>Draw bootstrap sample of size <span class="math inline">\(n\)</span></p></li>
-<li class="fragment"><p>Grow tree:</p>
+<li><p>Draw bootstrap sample of size <span class="math inline">\(n\)</span></p></li>
+<li><p>Grow tree:</p>
 <ul>
-<li class="fragment"><p>At each node, select <span class="math inline">\(m\)</span>
+<li><p>At each node, select <span class="math inline">\(m\)</span>
 features randomly</p></li>
-<li class="fragment"><p>Find best split among <span class="math inline">\(m\)</span>
+<li><p>Find best split among <span class="math inline">\(m\)</span>
 features</p></li>
-<li class="fragment"><p>Split until stopping criterion</p></li>
+<li><p>Split until stopping criterion</p></li>
 </ul></li>
 </ul></li>
 </ol>
 <p><strong>Prediction:</strong></p>
 <ul>
-<li class="fragment"><p>Classification: majority vote across trees</p></li>
-<li class="fragment"><p>Regression: average predictions</p></li>
+<li><p>Classification: majority vote across trees</p></li>
+<li><p>Regression: average predictions</p></li>
 </ul>
 <p><span style="color: #666666">Typical: 100-500 trees, but more trees
 never hurts (just slower)</span></p>
@@ -359,15 +359,15 @@ reductions from splits on feature</span></p>
 <p> <strong>1. Mean Decrease in
 Impurity (MDI):</strong></p>
 <ul>
-<li class="fragment"><p>Sum of Gini/entropy reductions from splits on feature</p></li>
-<li class="fragment"><p>Fast to compute (comes free from training)</p></li>
-<li class="fragment"><p>Bias toward high-cardinality features</p></li>
+<li><p>Sum of Gini/entropy reductions from splits on feature</p></li>
+<li><p>Fast to compute (comes free from training)</p></li>
+<li><p>Bias toward high-cardinality features</p></li>
 </ul>
 <p><strong>2. Permutation Importance:</strong></p>
 <ul>
-<li class="fragment"><p>Permute feature values, measure accuracy drop</p></li>
-<li class="fragment"><p>More reliable, less biased</p></li>
-<li class="fragment"><p>Slower (requires re-evaluation)</p></li>
+<li><p>Permute feature values, measure accuracy drop</p></li>
+<li><p>More reliable, less biased</p></li>
+<li><p>Slower (requires re-evaluation)</p></li>
 </ul>
 <p><span style="color: #666666">Permutation importance preferred for final
 feature selection</span></p>
@@ -392,17 +392,17 @@ samples not in bootstrap</span></p>
 <p> <strong>For each
 observation <span class="math inline">\(i\)</span>:</strong></p>
 <ol>
-<li class="fragment"><p>Identify trees where <span class="math inline">\(i\)</span> was
+<li><p>Identify trees where <span class="math inline">\(i\)</span> was
 OOB (not in bootstrap sample)</p></li>
-<li class="fragment"><p>Aggregate predictions from only those trees</p></li>
-<li class="fragment"><p>Compare to true label</p></li>
+<li><p>Aggregate predictions from only those trees</p></li>
+<li><p>Compare to true label</p></li>
 </ol>
 <p><strong>Benefits:</strong></p>
 <ul>
-<li class="fragment"><p>No separate validation set needed</p></li>
-<li class="fragment"><p>Uses <span class="math inline">\(\sim 37\%\)</span> of trees per
+<li><p>No separate validation set needed</p></li>
+<li><p>Uses <span class="math inline">\(\sim 37\%\)</span> of trees per
 sample</p></li>
-<li class="fragment"><p>Unbiased estimate of generalization error</p></li>
+<li><p>Unbiased estimate of generalization error</p></li>
 </ul>
 <p><span style="color: #666666">OOB error converges to leave-one-out
 cross-validation error</span></p>
@@ -430,13 +430,13 @@ Prediction Error:</strong> <span class="math display">\[\mathbb{E}[(y -
 Error}\]</span></p>
 <p><strong>Single Tree:</strong></p>
 <ul>
-<li class="fragment"><p>Low bias (can fit complex patterns)</p></li>
-<li class="fragment"><p>High variance (sensitive to training data)</p></li>
+<li><p>Low bias (can fit complex patterns)</p></li>
+<li><p>High variance (sensitive to training data)</p></li>
 </ul>
 <p><strong>Random Forest:</strong></p>
 <ul>
-<li class="fragment"><p>Bias: similar to single tree</p></li>
-<li class="fragment"><p>Variance: reduced by <span class="math inline">\(\approx\)</span>
+<li><p>Bias: similar to single tree</p></li>
+<li><p>Variance: reduced by <span class="math inline">\(\approx\)</span>
 factor of <span class="math inline">\(1/B\)</span> (with
 decorrelation)</p></li>
 </ul>
@@ -463,15 +463,15 @@ reduces prediction variance</span></p>
 <p>
 <strong>n_estimators</strong> (number of trees):</p>
 <ul>
-<li class="fragment"><p>More trees = lower variance, never overfits</p></li>
-<li class="fragment"><p>Diminishing returns after 100-500 trees</p></li>
-<li class="fragment"><p>Cost: linear increase in training/prediction time</p></li>
+<li><p>More trees = lower variance, never overfits</p></li>
+<li><p>Diminishing returns after 100-500 trees</p></li>
+<li><p>Cost: linear increase in training/prediction time</p></li>
 </ul>
 <p><strong>Guidelines:</strong></p>
 <ul>
-<li class="fragment"><p>Start with 100, increase if OOB error still decreasing</p></li>
-<li class="fragment"><p>For production: balance accuracy vs. latency</p></li>
-<li class="fragment"><p>More trees always better (if time permits)</p></li>
+<li><p>Start with 100, increase if OOB error still decreasing</p></li>
+<li><p>For production: balance accuracy vs. latency</p></li>
+<li><p>More trees always better (if time permits)</p></li>
 </ul>
 <p><span style="color: #666666">Unlike most hyperparameters, more trees
 cannot hurt accuracy</span></p>
@@ -484,18 +484,18 @@ cannot hurt accuracy</span></p>
 <p>
 <strong>max_depth</strong>: Maximum tree depth</p>
 <ul>
-<li class="fragment"><p>Deeper = more complex patterns, higher variance</p></li>
-<li class="fragment"><p>Default: unlimited (grow full trees)</p></li>
+<li><p>Deeper = more complex patterns, higher variance</p></li>
+<li><p>Default: unlimited (grow full trees)</p></li>
 </ul>
 <p><strong>min_samples_split</strong>: Minimum samples to split</p>
 <ul>
-<li class="fragment"><p>Higher = simpler trees, more regularization</p></li>
-<li class="fragment"><p>Default: 2 (full trees)</p></li>
+<li><p>Higher = simpler trees, more regularization</p></li>
+<li><p>Default: 2 (full trees)</p></li>
 </ul>
 <p><strong>min_samples_leaf</strong>: Minimum samples in leaf</p>
 <ul>
-<li class="fragment"><p>Higher = smoother predictions</p></li>
-<li class="fragment"><p>Default: 1 (full trees)</p></li>
+<li><p>Higher = smoother predictions</p></li>
+<li><p>Default: 1 (full trees)</p></li>
 </ul>
 <p><span style="color: #666666">Full trees (default) often work well due to
 bagging’s variance reduction</span></p>
@@ -508,21 +508,21 @@ bagging’s variance reduction</span></p>
 <p>
 <strong>max_features</strong>: Features considered at each split</p>
 <ul>
-<li class="fragment"><p>Lower = more decorrelated trees, higher bias</p></li>
-<li class="fragment"><p>Higher = less decorrelated, lower bias</p></li>
+<li><p>Lower = more decorrelated trees, higher bias</p></li>
+<li><p>Higher = less decorrelated, lower bias</p></li>
 </ul>
 <p><strong>Defaults:</strong></p>
 <ul>
-<li class="fragment"><p>Classification: <span class="math inline">\(\sqrt{p}\)</span>
+<li><p>Classification: <span class="math inline">\(\sqrt{p}\)</span>
 (e.g., 10 features <span class="math inline">\(\rightarrow\)</span>
 3)</p></li>
-<li class="fragment"><p>Regression: <span class="math inline">\(p/3\)</span> (e.g., 30
+<li><p>Regression: <span class="math inline">\(p/3\)</span> (e.g., 30
 features <span class="math inline">\(\rightarrow\)</span> 10)</p></li>
 </ul>
 <p><strong>Tuning:</strong></p>
 <ul>
-<li class="fragment"><p>Try: <span class="math inline">\(\sqrt{p}\)</span>, <span class="math inline">\(\log_2(p)\)</span>, <span class="math inline">\(p/3\)</span></p></li>
-<li class="fragment"><p>Cross-validate to find optimal</p></li>
+<li><p>Try: <span class="math inline">\(\sqrt{p}\)</span>, <span class="math inline">\(\log_2(p)\)</span>, <span class="math inline">\(p/3\)</span></p></li>
+<li><p>Cross-validate to find optimal</p></li>
 </ul>
 <p><span style="color: #666666">Feature randomization is key differentiator
 from bagged trees</span></p>
@@ -535,18 +535,18 @@ from bagged trees</span></p>
 <p>
 <strong>Advantages:</strong></p>
 <ul>
-<li class="fragment"><p>Excellent accuracy out-of-the-box</p></li>
-<li class="fragment"><p>Handles mixed feature types</p></li>
-<li class="fragment"><p>Built-in feature importance</p></li>
-<li class="fragment"><p>Robust to outliers and missing values</p></li>
-<li class="fragment"><p>Parallelizable (trees independent)</p></li>
+<li><p>Excellent accuracy out-of-the-box</p></li>
+<li><p>Handles mixed feature types</p></li>
+<li><p>Built-in feature importance</p></li>
+<li><p>Robust to outliers and missing values</p></li>
+<li><p>Parallelizable (trees independent)</p></li>
 </ul>
 <p><strong>Limitations:</strong></p>
 <ul>
-<li class="fragment"><p>Less interpretable than single tree</p></li>
-<li class="fragment"><p>Memory intensive (stores all trees)</p></li>
-<li class="fragment"><p>Slower prediction than linear models</p></li>
-<li class="fragment"><p>Cannot extrapolate beyond training range</p></li>
+<li><p>Less interpretable than single tree</p></li>
+<li><p>Memory intensive (stores all trees)</p></li>
+<li><p>Slower prediction than linear models</p></li>
+<li><p>Cannot extrapolate beyond training range</p></li>
 </ul>
 <p><span style="color: #666666">Random Forests: excellent default choice
 for tabular data</span></p>
@@ -624,17 +624,17 @@ significant accuracy gains</span></p>
 <p> <strong>Use
 When:</strong></p>
 <ul>
-<li class="fragment"><p>Tabular data with mixed feature types</p></li>
-<li class="fragment"><p>Non-linear relationships expected</p></li>
-<li class="fragment"><p>Feature importance needed</p></li>
-<li class="fragment"><p>Out-of-the-box performance matters</p></li>
+<li><p>Tabular data with mixed feature types</p></li>
+<li><p>Non-linear relationships expected</p></li>
+<li><p>Feature importance needed</p></li>
+<li><p>Out-of-the-box performance matters</p></li>
 </ul>
 <p><strong>Consider Alternatives When:</strong></p>
 <ul>
-<li class="fragment"><p>Need fully interpretable model (use single tree)</p></li>
-<li class="fragment"><p>Very high-dimensional sparse data (use linear models)</p></li>
-<li class="fragment"><p>Extrapolation required (use parametric models)</p></li>
-<li class="fragment"><p>Need fastest prediction (use linear/shallow tree)</p></li>
+<li><p>Need fully interpretable model (use single tree)</p></li>
+<li><p>Very high-dimensional sparse data (use linear models)</p></li>
+<li><p>Extrapolation required (use parametric models)</p></li>
+<li><p>Need fastest prediction (use linear/shallow tree)</p></li>
 </ul>
 <p><span style="color: #666666">Random Forest: often the first model to try
 on tabular data</span></p>
@@ -665,10 +665,10 @@ rf.fit(X_train, y_train)
 print(f"OOB Score: {rf.oob_score_:.3f}")</code></pre>
 <p><strong>Key Parameters:</strong></p>
 <ul>
-<li class="fragment"><p><code>n_estimators</code>: number of trees</p></li>
-<li class="fragment"><p><code>max_features</code>: features per split</p></li>
-<li class="fragment"><p><code>oob_score</code>: compute OOB error</p></li>
-<li class="fragment"><p><code>n_jobs</code>: parallel trees (-1 for all cores)</p></li>
+<li><p><code>n_estimators</code>: number of trees</p></li>
+<li><p><code>max_features</code>: features per split</p></li>
+<li><p><code>oob_score</code>: compute OOB error</p></li>
+<li><p><code>n_jobs</code>: parallel trees (-1 for all cores)</p></li>
 </ul>
 <p><span style="color: #666666">Set random_state for
 reproducibility</span></p>
@@ -681,17 +681,17 @@ reproducibility</span></p>
 <p> <strong>Core
 Concepts:</strong></p>
 <ul>
-<li class="fragment"><p>Ensemble of decision trees with bootstrap + feature
+<li><p>Ensemble of decision trees with bootstrap + feature
 randomization</p></li>
-<li class="fragment"><p>Reduces variance while maintaining low bias</p></li>
-<li class="fragment"><p>OOB error provides free cross-validation</p></li>
+<li><p>Reduces variance while maintaining low bias</p></li>
+<li><p>OOB error provides free cross-validation</p></li>
 </ul>
 <p><strong>Practical Takeaways:</strong></p>
 <ul>
-<li class="fragment"><p>Excellent default for tabular data</p></li>
-<li class="fragment"><p>Feature importance aids interpretation</p></li>
-<li class="fragment"><p>More trees never hurts (just slower)</p></li>
-<li class="fragment"><p>Hyperparameter tuning usually optional</p></li>
+<li><p>Excellent default for tabular data</p></li>
+<li><p>Feature importance aids interpretation</p></li>
+<li><p>More trees never hurts (just slower)</p></li>
+<li><p>Hyperparameter tuning usually optional</p></li>
 </ul>
 <p><span style="color: #666666">Next: PCA and t-SNE for dimensionality
 reduction</span></p>

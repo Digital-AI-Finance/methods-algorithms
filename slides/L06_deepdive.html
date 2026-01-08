@@ -112,18 +112,18 @@ Applications</p>
 <p> <strong>The Problem
 with One-Hot Encoding</strong></p>
 <ul>
-<li class="fragment"><p>Vocabulary of 10,000 words <span class="math inline">\(\rightarrow\)</span> 10,000-dim sparse
+<li><p>Vocabulary of 10,000 words <span class="math inline">\(\rightarrow\)</span> 10,000-dim sparse
 vectors</p></li>
-<li class="fragment"><p>No semantic similarity: “king” and “queen” equally distant from
+<li><p>No semantic similarity: “king” and “queen” equally distant from
 “car”</p></li>
-<li class="fragment"><p>Curse of dimensionality</p></li>
+<li><p>Curse of dimensionality</p></li>
 </ul>
 <p><strong>Solution: Dense Embeddings</strong></p>
 <ul>
-<li class="fragment"><p>Map words to dense vectors (50-300 dimensions)</p></li>
-<li class="fragment"><p>Similar words <span class="math inline">\(\rightarrow\)</span>
+<li><p>Map words to dense vectors (50-300 dimensions)</p></li>
+<li><p>Similar words <span class="math inline">\(\rightarrow\)</span>
 similar vectors</p></li>
-<li class="fragment"><p>Learn from context (distributional hypothesis)</p></li>
+<li><p>Learn from context (distributional hypothesis)</p></li>
 </ul>
 <p><span style="color: #666666">“You shall know a word by the company it
 keeps” – Firth, 1957</span></p>
@@ -139,9 +139,9 @@ context words given target word <span class="math display">\[P(w_{context} | w_{
 v_{target})}\]</span></p>
 <p><strong>Training:</strong></p>
 <ul>
-<li class="fragment"><p>Slide window over text corpus</p></li>
-<li class="fragment"><p>For each word, predict surrounding words</p></li>
-<li class="fragment"><p>Update embeddings via gradient descent</p></li>
+<li><p>Slide window over text corpus</p></li>
+<li><p>For each word, predict surrounding words</p></li>
+<li><p>Update embeddings via gradient descent</p></li>
 </ul>
 <p><span style="color: #666666">Skip-gram works well for rare words; CBOW
 better for frequent words</span></p>
@@ -167,15 +167,15 @@ in embedding space</span></p>
 \vec{queen}\]</span></p>
 <p><strong>Finance Examples:</strong></p>
 <ul>
-<li class="fragment"><p><span class="math inline">\(\vec{stock} - \vec{equity} +
+<li><p><span class="math inline">\(\vec{stock} - \vec{equity} +
 \vec{debt} \approx \vec{bond}\)</span></p></li>
-<li class="fragment"><p><span class="math inline">\(\vec{CEO} - \vec{company} +
+<li><p><span class="math inline">\(\vec{CEO} - \vec{company} +
 \vec{country} \approx \vec{president}\)</span></p></li>
 </ul>
 <p><strong>How it works:</strong></p>
 <ul>
-<li class="fragment"><p>Vector arithmetic in embedding space</p></li>
-<li class="fragment"><p>Relationships encoded as directions</p></li>
+<li><p>Vector arithmetic in embedding space</p></li>
+<li><p>Relationships encoded as directions</p></li>
 </ul>
 <p><span style="color: #666666">Embeddings capture relational structure,
 not just similarity</span></p>
@@ -189,8 +189,8 @@ not just similarity</span></p>
 <span class="math display">\[\text{sim}(u, v) = \frac{u \cdot v}{||u||
 \cdot ||v||} = \cos(\theta)\]</span></p>
 <ul>
-<li class="fragment"><p>Range: <span class="math inline">\([-1, 1]\)</span></p></li>
-<li class="fragment"><p>1 = identical direction, 0 = orthogonal, -1 = opposite</p></li>
+<li><p>Range: <span class="math inline">\([-1, 1]\)</span></p></li>
+<li><p>1 = identical direction, 0 = orthogonal, -1 = opposite</p></li>
 </ul>
 <div class="center">
 <p><img src="images/L06_Embeddings_RL/02_similarity_heatmap.png" style="max-width:100%; max-height:500px;"></p>
@@ -206,16 +206,16 @@ focuses on direction</span></p>
 <p> <strong>Popular
 Options:</strong></p>
 <ul>
-<li class="fragment"><p><strong>Word2Vec</strong>: Google, 300-dim, 3M words</p></li>
-<li class="fragment"><p><strong>GloVe</strong>: Stanford, trained on Wikipedia + Common
+<li><p><strong>Word2Vec</strong>: Google, 300-dim, 3M words</p></li>
+<li><p><strong>GloVe</strong>: Stanford, trained on Wikipedia + Common
 Crawl</p></li>
-<li class="fragment"><p><strong>FastText</strong>: Facebook, handles subwords (OOV
+<li><p><strong>FastText</strong>: Facebook, handles subwords (OOV
 robust)</p></li>
 </ul>
 <p><strong>Domain-Specific:</strong></p>
 <ul>
-<li class="fragment"><p>FinBERT: Pre-trained on financial text</p></li>
-<li class="fragment"><p>BioBERT: Biomedical domain</p></li>
+<li><p>FinBERT: Pre-trained on financial text</p></li>
+<li><p>BioBERT: Biomedical domain</p></li>
 </ul>
 <p><span style="color: #666666">Fine-tuning pre-trained embeddings usually
 outperforms training from scratch</span></p>
@@ -227,19 +227,19 @@ outperforms training from scratch</span></p>
 
 <p> <strong>Applications:</strong></p>
 <ul>
-<li class="fragment"><p><strong>Sentiment Analysis</strong>: News <span class="math inline">\(\rightarrow\)</span> embedding <span class="math inline">\(\rightarrow\)</span> positive/negative</p></li>
-<li class="fragment"><p><strong>Document Similarity</strong>: Find similar SEC
+<li><p><strong>Sentiment Analysis</strong>: News <span class="math inline">\(\rightarrow\)</span> embedding <span class="math inline">\(\rightarrow\)</span> positive/negative</p></li>
+<li><p><strong>Document Similarity</strong>: Find similar SEC
 filings</p></li>
-<li class="fragment"><p><strong>Named Entity Recognition</strong>: Extract company
+<li><p><strong>Named Entity Recognition</strong>: Extract company
 names</p></li>
-<li class="fragment"><p><strong>Event Detection</strong>: Identify earnings
+<li><p><strong>Event Detection</strong>: Identify earnings
 announcements</p></li>
 </ul>
 <p><strong>Sentence Embeddings:</strong></p>
 <ul>
-<li class="fragment"><p>Average word vectors (simple baseline)</p></li>
-<li class="fragment"><p>Doc2Vec (paragraph vectors)</p></li>
-<li class="fragment"><p>Sentence-BERT (state-of-the-art)</p></li>
+<li><p>Average word vectors (simple baseline)</p></li>
+<li><p>Doc2Vec (paragraph vectors)</p></li>
+<li><p>Sentence-BERT (state-of-the-art)</p></li>
 </ul>
 <p><span style="color: #666666">Aggregate word embeddings to represent
 documents</span></p>
@@ -252,13 +252,13 @@ documents</span></p>
 <p> <strong>Key
 Components:</strong></p>
 <ul>
-<li class="fragment"><p><strong>Agent</strong>: Learner/decision-maker</p></li>
-<li class="fragment"><p><strong>Environment</strong>: What agent interacts with</p></li>
-<li class="fragment"><p><strong>State</strong> <span class="math inline">\(s\)</span>:
+<li><p><strong>Agent</strong>: Learner/decision-maker</p></li>
+<li><p><strong>Environment</strong>: What agent interacts with</p></li>
+<li><p><strong>State</strong> <span class="math inline">\(s\)</span>:
 Current situation</p></li>
-<li class="fragment"><p><strong>Action</strong> <span class="math inline">\(a\)</span>:
+<li><p><strong>Action</strong> <span class="math inline">\(a\)</span>:
 What agent can do</p></li>
-<li class="fragment"><p><strong>Reward</strong> <span class="math inline">\(r\)</span>:
+<li><p><strong>Reward</strong> <span class="math inline">\(r\)</span>:
 Feedback signal</p></li>
 </ul>
 <div class="center">
@@ -275,13 +275,13 @@ labeled examples</span></p>
 <p> <strong>MDP Tuple:</strong>
 <span class="math inline">\((S, A, P, R, \gamma)\)</span></p>
 <ul>
-<li class="fragment"><p><span class="math inline">\(S\)</span>: Set of states</p></li>
-<li class="fragment"><p><span class="math inline">\(A\)</span>: Set of actions</p></li>
-<li class="fragment"><p><span class="math inline">\(P(s'|s, a)\)</span>: Transition
+<li><p><span class="math inline">\(S\)</span>: Set of states</p></li>
+<li><p><span class="math inline">\(A\)</span>: Set of actions</p></li>
+<li><p><span class="math inline">\(P(s'|s, a)\)</span>: Transition
 probability</p></li>
-<li class="fragment"><p><span class="math inline">\(R(s, a, s')\)</span>: Reward
+<li><p><span class="math inline">\(R(s, a, s')\)</span>: Reward
 function</p></li>
-<li class="fragment"><p><span class="math inline">\(\gamma \in [0,1]\)</span>: Discount
+<li><p><span class="math inline">\(\gamma \in [0,1]\)</span>: Discount
 factor</p></li>
 </ul>
 <p><strong>Markov Property:</strong> <span class="math display">\[P(s_{t+1} | s_t, a_t, s_{t-1}, ...) = P(s_{t+1} |
@@ -296,8 +296,8 @@ current state, not history</span></p>
 <p> <strong>Policy:</strong>
 <span class="math inline">\(\pi(a|s) = P(A_t = a | S_t = s)\)</span></p>
 <ul>
-<li class="fragment"><p>Maps states to action probabilities</p></li>
-<li class="fragment"><p>Goal: Find optimal policy <span class="math inline">\(\pi^*\)</span></p></li>
+<li><p>Maps states to action probabilities</p></li>
+<li><p>Goal: Find optimal policy <span class="math inline">\(\pi^*\)</span></p></li>
 </ul>
 <p><strong>Value Function:</strong> <span class="math display">\[V^\pi(s) = \mathbb{E}_\pi \left[
 \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s \right]\]</span></p>
@@ -316,8 +316,8 @@ state s, taking action a</span></p>
 \max_{a'} Q^*(s', a') \right]\]</span>
 <strong>Interpretation:</strong></p>
 <ul>
-<li class="fragment"><p>Value = immediate reward + discounted future value</p></li>
-<li class="fragment"><p>Recursive definition enables dynamic programming</p></li>
+<li><p>Value = immediate reward + discounted future value</p></li>
+<li><p>Recursive definition enables dynamic programming</p></li>
 </ul>
 <p><strong>Optimal Policy:</strong> <span class="math display">\[\pi^*(s) = \arg\max_a Q^*(s, a)\]</span> <span style="color: #666666">Bellman equation: foundation of all value-based RL
 methods</span></p>
@@ -331,14 +331,14 @@ methods</span></p>
 \gamma \max_{a'} Q(s', a') - Q(s, a) \right]\]</span>
 <strong>Algorithm:</strong></p>
 <ol>
-<li class="fragment"><p>Initialize <span class="math inline">\(Q(s,a)\)</span>
+<li><p>Initialize <span class="math inline">\(Q(s,a)\)</span>
 arbitrarily</p></li>
-<li class="fragment"><p>For each episode:</p>
+<li><p>For each episode:</p>
 <ul>
-<li class="fragment"><p>Observe state <span class="math inline">\(s\)</span></p></li>
-<li class="fragment"><p>Choose action <span class="math inline">\(a\)</span> (<span class="math inline">\(\epsilon\)</span>-greedy)</p></li>
-<li class="fragment"><p>Execute <span class="math inline">\(a\)</span>, observe <span class="math inline">\(r\)</span>, <span class="math inline">\(s'\)</span></p></li>
-<li class="fragment"><p>Update <span class="math inline">\(Q(s, a)\)</span></p></li>
+<li><p>Observe state <span class="math inline">\(s\)</span></p></li>
+<li><p>Choose action <span class="math inline">\(a\)</span> (<span class="math inline">\(\epsilon\)</span>-greedy)</p></li>
+<li><p>Execute <span class="math inline">\(a\)</span>, observe <span class="math inline">\(r\)</span>, <span class="math inline">\(s'\)</span></p></li>
+<li><p>Update <span class="math inline">\(Q(s, a)\)</span></p></li>
 </ul></li>
 </ol>
 <p><span style="color: #666666">Q-learning is off-policy: learns optimal Q
@@ -364,9 +364,9 @@ regardless of policy followed</span></p>
 <p> <strong>The
 Dilemma:</strong></p>
 <ul>
-<li class="fragment"><p><strong>Exploit</strong>: Choose best known action
+<li><p><strong>Exploit</strong>: Choose best known action
 (greedy)</p></li>
-<li class="fragment"><p><strong>Explore</strong>: Try new actions (discover better
+<li><p><strong>Explore</strong>: Try new actions (discover better
 options)</p></li>
 </ul>
 <p><strong><span class="math inline">\(\epsilon\)</span>-Greedy
@@ -375,9 +375,9 @@ Strategy:</strong> <span class="math display">\[a = \begin{cases}
 \text{random action} &amp; \text{with probability } \epsilon
 \end{cases}\]</span> <strong>Decay Schedule:</strong></p>
 <ul>
-<li class="fragment"><p>Start with high <span class="math inline">\(\epsilon\)</span>
+<li><p>Start with high <span class="math inline">\(\epsilon\)</span>
 (explore more)</p></li>
-<li class="fragment"><p>Decay <span class="math inline">\(\epsilon\)</span> over time
+<li><p>Decay <span class="math inline">\(\epsilon\)</span> over time
 (exploit more)</p></li>
 </ul>
 <p><span style="color: #666666">Balance: too much exploration wastes time;
@@ -402,19 +402,19 @@ outperforms tabular Q-learning</span></p>
 
 <p> <strong>Formulation:</strong></p>
 <ul>
-<li class="fragment"><p><strong>State</strong>: Price history, portfolio, technical
+<li><p><strong>State</strong>: Price history, portfolio, technical
 indicators</p></li>
-<li class="fragment"><p><strong>Action</strong>: Buy, sell, hold (+ position
+<li><p><strong>Action</strong>: Buy, sell, hold (+ position
 size)</p></li>
-<li class="fragment"><p><strong>Reward</strong>: Profit/loss, risk-adjusted
+<li><p><strong>Reward</strong>: Profit/loss, risk-adjusted
 return</p></li>
 </ul>
 <p><strong>Challenges:</strong></p>
 <ul>
-<li class="fragment"><p>Non-stationary environment</p></li>
-<li class="fragment"><p>High noise, low signal-to-noise ratio</p></li>
-<li class="fragment"><p>Transaction costs</p></li>
-<li class="fragment"><p>Partial observability</p></li>
+<li><p>Non-stationary environment</p></li>
+<li><p>High noise, low signal-to-noise ratio</p></li>
+<li><p>Transaction costs</p></li>
+<li><p>Partial observability</p></li>
 </ul>
 <p><span style="color: #666666">RL for trading is active research area; not
 solved problem</span></p>
@@ -440,11 +440,11 @@ momentum, sell when overbought</span></p>
 network to approximate Q-function <span class="math display">\[Q(s, a;
 \theta) \approx Q^*(s, a)\]</span> <strong>Key Innovations:</strong></p>
 <ul>
-<li class="fragment"><p><strong>Experience Replay</strong>: Store transitions, sample
+<li><p><strong>Experience Replay</strong>: Store transitions, sample
 randomly</p></li>
-<li class="fragment"><p><strong>Target Network</strong>: Separate network for
+<li><p><strong>Target Network</strong>: Separate network for
 stability</p></li>
-<li class="fragment"><p><strong>Function Approximation</strong>: Handle large state
+<li><p><strong>Function Approximation</strong>: Handle large state
 spaces</p></li>
 </ul>
 <p><span style="color: #666666">DQN: breakthrough for RL on Atari games
@@ -461,10 +461,10 @@ J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log
 \pi_\theta(a|s) \cdot Q^{\pi_\theta}(s, a) \right]\]</span>
 <strong>Algorithms:</strong></p>
 <ul>
-<li class="fragment"><p>REINFORCE (vanilla policy gradient)</p></li>
-<li class="fragment"><p>Actor-Critic (combine value and policy)</p></li>
-<li class="fragment"><p>PPO (Proximal Policy Optimization)</p></li>
-<li class="fragment"><p>A3C (Asynchronous Advantage Actor-Critic)</p></li>
+<li><p>REINFORCE (vanilla policy gradient)</p></li>
+<li><p>Actor-Critic (combine value and policy)</p></li>
+<li><p>PPO (Proximal Policy Optimization)</p></li>
+<li><p>A3C (Asynchronous Advantage Actor-Critic)</p></li>
 </ul>
 <p><span style="color: #666666">Policy gradient: directly optimize policy,
 can handle continuous actions</span></p>
@@ -541,18 +541,18 @@ learnable representations</span></p>
 <p> <strong>Embeddings in
 Python:</strong></p>
 <ul>
-<li class="fragment"><p><code>gensim.models.Word2Vec</code>: Train your own</p></li>
-<li class="fragment"><p><code>gensim.downloader.load(’glove-wiki-gigaword-100’)</code>:
+<li><p><code>gensim.models.Word2Vec</code>: Train your own</p></li>
+<li><p><code>gensim.downloader.load(’glove-wiki-gigaword-100’)</code>:
 Pre-trained</p></li>
-<li class="fragment"><p><code>transformers.BertModel</code>: BERT embeddings</p></li>
+<li><p><code>transformers.BertModel</code>: BERT embeddings</p></li>
 </ul>
 <p><strong>RL Libraries:</strong></p>
 <ul>
-<li class="fragment"><p><code>gymnasium</code>: Environment interface (formerly OpenAI
+<li><p><code>gymnasium</code>: Environment interface (formerly OpenAI
 Gym)</p></li>
-<li class="fragment"><p><code>stable-baselines3</code>: Pre-implemented
+<li><p><code>stable-baselines3</code>: Pre-implemented
 algorithms</p></li>
-<li class="fragment"><p><code>ray[rllib]</code>: Scalable RL</p></li>
+<li><p><code>ray[rllib]</code>: Scalable RL</p></li>
 </ul>
 <p><span style="color: #666666">Start with pre-trained embeddings; use
 stable-baselines3 for RL</span></p>
@@ -564,16 +564,16 @@ stable-baselines3 for RL</span></p>
 
 <p> <strong>Embeddings:</strong></p>
 <ul>
-<li class="fragment"><p>Start with pre-trained, fine-tune if needed</p></li>
-<li class="fragment"><p>Check domain match (general vs financial)</p></li>
-<li class="fragment"><p>Visualize with t-SNE/UMAP to verify quality</p></li>
+<li><p>Start with pre-trained, fine-tune if needed</p></li>
+<li><p>Check domain match (general vs financial)</p></li>
+<li><p>Visualize with t-SNE/UMAP to verify quality</p></li>
 </ul>
 <p><strong>RL:</strong></p>
 <ul>
-<li class="fragment"><p>Start simple (tabular Q-learning before DQN)</p></li>
-<li class="fragment"><p>Reward shaping is crucial (sparse rewards are hard)</p></li>
-<li class="fragment"><p>Normalize observations</p></li>
-<li class="fragment"><p>Use established environments first (Gym, FinRL)</p></li>
+<li><p>Start simple (tabular Q-learning before DQN)</p></li>
+<li><p>Reward shaping is crucial (sparse rewards are hard)</p></li>
+<li><p>Normalize observations</p></li>
+<li><p>Use established environments first (Gym, FinRL)</p></li>
 </ul>
 <p><span style="color: #666666">Both domains: start simple, iterate,
 validate thoroughly</span></p>
@@ -585,15 +585,15 @@ validate thoroughly</span></p>
 
 <p> <strong>Embeddings:</strong></p>
 <ul>
-<li class="fragment"><p>Dense vector representations of text/categories</p></li>
-<li class="fragment"><p>Capture semantic similarity</p></li>
-<li class="fragment"><p>Use pre-trained (Word2Vec, GloVe, BERT)</p></li>
+<li><p>Dense vector representations of text/categories</p></li>
+<li><p>Capture semantic similarity</p></li>
+<li><p>Use pre-trained (Word2Vec, GloVe, BERT)</p></li>
 </ul>
 <p><strong>Reinforcement Learning:</strong></p>
 <ul>
-<li class="fragment"><p>Agent learns from environment interaction</p></li>
-<li class="fragment"><p>Q-learning: value-based, tabular or deep (DQN)</p></li>
-<li class="fragment"><p>Applications: trading, portfolio optimization</p></li>
+<li><p>Agent learns from environment interaction</p></li>
+<li><p>Q-learning: value-based, tabular or deep (DQN)</p></li>
+<li><p>Applications: trading, portfolio optimization</p></li>
 </ul>
 <p><strong>Key Takeaway:</strong> Different tools for different problems
 <span style="color: #666666">Course complete! Apply these methods in your
@@ -606,21 +606,21 @@ capstone project</span></p>
 
 <p> <strong>Embeddings:</strong></p>
 <ul>
-<li class="fragment"><p>Mikolov et al. (2013). Word2Vec</p></li>
-<li class="fragment"><p>Pennington et al. (2014). GloVe</p></li>
-<li class="fragment"><p>Devlin et al. (2019). BERT</p></li>
+<li><p>Mikolov et al. (2013). Word2Vec</p></li>
+<li><p>Pennington et al. (2014). GloVe</p></li>
+<li><p>Devlin et al. (2019). BERT</p></li>
 </ul>
 <p><strong>Reinforcement Learning:</strong></p>
 <ul>
-<li class="fragment"><p>Sutton &amp; Barto (2018). RL: An Introduction (free
+<li><p>Sutton &amp; Barto (2018). RL: An Introduction (free
 online)</p></li>
-<li class="fragment"><p>Mnih et al. (2015). DQN (Atari)</p></li>
-<li class="fragment"><p>Schulman et al. (2017). PPO</p></li>
+<li><p>Mnih et al. (2015). DQN (Atari)</p></li>
+<li><p>Schulman et al. (2017). PPO</p></li>
 </ul>
 <p><strong>Finance Applications:</strong></p>
 <ul>
-<li class="fragment"><p>Liu et al. (2021). FinRL: Deep RL for Trading</p></li>
-<li class="fragment"><p>Araci (2019). FinBERT</p></li>
+<li><p>Liu et al. (2021). FinRL: Deep RL for Trading</p></li>
+<li><p>Araci (2019). FinBERT</p></li>
 </ul>
 <p><span style="color: #666666">Sutton &amp; Barto: the definitive RL
 textbook (free at incompleteideas.net)</span></p>
