@@ -24,6 +24,11 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* Additional inline styles */
         .reveal .sourceCode {
@@ -43,16 +48,62 @@
             flex: auto;
             overflow-x: auto;
         }
+
+        /* Spotlight cursor */
+        .spotlight-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+        }
+
+        /* PDF export button */
+        .pdf-export-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--ml-purple, #3333B2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .pdf-export-btn:hover {
+            opacity: 1;
+        }
+
+        /* Hide export button in print mode */
+        @media print {
+            .pdf-export-btn {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide">
-<h1 class="title">L04: Random Forests</h1>
-<p class="subtitle">Deep Dive: Theory, Implementation, and
+            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
+    <div style="color: white; text-align: center;">
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L04: Random Forests</h1>
+        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Deep Dive: Theory, Implementation, and
 Applications</p>
-<p class="author">Methods and Algorithms – MSc Data Science</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <div style="margin-top: 2em;">
+            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
+            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
+        </div>
+    </div>
 </section>
 
 <section>
@@ -71,7 +122,7 @@ Trees</strong></p>
 <li class="fragment"><p>When to stop splitting?</p></li>
 <li class="fragment"><p>How to make predictions?</p></li>
 </ul>
-<p><span style="color: gray">Decision trees: the building blocks of
+<p><span style="color: #666666">Decision trees: the building blocks of
 Random Forests</span></p>
 
 </section>
@@ -89,7 +140,7 @@ samples same class)</p></li>
 for binary classification</p></li>
 <li class="fragment"><p>Lower Gini = better split</p></li>
 </ul>
-<p><span style="color: gray">Gini impurity: probability of
+<p><span style="color: #666666">Gini impurity: probability of
 misclassifying a random sample</span></p>
 
 </section>
@@ -108,7 +159,7 @@ class</p></li>
 <li class="fragment"><p>Entropy: more balanced trees, slightly slower</p></li>
 <li class="fragment"><p>In practice: similar performance</p></li>
 </ul>
-<p><span style="color: gray">Both criteria aim to create pure child
+<p><span style="color: #666666">Both criteria aim to create pure child
 nodes</span></p>
 
 </section>
@@ -121,7 +172,7 @@ regression</strong>, use Mean Squared Error: <span class="math display">\[\text{
 \bar{y})^2\]</span></p>
 <p><strong>Split quality</strong>: <span class="math display">\[\text{Reduction} = \text{MSE}(\text{parent}) -
 \sum_{j} \frac{n_j}{n} \text{MSE}(\text{child}_j)\]</span></p>
-<p><strong>Leaf prediction</strong>: mean of samples in leaf <span style="color: gray">Trees can handle both classification and regression
+<p><strong>Leaf prediction</strong>: mean of samples in leaf <span style="color: #666666">Trees can handle both classification and regression
 tasks</span></p>
 
 </section>
@@ -147,7 +198,7 @@ Partitioning:</strong></p>
 <li class="fragment"><p>Minimum samples per leaf</p></li>
 <li class="fragment"><p>No improvement in impurity</p></li>
 </ul>
-<p><span style="color: gray">Greedy algorithm: locally optimal splits at
+<p><span style="color: #666666">Greedy algorithm: locally optimal splits at
 each step</span></p>
 
 </section>
@@ -157,9 +208,9 @@ each step</span></p>
 
 
 <div class="center">
-<p><embed data-src="01_decision_tree/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L04_Random_Forests/01_decision_tree.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Each path through the tree represents a
+<p><span style="color: #666666">Each path through the tree represents a
 fraud detection rule</span></p>
 
 </section>
@@ -180,7 +231,7 @@ Trees:</strong></p>
 <li class="fragment"><p>Combine predictions</p></li>
 <li class="fragment"><p>Reduce variance while maintaining low bias</p></li>
 </ul>
-<p><span style="color: gray">“Wisdom of crowds”: aggregate many weak
+<p><span style="color: #666666">“Wisdom of crowds”: aggregate many weak
 learners into strong learner</span></p>
 
 </section>
@@ -205,7 +256,7 @@ out-of-bag (OOB) samples</p></li>
 <li class="fragment"><p>Creates diversity among trees</p></li>
 <li class="fragment"><p>OOB samples provide validation</p></li>
 </ul>
-<p><span style="color: gray">Bootstrap: key ingredient for reducing
+<p><span style="color: #666666">Bootstrap: key ingredient for reducing
 variance through aggregation</span></p>
 
 </section>
@@ -215,9 +266,9 @@ variance through aggregation</span></p>
 
 
 <div class="center">
-<p><embed data-src="03_bootstrap/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L04_Random_Forests/03_bootstrap.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Bootstrap Aggregating: train on random
+<p><span style="color: #666666">Bootstrap Aggregating: train on random
 samples, aggregate predictions</span></p>
 
 </section>
@@ -233,7 +284,7 @@ with variance <span class="math inline">\(\sigma^2\)</span>: <span class="math d
 <p><strong>With correlation <span class="math inline">\(\rho\)</span></strong>: <span class="math display">\[\text{Var} = \rho \sigma^2 +
 \frac{1-\rho}{B}\sigma^2\]</span></p>
 <p><strong>Key insight</strong>: Reduce correlation between trees to
-maximize variance reduction <span style="color: gray">Lower correlation
+maximize variance reduction <span style="color: #666666">Lower correlation
 between trees = greater ensemble benefit</span></p>
 
 </section>
@@ -257,7 +308,7 @@ features (default)</p></li>
 (default)</p></li>
 <li class="fragment"><p>Decorrelates trees more than bagging alone</p></li>
 </ul>
-<p><span style="color: gray">Feature randomization: Breiman’s key
+<p><span style="color: #666666">Feature randomization: Breiman’s key
 innovation over bagging</span></p>
 
 </section>
@@ -285,7 +336,7 @@ features</p></li>
 <li class="fragment"><p>Classification: majority vote across trees</p></li>
 <li class="fragment"><p>Regression: average predictions</p></li>
 </ul>
-<p><span style="color: gray">Typical: 100-500 trees, but more trees
+<p><span style="color: #666666">Typical: 100-500 trees, but more trees
 never hurts (just slower)</span></p>
 
 </section>
@@ -295,9 +346,9 @@ never hurts (just slower)</span></p>
 
 
 <div class="center">
-<p><embed data-src="02_feature_importance/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L04_Random_Forests/02_feature_importance.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Mean Decrease in Impurity: sum of impurity
+<p><span style="color: #666666">Mean Decrease in Impurity: sum of impurity
 reductions from splits on feature</span></p>
 
 </section>
@@ -318,7 +369,7 @@ Impurity (MDI):</strong></p>
 <li class="fragment"><p>More reliable, less biased</p></li>
 <li class="fragment"><p>Slower (requires re-evaluation)</p></li>
 </ul>
-<p><span style="color: gray">Permutation importance preferred for final
+<p><span style="color: #666666">Permutation importance preferred for final
 feature selection</span></p>
 
 </section>
@@ -328,9 +379,9 @@ feature selection</span></p>
 
 
 <div class="center">
-<p><embed data-src="04_oob_error/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L04_Random_Forests/04_oob_error.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">OOB error: free cross-validation using
+<p><span style="color: #666666">OOB error: free cross-validation using
 samples not in bootstrap</span></p>
 
 </section>
@@ -353,7 +404,7 @@ OOB (not in bootstrap sample)</p></li>
 sample</p></li>
 <li class="fragment"><p>Unbiased estimate of generalization error</p></li>
 </ul>
-<p><span style="color: gray">OOB error converges to leave-one-out
+<p><span style="color: #666666">OOB error converges to leave-one-out
 cross-validation error</span></p>
 
 </section>
@@ -363,9 +414,9 @@ cross-validation error</span></p>
 
 
 <div class="center">
-<p><embed data-src="05_ensemble_voting/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L04_Random_Forests/05_ensemble_voting.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Classification: majority vote. Regression:
+<p><span style="color: #666666">Classification: majority vote. Regression:
 average prediction</span></p>
 
 </section>
@@ -389,7 +440,7 @@ Error}\]</span></p>
 factor of <span class="math inline">\(1/B\)</span> (with
 decorrelation)</p></li>
 </ul>
-<p><span style="color: gray">Ensembles reduce variance without
+<p><span style="color: #666666">Ensembles reduce variance without
 increasing bias</span></p>
 
 </section>
@@ -399,9 +450,9 @@ increasing bias</span></p>
 
 
 <div class="center">
-<p><embed data-src="06_bias_variance/chart.pdf" style="width:65.0%"/></p>
+<p><img src="images/L04_Random_Forests/06_bias_variance.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Averaging decorrelated trees dramatically
+<p><span style="color: #666666">Averaging decorrelated trees dramatically
 reduces prediction variance</span></p>
 
 </section>
@@ -422,7 +473,7 @@ reduces prediction variance</span></p>
 <li class="fragment"><p>For production: balance accuracy vs. latency</p></li>
 <li class="fragment"><p>More trees always better (if time permits)</p></li>
 </ul>
-<p><span style="color: gray">Unlike most hyperparameters, more trees
+<p><span style="color: #666666">Unlike most hyperparameters, more trees
 cannot hurt accuracy</span></p>
 
 </section>
@@ -446,7 +497,7 @@ cannot hurt accuracy</span></p>
 <li class="fragment"><p>Higher = smoother predictions</p></li>
 <li class="fragment"><p>Default: 1 (full trees)</p></li>
 </ul>
-<p><span style="color: gray">Full trees (default) often work well due to
+<p><span style="color: #666666">Full trees (default) often work well due to
 bagging’s variance reduction</span></p>
 
 </section>
@@ -473,7 +524,7 @@ features <span class="math inline">\(\rightarrow\)</span> 10)</p></li>
 <li class="fragment"><p>Try: <span class="math inline">\(\sqrt{p}\)</span>, <span class="math inline">\(\log_2(p)\)</span>, <span class="math inline">\(p/3\)</span></p></li>
 <li class="fragment"><p>Cross-validate to find optimal</p></li>
 </ul>
-<p><span style="color: gray">Feature randomization is key differentiator
+<p><span style="color: #666666">Feature randomization is key differentiator
 from bagged trees</span></p>
 
 </section>
@@ -497,7 +548,7 @@ from bagged trees</span></p>
 <li class="fragment"><p>Slower prediction than linear models</p></li>
 <li class="fragment"><p>Cannot extrapolate beyond training range</p></li>
 </ul>
-<p><span style="color: gray">Random Forests: excellent default choice
+<p><span style="color: #666666">Random Forests: excellent default choice
 for tabular data</span></p>
 
 </section>
@@ -562,7 +613,7 @@ for tabular data</span></p>
 </tbody>
 </table>
 </div>
-<p><span style="color: gray">RF trades some interpretability for
+<p><span style="color: #666666">RF trades some interpretability for
 significant accuracy gains</span></p>
 
 </section>
@@ -585,7 +636,7 @@ When:</strong></p>
 <li class="fragment"><p>Extrapolation required (use parametric models)</p></li>
 <li class="fragment"><p>Need fastest prediction (use linear/shallow tree)</p></li>
 </ul>
-<p><span style="color: gray">Random Forest: often the first model to try
+<p><span style="color: #666666">Random Forest: often the first model to try
 on tabular data</span></p>
 
 </section>
@@ -595,9 +646,9 @@ on tabular data</span></p>
 
 
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:65.0%"/></p>
+<p><img src="images/L04_Random_Forests/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Start with Random Forest; switch if
+<p><span style="color: #666666">Start with Random Forest; switch if
 specific constraints require it</span></p>
 
 </section>
@@ -619,7 +670,7 @@ print(f"OOB Score: {rf.oob_score_:.3f}")</code></pre>
 <li class="fragment"><p><code>oob_score</code>: compute OOB error</p></li>
 <li class="fragment"><p><code>n_jobs</code>: parallel trees (-1 for all cores)</p></li>
 </ul>
-<p><span style="color: gray">Set random_state for
+<p><span style="color: #666666">Set random_state for
 reproducibility</span></p>
 
 </section>
@@ -642,7 +693,7 @@ randomization</p></li>
 <li class="fragment"><p>More trees never hurts (just slower)</p></li>
 <li class="fragment"><p>Hyperparameter tuning usually optional</p></li>
 </ul>
-<p><span style="color: gray">Next: PCA and t-SNE for dimensionality
+<p><span style="color: #666666">Next: PCA and t-SNE for dimensionality
 reduction</span></p>
 
 </section>
@@ -652,24 +703,24 @@ reduction</span></p>
 
 <p> <strong>Textbooks:</strong></p>
 <ul>
-<li class="fragment"><p>James et al. (2021). <em>ISLR</em>, Chapter 8: Tree-Based
+<li><p>James et al. (2021). <em>ISLR</em>, Chapter 8: Tree-Based
 Methods</p></li>
-<li class="fragment"><p>Hastie et al. (2009). <em>ESL</em>, Chapter 15: Random
+<li><p>Hastie et al. (2009). <em>ESL</em>, Chapter 15: Random
 Forests</p></li>
 </ul>
 <p><strong>Original Papers:</strong></p>
 <ul>
-<li class="fragment"><p>Breiman, L. (2001). Random Forests. <em>Machine Learning</em>,
+<li><p>Breiman, L. (2001). Random Forests. <em>Machine Learning</em>,
 45(1), 5-32.</p></li>
-<li class="fragment"><p>Breiman, L. (1996). Bagging Predictors. <em>Machine
+<li><p>Breiman, L. (1996). Bagging Predictors. <em>Machine
 Learning</em>, 24(2), 123-140.</p></li>
 </ul>
 <p><strong>Documentation:</strong></p>
 <ul>
-<li class="fragment"><p>scikit-learn:
+<li><p>scikit-learn:
 <code>sklearn.ensemble.RandomForestClassifier</code></p></li>
 </ul>
-<p><span style="color: gray">Breiman’s 2001 paper: one of the most cited
+<p><span style="color: #666666">Breiman’s 2001 paper: one of the most cited
 in ML</span></p>
 
 </section>
@@ -682,6 +733,11 @@ in ML</span></p>
             <div class="footer-right"></div>
         </div>
     </div>
+
+    <!-- PDF Export Button -->
+    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+        <i class="fas fa-file-pdf"></i> PDF
+    </button>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -700,6 +756,45 @@ in ML</span></p>
     <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
     <script>
+        // Spotlight functionality
+        let spotlightEnabled = false;
+        let spotlightElement = null;
+
+        function toggleSpotlight() {
+            spotlightEnabled = !spotlightEnabled;
+            if (spotlightEnabled) {
+                spotlightElement = document.createElement('div');
+                spotlightElement.className = 'spotlight-cursor';
+                spotlightElement.style.width = '100px';
+                spotlightElement.style.height = '100px';
+                document.body.appendChild(spotlightElement);
+                document.addEventListener('mousemove', updateSpotlight);
+            } else if (spotlightElement) {
+                document.removeEventListener('mousemove', updateSpotlight);
+                spotlightElement.remove();
+                spotlightElement = null;
+            }
+        }
+
+        function updateSpotlight(e) {
+            if (spotlightElement) {
+                spotlightElement.style.left = e.clientX + 'px';
+                spotlightElement.style.top = e.clientY + 'px';
+            }
+        }
+
+        // PDF Export function
+        function exportPDF() {
+            // Open print dialog with PDF-optimized settings
+            const printUrl = window.location.href + '?print-pdf';
+            window.open(printUrl, '_blank');
+        }
+
+        // Check if we're in print mode
+        if (window.location.search.includes('print-pdf')) {
+            document.querySelector('.pdf-export-btn').style.display = 'none';
+        }
+
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -762,7 +857,22 @@ in ML</span></p>
                 useTextContentForMissingTitles: true,
                 hideMissingTitles: false,
                 markers: true,
-                custom: false,
+                custom: [
+                    {
+                        title: 'Tools',
+                        icon: '<i class="fas fa-tools"></i>',
+                        content: `
+                            <ul class="slide-menu-items">
+                                <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
+                                    <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
+                                </li>
+                                <li class="slide-menu-item" onclick="exportPDF();">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </li>
+                            </ul>
+                        `
+                    }
+                ],
                 themes: [
                     { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
                     { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
@@ -804,6 +914,9 @@ in ML</span></p>
             ]
         });
 
+        // Custom keyboard shortcuts
+        Reveal.addKeyBinding({ keyCode: 76, key: 'L' }, toggleSpotlight);  // L for spotlight
+
         // Update footer with slide number
         Reveal.on('slidechanged', event => {
             const footer = document.querySelector('.slide-footer .footer-right');
@@ -828,6 +941,7 @@ in ML</span></p>
         console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
+        console.log('  L - Spotlight/Laser pointer');
         console.log('  M - Menu');
         console.log('  O - Overview');
         console.log('  F - Fullscreen');

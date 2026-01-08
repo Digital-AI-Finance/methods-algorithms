@@ -24,6 +24,11 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* Additional inline styles */
         .reveal .sourceCode {
@@ -43,16 +48,62 @@
             flex: auto;
             overflow-x: auto;
         }
+
+        /* Spotlight cursor */
+        .spotlight-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+        }
+
+        /* PDF export button */
+        .pdf-export-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--ml-purple, #3333B2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .pdf-export-btn:hover {
+            opacity: 1;
+        }
+
+        /* Hide export button in print mode */
+        @media print {
+            .pdf-export-btn {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide">
-<h1 class="title">L05: PCA &amp; t-SNE</h1>
-<p class="subtitle">Deep Dive: Theory, Implementation, and
+            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
+    <div style="color: white; text-align: center;">
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L05: PCA & t-SNE</h1>
+        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Deep Dive: Theory, Implementation, and
 Applications</p>
-<p class="author">Methods and Algorithms – MSc Data Science</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <div style="margin-top: 2em;">
+            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
+            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
+        </div>
+    </div>
 </section>
 
 <section>
@@ -71,7 +122,7 @@ Analysis (PCA)</strong></p>
 <li class="fragment"><p>Components are uncorrelated</p></li>
 <li class="fragment"><p>Reversible (can reconstruct original data)</p></li>
 </ul>
-<p><span style="color: gray">PCA: one of the most fundamental tools in
+<p><span style="color: #666666">PCA: one of the most fundamental tools in
 data science</span></p>
 
 </section>
@@ -85,7 +136,7 @@ X \quad \text{(centered data)}\]</span></p>
 <p><strong>Eigendecomposition:</strong> <span class="math display">\[\Sigma v = \lambda v\]</span> where <span class="math inline">\(v\)</span> = eigenvector (principal direction),
 <span class="math inline">\(\lambda\)</span> = eigenvalue (variance)</p>
 <p><strong>Projection:</strong> <span class="math display">\[Z = X W_k
-\quad \text{where } W_k = [v_1, v_2, \ldots, v_k]\]</span> <span style="color: gray">Eigenvalues tell us how much variance each component
+\quad \text{where } W_k = [v_1, v_2, \ldots, v_k]\]</span> <span style="color: #666666">Eigenvalues tell us how much variance each component
 captures</span></p>
 
 </section>
@@ -104,7 +155,7 @@ thumb for choosing k:</strong></p>
 <li class="fragment"><p>Use scree plot “elbow” method</p></li>
 <li class="fragment"><p>Kaiser criterion: keep components with <span class="math inline">\(\lambda &gt; 1\)</span></p></li>
 </ul>
-<p><span style="color: gray">Balance dimensionality reduction with
+<p><span style="color: #666666">Balance dimensionality reduction with
 information preservation</span></p>
 
 </section>
@@ -114,9 +165,9 @@ information preservation</span></p>
 
 
 <div class="center">
-<p><embed data-src="01_scree_plot/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L05_PCA_tSNE/01_scree_plot.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Look for the “elbow” where variance
+<p><span style="color: #666666">Look for the “elbow” where variance
 explained drops off</span></p>
 
 </section>
@@ -126,9 +177,9 @@ explained drops off</span></p>
 
 
 <div class="center">
-<p><embed data-src="02_principal_components/chart.pdf" style="width:50.0%"/></p>
+<p><img src="images/L05_PCA_tSNE/02_principal_components.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">PC1 captures the dominant trend, PC2 the
+<p><span style="color: #666666">PC1 captures the dominant trend, PC2 the
 residual variation</span></p>
 
 </section>
@@ -140,7 +191,7 @@ residual variation</span></p>
 original space:</strong> <span class="math display">\[\hat{X} = Z W_k^T
 = X W_k W_k^T\]</span></p>
 <p><strong>Reconstruction Error:</strong> <span class="math display">\[\text{Error} = ||X - \hat{X}||_F^2 =
-\sum_{i=k+1}^{p} \lambda_i\]</span> <span style="color: gray">Reconstruction error = sum of discarded
+\sum_{i=k+1}^{p} \lambda_i\]</span> <span style="color: #666666">Reconstruction error = sum of discarded
 eigenvalues</span></p>
 
 </section>
@@ -150,9 +201,9 @@ eigenvalues</span></p>
 
 
 <div class="center">
-<p><embed data-src="03_reconstruction/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L05_PCA_tSNE/03_reconstruction.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Adding more components always reduces error
+<p><span style="color: #666666">Adding more components always reduces error
 (but diminishing returns)</span></p>
 
 </section>
@@ -174,7 +225,7 @@ Decomposition:</strong></p>
 <li class="fragment"><p>Noise reduction in time series</p></li>
 <li class="fragment"><p>Feature extraction for ML models</p></li>
 </ul>
-<p><span style="color: gray">PCA reveals latent structure in financial
+<p><span style="color: #666666">PCA reveals latent structure in financial
 data</span></p>
 
 </section>
@@ -196,7 +247,7 @@ Short:</strong></p>
 <li class="fragment"><p>Robust PCA (outlier-resistant)</p></li>
 <li class="fragment"><p>t-SNE/UMAP (for visualization)</p></li>
 </ul>
-<p><span style="color: gray">PCA assumes linear structure and
+<p><span style="color: #666666">PCA assumes linear structure and
 Gaussian-like distributions</span></p>
 
 </section>
@@ -218,7 +269,7 @@ Stochastic Neighbor Embedding</strong></p>
 <li class="fragment"><p>In low-D: t-distribution similarities</p></li>
 <li class="fragment"><p>Minimize KL divergence between distributions</p></li>
 </ul>
-<p><span style="color: gray">t-SNE: visualization method, NOT for
+<p><span style="color: #666666">t-SNE: visualization method, NOT for
 preprocessing</span></p>
 
 </section>
@@ -233,7 +284,7 @@ similarity:</strong> <span class="math display">\[p_{j|i} =
 <p><strong>Low-dimensional similarity (t-distribution):</strong> <span class="math display">\[q_{ij} = \frac{(1 + ||y_i -
 y_j||^2)^{-1}}{\sum_{k \neq l} (1 + ||y_k - y_l||^2)^{-1}}\]</span></p>
 <p><strong>Objective: Minimize KL divergence</strong> <span class="math display">\[KL(P||Q) = \sum_{i \neq j} p_{ij} \log
-\frac{p_{ij}}{q_{ij}}\]</span> <span style="color: gray">t-distribution
+\frac{p_{ij}}{q_{ij}}\]</span> <span style="color: #666666">t-distribution
 has heavier tails, allowing better separation in low-D</span></p>
 
 </section>
@@ -243,9 +294,9 @@ has heavier tails, allowing better separation in low-D</span></p>
 
 
 <div class="center">
-<p><embed data-src="04_tsne_perplexity/chart.pdf" style="width:65.0%"/></p>
+<p><img src="images/L05_PCA_tSNE/04_tsne_perplexity.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Perplexity <span class="math inline">\(\approx\)</span> effective number of neighbors
+<p><span style="color: #666666">Perplexity <span class="math inline">\(\approx\)</span> effective number of neighbors
 (try 5-50)</span></p>
 
 </section>
@@ -266,7 +317,7 @@ controls the balance between local and global structure:</p>
 <li class="fragment"><p>Larger datasets can use higher perplexity</p></li>
 <li class="fragment"><p>Run multiple perplexities to validate findings</p></li>
 </ul>
-<p><span style="color: gray">Results can vary significantly with
+<p><span style="color: #666666">Results can vary significantly with
 perplexity choice</span></p>
 
 </section>
@@ -289,7 +340,7 @@ Limitations:</strong></p>
 <li class="fragment"><p>Don’t over-interpret cluster sizes/distances</p></li>
 <li class="fragment"><p>Use for exploration, not final conclusions</p></li>
 </ul>
-<p><span style="color: gray">t-SNE shows IF clusters exist, not HOW they
+<p><span style="color: #666666">t-SNE shows IF clusters exist, not HOW they
 relate</span></p>
 
 </section>
@@ -299,9 +350,9 @@ relate</span></p>
 
 
 <div class="center">
-<p><embed data-src="05_pca_vs_tsne/chart.pdf" style="width:65.0%"/></p>
+<p><img src="images/L05_PCA_tSNE/05_pca_vs_tsne.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">PCA: global structure, linear. t-SNE: local
+<p><span style="color: #666666">PCA: global structure, linear. t-SNE: local
 structure, non-linear</span></p>
 
 </section>
@@ -358,7 +409,7 @@ structure, non-linear</span></p>
 </tbody>
 </table>
 </div>
-<p><span style="color: gray">Use PCA for preprocessing, t-SNE for
+<p><span style="color: #666666">Use PCA for preprocessing, t-SNE for
 visualization only</span></p>
 
 </section>
@@ -368,9 +419,9 @@ visualization only</span></p>
 
 
 <div class="center">
-<p><embed data-src="06_cluster_preservation/chart.pdf" style="width:65.0%"/></p>
+<p><img src="images/L05_PCA_tSNE/06_cluster_preservation.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">t-SNE often reveals cluster structure
+<p><span style="color: #666666">t-SNE often reveals cluster structure
 better than PCA</span></p>
 
 </section>
@@ -392,7 +443,7 @@ better than PCA</span></p>
 <li class="fragment"><p>Non-linear manifolds expected</p></li>
 <li class="fragment"><p>Exploratory analysis</p></li>
 </ul>
-<p><span style="color: gray">Often use both: PCA first to 30-50 dims,
+<p><span style="color: #666666">Often use both: PCA first to 30-50 dims,
 then t-SNE for visualization</span></p>
 
 </section>
@@ -402,9 +453,9 @@ then t-SNE for visualization</span></p>
 
 
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:50.0%"/></p>
+<p><img src="images/L05_PCA_tSNE/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Consider purpose: preprocessing (PCA) vs
+<p><span style="color: #666666">Consider purpose: preprocessing (PCA) vs
 visualization (t-SNE)</span></p>
 
 </section>
@@ -428,7 +479,7 @@ original</p></li>
 <li class="fragment"><p>Always normalize data first</p></li>
 <li class="fragment"><p>Consider PCA preprocessing for speed</p></li>
 </ul>
-<p><span style="color: gray">Standardize data before PCA; normalize
+<p><span style="color: #666666">Standardize data before PCA; normalize
 before t-SNE</span></p>
 
 </section>
@@ -450,7 +501,7 @@ Approximation and Projection</strong></p>
 <li class="fragment"><p>Need to embed new data points</p></li>
 <li class="fragment"><p>Want more preserved global structure</p></li>
 </ul>
-<p><span style="color: gray">UMAP often preferred over t-SNE in modern
+<p><span style="color: #666666">UMAP often preferred over t-SNE in modern
 practice</span></p>
 
 </section>
@@ -470,7 +521,7 @@ practice</span></p>
 <li class="fragment"><p>Excellent for exploring cluster structure</p></li>
 <li class="fragment"><p>Don’t interpret distances or sizes literally</p></li>
 </ul>
-<p><strong>Common Pipeline:</strong> Standardize <span class="math inline">\(\rightarrow\)</span> PCA (30-50) <span class="math inline">\(\rightarrow\)</span> t-SNE (2D) <span style="color: gray">Next: Embeddings and Reinforcement
+<p><strong>Common Pipeline:</strong> Standardize <span class="math inline">\(\rightarrow\)</span> PCA (30-50) <span class="math inline">\(\rightarrow\)</span> t-SNE (2D) <span style="color: #666666">Next: Embeddings and Reinforcement
 Learning</span></p>
 
 </section>
@@ -480,24 +531,24 @@ Learning</span></p>
 
 <p> <strong>Textbooks:</strong></p>
 <ul>
-<li class="fragment"><p>James et al. (2021). <em>ISLR</em>, Chapter 12: Unsupervised
+<li><p>James et al. (2021). <em>ISLR</em>, Chapter 12: Unsupervised
 Learning</p></li>
-<li class="fragment"><p>Hastie et al. (2009). <em>ESL</em>, Chapter 14: Unsupervised
+<li><p>Hastie et al. (2009). <em>ESL</em>, Chapter 14: Unsupervised
 Learning</p></li>
 </ul>
 <p><strong>Original Papers:</strong></p>
 <ul>
-<li class="fragment"><p>Pearson (1901). On Lines and Planes of Closest Fit</p></li>
-<li class="fragment"><p>van der Maaten &amp; Hinton (2008). Visualizing Data using
+<li><p>Pearson (1901). On Lines and Planes of Closest Fit</p></li>
+<li><p>van der Maaten &amp; Hinton (2008). Visualizing Data using
 t-SNE</p></li>
-<li class="fragment"><p>McInnes et al. (2018). UMAP</p></li>
+<li><p>McInnes et al. (2018). UMAP</p></li>
 </ul>
 <p><strong>Documentation:</strong></p>
 <ul>
-<li class="fragment"><p>scikit-learn: <code>sklearn.decomposition.PCA</code></p></li>
-<li class="fragment"><p>scikit-learn: <code>sklearn.manifold.TSNE</code></p></li>
+<li><p>scikit-learn: <code>sklearn.decomposition.PCA</code></p></li>
+<li><p>scikit-learn: <code>sklearn.manifold.TSNE</code></p></li>
 </ul>
-<p><span style="color: gray">t-SNE paper: one of the most influential
+<p><span style="color: #666666">t-SNE paper: one of the most influential
 visualization papers</span></p>
 
 </section>
@@ -510,6 +561,11 @@ visualization papers</span></p>
             <div class="footer-right"></div>
         </div>
     </div>
+
+    <!-- PDF Export Button -->
+    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+        <i class="fas fa-file-pdf"></i> PDF
+    </button>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -528,6 +584,45 @@ visualization papers</span></p>
     <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
     <script>
+        // Spotlight functionality
+        let spotlightEnabled = false;
+        let spotlightElement = null;
+
+        function toggleSpotlight() {
+            spotlightEnabled = !spotlightEnabled;
+            if (spotlightEnabled) {
+                spotlightElement = document.createElement('div');
+                spotlightElement.className = 'spotlight-cursor';
+                spotlightElement.style.width = '100px';
+                spotlightElement.style.height = '100px';
+                document.body.appendChild(spotlightElement);
+                document.addEventListener('mousemove', updateSpotlight);
+            } else if (spotlightElement) {
+                document.removeEventListener('mousemove', updateSpotlight);
+                spotlightElement.remove();
+                spotlightElement = null;
+            }
+        }
+
+        function updateSpotlight(e) {
+            if (spotlightElement) {
+                spotlightElement.style.left = e.clientX + 'px';
+                spotlightElement.style.top = e.clientY + 'px';
+            }
+        }
+
+        // PDF Export function
+        function exportPDF() {
+            // Open print dialog with PDF-optimized settings
+            const printUrl = window.location.href + '?print-pdf';
+            window.open(printUrl, '_blank');
+        }
+
+        // Check if we're in print mode
+        if (window.location.search.includes('print-pdf')) {
+            document.querySelector('.pdf-export-btn').style.display = 'none';
+        }
+
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -590,7 +685,22 @@ visualization papers</span></p>
                 useTextContentForMissingTitles: true,
                 hideMissingTitles: false,
                 markers: true,
-                custom: false,
+                custom: [
+                    {
+                        title: 'Tools',
+                        icon: '<i class="fas fa-tools"></i>',
+                        content: `
+                            <ul class="slide-menu-items">
+                                <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
+                                    <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
+                                </li>
+                                <li class="slide-menu-item" onclick="exportPDF();">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </li>
+                            </ul>
+                        `
+                    }
+                ],
                 themes: [
                     { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
                     { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
@@ -632,6 +742,9 @@ visualization papers</span></p>
             ]
         });
 
+        // Custom keyboard shortcuts
+        Reveal.addKeyBinding({ keyCode: 76, key: 'L' }, toggleSpotlight);  // L for spotlight
+
         // Update footer with slide number
         Reveal.on('slidechanged', event => {
             const footer = document.querySelector('.slide-footer .footer-right');
@@ -656,6 +769,7 @@ visualization papers</span></p>
         console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
+        console.log('  L - Spotlight/Laser pointer');
         console.log('  M - Menu');
         console.log('  O - Overview');
         console.log('  F - Fullscreen');

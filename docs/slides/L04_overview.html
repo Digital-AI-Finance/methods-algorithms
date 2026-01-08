@@ -24,6 +24,11 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* Additional inline styles */
         .reveal .sourceCode {
@@ -43,15 +48,61 @@
             flex: auto;
             overflow-x: auto;
         }
+
+        /* Spotlight cursor */
+        .spotlight-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+        }
+
+        /* PDF export button */
+        .pdf-export-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--ml-purple, #3333B2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .pdf-export-btn:hover {
+            opacity: 1;
+        }
+
+        /* Hide export button in print mode */
+        @media print {
+            .pdf-export-btn {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide">
-<h1 class="title">L04: Random Forests</h1>
-<p class="subtitle">Ensemble Learning for Robust Predictions</p>
-<p class="author">Methods and Algorithms – MSc Data Science</p>
+            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
+    <div style="color: white; text-align: center;">
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L04: Random Forests</h1>
+        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Ensemble Learning for Robust Predictions</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <div style="margin-top: 2em;">
+            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
+            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
+        </div>
+    </div>
 </section>
 
 <section>
@@ -67,7 +118,7 @@ randomization</p></li>
 <li class="fragment"><p>Apply ensemble methods to fraud detection problems</p></li>
 </ol>
 <p><strong>Finance Application:</strong> Fraud detection with
-interpretable feature importance <span style="color: gray">From single
+interpretable feature importance <span style="color: #666666">From single
 models to ensemble methods that combine many weak learners</span></p>
 
 </section>
@@ -89,7 +140,7 @@ millions</p></li>
 <li class="fragment"><p>Built-in feature importance ranking</p></li>
 <li class="fragment"><p>Handles non-linear relationships naturally</p></li>
 </ul>
-<p><span style="color: gray">Ensemble methods: “wisdom of crowds” for
+<p><span style="color: #666666">Ensemble methods: “wisdom of crowds” for
 machine learning</span></p>
 
 </section>
@@ -99,9 +150,9 @@ machine learning</span></p>
 
 
 <div class="center">
-<p><embed data-src="01_decision_tree/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L04_Random_Forests/01_decision_tree.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Trees split data using simple rules at each
+<p><span style="color: #666666">Trees split data using simple rules at each
 node until reaching a prediction</span></p>
 
 </section>
@@ -111,9 +162,9 @@ node until reaching a prediction</span></p>
 
 
 <div class="center">
-<p><embed data-src="02_feature_importance/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L04_Random_Forests/02_feature_importance.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Random Forests automatically rank which
+<p><span style="color: #666666">Random Forests automatically rank which
 features matter most for prediction</span></p>
 
 </section>
@@ -123,9 +174,9 @@ features matter most for prediction</span></p>
 
 
 <div class="center">
-<p><embed data-src="03_bootstrap/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L04_Random_Forests/03_bootstrap.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Each tree trains on a different random
+<p><span style="color: #666666">Each tree trains on a different random
 sample, reducing overfitting</span></p>
 
 </section>
@@ -135,9 +186,9 @@ sample, reducing overfitting</span></p>
 
 
 <div class="center">
-<p><embed data-src="04_oob_error/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L04_Random_Forests/04_oob_error.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">OOB error provides free cross-validation
+<p><span style="color: #666666">OOB error provides free cross-validation
 without held-out test set</span></p>
 
 </section>
@@ -147,9 +198,9 @@ without held-out test set</span></p>
 
 
 <div class="center">
-<p><embed data-src="05_ensemble_voting/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L04_Random_Forests/05_ensemble_voting.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Final prediction combines votes from all
+<p><span style="color: #666666">Final prediction combines votes from all
 trees (majority for classification)</span></p>
 
 </section>
@@ -159,9 +210,9 @@ trees (majority for classification)</span></p>
 
 
 <div class="center">
-<p><embed data-src="06_bias_variance/chart.pdf" style="width:65.0%"/></p>
+<p><img src="images/L04_Random_Forests/06_bias_variance.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Averaging many high-variance trees produces
+<p><span style="color: #666666">Averaging many high-variance trees produces
 low-variance ensemble</span></p>
 
 </section>
@@ -171,9 +222,9 @@ low-variance ensemble</span></p>
 
 
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:65.0%"/></p>
+<p><img src="images/L04_Random_Forests/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Random Forests excel when accuracy and
+<p><span style="color: #666666">Random Forests excel when accuracy and
 feature importance both matter</span></p>
 
 </section>
@@ -186,6 +237,11 @@ feature importance both matter</span></p>
             <div class="footer-right"></div>
         </div>
     </div>
+
+    <!-- PDF Export Button -->
+    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+        <i class="fas fa-file-pdf"></i> PDF
+    </button>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -204,6 +260,45 @@ feature importance both matter</span></p>
     <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
     <script>
+        // Spotlight functionality
+        let spotlightEnabled = false;
+        let spotlightElement = null;
+
+        function toggleSpotlight() {
+            spotlightEnabled = !spotlightEnabled;
+            if (spotlightEnabled) {
+                spotlightElement = document.createElement('div');
+                spotlightElement.className = 'spotlight-cursor';
+                spotlightElement.style.width = '100px';
+                spotlightElement.style.height = '100px';
+                document.body.appendChild(spotlightElement);
+                document.addEventListener('mousemove', updateSpotlight);
+            } else if (spotlightElement) {
+                document.removeEventListener('mousemove', updateSpotlight);
+                spotlightElement.remove();
+                spotlightElement = null;
+            }
+        }
+
+        function updateSpotlight(e) {
+            if (spotlightElement) {
+                spotlightElement.style.left = e.clientX + 'px';
+                spotlightElement.style.top = e.clientY + 'px';
+            }
+        }
+
+        // PDF Export function
+        function exportPDF() {
+            // Open print dialog with PDF-optimized settings
+            const printUrl = window.location.href + '?print-pdf';
+            window.open(printUrl, '_blank');
+        }
+
+        // Check if we're in print mode
+        if (window.location.search.includes('print-pdf')) {
+            document.querySelector('.pdf-export-btn').style.display = 'none';
+        }
+
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -266,7 +361,22 @@ feature importance both matter</span></p>
                 useTextContentForMissingTitles: true,
                 hideMissingTitles: false,
                 markers: true,
-                custom: false,
+                custom: [
+                    {
+                        title: 'Tools',
+                        icon: '<i class="fas fa-tools"></i>',
+                        content: `
+                            <ul class="slide-menu-items">
+                                <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
+                                    <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
+                                </li>
+                                <li class="slide-menu-item" onclick="exportPDF();">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </li>
+                            </ul>
+                        `
+                    }
+                ],
                 themes: [
                     { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
                     { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
@@ -308,6 +418,9 @@ feature importance both matter</span></p>
             ]
         });
 
+        // Custom keyboard shortcuts
+        Reveal.addKeyBinding({ keyCode: 76, key: 'L' }, toggleSpotlight);  // L for spotlight
+
         // Update footer with slide number
         Reveal.on('slidechanged', event => {
             const footer = document.querySelector('.slide-footer .footer-right');
@@ -332,6 +445,7 @@ feature importance both matter</span></p>
         console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
+        console.log('  L - Spotlight/Laser pointer');
         console.log('  M - Menu');
         console.log('  O - Overview');
         console.log('  F - Fullscreen');

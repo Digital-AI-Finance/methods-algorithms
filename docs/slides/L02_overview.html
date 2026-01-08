@@ -24,6 +24,11 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* Additional inline styles */
         .reveal .sourceCode {
@@ -43,15 +48,61 @@
             flex: auto;
             overflow-x: auto;
         }
+
+        /* Spotlight cursor */
+        .spotlight-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+        }
+
+        /* PDF export button */
+        .pdf-export-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--ml-purple, #3333B2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .pdf-export-btn:hover {
+            opacity: 1;
+        }
+
+        /* Hide export button in print mode */
+        @media print {
+            .pdf-export-btn {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide">
-<h1 class="title">L02: Logistic Regression</h1>
-<p class="subtitle">Classification with Probability Estimates</p>
-<p class="author">Methods and Algorithms – MSc Data Science</p>
+            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
+    <div style="color: white; text-align: center;">
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L02: Logistic Regression</h1>
+        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Classification with Probability Estimates</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <div style="margin-top: 2em;">
+            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
+            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
+        </div>
+    </div>
 </section>
 
 <section>
@@ -67,7 +118,7 @@ regression</p></li>
 AUC)</p></li>
 <li class="fragment"><p>Apply logistic regression for credit scoring decisions</p></li>
 </ol>
-<p><strong>Finance Application:</strong> Credit default prediction <span style="color: gray">These objectives span Bloom’s levels: Understand,
+<p><strong>Finance Application:</strong> Credit default prediction <span style="color: #666666">These objectives span Bloom’s levels: Understand,
 Apply, Analyze</span></p>
 
 </section>
@@ -88,7 +139,7 @@ Problem</strong></p>
 <li class="fragment"><p>Binary outcomes need probability-based approach</p></li>
 <li class="fragment"><p>Logistic regression outputs calibrated probabilities</p></li>
 </ul>
-<p><span style="color: gray">Logistic regression: the industry standard
+<p><span style="color: #666666">Logistic regression: the industry standard
 for credit scoring since 1980s</span></p>
 
 </section>
@@ -103,9 +154,9 @@ Probability</strong></p>
 <li class="fragment"><p>Smooth, differentiable, interpretable</p></li>
 </ul>
 <div class="center">
-<p><embed data-src="01_sigmoid_function/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/01_sigmoid_function.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray"><span class="math inline">\(\sigma(z) =
+<p><span style="color: #666666"><span class="math inline">\(\sigma(z) =
 1/(1+e^{-z})\)</span> transforms linear combination to
 probability</span></p>
 
@@ -116,9 +167,9 @@ probability</span></p>
 
 
 <div class="center">
-<p><embed data-src="02_decision_boundary/chart.pdf" style="width:65.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/02_decision_boundary.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">The decision boundary is where <span class="math inline">\(P(y=1|x) = 0.5\)</span>, i.e., <span class="math inline">\(w'x + b = 0\)</span></span></p>
+<p><span style="color: #666666">The decision boundary is where <span class="math inline">\(P(y=1|x) = 0.5\)</span>, i.e., <span class="math inline">\(w'x + b = 0\)</span></span></p>
 
 </section>
 
@@ -132,9 +183,9 @@ MSE?</strong></p>
 <li class="fragment"><p>Cross-entropy is convex, guarantees global optimum</p></li>
 </ul>
 <div class="center">
-<p><embed data-src="03_log_loss/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/03_log_loss.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Heavily penalizes confident wrong
+<p><span style="color: #666666">Heavily penalizes confident wrong
 predictions</span></p>
 
 </section>
@@ -144,9 +195,9 @@ predictions</span></p>
 
 
 <div class="center">
-<p><embed data-src="04_roc_curve/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/04_roc_curve.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">AUC = probability that random positive
+<p><span style="color: #666666">AUC = probability that random positive
 ranks higher than random negative</span></p>
 
 </section>
@@ -156,9 +207,9 @@ ranks higher than random negative</span></p>
 
 
 <div class="center">
-<p><embed data-src="05_precision_recall/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/05_precision_recall.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Use PR curve when classes are imbalanced
+<p><span style="color: #666666">Use PR curve when classes are imbalanced
 (common in fraud detection)</span></p>
 
 </section>
@@ -168,9 +219,9 @@ ranks higher than random negative</span></p>
 
 
 <div class="center">
-<p><embed data-src="06_confusion_matrix/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/06_confusion_matrix.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">FP = approve bad loans (costly), FN =
+<p><span style="color: #666666">FP = approve bad loans (costly), FN =
 reject good customers (lost revenue)</span></p>
 
 </section>
@@ -180,9 +231,9 @@ reject good customers (lost revenue)</span></p>
 
 
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:65.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Key strengths: interpretable coefficients,
+<p><span style="color: #666666">Key strengths: interpretable coefficients,
 probability outputs, fast training</span></p>
 
 </section>
@@ -195,6 +246,11 @@ probability outputs, fast training</span></p>
             <div class="footer-right"></div>
         </div>
     </div>
+
+    <!-- PDF Export Button -->
+    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+        <i class="fas fa-file-pdf"></i> PDF
+    </button>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -213,6 +269,45 @@ probability outputs, fast training</span></p>
     <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
     <script>
+        // Spotlight functionality
+        let spotlightEnabled = false;
+        let spotlightElement = null;
+
+        function toggleSpotlight() {
+            spotlightEnabled = !spotlightEnabled;
+            if (spotlightEnabled) {
+                spotlightElement = document.createElement('div');
+                spotlightElement.className = 'spotlight-cursor';
+                spotlightElement.style.width = '100px';
+                spotlightElement.style.height = '100px';
+                document.body.appendChild(spotlightElement);
+                document.addEventListener('mousemove', updateSpotlight);
+            } else if (spotlightElement) {
+                document.removeEventListener('mousemove', updateSpotlight);
+                spotlightElement.remove();
+                spotlightElement = null;
+            }
+        }
+
+        function updateSpotlight(e) {
+            if (spotlightElement) {
+                spotlightElement.style.left = e.clientX + 'px';
+                spotlightElement.style.top = e.clientY + 'px';
+            }
+        }
+
+        // PDF Export function
+        function exportPDF() {
+            // Open print dialog with PDF-optimized settings
+            const printUrl = window.location.href + '?print-pdf';
+            window.open(printUrl, '_blank');
+        }
+
+        // Check if we're in print mode
+        if (window.location.search.includes('print-pdf')) {
+            document.querySelector('.pdf-export-btn').style.display = 'none';
+        }
+
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -275,7 +370,22 @@ probability outputs, fast training</span></p>
                 useTextContentForMissingTitles: true,
                 hideMissingTitles: false,
                 markers: true,
-                custom: false,
+                custom: [
+                    {
+                        title: 'Tools',
+                        icon: '<i class="fas fa-tools"></i>',
+                        content: `
+                            <ul class="slide-menu-items">
+                                <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
+                                    <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
+                                </li>
+                                <li class="slide-menu-item" onclick="exportPDF();">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </li>
+                            </ul>
+                        `
+                    }
+                ],
                 themes: [
                     { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
                     { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
@@ -317,6 +427,9 @@ probability outputs, fast training</span></p>
             ]
         });
 
+        // Custom keyboard shortcuts
+        Reveal.addKeyBinding({ keyCode: 76, key: 'L' }, toggleSpotlight);  // L for spotlight
+
         // Update footer with slide number
         Reveal.on('slidechanged', event => {
             const footer = document.querySelector('.slide-footer .footer-right');
@@ -341,6 +454,7 @@ probability outputs, fast training</span></p>
         console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
+        console.log('  L - Spotlight/Laser pointer');
         console.log('  M - Menu');
         console.log('  O - Overview');
         console.log('  F - Fullscreen');
