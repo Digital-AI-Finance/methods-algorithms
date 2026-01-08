@@ -51,3 +51,4 @@ CLAUDE.md
 *.tmp
 *.temp
 *.bak
+!docs/slides/pdf/*.pdf
