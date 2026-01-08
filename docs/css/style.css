@@ -453,52 +453,20 @@ body {
     top: 6px;
 }
 
-/* Mobile TOC (horizontal pills) */
+/* Mobile TOC (horizontal pills) - HIDDEN, using right sidebar instead */
 .toc-mobile {
-    display: none;
-    background: var(--toc-bg);
-    padding: 12px 20px;
-    overflow-x: auto;
-    white-space: nowrap;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    display: none !important;
 }
 
-.toc-mobile .toc-link {
-    display: inline-block;
-    padding: 6px 12px;
-    margin-right: 8px;
-    border-radius: 16px;
-    border-left: none;
-    font-size: 12px;
-    background: #fff;
-    border: 1px solid var(--border);
-}
-
-.toc-mobile .toc-link.active {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-}
-
-/* Responsive */
+/* Responsive - Right TOC always visible */
 @media (max-width: 1200px) {
+    /* Keep right TOC visible, just make it narrower */
     .toc-sidebar {
-        display: none;
+        width: 180px;
     }
 
-    .toc-mobile {
-        display: block;
-    }
-
-    .wiki-container {
-        grid-template-columns: var(--sidebar-width) 1fr;
-    }
-
-    .main-content {
-        padding-top: 60px;
+    :root {
+        --toc-width: 180px;
     }
 }
 
@@ -517,12 +485,24 @@ body {
     }
 
     .wiki-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 160px;
     }
 
     .main-content {
         margin-left: 0;
         padding: 80px 20px 40px;
+    }
+
+    /* Right TOC stays visible on mobile */
+    .toc-sidebar {
+        width: 160px;
+        top: 60px;
+        padding: 0 10px;
+    }
+
+    .toc-link {
+        font-size: 11px;
+        padding-left: 8px;
     }
 
     .stats-grid {
