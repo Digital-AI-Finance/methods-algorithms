@@ -2,11 +2,14 @@
 
 Converts Beamer PDF slides to PNG images and generates Reveal.js HTML slideshow.
 This avoids LaTeX parsing issues - the PDF is already perfectly rendered.
+
+Supports vertical slide navigation when section config files are provided.
 """
 
 from pathlib import Path
 from pdf2image import convert_from_path
 import shutil
+import json
 
 
 def convert_pdf_to_slides(pdf_path: Path, output_dir: Path, dpi: int = 150) -> list:
@@ -35,12 +38,30 @@ def convert_pdf_to_slides(pdf_path: Path, output_dir: Path, dpi: int = 150) -> l
     return slide_paths
 
 
+def load_section_config(sections_dir: Path, slide_name: str) -> dict:
+    """Load section configuration for a lecture if it exists.
+
+    Args:
+        sections_dir: Directory containing section JSON files
+        slide_name: Name of the slide deck (e.g., L01_overview)
+
+    Returns:
+        Section config dict or None if no config exists
+    """
+    config_path = sections_dir / f"{slide_name}.json"
+    if config_path.exists():
+        with open(config_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return None
+
+
 def generate_revealjs_html(
     slide_paths: list,
     slide_name: str,
     title: str,
     output_path: Path,
-    images_subdir: str
+    images_subdir: str,
+    section_config: dict = None
 ) -> None:
     """Generate Reveal.js HTML with image slides.
 
@@ -50,11 +71,37 @@ def generate_revealjs_html(
         title: Title for the HTML page
         output_path: Path to save the HTML file
         images_subdir: Subdirectory name for images (relative to HTML)
+        section_config: Optional section grouping config for vertical slides
     """
-    # Generate slide sections
-    sections = []
-    for i, slide in enumerate(slide_paths, 1):
-        sections.append(f'''<section data-slide="{i}">
+    # Generate slide sections (nested if config provided)
+    if section_config and 'sections' in section_config:
+        # Vertical slides: group by sections
+        sections = []
+        for section in section_config['sections']:
+            section_name = section.get('name', '')
+            slide_nums = section.get('slides', [])
+
+            # Build nested section
+            inner_slides = []
+            for slide_num in slide_nums:
+                if 1 <= slide_num <= len(slide_paths):
+                    slide = slide_paths[slide_num - 1]
+                    inner_slides.append(f'''    <section data-slide="{slide_num}">
+        <img src="{images_subdir}/{slide.name}"
+             style="max-width:100%; max-height:95vh; object-fit:contain;"
+             alt="Slide {slide_num}">
+    </section>''')
+
+            if inner_slides:
+                section_html = f'''<section data-section="{section_name}">
+{chr(10).join(inner_slides)}
+</section>'''
+                sections.append(section_html)
+    else:
+        # Flat structure (no vertical navigation)
+        sections = []
+        for i, slide in enumerate(slide_paths, 1):
+            sections.append(f'''<section data-slide="{i}">
     <img src="{images_subdir}/{slide.name}"
          style="max-width:100%; max-height:95vh; object-fit:contain;"
          alt="Slide {i}">
@@ -352,7 +399,8 @@ def generate_revealjs_html(
 def convert_all_pdfs(
     pdf_dir: Path,
     output_dir: Path,
-    dpi: int = 150
+    dpi: int = 150,
+    sections_dir: Path = None
 ) -> dict:
     """Convert all PDFs in a directory to Reveal.js slideshows.
 
@@ -360,6 +408,7 @@ def convert_all_pdfs(
         pdf_dir: Directory containing PDF files
         output_dir: Directory for output (HTML and images)
         dpi: Image resolution
+        sections_dir: Directory containing section JSON configs (optional)
 
     Returns:
         Dictionary with conversion results
@@ -372,6 +421,8 @@ def convert_all_pdfs(
 
     print(f"Found {len(pdf_files)} PDF files to convert")
     print(f"Output: {output_dir}")
+    if sections_dir and sections_dir.exists():
+        print(f"Sections: {sections_dir}")
     print()
 
     converted = 0
@@ -387,6 +438,13 @@ def convert_all_pdfs(
             # Convert PDF to images
             slide_paths = convert_pdf_to_slides(pdf_path, images_dir, dpi)
 
+            # Load section config if available
+            section_config = None
+            if sections_dir:
+                section_config = load_section_config(sections_dir, slide_name)
+                if section_config:
+                    print(f"    Using section config: {len(section_config.get('sections', []))} sections")
+
             # Generate HTML
             title = slide_name.replace("_", ": ").replace("L0", "L")
             html_path = output_dir / f"{slide_name}.html"
@@ -396,10 +454,12 @@ def convert_all_pdfs(
                 slide_name=slide_name,
                 title=title,
                 output_path=html_path,
-                images_subdir=f"images/{slide_name}"
+                images_subdir=f"images/{slide_name}",
+                section_config=section_config
             )
 
-            print(f"  OK: {pdf_path.name} -> {html_path.name} ({len(slide_paths)} slides)")
+            nav_type = "vertical" if section_config else "flat"
+            print(f"  OK: {pdf_path.name} -> {html_path.name} ({len(slide_paths)} slides, {nav_type})")
             converted += 1
 
         except Exception as e:
@@ -425,6 +485,7 @@ if __name__ == "__main__":
     # Default paths
     pdf_dir = Path("docs/slides/pdf")
     output_dir = Path("docs/slides")
+    sections_dir = Path("docs/slides/sections")
 
     # Parse command line args
     dpi = 150
@@ -435,4 +496,4 @@ if __name__ == "__main__":
     print(f"DPI: {dpi}")
     print()
 
-    results = convert_all_pdfs(pdf_dir, output_dir, dpi)
+    results = convert_all_pdfs(pdf_dir, output_dir, dpi, sections_dir)
