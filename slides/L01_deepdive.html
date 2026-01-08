@@ -116,39 +116,39 @@
 <strong>The Model in Matrix Form</strong>
 \[\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}\]
 <ul>
-<li>yR^n: Response vector</li>
-<li>XR^n(p+1): Design matrix (with intercept column)</li>
-<li>R^p+1: Coefficient vector</li>
-<li>R^n: Error vector</li>
+<li>\(\mathbf{y} \in \mathbb{R}^n\): Response vector</li>
+<li>\(\mathbf{X} \in \mathbb{R}^{n \times (p+1)}\): Design matrix (with intercept column)</li>
+<li>\(\boldsymbol{\beta} \in \mathbb{R}^{p+1}\): Coefficient vector</li>
+<li>\(\boldsymbol{\varepsilon} \in \mathbb{R}^n\): Error vector</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Matrix notation enables elegant derivations and efficient computation</em></p>
 </section>
 
 <section>
 <h2>Design Matrix Structure</h2>
-<strong>The Design MatrixX</strong>
+<strong>The Design Matrix \(\mathbf{X}\)</strong>
 \[\mathbf{X} = \begin{bmatrix}
       1 & x_{11} & x_{12} & \cdots & x_{1p} \\
       1 & x_{21} & x_{22} & \cdots & x_{2p} \\
       \vdots & \vdots & \vdots & \ddots & \vdots \\
       1 & x_{n1} & x_{n2} & \cdots & x_{np}\]
 <ul>
-<li>First column of 1s for intercept_0</li>
+<li>First column of 1s for intercept \(\beta_0\)</li>
 <li>Each row is one observation</li>
 <li>Each column (after first) is one feature</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>nobservations,pfeatures,p+1parameters</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>\(n\) observations, \(p\) features, \(p+1\) parameters</em></p>
 </section>
 
 <section>
 <h2>OLS Assumptions</h2>
 <strong>Classical Assumptions for Valid Inference</strong>
 <ol>
-<li><strong>Linearity</strong>:E[y|X]= X(correct functional form)</li>
-<li><strong>Exogeneity</strong>:E[|X]= 0(no omitted variables)</li>
-<li><strong>Homoscedasticity</strong>:Var(|X) =^2 I(constant variance)</li>
-<li><strong>No multicollinearity</strong>:rank(X) = p+1(full rank)</li>
-<li><strong>Normality</strong>(for inference):N(0,^2 I)</li>
+<li><strong>Linearity</strong>: \(E[y|X] = X\beta\) (correct functional form)</li>
+<li><strong>Exogeneity</strong>: \(E[\varepsilon|X] = 0\) (no omitted variables)</li>
+<li><strong>Homoscedasticity</strong>: \(\text{Var}(\varepsilon|X) = \sigma^2 I\) (constant variance)</li>
+<li><strong>No multicollinearity</strong>: \(\text{rank}(X) = p+1\) (full rank)</li>
+<li><strong>Normality</strong>(for inference): \(\varepsilon \sim N(0, \sigma^2 I)\)</li>
 </ol>
 <strong>Violations?</strong>
 Robust standard errors, transformations, regularization
@@ -161,7 +161,7 @@ Robust standard errors, transformations, regularization
 \[L(\boldsymbol{\beta}) = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\top (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})\]
 <strong>Expanding:</strong>
 \[L(\boldsymbol{\beta}) = \mathbf{y}^\top\mathbf{y} - 2\boldsymbol{\beta}^\top\mathbf{X}^\top\mathbf{y} + \boldsymbol{\beta}^\top\mathbf{X}^\top\mathbf{X}\boldsymbol{\beta}\]
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Quadratic function in- has unique minimum (ifXfull rank)</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Quadratic function in \(\boldsymbol{\beta}\) - has unique minimum (if \(X\) full rank)</em></p>
 </section>
 
 <section>
@@ -183,16 +183,16 @@ Robust standard errors, transformations, regularization
 <section>
 <h2>Multiple Regression Surface</h2>
 <div class="center"><img src="images/L01_Introduction_Linear_Regression/02_multiple_regression_3d.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>With 2 features, we fit a plane; withpfeatures, a hyperplane</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>With 2 features, we fit a plane; with \(p\) features, a hyperplane</em></p>
 </section>
 
 <section>
 <h2>Why Gradient Descent?</h2>
 <strong>Normal Equation Limitations</strong>
 <ul>
-<li>Computing(X^X)^-1isO(p^3)</li>
-<li>Memory: Need to storeppmatrix</li>
-<li>For largep(millions of features): infeasible</li>
+<li>Computing \((\mathbf{X}^\top\mathbf{X})^{-1}\) is \(O(p^3)\)</li>
+<li>Memory: Need to store \(p \times p\) matrix</li>
+<li>For large \(p\) (millions of features): infeasible</li>
 </ul>
 <strong>Gradient Descent Advantages</strong>
 <ul>
@@ -200,23 +200,21 @@ Robust standard errors, transformations, regularization
 <li>Scales to big data (SGD)</li>
 <li>Generalizes to non-linear models</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Forp > 10,000, gradient descent usually faster</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>For \(p > 10{,}000\), gradient descent usually faster</em></p>
 </section>
 
 <section>
 <h2>The Gradient</h2>
 <strong>Gradient of the Loss Function</strong>
 \[\nabla L(\boldsymbol{\beta}) = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) = -2\mathbf{X}^\top\mathbf{r}\]
-where
-r=y-X
-is the residual vector.
+where \(\mathbf{r} = \mathbf{y} - \mathbf{X}\boldsymbol{\beta}\) is the residual vector.
 <strong>Intuition:</strong>
 <ul>
 <li>Gradient points in direction of steepest ascent</li>
 <li>We move opposite to gradient (steepest descent)</li>
-<li>Scale by learning rate</li>
+<li>Scale by learning rate \(\alpha\)</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Gradient is ap+1dimensional vector</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Gradient is a \(p+1\) dimensional vector</em></p>
 </section>
 
 <section>
@@ -225,12 +223,12 @@ is the residual vector.
 \[\boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L(\boldsymbol{\beta}^{(t)})\]
 <strong>Algorithm:</strong>
 <ol>
-<li>Initialize^(0)(often zeros or random)</li>
-<li>Compute gradientL(^(t))</li>
-<li>Update:^(t+1)=^(t)-L</li>
+<li>Initialize \(\boldsymbol{\beta}^{(0)}\) (often zeros or random)</li>
+<li>Compute gradient \(\nabla L(\boldsymbol{\beta}^{(t)})\)</li>
+<li>Update: \(\boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L\)</li>
 <li>Repeat until convergence</li>
 </ol>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Convergence:\|^(t+1)-^(t)\|<or max iterations</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Convergence: \(\|\boldsymbol{\beta}^{(t+1)} - \boldsymbol{\beta}^{(t)}\| < \epsilon\) or max iterations</em></p>
 </section>
 
 <section>
@@ -249,11 +247,11 @@ is the residual vector.
 </ul>
 <strong>Practical Approaches:</strong>
 <ul>
-<li>Start with= 0.01or0.001</li>
+<li>Start with \(\alpha = 0.01\) or \(0.001\)</li>
 <li>Learning rate schedules (decay over time)</li>
 <li>Adaptive methods: Adam, AdaGrad, RMSprop</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>For OLS, optimal= 1/_(X^X)</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>For OLS, optimal \(\alpha = 1/\lambda_{\max}(X^\top X)\)</em></p>
 </section>
 
 <section>
@@ -261,33 +259,28 @@ is the residual vector.
 <strong>Mini-Batch Gradient Descent</strong>
 Instead of full gradient:
 \[\nabla L(\boldsymbol{\beta}) = -\frac{2}{n}\mathbf{X}^\top\mathbf{r}\]
-Use mini-batch of size
-m
-:
+Use mini-batch of size \(m\):
 \[\nabla L_B(\boldsymbol{\beta}) = -\frac{2}{m}\mathbf{X}_B^\top\mathbf{r}_B\]
 <ul>
-<li>m = 1: Stochastic GD (noisy but fast)</li>
-<li>m = n: Batch GD (stable but slow)</li>
-<li>m[32, 256]: Mini-batch (good tradeoff)</li>
+<li>\(m = 1\): Stochastic GD (noisy but fast)</li>
+<li>\(m = n\): Batch GD (stable but slow)</li>
+<li>\(m \in [32, 256]\): Mini-batch (good tradeoff)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>SGD: Process data once per epoch, update many times</em></p>
 </section>
 
 <section>
-<h2>R-Squared ($R^2$)</h2>
-R-Squared (
-R^2
-)
+<h2>R-Squared (\(R^2\))</h2>
 <strong>Coefficient of Determination</strong>
 \[R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}} = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}\]
 <strong>Interpretation:</strong>
 <ul>
 <li>Proportion of variance explained by model</li>
-<li>R^2 = 0: Model no better than mean</li>
-<li>R^2 = 1: Perfect fit</li>
-<li>R^2 = 0.7: 70%of variance explained</li>
+<li>\(R^2 = 0\): Model no better than mean</li>
+<li>\(R^2 = 1\): Perfect fit</li>
+<li>\(R^2 = 0.7\): 70%of variance explained</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>R^2always increases with more features - use AdjustedR^2</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>\(R^2\) always increases with more features - use Adjusted \(R^2\)</em></p>
 </section>
 
 <section>
@@ -296,11 +289,11 @@ R^2
 \[R^2_{\text{adj}} = 1 - \frac{(1-R^2)(n-1)}{n-p-1}\]
 <strong>Properties:</strong>
 <ul>
-<li>Adjusts for number of predictorsp</li>
+<li>Adjusts for number of predictors \(p\)</li>
 <li>Can decrease when adding irrelevant features</li>
 <li>Better for model comparison</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>UseR^2_adjwhen comparing models with differentp</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Use \(R^2_{\text{adj}}\) when comparing models with different \(p\)</em></p>
 </section>
 
 <section>
@@ -333,9 +326,9 @@ R^2
 </ul>
 <strong>Cross-Validation (K-Fold):</strong>
 <ul>
-<li>Split intoKfolds (typicallyK=5or10)</li>
-<li>Train onK-1folds, validate on 1</li>
-<li>RepeatKtimes, average results</li>
+<li>Split into \(K\) folds (typically \(K=5\) or \(10\))</li>
+<li>Train on \(K-1\) folds, validate on 1</li>
+<li>Repeat \(K\) times, average results</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>CV gives more reliable estimate with limited data</em></p>
 </section>
@@ -350,13 +343,13 @@ R^2
 <h2>The Overfitting Problem</h2>
 <strong>When Models Memorize Instead of Learn</strong>
 <ul>
-<li>High-dimensional data (pnorp > n)</li>
+<li>High-dimensional data (\(p \approx n\) or \(p > n\))</li>
 <li>Coefficients become very large</li>
 <li>Perfect fit on training data, poor generalization</li>
 </ul>
 <strong>Solution: Add Penalty to Loss Function</strong>
 \[L_{\text{reg}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \cdot \text{penalty}(\boldsymbol{\beta})\]
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>controls strength of regularization</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>\(\lambda\) controls strength of regularization</em></p>
 </section>
 
 <section>
@@ -368,9 +361,9 @@ R^2
 <ul>
 <li>Shrinks all coefficients toward zero</li>
 <li>Never sets coefficients exactly to zero</li>
-<li>Always invertible (even whenp > n)</li>
+<li>Always invertible (even when \(p > n\))</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Ridge addsto diagonal - stabilizes inversion</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Ridge adds \(\lambda\) to diagonal - stabilizes inversion</em></p>
 </section>
 
 <section>
@@ -379,7 +372,7 @@ R^2
 \[L_{\text{lasso}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \|\boldsymbol{\beta}\|_1\]
 <strong>Properties:</strong>
 <ul>
-<li>Produces sparse solutions (some_j = 0)</li>
+<li>Produces sparse solutions (some \(\beta_j = 0\))</li>
 <li>Automatic feature selection</li>
 <li>No closed-form solution (use coordinate descent)</li>
 </ul>
@@ -409,9 +402,9 @@ R^2
 <h2>Choosing Lambda</h2>
 <strong>Cross-Validation for Hyperparameter Tuning</strong>
 <ol>
-<li>Define grid ofvalues (e.g.,10^-4to10^4)</li>
-<li>For each, perform K-fold CV</li>
-<li>Selectwith lowest CV error</li>
+<li>Define grid of \(\lambda\) values (e.g., \(10^{-4}\) to \(10^{4}\))</li>
+<li>For each \(\lambda\), perform K-fold CV</li>
+<li>Select \(\lambda\) with lowest CV error</li>
 <li>Refit on full training data</li>
 </ol>
 <strong>In Practice:</strong>
@@ -419,7 +412,7 @@ R^2
 <li>sklearn.linear\_model.RidgeCV</li>
 <li>sklearn.linear\_model.LassoCV</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Larger= more regularization = simpler model</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Larger \(\lambda\) = more regularization = simpler model</em></p>
 </section>
 
 <section>
@@ -429,7 +422,7 @@ R^2
 <ul>
 <li><strong>Bias</strong>: Error from wrong assumptions (underfitting)</li>
 <li><strong>Variance</strong>: Error from sensitivity to training data (overfitting)</li>
-<li><strong>^2</strong>: Irreducible noise in data</li>
+<li><strong>\(\sigma^2\)</strong>: Irreducible noise in data</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>We can't reduce irreducible error - focus on bias and variance</em></p>
 </section>
@@ -444,14 +437,14 @@ R^2
 <h2>Regularization and Bias-Variance</h2>
 <strong>How Regularization Helps</strong>
 <ul>
-<li>Increasing:<span style="color: #FF7F0E"><strong>increases bias</strong></span>,<span style="color: #FF7F0E"><strong>decreases variance</strong></span></li>
-<li>Decreasing: decreases bias, increases variance</li>
-<li>Optimal: minimizes total error</li>
+<li>Increasing \(\lambda\):<span style="color: #FF7F0E"><strong>increases bias</strong></span>,<span style="color: #FF7F0E"><strong>decreases variance</strong></span></li>
+<li>Decreasing \(\lambda\): decreases bias, increases variance</li>
+<li>Optimal \(\lambda\): minimizes total error</li>
 </ul>
 <strong>In Practice:</strong>
 <ul>
-<li>Use CV to find optimal</li>
-<li>Regularization almost always helps whenpis large</li>
+<li>Use CV to find optimal \(\lambda\)</li>
+<li>Regularization almost always helps when \(p\) is large</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Regularization trades a little bias for a lot of variance reduction</em></p>
 </section>
@@ -464,13 +457,13 @@ R^2
 
 <section>
 <h2>Linear Regression: When and Why</h2>
-<div class="columns"><div class="column">0.48<strong><span style="color: #2CA02C">Use When:</span></strong><ul>
+<div class="columns"><div class="column"><strong><span style="color: #2CA02C">Use When:</span></strong><ul>
 <li>Continuous target variable</li>
 <li>Approximate linear relationships</li>
 <li>Interpretability is critical</li>
 <li>Inference on coefficients needed</li>
 <li>Fast prediction required</li>
-</ul></div><div class="column">0.48<strong><span style="color: #D62728">Avoid When:</span></strong><ul>
+</ul></div><div class="column"><strong><span style="color: #D62728">Avoid When:</span></strong><ul>
 <li>Target is categorical</li>
 <li>Strong non-linear patterns</li>
 <li>Many outliers present</li>

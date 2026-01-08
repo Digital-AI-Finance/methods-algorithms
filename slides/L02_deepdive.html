@@ -111,12 +111,12 @@
 <h2>From Linear to Logistic</h2>
 <strong>The Classification Problem</strong>
 <ul>
-<li>Given featuresxR^p, predicty\{0, 1\}</li>
-<li>Linear regression:y=w^Tx+ b(unbounded)</li>
-<li>Need:P(y=1|x)[0, 1]</li>
+<li>Given features \(\mathbf{x} \in \mathbb{R}^p\), predict \(y \in \{0, 1\}\)</li>
+<li>Linear regression: \(\hat{y} = \mathbf{w}^T\mathbf{x} + b\) (unbounded)</li>
+<li>Need: \(P(y=1|\mathbf{x}) \in [0, 1]\)</li>
 </ul>
 <strong>Solution: The Logistic Function</strong>
-P(y=1|x) =(w^Tx+ b) =11 + e^-(w^Tx+ b)
+\[P(y=1|\mathbf{x}) = \sigma(\mathbf{w}^T\mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^T\mathbf{x} + b)}}\]
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The logistic function is also called the sigmoid function</em></p>
 </section>
 
@@ -125,9 +125,9 @@ P(y=1|x) =(w^Tx+ b) =11 + e^-(w^Tx+ b)
 <div class="center"><img src="images/L02_Logistic_Regression/01_sigmoid_function.png" style="max-width:100%; max-height:500px;"></div>
 <strong>Key Properties:</strong>
 <ul>
-<li>Range:(0, 1)- perfect for probabilities</li>
-<li>(0) = 0.5- threshold for classification</li>
-<li>'(z) =(z)(1 -(z))- simple gradient</li>
+<li>Range: \((0, 1)\) - perfect for probabilities</li>
+<li>\(\sigma(0) = 0.5\) - threshold for classification</li>
+<li>\(\sigma'(z) = \sigma(z)(1 - \sigma(z))\) - simple gradient</li>
 </ul>
 </section>
 
@@ -135,14 +135,14 @@ P(y=1|x) =(w^Tx+ b) =11 + e^-(w^Tx+ b)
 <h2>Odds and Log-Odds</h2>
 <strong>Understanding the Model</strong>
 <ul>
-<li>Odds:P(y=1)P(y=0)=p1-p</li>
-<li>Log-odds (logit):p1-p=w^Tx+ b</li>
+<li>Odds: \(\frac{P(y=1)}{P(y=0)} = \frac{p}{1-p}\)</li>
+<li>Log-odds (logit): \(\log\left(\frac{p}{1-p}\right) = \mathbf{w}^T\mathbf{x} + b\)</li>
 </ul>
 <strong>Coefficient Interpretation</strong>
 <ul>
-<li>w_j: change in log-odds per unit increase inx_j</li>
-<li>e^w_j: odds ratio - multiplicative effect on odds</li>
-<li>Example:w_income= 0.5each unit increase in income multiplies odds bye^0.51.65</li>
+<li>\(w_j\): change in log-odds per unit increase in \(x_j\)</li>
+<li>\(e^{w_j}\): odds ratio - multiplicative effect on odds</li>
+<li>Example: \(w_{\text{income}} = 0.5 \Rightarrow\) each unit increase in income multiplies odds by \(e^{0.5} \approx 1.65\)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Log-odds interpretation is key for regulatory compliance in banking</em></p>
 </section>
@@ -150,14 +150,11 @@ P(y=1|x) =(w^Tx+ b) =11 + e^-(w^Tx+ b)
 <section>
 <h2>Maximum Likelihood Estimation</h2>
 <strong>The Likelihood Function</strong>
-For observations
-(x_i, y_i)
-, the likelihood is:
-L(w) =_i=1^np_i^y_i(1-p_i)^1-y_i
-where
-p_i =(w^Tx_i + b)
+For observations \((x_i, y_i)\), the likelihood is:
+\[L(\mathbf{w}) = \prod_{i=1}^{n} p_i^{y_i}(1-p_i)^{1-y_i}\]
+where \(p_i = \sigma(\mathbf{w}^T\mathbf{x}_i + b)\)
 <strong>Log-Likelihood (easier to optimize)</strong>
-(w) =_i=1^ny_i(p_i) + (1-y_i)(1-p_i)
+\[\ell(\mathbf{w}) = \sum_{i=1}^{n} \left[ y_i \log(p_i) + (1-y_i)\log(1-p_i) \right]\]
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Maximize log-likelihood = minimize negative log-likelihood (cross-entropy)</em></p>
 </section>
 
@@ -165,7 +162,7 @@ p_i =(w^Tx_i + b)
 <h2>Binary Cross-Entropy Loss</h2>
 <div class="center"><img src="images/L02_Logistic_Regression/03_log_loss.png" style="max-width:100%; max-height:500px;"></div>
 <strong>Loss Function</strong>
-L= -1n_i=1^ny_i(p_i) + (1-y_i)(1-p_i)
+\[\mathcal{L} = -\frac{1}{n}\sum_{i=1}^{n}\left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]\]
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Cross-entropy loss is convex in the weights - guaranteed global optimum</em></p>
 </section>
 
@@ -173,11 +170,10 @@ L= -1n_i=1^ny_i(p_i) + (1-y_i)(1-p_i)
 <h2>Gradient Derivation</h2>
 <strong>Computing the Gradient</strong>
 For a single sample:
-Lw_j= (p - y) x_j
+\[\frac{\partial \mathcal{L}}{\partial w_j} = (p - y) x_j\]
 <strong>In Matrix Form</strong>
-_wL=1nX^T(p-y)
-where
-p=(Xw)
+\[\nabla_{\mathbf{w}} \mathcal{L} = \frac{1}{n}\mathbf{X}^T(\mathbf{p} - \mathbf{y})\]
+where \(\mathbf{p} = \sigma(\mathbf{X}\mathbf{w})\)
 <strong>Key Insight</strong>
 : Same form as linear regression gradient!
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The elegance of logistic regression: gradient has the same form as linear regression</em></p>
@@ -186,12 +182,12 @@ p=(Xw)
 <section>
 <h2>Gradient Descent Update</h2>
 <strong>Update Rule</strong>
-w^(t+1)=w^(t)-_wL
-w^(t+1)=w^(t)-nX^T((Xw^(t)) -y)
+\[\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \eta \nabla_{\mathbf{w}} \mathcal{L}\]
+\[\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \frac{\eta}{n}\mathbf{X}^T(\sigma(\mathbf{X}\mathbf{w}^{(t)}) - \mathbf{y})\]
 <strong>Practical Considerations</strong>
 <ul>
 <li>Feature scaling: standardize inputs for faster convergence</li>
-<li>Learning rate: start with= 0.01, use line search or decay</li>
+<li>Learning rate: start with \(\eta = 0.01\), use line search or decay</li>
 <li>Convergence: monitor loss, check gradient norm < tolerance</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>No closed-form solution like normal equation - must use iterative optimization</em></p>
@@ -201,9 +197,7 @@ w^(t+1)=w^(t)-nX^T((Xw^(t)) -y)
 <h2>Linear Decision Boundary</h2>
 <div class="center"><img src="images/L02_Logistic_Regression/02_decision_boundary.png" style="max-width:100%; max-height:500px;"></div>
 <strong>Decision Rule</strong>
-: Predict
-y= 1
-w^Tx+ b0
+: Predict \(\hat{y} = 1\) if \(\mathbf{w}^T\mathbf{x} + b \geq 0\)
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The decision boundary is always a hyperplane in the feature space</em></p>
 </section>
 
@@ -211,8 +205,8 @@ w^Tx+ b0
 <h2>Threshold Selection</h2>
 <strong>Default Threshold: 0.5</strong>
 <ul>
-<li>Predict 1 ifP(y=1|x)0.5</li>
-<li>Equivalent to:w^Tx+ b0</li>
+<li>Predict 1 if \(P(y=1|\mathbf{x}) \geq 0.5\)</li>
+<li>Equivalent to: \(\mathbf{w}^T\mathbf{x} + b \geq 0\)</li>
 </ul>
 <strong>Custom Thresholds</strong>
 <ul>
@@ -232,8 +226,8 @@ w^Tx+ b0
 <h2>Non-Linear Boundaries via Features</h2>
 <strong>Polynomial Features</strong>
 <ul>
-<li>Original:[x_1, x_2]</li>
-<li>Expanded:[x_1, x_2, x_1^2, x_2^2, x_1 x_2]</li>
+<li>Original: \([x_1, x_2]\)</li>
+<li>Expanded: \([x_1, x_2, x_1^2, x_2^2, x_1 x_2]\)</li>
 <li>Creates curved decision boundaries</li>
 </ul>
 <strong>Trade-offs</strong>
@@ -249,11 +243,11 @@ w^Tx+ b0
 <h2>Multiclass Extension: Softmax</h2>
 <strong>One-vs-Rest (OvR)</strong>
 <ul>
-<li>TrainKbinary classifiers</li>
+<li>Train \(K\) binary classifiers</li>
 <li>Predict class with highest probability</li>
 </ul>
 <strong>Multinomial (Softmax) Logistic Regression</strong>
-P(y=k|x) =e^w_k^Tx_j=1^Ke^w_j^Tx
+\[P(y=k|\mathbf{x}) = \frac{e^{\mathbf{w}_k^T\mathbf{x}}}{\sum_{j=1}^{K}e^{\mathbf{w}_j^T\mathbf{x}}}\]
 <ul>
 <li>Single model, probabilities sum to 1</li>
 <li>Loss: categorical cross-entropy</li>
@@ -271,10 +265,10 @@ P(y=k|x) =e^w_k^Tx_j=1^Ke^w_j^Tx
 <h2>Classification Metrics</h2>
 <strong>From the Confusion Matrix</strong>
 <ul>
-<li><strong>Accuracy</strong>:TP + TNTP + TN + FP + FN- overall correctness</li>
-<li><strong>Precision</strong>:TPTP + FP- of predicted positives, how many correct?</li>
-<li><strong>Recall</strong>:TPTP + FN- of actual positives, how many found?</li>
-<li><strong>F1 Score</strong>:2PrecisionRecallPrecision+Recall</li>
+<li><strong>Accuracy</strong>: \(\frac{TP + TN}{TP + TN + FP + FN}\) - overall correctness</li>
+<li><strong>Precision</strong>: \(\frac{TP}{TP + FP}\) - of predicted positives, how many correct?</li>
+<li><strong>Recall</strong>: \(\frac{TP}{TP + FN}\) - of actual positives, how many found?</li>
+<li><strong>F1 Score</strong>: \(\frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}\)</li>
 </ul>
 <strong>When Accuracy Fails</strong>
 <ul>
@@ -346,7 +340,7 @@ P(y=k|x) =e^w_k^Tx_j=1^Ke^w_j^Tx
 <strong>Checking Calibration</strong>
 <ul>
 <li>Reliability diagram (calibration plot)</li>
-<li>Brier score:1n(p_i - y_i)^2</li>
+<li>Brier score: \(\frac{1}{n}\sum(p_i - y_i)^2\)</li>
 </ul>
 <strong>Logistic Regression Advantage</strong>
 <ul>
@@ -365,10 +359,10 @@ P(y=k|x) =e^w_k^Tx_j=1^Ke^w_j^Tx
 <li>Perfect training accuracy, poor test performance</li>
 </ul>
 <strong>Solution: Penalize Large Coefficients</strong>
-L_regularized=L+penalty(w)
+\[\mathcal{L}_{\text{regularized}} = \mathcal{L} + \lambda \cdot \text{penalty}(\mathbf{w})\]
 <ul>
-<li>: regularization strength (hyperparameter)</li>
-<li>Larger= simpler model</li>
+<li>\(\lambda\): regularization strength (hyperparameter)</li>
+<li>Larger \(\lambda\) = simpler model</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Regularization trades bias for variance</em></p>
 </section>
@@ -376,13 +370,13 @@ L_regularized=L+penalty(w)
 <section>
 <h2>L1 vs L2 Regularization</h2>
 <strong>L2 (Ridge)</strong>
-L_Ridge=L+_j=1^pw_j^2
+\[\mathcal{L}_{\text{Ridge}} = \mathcal{L} + \lambda \sum_{j=1}^{p} w_j^2\]
 <ul>
 <li>Shrinks coefficients toward zero</li>
 <li>Keeps all features, reduces magnitude</li>
 </ul>
 <strong>L1 (Lasso)</strong>
-L_Lasso=L+_j=1^p|w_j|
+\[\mathcal{L}_{\text{Lasso}} = \mathcal{L} + \lambda \sum_{j=1}^{p} |w_j|\]
 <ul>
 <li>Some coefficients exactly zero</li>
 <li>Automatic feature selection</li>
@@ -393,7 +387,7 @@ L_Lasso=L+_j=1^p|w_j|
 <section>
 <h2>Elastic Net</h2>
 <strong>Best of Both Worlds</strong>
-L_ElasticNet=L+_1|w_j| +_2w_j^2
+\[\mathcal{L}_{\text{ElasticNet}} = \mathcal{L} + \lambda_1 \sum |w_j| + \lambda_2 \sum w_j^2\]
 <strong>Advantages</strong>
 <ul>
 <li>Handles correlated features better than Lasso alone</li>
@@ -408,25 +402,24 @@ L_ElasticNet=L+_1|w_j| +_2w_j^2
 </section>
 
 <section>
-<h2>Choosing $\lambda$</h2>
-Choosing
+<h2>Choosing \(\lambda\)</h2>
 <strong>Cross-Validation</strong>
 <ul>
-<li>Try grid ofvalues:[0.001, 0.01, 0.1, 1, 10, 100]</li>
+<li>Try grid of \(\lambda\) values:[0.001, 0.01, 0.1, 1, 10, 100]</li>
 <li>Use k-fold CV to estimate test performance</li>
-<li>Selectwith best CV score</li>
+<li>Select \(\lambda\) with best CV score</li>
 </ul>
 <strong>scikit-learn Convenience</strong>
 <ul>
-<li>LogisticRegressionCV: automaticsearch</li>
-<li>Cs: inverse of(larger C = less regularization)</li>
+<li>LogisticRegressionCV: automatic \(\lambda\) search</li>
+<li>Cs: inverse of \(\lambda\) (larger C = less regularization)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>LogisticRegressionCV does cross-validation internally</em></p>
 </section>
 
 <section>
 <h2>Algorithm: Gradient Descent</h2>
-1<strong>Input</strong>:X,y, learning rate, max iterationsTInitializew=0t = 1toTp=(Xw)=1nX^T(p-y)w=w-\|\|<<strong>break</strong><strong>return</strong>w
+1<strong>Input</strong>: \(\mathbf{X}\), \(\mathbf{y}\), learning rate \(\eta\), max iterations \(T\)Initialize \(\mathbf{w} = \mathbf{0}\)\(t = 1\) to \(T\)\(\mathbf{p} = \sigma(\mathbf{X}\mathbf{w})\)\(\nabla = \frac{1}{n}\mathbf{X}^T(\mathbf{p} - \mathbf{y})\)\(\mathbf{w} = \mathbf{w} - \eta \nabla\)\(\|\nabla\| < \epsilon\)<strong>break</strong><strong>return</strong>\(\mathbf{w}\)
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>In practice, use quasi-Newton methods (L-BFGS) for faster convergence</em></p>
 </section>
 
@@ -465,8 +458,8 @@ Choosing
 <li><strong>Threshold tuning</strong>: optimize for F1 or business metric</li>
 </ul>
 <strong>Weighted Loss</strong>
-L_weighted= -_i w_y_i[y_ip_i + (1-y_i)(1-p_i)]
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>class\_weight='balanced' setsw_k1/n_k</em></p>
+\[\mathcal{L}_{\text{weighted}} = -\sum_i w_{y_i}[y_i\log p_i + (1-y_i)\log(1-p_i)]\]
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>class\_weight='balanced' sets \(w_k \propto 1/n_k\)</em></p>
 </section>
 
 <section>
@@ -476,7 +469,7 @@ L_weighted= -_i w_y_i[y_ip_i + (1-y_i)(1-p_i)]
 <li><strong>Standardization</strong>: mean=0, std=1 for all features</li>
 <li><strong>Missing values</strong>: impute or create indicator variable</li>
 <li><strong>Categorical</strong>: one-hot encoding (drop one level)</li>
-<li><strong>Interactions</strong>:x_1x_2if domain suggests</li>
+<li><strong>Interactions</strong>: \(x_1 \times x_2\) if domain suggests</li>
 <li><strong>Non-linearity</strong>: binning or polynomial features</li>
 </ul>
 <strong>Credit Scoring Example</strong>
@@ -494,12 +487,12 @@ L_weighted= -_i w_y_i[y_ip_i + (1-y_i)(1-p_i)]
 <ul>
 <li>Sign: direction of effect</li>
 <li>Magnitude: strength (after standardization)</li>
-<li>Odds ratioe^w_j: multiplicative effect</li>
+<li>Odds ratio \(e^{w_j}\): multiplicative effect</li>
 </ul>
 <strong>Example Interpretation</strong>
 <ul>
-<li>w_income= 0.5: each\$1000 income increase multiplies odds of approval bye^0.5= 1.65</li>
-<li>w_debt\_ratio= -1.2: each 0.1 increase in debt ratio multiplies odds bye^-0.12= 0.89(11%decrease)</li>
+<li>\(w_{\text{income}} = 0.5\): each$1000 income increase multiplies odds of approval by \(e^{0.5} = 1.65\)</li>
+<li>\(w_{\text{debt\_ratio}} = -1.2\): each 0.1 increase in debt ratio multiplies odds by \(e^{-0.12} = 0.89\) (11%decrease)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>This interpretability makes logistic regression preferred in regulated industries</em></p>
 </section>

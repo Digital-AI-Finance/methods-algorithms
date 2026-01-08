@@ -130,10 +130,7 @@
 =1n-1X^T X(centered data)
 <strong>Eigendecomposition:</strong>
 v =v
-where
-v
-= eigenvector (principal direction),
-= eigenvalue (variance)
+where \(v\) = eigenvector (principal direction), \(\lambda\) = eigenvalue (variance)
 <strong>Projection:</strong>
 Z = X W_kwhereW_k =[v_1, v_2,, v_k]
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Eigenvalues tell us how much variance each component captures</em></p>
@@ -149,7 +146,7 @@ Cumulative_k =_i=1^k_i_j=1^p_j
 <ul>
 <li>Keep 80-95%of total variance</li>
 <li>Use scree plot "elbow" method</li>
-<li>Kaiser criterion: keep components with> 1</li>
+<li>Kaiser criterion: keep components with \(\lambda > 1\)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Balance dimensionality reduction with information preservation</em></p>
 </section>
@@ -249,7 +246,7 @@ KL(P||Q) =_ijp_ijp_ijq_ij
 <section>
 <h2>Perplexity Parameter</h2>
 <div class="center"><img src="images/L05_PCA_tSNE/04_tsne_perplexity.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Perplexityeffective number of neighbors (try 5-50)</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Perplexity \(\approx\) effective number of neighbors (try 5-50)</em></p>
 </section>
 
 <section>
@@ -277,7 +274,7 @@ controls the balance between local and global structure:
 <li>Non-deterministic (run multiple times)</li>
 <li>Cluster sizes are not meaningful</li>
 <li>Distances between clusters are not meaningful</li>
-<li>Slow for large datasets (O(n^2))</li>
+<li>Slow for large datasets (O(\(n^2\)))</li>
 </ul>
 <strong>Best Practices:</strong>
 <ul>
@@ -297,7 +294,16 @@ controls the balance between local and global structure:
 
 <section>
 <h2>Comparison Table</h2>
-<div class="center">l|cc<strong>Aspect</strong>&<strong>PCA</strong>&<strong>t-SNE</strong><br>Type & Linear & Non-linear<br>Speed & FastO(np^2)& SlowO(n^2)<br>Deterministic & Yes & No<br>Preserves & Global variance & Local neighbors<br>Reversible & Yes & No<br>Use for ML & Yes (preprocessing) & No<br>Visualization & Okay & Excellent<br></div>
+<div class="center"><table class="beamer-table">
+<tr><th><strong>Aspect</strong></th><th><strong>PCA</strong></th><th><strong>t-SNE</strong></th></tr>
+<tr><td>Type</td><td>Linear</td><td>Non-linear</td></tr>
+<tr><td>Speed</td><td>Fast \(O(np^2)\)</td><td>Slow \(O(n^2)\)</td></tr>
+<tr><td>Deterministic</td><td>Yes</td><td>No</td></tr>
+<tr><td>Preserves</td><td>Global variance</td><td>Local neighbors</td></tr>
+<tr><td>Reversible</td><td>Yes</td><td>No</td></tr>
+<tr><td>Use for ML</td><td>Yes (preprocessing)</td><td>No</td></tr>
+<tr><td>Visualization</td><td>Okay</td><td>Excellent</td></tr>
+</table></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Use PCA for preprocessing, t-SNE for visualization only</em></p>
 </section>
 
@@ -383,9 +389,7 @@ controls the balance between local and global structure:
 <li>Don't interpret distances or sizes literally</li>
 </ul>
 <strong>Common Pipeline:</strong>
-Standardize
-PCA (30-50)
-t-SNE (2D)
+Standardize \(\rightarrow\) PCA (30-50) \(\rightarrow\) t-SNE (2D)
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Next: Embeddings and Reinforcement Learning</em></p>
 </section>
 

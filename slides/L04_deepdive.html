@@ -129,15 +129,11 @@
 <strong>Gini Impurity</strong>
 measures class mixture at a node:
 G = 1 -_k=1^Kp_k^2
-where
-p_k
-is the proportion of class
-k
-samples.
+where \(p_k\) is the proportion of class \(k\) samples.
 <strong>Properties:</strong>
 <ul>
-<li>G = 0: pure node (all samples same class)</li>
-<li>G = 0.5: maximum impurity for binary classification</li>
+<li>\(G = 0\): pure node (all samples same class)</li>
+<li>\(G = 0.5\): maximum impurity for binary classification</li>
 <li>Lower Gini = better split</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Gini impurity: probability of misclassifying a random sample</em></p>
@@ -204,7 +200,7 @@ Reduction=MSE(parent) -_jn_jnMSE(child_j)
 <h2>Part 2: Why Ensembles?</h2>
 <strong>Problem with Single Trees:</strong>
 <ul>
-<li>High variance: small data changesvery different trees</li>
+<li>High variance: small data changes \(\rightarrow\) very different trees</li>
 <li>Prone to overfitting</li>
 <li>Unstable predictions</li>
 </ul>
@@ -223,9 +219,9 @@ Reduction=MSE(parent) -_jn_jnMSE(child_j)
 : sample with replacement from original data
 <strong>Properties:</strong>
 <ul>
-<li>Each sample: same size as original (nobservations)</li>
-<li>Expected unique samples:63.2%(probability1 - (1-1/n)^n)</li>
-<li>Remaining37%: out-of-bag (OOB) samples</li>
+<li>Each sample: same size as original (\(n\) observations)</li>
+<li>Expected unique samples: \(\approx 63.2\%\) (probability \(1 - (1-1/n)^n\))</li>
+<li>Remaining \(\sim 37\%\): out-of-bag (OOB) samples</li>
 </ul>
 <strong>Effect:</strong>
 <ul>
@@ -245,13 +241,9 @@ Reduction=MSE(parent) -_jn_jnMSE(child_j)
 <section>
 <h2>Bagging: Mathematical Foundation</h2>
 <strong>Variance Reduction by Averaging</strong>
-For
-B
-independent predictions with variance
-^2
-:
+For \(B\) independent predictions with variance \(\sigma^2\):
 Var1B_b=1^Bf_b(x)=^2B
-<strong>With correlation</strong>
+<strong>With correlation \(\rho\)</strong>
 :
 Var=^2 +1-B^2
 <strong>Key insight</strong>
@@ -269,8 +261,8 @@ Var=^2 +1-B^2
 <strong>Feature Subset Size</strong>
 (at each split):
 <ul>
-<li>Classification:pfeatures (default)</li>
-<li>Regression:p/3features (default)</li>
+<li>Classification: \(\sqrt{p}\) features (default)</li>
+<li>Regression: \(p/3\) features (default)</li>
 <li>Decorrelates trees more than bagging alone</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Feature randomization: Breiman's key innovation over bagging</em></p>
@@ -280,11 +272,11 @@ Var=^2 +1-B^2
 <h2>Random Forest Algorithm</h2>
 <strong>Training:</strong>
 <ol>
-<li>Forb = 1toBtrees:<ul>
-<li>Draw bootstrap sample of sizen</li>
+<li>For \(b = 1\) to \(B\) trees:<ul>
+<li>Draw bootstrap sample of size \(n\)</li>
 <li>Grow tree:<ul>
-<li>At each node, selectmfeatures randomly</li>
-<li>Find best split amongmfeatures</li>
+<li>At each node, select \(m\) features randomly</li>
+<li>Find best split among \(m\) features</li>
 <li>Split until stopping criterion</li>
 </ul></li>
 </ul></li>
@@ -328,16 +320,16 @@ Var=^2 +1-B^2
 
 <section>
 <h2>Out-of-Bag Error: How It Works</h2>
-<strong>For each observationi:</strong>
+<strong>For each observation \(i\):</strong>
 <ol>
-<li>Identify trees whereiwas OOB (not in bootstrap sample)</li>
+<li>Identify trees where \(i\) was OOB (not in bootstrap sample)</li>
 <li>Aggregate predictions from only those trees</li>
 <li>Compare to true label</li>
 </ol>
 <strong>Benefits:</strong>
 <ul>
 <li>No separate validation set needed</li>
-<li>Uses37%of trees per sample</li>
+<li>Uses \(\sim 37\%\) of trees per sample</li>
 <li>Unbiased estimate of generalization error</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>OOB error converges to leave-one-out cross-validation error</em></p>
@@ -361,7 +353,7 @@ E(y -f(x))^2=Bias^2 +Variance+Irreducible Error
 <strong>Random Forest:</strong>
 <ul>
 <li>Bias: similar to single tree</li>
-<li>Variance: reduced byfactor of1/B(with decorrelation)</li>
+<li>Variance: reduced by \(\approx\) factor of \(1/B\) (with decorrelation)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Ensembles reduce variance without increasing bias</em></p>
 </section>
@@ -423,12 +415,12 @@ E(y -f(x))^2=Bias^2 +Variance+Irreducible Error
 </ul>
 <strong>Defaults:</strong>
 <ul>
-<li>Classification:p(e.g., 10 features3)</li>
-<li>Regression:p/3(e.g., 30 features10)</li>
+<li>Classification: \(\sqrt{p}\) (e.g., 10 features \(\rightarrow\) 3)</li>
+<li>Regression: \(p/3\) (e.g., 30 features \(\rightarrow\) 10)</li>
 </ul>
 <strong>Tuning:</strong>
 <ul>
-<li>Try:p,_2(p),p/3</li>
+<li>Try: \(\sqrt{p}\), \(\log_2(p)\), \(p/3\)</li>
 <li>Cross-validate to find optimal</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Feature randomization is key differentiator from bagged trees</em></p>
@@ -456,7 +448,14 @@ E(y -f(x))^2=Bias^2 +Variance+Irreducible Error
 
 <section>
 <h2>Comparison: Random Forest vs. Others</h2>
-<div class="center">l|ccccc<strong>Aspect</strong>&<strong>RF</strong>&<strong>Single Tree</strong>&<strong>Logistic</strong>&<strong>KNN</strong><br>Accuracy & High & Medium & Medium & Medium<br>Interpretability & Medium & High & High & Low<br>Training Speed & Medium & Fast & Fast & Fast<br>Feature Importance & Yes & Yes & Yes & No<br>Non-linear & Yes & Yes & No & Yes<br></div>
+<div class="center"><table class="beamer-table">
+<tr><th><strong>Aspect</strong></th><th><strong>RF</strong></th><th><strong>Single Tree</strong></th><th><strong>Logistic</strong></th><th><strong>KNN</strong></th></tr>
+<tr><td>Accuracy</td><td>High</td><td>Medium</td><td>Medium</td><td>Medium</td></tr>
+<tr><td>Interpretability</td><td>Medium</td><td>High</td><td>High</td><td>Low</td></tr>
+<tr><td>Training Speed</td><td>Medium</td><td>Fast</td><td>Fast</td><td>Fast</td></tr>
+<tr><td>Feature Importance</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+<tr><td>Non-linear</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+</table></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>RF trades some interpretability for significant accuracy gains</em></p>
 </section>
 
