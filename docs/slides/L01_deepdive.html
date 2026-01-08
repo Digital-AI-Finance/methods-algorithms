@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="custom beamer parser">
-    <meta name="author" content="Methods and Algorithms">
-    <title>Introduction &amp; Linear Regression</title>
+    <meta name="generator" content="pdf-to-revealjs">
+    <meta name="author" content="Methods and Algorithms - MSc Data Science">
+    <title>L1: deepdive</title>
 
     <!-- Reveal.js core -->
     <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
@@ -24,29 +24,21 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        /* Additional inline styles */
-        .reveal .sourceCode {
-            overflow: visible;
+        /* Image slide styling */
+        .reveal section img {
+            border: none;
+            box-shadow: none;
+            background: transparent;
         }
-        code {
-            white-space: pre-wrap;
-        }
-        span.smallcaps {
-            font-variant: small-caps;
-        }
-        div.columns {
-            display: flex;
-            gap: min(4vw, 1.5em);
-        }
-        div.column {
-            flex: auto;
-            overflow-x: auto;
+
+        /* Center slides vertically */
+        .reveal .slides section {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
 
         /* Spotlight cursor */
@@ -84,7 +76,6 @@
             color: white;
         }
 
-        /* Hide export button in print mode */
         @media print {
             .pdf-export-btn {
                 display: none;
@@ -95,420 +86,214 @@
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
-    <div style="color: white; text-align: center;">
-        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Introduction &amp; Linear Regression</h1>
-        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Deep Dive: Mathematics and Implementation</p>
-        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms</p>
-        <div style="margin-top: 2em;">
-            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
-            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
-        </div>
-    </div>
+<section data-slide="1">
+    <img src="images/L01_deepdive/slide_01.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 1">
 </section>
 
-<section>
-<h2>Outline</h2>
+<section data-slide="2">
+    <img src="images/L01_deepdive/slide_02.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 2">
 </section>
 
-<section>
-<h2>Matrix Notation</h2>
-<strong>The Model in Matrix Form</strong>
-\[\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}\]
-<ul>
-<li>\(\mathbf{y} \in \mathbb{R}^n\): Response vector</li>
-<li>\(\mathbf{X} \in \mathbb{R}^{n \times (p+1)}\): Design matrix (with intercept column)</li>
-<li>\(\boldsymbol{\beta} \in \mathbb{R}^{p+1}\): Coefficient vector</li>
-<li>\(\boldsymbol{\varepsilon} \in \mathbb{R}^n\): Error vector</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Matrix notation enables elegant derivations and efficient computation</em></p>
+<section data-slide="3">
+    <img src="images/L01_deepdive/slide_03.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 3">
 </section>
 
-<section>
-<h2>Design Matrix Structure</h2>
-<strong>The Design Matrix \(\mathbf{X}\)</strong>
-\[\mathbf{X} = \begin{bmatrix}
-      1 & x_{11} & x_{12} & \cdots & x_{1p} \\
-      1 & x_{21} & x_{22} & \cdots & x_{2p} \\
-      \vdots & \vdots & \vdots & \ddots & \vdots \\
-      1 & x_{n1} & x_{n2} & \cdots & x_{np}\]
-<ul>
-<li>First column of 1s for intercept \(\beta_0\)</li>
-<li>Each row is one observation</li>
-<li>Each column (after first) is one feature</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>\(n\) observations, \(p\) features, \(p+1\) parameters</em></p>
+<section data-slide="4">
+    <img src="images/L01_deepdive/slide_04.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 4">
 </section>
 
-<section>
-<h2>OLS Assumptions</h2>
-<strong>Classical Assumptions for Valid Inference</strong>
-<ol>
-<li><strong>Linearity</strong>: \(E[y|X] = X\beta\) (correct functional form)</li>
-<li><strong>Exogeneity</strong>: \(E[\varepsilon|X] = 0\) (no omitted variables)</li>
-<li><strong>Homoscedasticity</strong>: \(\text{Var}(\varepsilon|X) = \sigma^2 I\) (constant variance)</li>
-<li><strong>No multicollinearity</strong>: \(\text{rank}(X) = p+1\) (full rank)</li>
-<li><strong>Normality</strong>(for inference): \(\varepsilon \sim N(0, \sigma^2 I)\)</li>
-</ol>
-<strong>Violations?</strong>
-Robust standard errors, transformations, regularization
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Assumptions 1-4 needed for unbiased estimates; 5 for t-tests and CIs</em></p>
+<section data-slide="5">
+    <img src="images/L01_deepdive/slide_05.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 5">
 </section>
 
-<section>
-<h2>The Loss Function</h2>
-<strong>Sum of Squared Residuals (SSR)</strong>
-\[L(\boldsymbol{\beta}) = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\top (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})\]
-<strong>Expanding:</strong>
-\[L(\boldsymbol{\beta}) = \mathbf{y}^\top\mathbf{y} - 2\boldsymbol{\beta}^\top\mathbf{X}^\top\mathbf{y} + \boldsymbol{\beta}^\top\mathbf{X}^\top\mathbf{X}\boldsymbol{\beta}\]
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Quadratic function in \(\boldsymbol{\beta}\) - has unique minimum (if \(X\) full rank)</em></p>
+<section data-slide="6">
+    <img src="images/L01_deepdive/slide_06.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 6">
 </section>
 
-<section>
-<h2>Deriving the Normal Equation</h2>
-<strong>Taking the Derivative</strong>
-\[\frac{\partial L}{\partial \boldsymbol{\beta}} = -2\mathbf{X}^\top\mathbf{y} + 2\mathbf{X}^\top\mathbf{X}\boldsymbol{\beta}\]
-<strong>Setting to Zero:</strong>
-\[\mathbf{X}^\top\mathbf{X}\hat{\boldsymbol{\beta}} &= \mathbf{X}^\top\mathbf{y} \\
-    \hat{\boldsymbol{\beta}} &= (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}\]
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>This is the closed-form OLS solution - the "normal equation"</em></p>
+<section data-slide="7">
+    <img src="images/L01_deepdive/slide_07.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 7">
 </section>
 
-<section>
-<h2>Simple Regression Visualization</h2>
-<div class="center"><img src="images/L01_Introduction_Linear_Regression/01_simple_regression.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The fitted line minimizes vertical distances squared</em></p>
+<section data-slide="8">
+    <img src="images/L01_deepdive/slide_08.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 8">
 </section>
 
-<section>
-<h2>Multiple Regression Surface</h2>
-<div class="center"><img src="images/L01_Introduction_Linear_Regression/02_multiple_regression_3d.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>With 2 features, we fit a plane; with \(p\) features, a hyperplane</em></p>
+<section data-slide="9">
+    <img src="images/L01_deepdive/slide_09.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 9">
 </section>
 
-<section>
-<h2>Why Gradient Descent?</h2>
-<strong>Normal Equation Limitations</strong>
-<ul>
-<li>Computing \((\mathbf{X}^\top\mathbf{X})^{-1}\) is \(O(p^3)\)</li>
-<li>Memory: Need to store \(p \times p\) matrix</li>
-<li>For large \(p\) (millions of features): infeasible</li>
-</ul>
-<strong>Gradient Descent Advantages</strong>
-<ul>
-<li>Memory efficient: process one sample at a time</li>
-<li>Scales to big data (SGD)</li>
-<li>Generalizes to non-linear models</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>For \(p > 10{,}000\), gradient descent usually faster</em></p>
+<section data-slide="10">
+    <img src="images/L01_deepdive/slide_10.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 10">
 </section>
 
-<section>
-<h2>The Gradient</h2>
-<strong>Gradient of the Loss Function</strong>
-\[\nabla L(\boldsymbol{\beta}) = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) = -2\mathbf{X}^\top\mathbf{r}\]
-where \(\mathbf{r} = \mathbf{y} - \mathbf{X}\boldsymbol{\beta}\) is the residual vector.
-<strong>Intuition:</strong>
-<ul>
-<li>Gradient points in direction of steepest ascent</li>
-<li>We move opposite to gradient (steepest descent)</li>
-<li>Scale by learning rate \(\alpha\)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Gradient is a \(p+1\) dimensional vector</em></p>
+<section data-slide="11">
+    <img src="images/L01_deepdive/slide_11.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 11">
 </section>
 
-<section>
-<h2>Gradient Descent Algorithm</h2>
-<strong>Update Rule</strong>
-\[\boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L(\boldsymbol{\beta}^{(t)})\]
-<strong>Algorithm:</strong>
-<ol>
-<li>Initialize \(\boldsymbol{\beta}^{(0)}\) (often zeros or random)</li>
-<li>Compute gradient \(\nabla L(\boldsymbol{\beta}^{(t)})\)</li>
-<li>Update: \(\boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L\)</li>
-<li>Repeat until convergence</li>
-</ol>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Convergence: \(\|\boldsymbol{\beta}^{(t+1)} - \boldsymbol{\beta}^{(t)}\| < \epsilon\) or max iterations</em></p>
+<section data-slide="12">
+    <img src="images/L01_deepdive/slide_12.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 12">
 </section>
 
-<section>
-<h2>Gradient Descent Visualization</h2>
-<div class="center"><img src="images/L01_Introduction_Linear_Regression/04_gradient_descent.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Contours show loss surface; path shows optimization trajectory</em></p>
+<section data-slide="13">
+    <img src="images/L01_deepdive/slide_13.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 13">
 </section>
 
-<section>
-<h2>Learning Rate Selection</h2>
-<strong>The Critical Hyperparameter</strong>
-<ul>
-<li><strong>Too small</strong>: Slow convergence, many iterations</li>
-<li><strong>Too large</strong>: Divergence, oscillation</li>
-<li><strong>Just right</strong>: Fast, stable convergence</li>
-</ul>
-<strong>Practical Approaches:</strong>
-<ul>
-<li>Start with \(\alpha = 0.01\) or \(0.001\)</li>
-<li>Learning rate schedules (decay over time)</li>
-<li>Adaptive methods: Adam, AdaGrad, RMSprop</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>For OLS, optimal \(\alpha = 1/\lambda_{\max}(X^\top X)\)</em></p>
+<section data-slide="14">
+    <img src="images/L01_deepdive/slide_14.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 14">
 </section>
 
-<section>
-<h2>Stochastic Gradient Descent (SGD)</h2>
-<strong>Mini-Batch Gradient Descent</strong>
-Instead of full gradient:
-\[\nabla L(\boldsymbol{\beta}) = -\frac{2}{n}\mathbf{X}^\top\mathbf{r}\]
-Use mini-batch of size \(m\):
-\[\nabla L_B(\boldsymbol{\beta}) = -\frac{2}{m}\mathbf{X}_B^\top\mathbf{r}_B\]
-<ul>
-<li>\(m = 1\): Stochastic GD (noisy but fast)</li>
-<li>\(m = n\): Batch GD (stable but slow)</li>
-<li>\(m \in [32, 256]\): Mini-batch (good tradeoff)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>SGD: Process data once per epoch, update many times</em></p>
+<section data-slide="15">
+    <img src="images/L01_deepdive/slide_15.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 15">
 </section>
 
-<section>
-<h2>R-Squared (\(R^2\))</h2>
-<strong>Coefficient of Determination</strong>
-\[R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}} = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}\]
-<strong>Interpretation:</strong>
-<ul>
-<li>Proportion of variance explained by model</li>
-<li>\(R^2 = 0\): Model no better than mean</li>
-<li>\(R^2 = 1\): Perfect fit</li>
-<li>\(R^2 = 0.7\): 70%of variance explained</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>\(R^2\) always increases with more features - use Adjusted \(R^2\)</em></p>
+<section data-slide="16">
+    <img src="images/L01_deepdive/slide_16.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 16">
 </section>
 
-<section>
-<h2>Adjusted R-Squared</h2>
-<strong>Penalizing Model Complexity</strong>
-\[R^2_{\text{adj}} = 1 - \frac{(1-R^2)(n-1)}{n-p-1}\]
-<strong>Properties:</strong>
-<ul>
-<li>Adjusts for number of predictors \(p\)</li>
-<li>Can decrease when adding irrelevant features</li>
-<li>Better for model comparison</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Use \(R^2_{\text{adj}}\) when comparing models with different \(p\)</em></p>
+<section data-slide="17">
+    <img src="images/L01_deepdive/slide_17.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 17">
 </section>
 
-<section>
-<h2>RMSE and MAE</h2>
-<strong>Error Metrics in Original Units</strong>
-\[\text{RMSE} &= \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2} \\
-    \text{MAE} &= \frac{1}{n}\sum|y_i - \hat{y}_i|\]
-<strong>Comparison:</strong>
-<ul>
-<li>RMSE: Penalizes large errors more (sensitive to outliers)</li>
-<li>MAE: More robust, easier to interpret</li>
-<li>Units: Same as target variable (e.g., dollars)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Report both for comprehensive evaluation</em></p>
+<section data-slide="18">
+    <img src="images/L01_deepdive/slide_18.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 18">
 </section>
 
-<section>
-<h2>Residual Analysis</h2>
-<div class="center"><img src="images/L01_Introduction_Linear_Regression/03_residual_plots.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Good: random scatter. Bad: patterns indicate model misspecification</em></p>
+<section data-slide="19">
+    <img src="images/L01_deepdive/slide_19.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 19">
 </section>
 
-<section>
-<h2>Train-Test Split</h2>
-<strong>Evaluating Generalization</strong>
-<ul>
-<li>Never evaluate on training data alone</li>
-<li>Split: 70-80%train, 20-30%test</li>
-<li>Report test set metrics</li>
-</ul>
-<strong>Cross-Validation (K-Fold):</strong>
-<ul>
-<li>Split into \(K\) folds (typically \(K=5\) or \(10\))</li>
-<li>Train on \(K-1\) folds, validate on 1</li>
-<li>Repeat \(K\) times, average results</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>CV gives more reliable estimate with limited data</em></p>
+<section data-slide="20">
+    <img src="images/L01_deepdive/slide_20.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 20">
 </section>
 
-<section>
-<h2>Learning Curves</h2>
-<div class="center"><img src="images/L01_Introduction_Linear_Regression/05_learning_curves.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Gap between curves indicates overfitting; convergence shows saturation</em></p>
+<section data-slide="21">
+    <img src="images/L01_deepdive/slide_21.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 21">
 </section>
 
-<section>
-<h2>The Overfitting Problem</h2>
-<strong>When Models Memorize Instead of Learn</strong>
-<ul>
-<li>High-dimensional data (\(p \approx n\) or \(p > n\))</li>
-<li>Coefficients become very large</li>
-<li>Perfect fit on training data, poor generalization</li>
-</ul>
-<strong>Solution: Add Penalty to Loss Function</strong>
-\[L_{\text{reg}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \cdot \text{penalty}(\boldsymbol{\beta})\]
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>\(\lambda\) controls strength of regularization</em></p>
+<section data-slide="22">
+    <img src="images/L01_deepdive/slide_22.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 22">
 </section>
 
-<section>
-<h2>Ridge Regression (L2)</h2>
-<strong>L2 Penalty: Sum of Squared Coefficients</strong>
-\[L_{\text{ridge}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \|\boldsymbol{\beta}\|_2^2\]
-<strong>Closed-Form Solution:</strong>
-\[\hat{\boldsymbol{\beta}}_{\text{ridge}} = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}\]
-<ul>
-<li>Shrinks all coefficients toward zero</li>
-<li>Never sets coefficients exactly to zero</li>
-<li>Always invertible (even when \(p > n\))</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Ridge adds \(\lambda\) to diagonal - stabilizes inversion</em></p>
+<section data-slide="23">
+    <img src="images/L01_deepdive/slide_23.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 23">
 </section>
 
-<section>
-<h2>Lasso Regression (L1)</h2>
-<strong>L1 Penalty: Sum of Absolute Coefficients</strong>
-\[L_{\text{lasso}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \|\boldsymbol{\beta}\|_1\]
-<strong>Properties:</strong>
-<ul>
-<li>Produces sparse solutions (some \(\beta_j = 0\))</li>
-<li>Automatic feature selection</li>
-<li>No closed-form solution (use coordinate descent)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Lasso: Least Absolute Shrinkage and Selection Operator</em></p>
+<section data-slide="24">
+    <img src="images/L01_deepdive/slide_24.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 24">
 </section>
 
-<section>
-<h2>Ridge vs Lasso Comparison</h2>
-<div class="center"><img src="images/L01_Introduction_Linear_Regression/06_regularization_comparison.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Ridge: smooth shrinkage. Lasso: sparse (feature selection)</em></p>
+<section data-slide="25">
+    <img src="images/L01_deepdive/slide_25.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 25">
 </section>
 
-<section>
-<h2>Elastic Net</h2>
-<strong>Combining L1 and L2 Penalties</strong>
-\[L_{\text{elastic}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda_1 \|\boldsymbol{\beta}\|_1 + \lambda_2 \|\boldsymbol{\beta}\|_2^2\]
-<strong>Benefits:</strong>
-<ul>
-<li>Sparsity from L1</li>
-<li>Stability from L2 (handles correlated features)</li>
-<li>Two hyperparameters to tune</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Often best of both worlds for correlated features</em></p>
+<section data-slide="26">
+    <img src="images/L01_deepdive/slide_26.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 26">
 </section>
 
-<section>
-<h2>Choosing Lambda</h2>
-<strong>Cross-Validation for Hyperparameter Tuning</strong>
-<ol>
-<li>Define grid of \(\lambda\) values (e.g., \(10^{-4}\) to \(10^{4}\))</li>
-<li>For each \(\lambda\), perform K-fold CV</li>
-<li>Select \(\lambda\) with lowest CV error</li>
-<li>Refit on full training data</li>
-</ol>
-<strong>In Practice:</strong>
-<ul>
-<li>sklearn.linear\_model.RidgeCV</li>
-<li>sklearn.linear\_model.LassoCV</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Larger \(\lambda\) = more regularization = simpler model</em></p>
+<section data-slide="27">
+    <img src="images/L01_deepdive/slide_27.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 27">
 </section>
 
-<section>
-<h2>Decomposing Prediction Error</h2>
-<strong>Expected Prediction Error</strong>
-\[E[(y - \hat{f}(x))^2] = \text{Bias}^2(\hat{f}) + \text{Var}(\hat{f}) + \sigma^2\]
-<ul>
-<li><strong>Bias</strong>: Error from wrong assumptions (underfitting)</li>
-<li><strong>Variance</strong>: Error from sensitivity to training data (overfitting)</li>
-<li><strong>\(\sigma^2\)</strong>: Irreducible noise in data</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>We can't reduce irreducible error - focus on bias and variance</em></p>
+<section data-slide="28">
+    <img src="images/L01_deepdive/slide_28.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 28">
 </section>
 
-<section>
-<h2>The Tradeoff Illustrated</h2>
-<div class="center"><img src="images/L01_Introduction_Linear_Regression/07_bias_variance.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Optimal complexity minimizes total error</em></p>
+<section data-slide="29">
+    <img src="images/L01_deepdive/slide_29.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 29">
 </section>
 
-<section>
-<h2>Regularization and Bias-Variance</h2>
-<strong>How Regularization Helps</strong>
-<ul>
-<li>Increasing \(\lambda\):<span style="color: #FF7F0E"><strong>increases bias</strong></span>,<span style="color: #FF7F0E"><strong>decreases variance</strong></span></li>
-<li>Decreasing \(\lambda\): decreases bias, increases variance</li>
-<li>Optimal \(\lambda\): minimizes total error</li>
-</ul>
-<strong>In Practice:</strong>
-<ul>
-<li>Use CV to find optimal \(\lambda\)</li>
-<li>Regularization almost always helps when \(p\) is large</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Regularization trades a little bias for a lot of variance reduction</em></p>
+<section data-slide="30">
+    <img src="images/L01_deepdive/slide_30.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 30">
 </section>
 
-<section>
-<h2>Algorithm Selection Guide</h2>
-<div class="center"><img src="images/L01_Introduction_Linear_Regression/08_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Use this framework when choosing regression methods</em></p>
+<section data-slide="31">
+    <img src="images/L01_deepdive/slide_31.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 31">
 </section>
 
-<section>
-<h2>Linear Regression: When and Why</h2>
-<div class="columns"><div class="column"><strong><span style="color: #2CA02C">Use When:</span></strong><ul>
-<li>Continuous target variable</li>
-<li>Approximate linear relationships</li>
-<li>Interpretability is critical</li>
-<li>Inference on coefficients needed</li>
-<li>Fast prediction required</li>
-</ul></div><div class="column"><strong><span style="color: #D62728">Avoid When:</span></strong><ul>
-<li>Target is categorical</li>
-<li>Strong non-linear patterns</li>
-<li>Many outliers present</li>
-<li>Features highly correlated</li>
-<li>Prediction accuracy paramount</li>
-</ul></div></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>When in doubt, linear regression is a strong baseline</em></p>
+<section data-slide="32">
+    <img src="images/L01_deepdive/slide_32.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 32">
 </section>
 
-<section>
-<h2>Key Equations Summary</h2>
-\[\text{Model:} \quad & \mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon} \\
-    \text{OLS Solution:} \quad & \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y} \\
-    \text{Gradient:} \quad & \nabla L = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) \\
-    \text{GD Update:} \quad & \boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L \\
-    \text{Ridge:} \quad & \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y} \\
-    R^2: \quad & 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}\]
+<section data-slide="33">
+    <img src="images/L01_deepdive/slide_33.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 33">
 </section>
 
-<section>
-<h2>Key Takeaways</h2>
-<ol>
-<li>Linear regression minimizes squared error - closed form or GD</li>
-<li>Matrix notation enables efficient computation</li>
-<li>Gradient descent scales to large datasets</li>
-<li>Regularization (Ridge/Lasso) prevents overfitting</li>
-<li>The bias-variance tradeoff guides model complexity</li>
-<li>Always evaluate on held-out test data</li>
-</ol>
-<strong>Next Session:</strong>
-Logistic Regression for Classification
+<section data-slide="34">
+    <img src="images/L01_deepdive/slide_34.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 34">
 </section>
 
-<section>
-<h2>References</h2>
-<ul>
-<li>James, Witten, Hastie, Tibshirani (2021).<em>Introduction to Statistical Learning</em>. Chapter 3.</li>
-<li>Hastie, Tibshirani, Friedman (2009).<em>Elements of Statistical Learning</em>. Chapter 3.</li>
-<li>Bishop (2006).<em>Pattern Recognition and Machine Learning</em>. Chapter 3.</li>
-</ul>
-<strong>Online Resources:</strong>
-<ul>
-<li>scikit-learn:https://scikit-learn.org/stable/modules/linear_model.html</li>
-<li>Stanford CS229:https://cs229.stanford.edu/</li>
-</ul>
+<section data-slide="35">
+    <img src="images/L01_deepdive/slide_35.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 35">
 </section>
         </div>
 
@@ -532,7 +317,6 @@ Logistic Regression for Classification
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
-    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
 
     <!-- Menu plugin -->
@@ -569,21 +353,6 @@ Logistic Regression for Classification
             }
         }
 
-        // Hide PDF button if PDF doesn't exist
-        const pdfLink = document.querySelector('.pdf-export-btn');
-        if (pdfLink) {
-            fetch(pdfLink.href, { method: 'HEAD' })
-                .then(response => {
-                    if (!response.ok) {
-                        pdfLink.style.display = 'none';
-                    }
-                })
-                .catch(() => {
-                    // PDF not available, hide button
-                    pdfLink.style.display = 'none';
-                });
-        }
-
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -607,43 +376,24 @@ Logistic Regression for Classification
             transitionSpeed: 'default',
             backgroundTransition: 'fade',
 
-            // Sizing (16:9 aspect ratio)
+            // Sizing (16:9 aspect ratio - matches Beamer)
             width: 1600,
             height: 900,
-            margin: 0.04,
+            margin: 0.02,
             minScale: 0.2,
             maxScale: 2.0,
-            center: false,
-
-            // Fragments
-            fragments: true,
-            fragmentInURL: false,
+            center: true,
 
             // Auto-slide (disabled)
             autoSlide: 0,
-
-            // Math configuration
-            math: {
-                mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
-                config: 'TeX-AMS_HTML-full',
-                tex: {
-                    inlineMath: [['\\(', '\\)']],
-                    displayMath: [['\\[', '\\]']],
-                    processEscapes: true,
-                    processEnvironments: true
-                },
-                options: {
-                    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-                }
-            },
 
             // Menu plugin configuration
             menu: {
                 side: 'left',
                 width: 'normal',
                 numbers: true,
-                titleSelector: 'h1, h2',
-                useTextContentForMissingTitles: true,
+                titleSelector: 'h1, h2, [data-slide]',
+                useTextContentForMissingTitles: false,
                 hideMissingTitles: false,
                 markers: true,
                 custom: [
@@ -691,9 +441,8 @@ Logistic Regression for Classification
                 theme: "chalkboard"
             },
 
-            // Plugins to load
+            // Plugins to load (no MathJax needed - math is in images)
             plugins: [
-                RevealMath,
                 RevealNotes,
                 RevealSearch,
                 RevealZoom,
@@ -727,7 +476,6 @@ Logistic Regression for Classification
 
         // Keyboard shortcuts info
         console.log('Keyboard shortcuts:');
-        console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
         console.log('  L - Spotlight/Laser pointer');

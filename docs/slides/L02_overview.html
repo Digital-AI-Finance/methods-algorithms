@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="custom beamer parser">
+    <meta name="generator" content="pdf-to-revealjs">
     <meta name="author" content="Methods and Algorithms - MSc Data Science">
-    <title>L02: Logistic Regression</title>
+    <title>L2: overview</title>
 
     <!-- Reveal.js core -->
     <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
@@ -24,29 +24,21 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        /* Additional inline styles */
-        .reveal .sourceCode {
-            overflow: visible;
+        /* Image slide styling */
+        .reveal section img {
+            border: none;
+            box-shadow: none;
+            background: transparent;
         }
-        code {
-            white-space: pre-wrap;
-        }
-        span.smallcaps {
-            font-variant: small-caps;
-        }
-        div.columns {
-            display: flex;
-            gap: min(4vw, 1.5em);
-        }
-        div.column {
-            flex: auto;
-            overflow-x: auto;
+
+        /* Center slides vertically */
+        .reveal .slides section {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
 
         /* Spotlight cursor */
@@ -84,7 +76,6 @@
             color: white;
         }
 
-        /* Hide export button in print mode */
         @media print {
             .pdf-export-btn {
                 display: none;
@@ -95,99 +86,64 @@
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
-    <div style="color: white; text-align: center;">
-        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L02: Logistic Regression</h1>
-        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Classification with Probability Estimates</p>
-        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms - MSc Data Science</p>
-        <div style="margin-top: 2em;">
-            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
-            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
-        </div>
-    </div>
+<section data-slide="1">
+    <img src="images/L02_overview/slide_01.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 1">
 </section>
 
-<section>
-<h2>Learning Objectives</h2>
-<strong>By the end of this lecture, you will be able to:</strong>
-<ol>
-<li>Explain how logistic regression models binary outcomes</li>
-<li>Derive the maximum likelihood estimation for logistic regression</li>
-<li>Interpret classification metrics (precision, recall, AUC)</li>
-<li>Apply logistic regression for credit scoring decisions</li>
-</ol>
-<strong>Finance Application:</strong>
-Credit default prediction
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>These objectives span Bloom's levels: Understand, Apply, Analyze</em></p>
+<section data-slide="2">
+    <img src="images/L02_overview/slide_02.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 2">
 </section>
 
-<section>
-<h2>Why Logistic Regression?</h2>
-<strong>The Business Problem</strong>
-<ul>
-<li>Banks must decide: approve or reject loan applications</li>
-<li>Need probability of default, not just yes/no prediction</li>
-<li>Regulatory requirement: interpretable, auditable models</li>
-</ul>
-<strong>Why Not Linear Regression?</strong>
-<ul>
-<li>Linear regression can predict values outside[0,1]</li>
-<li>Binary outcomes need probability-based approach</li>
-<li>Logistic regression outputs calibrated probabilities</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Logistic regression: the industry standard for credit scoring since 1980s</em></p>
+<section data-slide="3">
+    <img src="images/L02_overview/slide_03.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 3">
 </section>
 
-<section>
-<h2>The Sigmoid Function</h2>
-<strong>From Linear to Probability</strong>
-<ul>
-<li>Maps any real number to (0, 1) range</li>
-<li>Smooth, differentiable, interpretable</li>
-</ul>
-<div class="center"><img src="images/L02_Logistic_Regression/01_sigmoid_function.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>\(\sigma(z) = 1/(1+e^{-z})\) transforms linear combination to probability</em></p>
+<section data-slide="4">
+    <img src="images/L02_overview/slide_04.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 4">
 </section>
 
-<section>
-<h2>Decision Boundary</h2>
-<div class="center"><img src="images/L02_Logistic_Regression/02_decision_boundary.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The decision boundary is where \(P(y=1|x) = 0.5\), i.e., \(w'x + b = 0\)</em></p>
+<section data-slide="5">
+    <img src="images/L02_overview/slide_05.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 5">
 </section>
 
-<section>
-<h2>Binary Cross-Entropy Loss</h2>
-<strong>Why Not MSE?</strong>
-<ul>
-<li>MSE with sigmoid creates non-convex loss landscape</li>
-<li>Cross-entropy is convex, guarantees global optimum</li>
-</ul>
-<div class="center"><img src="images/L02_Logistic_Regression/03_log_loss.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Heavily penalizes confident wrong predictions</em></p>
+<section data-slide="6">
+    <img src="images/L02_overview/slide_06.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 6">
 </section>
 
-<section>
-<h2>ROC Curve and AUC</h2>
-<div class="center"><img src="images/L02_Logistic_Regression/04_roc_curve.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>AUC = probability that random positive ranks higher than random negative</em></p>
+<section data-slide="7">
+    <img src="images/L02_overview/slide_07.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 7">
 </section>
 
-<section>
-<h2>Precision-Recall Trade-off</h2>
-<div class="center"><img src="images/L02_Logistic_Regression/05_precision_recall.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Use PR curve when classes are imbalanced (common in fraud detection)</em></p>
+<section data-slide="8">
+    <img src="images/L02_overview/slide_08.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 8">
 </section>
 
-<section>
-<h2>Confusion Matrix: Reading the Results</h2>
-<div class="center"><img src="images/L02_Logistic_Regression/06_confusion_matrix.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>FP = approve bad loans (costly), FN = reject good customers (lost revenue)</em></p>
+<section data-slide="9">
+    <img src="images/L02_overview/slide_09.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 9">
 </section>
 
-<section>
-<h2>When to Use Logistic Regression</h2>
-<div class="center"><img src="images/L02_Logistic_Regression/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Key strengths: interpretable coefficients, probability outputs, fast training</em></p>
+<section data-slide="10">
+    <img src="images/L02_overview/slide_10.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 10">
 </section>
         </div>
 
@@ -211,7 +167,6 @@ Credit default prediction
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
-    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
 
     <!-- Menu plugin -->
@@ -248,21 +203,6 @@ Credit default prediction
             }
         }
 
-        // Hide PDF button if PDF doesn't exist
-        const pdfLink = document.querySelector('.pdf-export-btn');
-        if (pdfLink) {
-            fetch(pdfLink.href, { method: 'HEAD' })
-                .then(response => {
-                    if (!response.ok) {
-                        pdfLink.style.display = 'none';
-                    }
-                })
-                .catch(() => {
-                    // PDF not available, hide button
-                    pdfLink.style.display = 'none';
-                });
-        }
-
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -286,43 +226,24 @@ Credit default prediction
             transitionSpeed: 'default',
             backgroundTransition: 'fade',
 
-            // Sizing (16:9 aspect ratio)
+            // Sizing (16:9 aspect ratio - matches Beamer)
             width: 1600,
             height: 900,
-            margin: 0.04,
+            margin: 0.02,
             minScale: 0.2,
             maxScale: 2.0,
-            center: false,
-
-            // Fragments
-            fragments: true,
-            fragmentInURL: false,
+            center: true,
 
             // Auto-slide (disabled)
             autoSlide: 0,
-
-            // Math configuration
-            math: {
-                mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
-                config: 'TeX-AMS_HTML-full',
-                tex: {
-                    inlineMath: [['\\(', '\\)']],
-                    displayMath: [['\\[', '\\]']],
-                    processEscapes: true,
-                    processEnvironments: true
-                },
-                options: {
-                    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-                }
-            },
 
             // Menu plugin configuration
             menu: {
                 side: 'left',
                 width: 'normal',
                 numbers: true,
-                titleSelector: 'h1, h2',
-                useTextContentForMissingTitles: true,
+                titleSelector: 'h1, h2, [data-slide]',
+                useTextContentForMissingTitles: false,
                 hideMissingTitles: false,
                 markers: true,
                 custom: [
@@ -370,9 +291,8 @@ Credit default prediction
                 theme: "chalkboard"
             },
 
-            // Plugins to load
+            // Plugins to load (no MathJax needed - math is in images)
             plugins: [
-                RevealMath,
                 RevealNotes,
                 RevealSearch,
                 RevealZoom,
@@ -406,7 +326,6 @@ Credit default prediction
 
         // Keyboard shortcuts info
         console.log('Keyboard shortcuts:');
-        console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
         console.log('  L - Spotlight/Laser pointer');

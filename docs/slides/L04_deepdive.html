@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="custom beamer parser">
+    <meta name="generator" content="pdf-to-revealjs">
     <meta name="author" content="Methods and Algorithms - MSc Data Science">
-    <title>L04: Random Forests</title>
+    <title>L4: deepdive</title>
 
     <!-- Reveal.js core -->
     <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
@@ -24,29 +24,21 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        /* Additional inline styles */
-        .reveal .sourceCode {
-            overflow: visible;
+        /* Image slide styling */
+        .reveal section img {
+            border: none;
+            box-shadow: none;
+            background: transparent;
         }
-        code {
-            white-space: pre-wrap;
-        }
-        span.smallcaps {
-            font-variant: small-caps;
-        }
-        div.columns {
-            display: flex;
-            gap: min(4vw, 1.5em);
-        }
-        div.column {
-            flex: auto;
-            overflow-x: auto;
+
+        /* Center slides vertically */
+        .reveal .slides section {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
 
         /* Spotlight cursor */
@@ -84,7 +76,6 @@
             color: white;
         }
 
-        /* Hide export button in print mode */
         @media print {
             .pdf-export-btn {
                 display: none;
@@ -95,449 +86,184 @@
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
-    <div style="color: white; text-align: center;">
-        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L04: Random Forests</h1>
-        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Deep Dive: Theory, Implementation, and Applications</p>
-        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms - MSc Data Science</p>
-        <div style="margin-top: 2em;">
-            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
-            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
-        </div>
-    </div>
+<section data-slide="1">
+    <img src="images/L04_deepdive/slide_01.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 1">
 </section>
 
-<section>
-<h2>Part 1: Decision Tree Foundations</h2>
-<strong>From Rules to Trees</strong>
-<ul>
-<li>Decision trees encode if-then-else rules</li>
-<li>Each node splits data based on a feature threshold</li>
-<li>Leaves contain predictions (class or value)</li>
-</ul>
-<strong>Key Questions</strong>
-<ul>
-<li>How to choose the best split?</li>
-<li>When to stop splitting?</li>
-<li>How to make predictions?</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Decision trees: the building blocks of Random Forests</em></p>
+<section data-slide="2">
+    <img src="images/L04_deepdive/slide_02.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 2">
 </section>
 
-<section>
-<h2>Splitting Criteria: Gini Impurity</h2>
-<strong>Gini Impurity</strong>
-measures class mixture at a node:
-G = 1 -_k=1^Kp_k^2
-where \(p_k\) is the proportion of class \(k\) samples.
-<strong>Properties:</strong>
-<ul>
-<li>\(G = 0\): pure node (all samples same class)</li>
-<li>\(G = 0.5\): maximum impurity for binary classification</li>
-<li>Lower Gini = better split</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Gini impurity: probability of misclassifying a random sample</em></p>
+<section data-slide="3">
+    <img src="images/L04_deepdive/slide_03.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 3">
 </section>
 
-<section>
-<h2>Splitting Criteria: Information Gain</h2>
-<strong>Entropy</strong>
-measures disorder:
-H = -_k=1^Kp_k_2(p_k)
-<strong>Information Gain</strong>
-:
-IG = H(parent) -_jn_jnH(child_j)
-<strong>Comparison:</strong>
-<ul>
-<li>Gini: faster to compute, tends to isolate most frequent class</li>
-<li>Entropy: more balanced trees, slightly slower</li>
-<li>In practice: similar performance</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Both criteria aim to create pure child nodes</em></p>
+<section data-slide="4">
+    <img src="images/L04_deepdive/slide_04.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 4">
 </section>
 
-<section>
-<h2>Regression Trees: MSE Criterion</h2>
-<strong>For regression</strong>
-, use Mean Squared Error:
-MSE=1n_i=1^n(y_i -y)^2
-<strong>Split quality</strong>
-:
-Reduction=MSE(parent) -_jn_jnMSE(child_j)
-<strong>Leaf prediction</strong>
-: mean of samples in leaf
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Trees can handle both classification and regression tasks</em></p>
+<section data-slide="5">
+    <img src="images/L04_deepdive/slide_05.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 5">
 </section>
 
-<section>
-<h2>Decision Tree Algorithm</h2>
-<strong>Recursive Partitioning:</strong>
-<ol>
-<li>Start with all samples at root</li>
-<li>For each feature and threshold:<ul>
-<li>Calculate impurity reduction</li>
-<li>Select split with maximum reduction</li>
-</ul></li>
-<li>Create child nodes with split samples</li>
-<li>Recurse until stopping criterion met</li>
-</ol>
-<strong>Stopping Criteria:</strong>
-<ul>
-<li>Maximum depth reached</li>
-<li>Minimum samples per leaf</li>
-<li>No improvement in impurity</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Greedy algorithm: locally optimal splits at each step</em></p>
+<section data-slide="6">
+    <img src="images/L04_deepdive/slide_06.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 6">
 </section>
 
-<section>
-<h2>Decision Tree: Fraud Detection Example</h2>
-<div class="center"><img src="images/L04_Random_Forests/01_decision_tree.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Each path through the tree represents a fraud detection rule</em></p>
+<section data-slide="7">
+    <img src="images/L04_deepdive/slide_07.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 7">
 </section>
 
-<section>
-<h2>Part 2: Why Ensembles?</h2>
-<strong>Problem with Single Trees:</strong>
-<ul>
-<li>High variance: small data changes \(\rightarrow\) very different trees</li>
-<li>Prone to overfitting</li>
-<li>Unstable predictions</li>
-</ul>
-<strong>Ensemble Solution:</strong>
-<ul>
-<li>Train multiple diverse models</li>
-<li>Combine predictions</li>
-<li>Reduce variance while maintaining low bias</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>"Wisdom of crowds": aggregate many weak learners into strong learner</em></p>
+<section data-slide="8">
+    <img src="images/L04_deepdive/slide_08.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 8">
 </section>
 
-<section>
-<h2>Bootstrap Sampling</h2>
-<strong>Bootstrap</strong>
-: sample with replacement from original data
-<strong>Properties:</strong>
-<ul>
-<li>Each sample: same size as original (\(n\) observations)</li>
-<li>Expected unique samples: \(\approx 63.2\%\) (probability \(1 - (1-1/n)^n\))</li>
-<li>Remaining \(\sim 37\%\): out-of-bag (OOB) samples</li>
-</ul>
-<strong>Effect:</strong>
-<ul>
-<li>Each tree sees different data subset</li>
-<li>Creates diversity among trees</li>
-<li>OOB samples provide validation</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Bootstrap: key ingredient for reducing variance through aggregation</em></p>
+<section data-slide="9">
+    <img src="images/L04_deepdive/slide_09.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 9">
 </section>
 
-<section>
-<h2>Bagging Visualization</h2>
-<div class="center"><img src="images/L04_Random_Forests/03_bootstrap.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Bootstrap Aggregating: train on random samples, aggregate predictions</em></p>
+<section data-slide="10">
+    <img src="images/L04_deepdive/slide_10.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 10">
 </section>
 
-<section>
-<h2>Bagging: Mathematical Foundation</h2>
-<strong>Variance Reduction by Averaging</strong>
-For \(B\) independent predictions with variance \(\sigma^2\):
-Var1B_b=1^Bf_b(x)=^2B
-<strong>With correlation \(\rho\)</strong>
-:
-Var=^2 +1-B^2
-<strong>Key insight</strong>
-: Reduce correlation between trees to maximize variance reduction
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Lower correlation between trees = greater ensemble benefit</em></p>
+<section data-slide="11">
+    <img src="images/L04_deepdive/slide_11.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 11">
 </section>
 
-<section>
-<h2>Part 3: Random Forests Algorithm</h2>
-<strong>Two Sources of Randomness:</strong>
-<ol>
-<li><strong>Bootstrap sampling</strong>: each tree trained on random sample</li>
-<li><strong>Feature randomization</strong>: each split considers random subset</li>
-</ol>
-<strong>Feature Subset Size</strong>
-(at each split):
-<ul>
-<li>Classification: \(\sqrt{p}\) features (default)</li>
-<li>Regression: \(p/3\) features (default)</li>
-<li>Decorrelates trees more than bagging alone</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Feature randomization: Breiman's key innovation over bagging</em></p>
+<section data-slide="12">
+    <img src="images/L04_deepdive/slide_12.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 12">
 </section>
 
-<section>
-<h2>Random Forest Algorithm</h2>
-<strong>Training:</strong>
-<ol>
-<li>For \(b = 1\) to \(B\) trees:<ul>
-<li>Draw bootstrap sample of size \(n\)</li>
-<li>Grow tree:<ul>
-<li>At each node, select \(m\) features randomly</li>
-<li>Find best split among \(m\) features</li>
-<li>Split until stopping criterion</li>
-</ul></li>
-</ul></li>
-</ol>
-<strong>Prediction:</strong>
-<ul>
-<li>Classification: majority vote across trees</li>
-<li>Regression: average predictions</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Typical: 100-500 trees, but more trees never hurts (just slower)</em></p>
+<section data-slide="13">
+    <img src="images/L04_deepdive/slide_13.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 13">
 </section>
 
-<section>
-<h2>Feature Importance</h2>
-<div class="center"><img src="images/L04_Random_Forests/02_feature_importance.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Mean Decrease in Impurity: sum of impurity reductions from splits on feature</em></p>
+<section data-slide="14">
+    <img src="images/L04_deepdive/slide_14.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 14">
 </section>
 
-<section>
-<h2>Feature Importance Methods</h2>
-<strong>1. Mean Decrease in Impurity (MDI):</strong>
-<ul>
-<li>Sum of Gini/entropy reductions from splits on feature</li>
-<li>Fast to compute (comes free from training)</li>
-<li>Bias toward high-cardinality features</li>
-</ul>
-<strong>2. Permutation Importance:</strong>
-<ul>
-<li>Permute feature values, measure accuracy drop</li>
-<li>More reliable, less biased</li>
-<li>Slower (requires re-evaluation)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Permutation importance preferred for final feature selection</em></p>
+<section data-slide="15">
+    <img src="images/L04_deepdive/slide_15.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 15">
 </section>
 
-<section>
-<h2>Out-of-Bag Error</h2>
-<div class="center"><img src="images/L04_Random_Forests/04_oob_error.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>OOB error: free cross-validation using samples not in bootstrap</em></p>
+<section data-slide="16">
+    <img src="images/L04_deepdive/slide_16.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 16">
 </section>
 
-<section>
-<h2>Out-of-Bag Error: How It Works</h2>
-<strong>For each observation \(i\):</strong>
-<ol>
-<li>Identify trees where \(i\) was OOB (not in bootstrap sample)</li>
-<li>Aggregate predictions from only those trees</li>
-<li>Compare to true label</li>
-</ol>
-<strong>Benefits:</strong>
-<ul>
-<li>No separate validation set needed</li>
-<li>Uses \(\sim 37\%\) of trees per sample</li>
-<li>Unbiased estimate of generalization error</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>OOB error converges to leave-one-out cross-validation error</em></p>
+<section data-slide="17">
+    <img src="images/L04_deepdive/slide_17.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 17">
 </section>
 
-<section>
-<h2>Ensemble Voting</h2>
-<div class="center"><img src="images/L04_Random_Forests/05_ensemble_voting.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Classification: majority vote. Regression: average prediction</em></p>
+<section data-slide="18">
+    <img src="images/L04_deepdive/slide_18.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 18">
 </section>
 
-<section>
-<h2>Part 4: Bias-Variance Decomposition</h2>
-<strong>Expected Prediction Error:</strong>
-E(y -f(x))^2=Bias^2 +Variance+Irreducible Error
-<strong>Single Tree:</strong>
-<ul>
-<li>Low bias (can fit complex patterns)</li>
-<li>High variance (sensitive to training data)</li>
-</ul>
-<strong>Random Forest:</strong>
-<ul>
-<li>Bias: similar to single tree</li>
-<li>Variance: reduced by \(\approx\) factor of \(1/B\) (with decorrelation)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Ensembles reduce variance without increasing bias</em></p>
+<section data-slide="19">
+    <img src="images/L04_deepdive/slide_19.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 19">
 </section>
 
-<section>
-<h2>Bias-Variance: Visualization</h2>
-<div class="center"><img src="images/L04_Random_Forests/06_bias_variance.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Averaging decorrelated trees dramatically reduces prediction variance</em></p>
+<section data-slide="20">
+    <img src="images/L04_deepdive/slide_20.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 20">
 </section>
 
-<section>
-<h2>Hyperparameters: Number of Trees</h2>
-<strong>n\_estimators</strong>
-(number of trees):
-<ul>
-<li>More trees = lower variance, never overfits</li>
-<li>Diminishing returns after 100-500 trees</li>
-<li>Cost: linear increase in training/prediction time</li>
-</ul>
-<strong>Guidelines:</strong>
-<ul>
-<li>Start with 100, increase if OOB error still decreasing</li>
-<li>For production: balance accuracy vs. latency</li>
-<li>More trees always better (if time permits)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Unlike most hyperparameters, more trees cannot hurt accuracy</em></p>
+<section data-slide="21">
+    <img src="images/L04_deepdive/slide_21.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 21">
 </section>
 
-<section>
-<h2>Hyperparameters: Tree Complexity</h2>
-<strong>max\_depth</strong>
-: Maximum tree depth
-<ul>
-<li>Deeper = more complex patterns, higher variance</li>
-<li>Default: unlimited (grow full trees)</li>
-</ul>
-<strong>min\_samples\_split</strong>
-: Minimum samples to split
-<ul>
-<li>Higher = simpler trees, more regularization</li>
-<li>Default: 2 (full trees)</li>
-</ul>
-<strong>min\_samples\_leaf</strong>
-: Minimum samples in leaf
-<ul>
-<li>Higher = smoother predictions</li>
-<li>Default: 1 (full trees)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Full trees (default) often work well due to bagging's variance reduction</em></p>
+<section data-slide="22">
+    <img src="images/L04_deepdive/slide_22.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 22">
 </section>
 
-<section>
-<h2>Hyperparameters: Feature Randomization</h2>
-<strong>max\_features</strong>
-: Features considered at each split
-<ul>
-<li>Lower = more decorrelated trees, higher bias</li>
-<li>Higher = less decorrelated, lower bias</li>
-</ul>
-<strong>Defaults:</strong>
-<ul>
-<li>Classification: \(\sqrt{p}\) (e.g., 10 features \(\rightarrow\) 3)</li>
-<li>Regression: \(p/3\) (e.g., 30 features \(\rightarrow\) 10)</li>
-</ul>
-<strong>Tuning:</strong>
-<ul>
-<li>Try: \(\sqrt{p}\), \(\log_2(p)\), \(p/3\)</li>
-<li>Cross-validate to find optimal</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Feature randomization is key differentiator from bagged trees</em></p>
+<section data-slide="23">
+    <img src="images/L04_deepdive/slide_23.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 23">
 </section>
 
-<section>
-<h2>Part 5: Practical Considerations</h2>
-<strong>Advantages:</strong>
-<ul>
-<li>Excellent accuracy out-of-the-box</li>
-<li>Handles mixed feature types</li>
-<li>Built-in feature importance</li>
-<li>Robust to outliers and missing values</li>
-<li>Parallelizable (trees independent)</li>
-</ul>
-<strong>Limitations:</strong>
-<ul>
-<li>Less interpretable than single tree</li>
-<li>Memory intensive (stores all trees)</li>
-<li>Slower prediction than linear models</li>
-<li>Cannot extrapolate beyond training range</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Random Forests: excellent default choice for tabular data</em></p>
+<section data-slide="24">
+    <img src="images/L04_deepdive/slide_24.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 24">
 </section>
 
-<section>
-<h2>Comparison: Random Forest vs. Others</h2>
-<div class="center"><table class="beamer-table">
-<tr><th><strong>Aspect</strong></th><th><strong>RF</strong></th><th><strong>Single Tree</strong></th><th><strong>Logistic</strong></th><th><strong>KNN</strong></th></tr>
-<tr><td>Accuracy</td><td>High</td><td>Medium</td><td>Medium</td><td>Medium</td></tr>
-<tr><td>Interpretability</td><td>Medium</td><td>High</td><td>High</td><td>Low</td></tr>
-<tr><td>Training Speed</td><td>Medium</td><td>Fast</td><td>Fast</td><td>Fast</td></tr>
-<tr><td>Feature Importance</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr>
-<tr><td>Non-linear</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td></tr>
-</table></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>RF trades some interpretability for significant accuracy gains</em></p>
+<section data-slide="25">
+    <img src="images/L04_deepdive/slide_25.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 25">
 </section>
 
-<section>
-<h2>When to Use Random Forests</h2>
-<strong>Use When:</strong>
-<ul>
-<li>Tabular data with mixed feature types</li>
-<li>Non-linear relationships expected</li>
-<li>Feature importance needed</li>
-<li>Out-of-the-box performance matters</li>
-</ul>
-<strong>Consider Alternatives When:</strong>
-<ul>
-<li>Need fully interpretable model (use single tree)</li>
-<li>Very high-dimensional sparse data (use linear models)</li>
-<li>Extrapolation required (use parametric models)</li>
-<li>Need fastest prediction (use linear/shallow tree)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Random Forest: often the first model to try on tabular data</em></p>
+<section data-slide="26">
+    <img src="images/L04_deepdive/slide_26.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 26">
 </section>
 
-<section>
-<h2>Decision Framework</h2>
-<div class="center"><img src="images/L04_Random_Forests/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Start with Random Forest; switch if specific constraints require it</em></p>
+<section data-slide="27">
+    <img src="images/L04_deepdive/slide_27.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 27">
 </section>
 
-<section>
-<h2>Implementation: scikit-learn</h2>
-t,fragile
-<strong>Classification:</strong>
-from sklearn.ensemble import RandomForestClassifier
-rf = RandomForestClassifier(n_estimators=100, max_features='sqrt',
-                            oob_score=True, random_state=42)
-rf.fit(X_train, y_train)
-print(f"OOB Score: {rf.oob_score_:.3f}")
-<strong>Key Parameters:</strong>
-<ul>
-<li>n\_estimators: number of trees</li>
-<li>max\_features: features per split</li>
-<li>oob\_score: compute OOB error</li>
-<li>n\_jobs: parallel trees (-1 for all cores)</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Set random\_state for reproducibility</em></p>
+<section data-slide="28">
+    <img src="images/L04_deepdive/slide_28.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 28">
 </section>
 
-<section>
-<h2>Summary: Random Forests</h2>
-<strong>Core Concepts:</strong>
-<ul>
-<li>Ensemble of decision trees with bootstrap + feature randomization</li>
-<li>Reduces variance while maintaining low bias</li>
-<li>OOB error provides free cross-validation</li>
-</ul>
-<strong>Practical Takeaways:</strong>
-<ul>
-<li>Excellent default for tabular data</li>
-<li>Feature importance aids interpretation</li>
-<li>More trees never hurts (just slower)</li>
-<li>Hyperparameter tuning usually optional</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Next: PCA and t-SNE for dimensionality reduction</em></p>
+<section data-slide="29">
+    <img src="images/L04_deepdive/slide_29.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 29">
 </section>
 
-<section>
-<h2>References</h2>
-<strong>Textbooks:</strong>
-<ul>
-<li>James et al. (2021).<em>ISLR</em>, Chapter 8: Tree-Based Methods</li>
-<li>Hastie et al. (2009).<em>ESL</em>, Chapter 15: Random Forests</li>
-</ul>
-<strong>Original Papers:</strong>
-<ul>
-<li>Breiman, L. (2001). Random Forests.<em>Machine Learning</em>, 45(1), 5-32.</li>
-<li>Breiman, L. (1996). Bagging Predictors.<em>Machine Learning</em>, 24(2), 123-140.</li>
-</ul>
-<strong>Documentation:</strong>
-<ul>
-<li>scikit-learn:sklearn.ensemble.RandomForestClassifier</li>
-</ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Breiman's 2001 paper: one of the most cited in ML</em></p>
+<section data-slide="30">
+    <img src="images/L04_deepdive/slide_30.png"
+         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         alt="Slide 30">
 </section>
         </div>
 
@@ -561,7 +287,6 @@ print(f"OOB Score: {rf.oob_score_:.3f}")
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/notes/notes.js"></script>
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/search/search.js"></script>
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/zoom/zoom.js"></script>
-    <script src="https://unpkg.com/reveal.js@4.5.0/plugin/math/math.js"></script>
     <script src="https://unpkg.com/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
 
     <!-- Menu plugin -->
@@ -598,21 +323,6 @@ print(f"OOB Score: {rf.oob_score_:.3f}")
             }
         }
 
-        // Hide PDF button if PDF doesn't exist
-        const pdfLink = document.querySelector('.pdf-export-btn');
-        if (pdfLink) {
-            fetch(pdfLink.href, { method: 'HEAD' })
-                .then(response => {
-                    if (!response.ok) {
-                        pdfLink.style.display = 'none';
-                    }
-                })
-                .catch(() => {
-                    // PDF not available, hide button
-                    pdfLink.style.display = 'none';
-                });
-        }
-
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -636,43 +346,24 @@ print(f"OOB Score: {rf.oob_score_:.3f}")
             transitionSpeed: 'default',
             backgroundTransition: 'fade',
 
-            // Sizing (16:9 aspect ratio)
+            // Sizing (16:9 aspect ratio - matches Beamer)
             width: 1600,
             height: 900,
-            margin: 0.04,
+            margin: 0.02,
             minScale: 0.2,
             maxScale: 2.0,
-            center: false,
-
-            // Fragments
-            fragments: true,
-            fragmentInURL: false,
+            center: true,
 
             // Auto-slide (disabled)
             autoSlide: 0,
-
-            // Math configuration
-            math: {
-                mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
-                config: 'TeX-AMS_HTML-full',
-                tex: {
-                    inlineMath: [['\\(', '\\)']],
-                    displayMath: [['\\[', '\\]']],
-                    processEscapes: true,
-                    processEnvironments: true
-                },
-                options: {
-                    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-                }
-            },
 
             // Menu plugin configuration
             menu: {
                 side: 'left',
                 width: 'normal',
                 numbers: true,
-                titleSelector: 'h1, h2',
-                useTextContentForMissingTitles: true,
+                titleSelector: 'h1, h2, [data-slide]',
+                useTextContentForMissingTitles: false,
                 hideMissingTitles: false,
                 markers: true,
                 custom: [
@@ -720,9 +411,8 @@ print(f"OOB Score: {rf.oob_score_:.3f}")
                 theme: "chalkboard"
             },
 
-            // Plugins to load
+            // Plugins to load (no MathJax needed - math is in images)
             plugins: [
-                RevealMath,
                 RevealNotes,
                 RevealSearch,
                 RevealZoom,
@@ -756,7 +446,6 @@ print(f"OOB Score: {rf.oob_score_:.3f}")
 
         // Keyboard shortcuts info
         console.log('Keyboard shortcuts:');
-        console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
         console.log('  L - Spotlight/Laser pointer');
