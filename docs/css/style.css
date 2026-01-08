@@ -140,7 +140,7 @@ body {
 .main-content {
     grid-column: 2;
     margin-left: var(--sidebar-width);
-    padding: 40px 40px;
+    padding: 40px 10px 40px 10px;
 }
 
 /* Right TOC Sidebar */
