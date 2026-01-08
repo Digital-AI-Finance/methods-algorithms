@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="pandoc + custom post-processor">
-    <meta name="author" content="Methods and Algorithms – MSc Data Science">
-    <title>L06: Embeddings & RL</title>
+    <meta name="generator" content="custom beamer parser">
+    <meta name="author" content="Methods and Algorithms - MSc Data Science">
+    <title>L06: Embeddings &amp; RL</title>
 
     <!-- Reveal.js core -->
     <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
@@ -59,7 +59,7 @@
             transform: translate(-50%, -50%);
         }
 
-        /* PDF export button */
+        /* PDF download button */
         .pdf-export-btn {
             position: fixed;
             bottom: 20px;
@@ -77,9 +77,11 @@
             gap: 8px;
             opacity: 0.8;
             transition: opacity 0.2s;
+            text-decoration: none;
         }
         .pdf-export-btn:hover {
             opacity: 1;
+            color: white;
         }
 
         /* Hide export button in print mode */
@@ -95,10 +97,9 @@
         <div class="slides">
             <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
     <div style="color: white; text-align: center;">
-        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L06: Embeddings & RL</h1>
-        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Text Representations and Sequential Decision
-Making</p>
-        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L06: Embeddings &amp; RL</h1>
+        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Text Representations and Sequential Decision Making</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms - MSc Data Science</p>
         <div style="margin-top: 2em;">
             <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
             <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
@@ -108,126 +109,89 @@ Making</p>
 
 <section>
 <h2>Learning Objectives</h2>
-
-<p> <strong>By the end of this lecture,
-you will be able to:</strong></p>
+<strong>By the end of this lecture, you will be able to:</strong>
 <ol>
-<li><p>Explain word embeddings and their applications</p></li>
-<li><p>Apply pre-trained embeddings for text analysis</p></li>
-<li><p>Understand the reinforcement learning framework</p></li>
-<li><p>Implement basic Q-learning for decision problems</p></li>
+<li>Explain word embeddings and their applications</li>
+<li>Apply pre-trained embeddings for text analysis</li>
+<li>Understand the reinforcement learning framework</li>
+<li>Implement basic Q-learning for decision problems</li>
 </ol>
-<p><strong>Finance Applications:</strong> Sentiment analysis,
-algorithmic trading <span style="color: #666666">From text to numbers, from
-decisions to optimal policies</span></p>
 
+<strong>Finance Applications:</strong> Sentiment analysis, algorithmic trading
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>From text to numbers, from decisions to optimal policies</em></p>
 </section>
 
 <section>
 <h2>The Business Problem</h2>
-
-<p> <strong>Text Data
-Challenge</strong></p>
+<strong>Text Data Challenge</strong>
 <ul>
-<li><p>Financial news, reports, social media contain valuable
-signals</p></li>
-<li><p>Text is unstructured—how to feed it to ML models?</p></li>
-<li><p>Need to capture semantic meaning (“bullish” similar to
-“positive”)</p></li>
+<li>Financial news, reports, social media contain valuable signals</li>
+<li>Text is unstructured--how to feed it to ML models?</li>
+<li>Need to capture semantic meaning ("bullish" similar to "positive")</li>
 </ul>
-<p><strong>Sequential Decision Challenge</strong></p>
-<ul>
-<li><p>Trading requires sequences of buy/sell/hold decisions</p></li>
-<li><p>Actions have delayed consequences (profit realized
-later)</p></li>
-</ul>
-<p><span style="color: #666666">Embeddings solve text, RL solves sequential
-decisions</span></p>
 
+<strong>Sequential Decision Challenge</strong>
+<ul>
+<li>Trading requires sequences of buy/sell/hold decisions</li>
+<li>Actions have delayed consequences (profit realized later)</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Embeddings solve text, RL solves sequential decisions</em></p>
 </section>
 
 <section>
 <h2>Word Embedding Space</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/01_word_embedding_space.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/01_word_embedding_space.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Similar words cluster together in embedding
-space</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Similar words cluster together in embedding space</em></p>
 </section>
 
 <section>
 <h2>Embedding Similarity</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/02_similarity_heatmap.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/02_similarity_heatmap.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Cosine similarity captures semantic
-relationships</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Cosine similarity captures semantic relationships</em></p>
 </section>
 
 <section>
 <h2>RL: Agent-Environment Loop</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/03_rl_loop.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/03_rl_loop.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Agent takes actions, receives rewards,
-learns optimal policy</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Agent takes actions, receives rewards, learns optimal policy</em></p>
 </section>
 
 <section>
 <h2>Q-Learning: Value Function</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/04_q_learning_grid.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/04_q_learning_grid.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Q-values indicate expected future reward
-from each state-action</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Q-values indicate expected future reward from each state-action</em></p>
 </section>
 
 <section>
 <h2>Learning Progress</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/05_reward_curves.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/05_reward_curves.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">RL agents improve through exploration and
-exploitation</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>RL agents improve through exploration and exploitation</em></p>
 </section>
 
 <section>
 <h2>Learned Trading Policy</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/06_policy_viz.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/06_policy_viz.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Policy maps states to actions (when to
-buy/sell/hold)</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Policy maps states to actions (when to buy/sell/hold)</em></p>
 </section>
 
 <section>
 <h2>Decision Framework</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Embeddings for text, RL for sequential
-decisions with delayed rewards</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Embeddings for text, RL for sequential decisions with delayed rewards</em></p>
 </section>
         </div>
 
@@ -239,10 +203,10 @@ decisions with delayed rewards</span></p>
         </div>
     </div>
 
-    <!-- PDF Export Button -->
-    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+    <!-- PDF Download Button -->
+    <a href="pdf/L06_overview.pdf" class="pdf-export-btn" download title="Download PDF">
         <i class="fas fa-file-pdf"></i> PDF
-    </button>
+    </a>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -288,16 +252,19 @@ decisions with delayed rewards</span></p>
             }
         }
 
-        // PDF Export function
-        function exportPDF() {
-            // Open print dialog with PDF-optimized settings
-            const printUrl = window.location.href + '?print-pdf';
-            window.open(printUrl, '_blank');
-        }
-
-        // Check if we're in print mode
-        if (window.location.search.includes('print-pdf')) {
-            document.querySelector('.pdf-export-btn').style.display = 'none';
+        // Hide PDF button if PDF doesn't exist
+        const pdfLink = document.querySelector('.pdf-export-btn');
+        if (pdfLink) {
+            fetch(pdfLink.href, { method: 'HEAD' })
+                .then(response => {
+                    if (!response.ok) {
+                        pdfLink.style.display = 'none';
+                    }
+                })
+                .catch(() => {
+                    // PDF not available, hide button
+                    pdfLink.style.display = 'none';
+                });
         }
 
         Reveal.initialize({
@@ -371,8 +338,8 @@ decisions with delayed rewards</span></p>
                                 <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
                                     <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
                                 </li>
-                                <li class="slide-menu-item" onclick="exportPDF();">
-                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                <li class="slide-menu-item" onclick="window.open('pdf/L06_overview.pdf', '_blank');">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
                                 </li>
                             </ul>
                         `

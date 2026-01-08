@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="pandoc + custom post-processor">
-    <meta name="author" content="Methods and Algorithms – MSc Data Science">
-    <title>L06: Embeddings & RL</title>
+    <meta name="generator" content="custom beamer parser">
+    <meta name="author" content="Methods and Algorithms - MSc Data Science">
+    <title>L06: Embeddings &amp; RL</title>
 
     <!-- Reveal.js core -->
     <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
@@ -59,7 +59,7 @@
             transform: translate(-50%, -50%);
         }
 
-        /* PDF export button */
+        /* PDF download button */
         .pdf-export-btn {
             position: fixed;
             bottom: 20px;
@@ -77,9 +77,11 @@
             gap: 8px;
             opacity: 0.8;
             transition: opacity 0.2s;
+            text-decoration: none;
         }
         .pdf-export-btn:hover {
             opacity: 1;
+            color: white;
         }
 
         /* Hide export button in print mode */
@@ -95,10 +97,9 @@
         <div class="slides">
             <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
     <div style="color: white; text-align: center;">
-        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L06: Embeddings & RL</h1>
-        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Deep Dive: Theory, Implementation, and
-Applications</p>
-        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L06: Embeddings &amp; RL</h1>
+        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Deep Dive: Theory, Implementation, and Applications</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms - MSc Data Science</p>
         <div style="margin-top: 2em;">
             <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
             <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
@@ -108,523 +109,425 @@ Applications</p>
 
 <section>
 <h2>Part 1: Word Embeddings Introduction</h2>
-
-<p> <strong>The Problem
-with One-Hot Encoding</strong></p>
+<strong>The Problem with One-Hot Encoding</strong>
 <ul>
-<li><p>Vocabulary of 10,000 words <span class="math inline">\(\rightarrow\)</span> 10,000-dim sparse
-vectors</p></li>
-<li><p>No semantic similarity: “king” and “queen” equally distant from
-“car”</p></li>
-<li><p>Curse of dimensionality</p></li>
+<li>Vocabulary of 10,000 words \(\rightarrow\) 10,000-dim sparse vectors</li>
+<li>No semantic similarity: "king" and "queen" equally distant from "car"</li>
+<li>Curse of dimensionality</li>
 </ul>
-<p><strong>Solution: Dense Embeddings</strong></p>
-<ul>
-<li><p>Map words to dense vectors (50-300 dimensions)</p></li>
-<li><p>Similar words <span class="math inline">\(\rightarrow\)</span>
-similar vectors</p></li>
-<li><p>Learn from context (distributional hypothesis)</p></li>
-</ul>
-<p><span style="color: #666666">“You shall know a word by the company it
-keeps” – Firth, 1957</span></p>
 
+<strong>Solution: Dense Embeddings</strong>
+<ul>
+<li>Map words to dense vectors (50-300 dimensions)</li>
+<li>Similar words \(\rightarrow\) similar vectors</li>
+<li>Learn from context (distributional hypothesis)</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>"You shall know a word by the company it keeps" -- Firth, 1957</em></p>
 </section>
 
 <section>
 <h2>Word2Vec: Skip-gram</h2>
+<strong>Objective:</strong> Predict context words given target word
+\[
+P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in V} \exp(v_w^T v_{target})}
+\]
 
-<p> <strong>Objective:</strong> Predict
-context words given target word <span class="math display">\[P(w_{context} | w_{target}) =
-\frac{\exp(v_{context}^T v_{target})}{\sum_{w \in V} \exp(v_w^T
-v_{target})}\]</span></p>
-<p><strong>Training:</strong></p>
+<strong>Training:</strong>
 <ul>
-<li><p>Slide window over text corpus</p></li>
-<li><p>For each word, predict surrounding words</p></li>
-<li><p>Update embeddings via gradient descent</p></li>
+<li>Slide window over text corpus</li>
+<li>For each word, predict surrounding words</li>
+<li>Update embeddings via gradient descent</li>
 </ul>
-<p><span style="color: #666666">Skip-gram works well for rare words; CBOW
-better for frequent words</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Skip-gram works well for rare words; CBOW better for frequent words</em></p>
 </section>
 
 <section>
 <h2>Word Embedding Space</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/01_word_embedding_space.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/01_word_embedding_space.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Finance terms cluster by semantic category
-in embedding space</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Finance terms cluster by semantic category in embedding space</em></p>
 </section>
 
 <section>
 <h2>Word Analogies</h2>
+<strong>Famous Example:</strong>
+\[
+\vec{king} - \vec{man} + \vec{woman} \approx \vec{queen}
+\]
 
-<p> <strong>Famous Example:</strong> <span class="math display">\[\vec{king} - \vec{man} + \vec{woman} \approx
-\vec{queen}\]</span></p>
-<p><strong>Finance Examples:</strong></p>
+<strong>Finance Examples:</strong>
 <ul>
-<li><p><span class="math inline">\(\vec{stock} - \vec{equity} +
-\vec{debt} \approx \vec{bond}\)</span></p></li>
-<li><p><span class="math inline">\(\vec{CEO} - \vec{company} +
-\vec{country} \approx \vec{president}\)</span></p></li>
+<li>\(\vec{stock} - \vec{equity} + \vec{debt} \approx \vec{bond}\)</li>
+<li>\(\vec{CEO} - \vec{company} + \vec{country} \approx \vec{president}\)</li>
 </ul>
-<p><strong>How it works:</strong></p>
-<ul>
-<li><p>Vector arithmetic in embedding space</p></li>
-<li><p>Relationships encoded as directions</p></li>
-</ul>
-<p><span style="color: #666666">Embeddings capture relational structure,
-not just similarity</span></p>
 
+<strong>How it works:</strong>
+<ul>
+<li>Vector arithmetic in embedding space</li>
+<li>Relationships encoded as directions</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Embeddings capture relational structure, not just similarity</em></p>
 </section>
 
 <section>
 <h2>Similarity Measures</h2>
-
-<p> <strong>Cosine Similarity:</strong>
-<span class="math display">\[\text{sim}(u, v) = \frac{u \cdot v}{||u||
-\cdot ||v||} = \cos(\theta)\]</span></p>
+<strong>Cosine Similarity:</strong>
+\[
+\text{sim}(u, v) = \frac{u \cdot v}{||u|| \cdot ||v||} = \cos(\theta)
+\]
 <ul>
-<li><p>Range: <span class="math inline">\([-1, 1]\)</span></p></li>
-<li><p>1 = identical direction, 0 = orthogonal, -1 = opposite</p></li>
+<li>Range: \([-1, 1]\)</li>
+<li>1 = identical direction, 0 = orthogonal, -1 = opposite</li>
 </ul>
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/02_similarity_heatmap.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/02_similarity_heatmap.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Cosine similarity ignores magnitude,
-focuses on direction</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Cosine similarity ignores magnitude, focuses on direction</em></p>
 </section>
 
 <section>
 <h2>Pre-trained Embeddings</h2>
-
-<p> <strong>Popular
-Options:</strong></p>
+<strong>Popular Options:</strong>
 <ul>
-<li><p><strong>Word2Vec</strong>: Google, 300-dim, 3M words</p></li>
-<li><p><strong>GloVe</strong>: Stanford, trained on Wikipedia + Common
-Crawl</p></li>
-<li><p><strong>FastText</strong>: Facebook, handles subwords (OOV
-robust)</p></li>
+<li><strong>Word2Vec</strong>: Google, 300-dim, 3M words</li>
+<li><strong>GloVe</strong>: Stanford, trained on Wikipedia + Common Crawl</li>
+<li><strong>FastText</strong>: Facebook, handles subwords (OOV robust)</li>
 </ul>
-<p><strong>Domain-Specific:</strong></p>
-<ul>
-<li><p>FinBERT: Pre-trained on financial text</p></li>
-<li><p>BioBERT: Biomedical domain</p></li>
-</ul>
-<p><span style="color: #666666">Fine-tuning pre-trained embeddings usually
-outperforms training from scratch</span></p>
 
+<strong>Domain-Specific:</strong>
+<ul>
+<li>FinBERT: Pre-trained on financial text</li>
+<li>BioBERT: Biomedical domain</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Fine-tuning pre-trained embeddings usually outperforms training from scratch</em></p>
 </section>
 
 <section>
 <h2>Embeddings in Finance</h2>
-
-<p> <strong>Applications:</strong></p>
+<strong>Applications:</strong>
 <ul>
-<li><p><strong>Sentiment Analysis</strong>: News <span class="math inline">\(\rightarrow\)</span> embedding <span class="math inline">\(\rightarrow\)</span> positive/negative</p></li>
-<li><p><strong>Document Similarity</strong>: Find similar SEC
-filings</p></li>
-<li><p><strong>Named Entity Recognition</strong>: Extract company
-names</p></li>
-<li><p><strong>Event Detection</strong>: Identify earnings
-announcements</p></li>
+<li><strong>Sentiment Analysis</strong>: News \(\rightarrow\) embedding \(\rightarrow\) positive/negative</li>
+<li><strong>Document Similarity</strong>: Find similar SEC filings</li>
+<li><strong>Named Entity Recognition</strong>: Extract company names</li>
+<li><strong>Event Detection</strong>: Identify earnings announcements</li>
 </ul>
-<p><strong>Sentence Embeddings:</strong></p>
-<ul>
-<li><p>Average word vectors (simple baseline)</p></li>
-<li><p>Doc2Vec (paragraph vectors)</p></li>
-<li><p>Sentence-BERT (state-of-the-art)</p></li>
-</ul>
-<p><span style="color: #666666">Aggregate word embeddings to represent
-documents</span></p>
 
+<strong>Sentence Embeddings:</strong>
+<ul>
+<li>Average word vectors (simple baseline)</li>
+<li>Doc2Vec (paragraph vectors)</li>
+<li>Sentence-BERT (state-of-the-art)</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Aggregate word embeddings to represent documents</em></p>
 </section>
 
 <section>
 <h2>Part 2: Reinforcement Learning Framework</h2>
-
-<p> <strong>Key
-Components:</strong></p>
+<strong>Key Components:</strong>
 <ul>
-<li><p><strong>Agent</strong>: Learner/decision-maker</p></li>
-<li><p><strong>Environment</strong>: What agent interacts with</p></li>
-<li><p><strong>State</strong> <span class="math inline">\(s\)</span>:
-Current situation</p></li>
-<li><p><strong>Action</strong> <span class="math inline">\(a\)</span>:
-What agent can do</p></li>
-<li><p><strong>Reward</strong> <span class="math inline">\(r\)</span>:
-Feedback signal</p></li>
+<li><strong>Agent</strong>: Learner/decision-maker</li>
+<li><strong>Environment</strong>: What agent interacts with</li>
+<li><strong>State</strong> \(s\): Current situation</li>
+<li><strong>Action</strong> \(a\): What agent can do</li>
+<li><strong>Reward</strong> \(r\): Feedback signal</li>
 </ul>
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/03_rl_loop.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/03_rl_loop.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">RL: Learning from interaction, not from
-labeled examples</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>RL: Learning from interaction, not from labeled examples</em></p>
 </section>
 
 <section>
 <h2>Markov Decision Process</h2>
-
-<p> <strong>MDP Tuple:</strong>
-<span class="math inline">\((S, A, P, R, \gamma)\)</span></p>
+<strong>MDP Tuple:</strong> \((S, A, P, R, \gamma)\)
 <ul>
-<li><p><span class="math inline">\(S\)</span>: Set of states</p></li>
-<li><p><span class="math inline">\(A\)</span>: Set of actions</p></li>
-<li><p><span class="math inline">\(P(s'|s, a)\)</span>: Transition
-probability</p></li>
-<li><p><span class="math inline">\(R(s, a, s')\)</span>: Reward
-function</p></li>
-<li><p><span class="math inline">\(\gamma \in [0,1]\)</span>: Discount
-factor</p></li>
+<li>\(S\): Set of states</li>
+<li>\(A\): Set of actions</li>
+<li>\(P(s'|s, a)\): Transition probability</li>
+<li>\(R(s, a, s')\): Reward function</li>
+<li>\(\gamma \in [0,1]\): Discount factor</li>
 </ul>
-<p><strong>Markov Property:</strong> <span class="math display">\[P(s_{t+1} | s_t, a_t, s_{t-1}, ...) = P(s_{t+1} |
-s_t, a_t)\]</span> <span style="color: #666666">Future depends only on
-current state, not history</span></p>
 
+<strong>Markov Property:</strong>
+\[
+P(s_{t+1} | s_t, a_t, s_{t-1}, ...) = P(s_{t+1} | s_t, a_t)
+\]
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Future depends only on current state, not history</em></p>
 </section>
 
 <section>
 <h2>Policy and Value Functions</h2>
-
-<p> <strong>Policy:</strong>
-<span class="math inline">\(\pi(a|s) = P(A_t = a | S_t = s)\)</span></p>
+<strong>Policy:</strong> \(\pi(a|s) = P(A_t = a | S_t = s)\)
 <ul>
-<li><p>Maps states to action probabilities</p></li>
-<li><p>Goal: Find optimal policy <span class="math inline">\(\pi^*\)</span></p></li>
+<li>Maps states to action probabilities</li>
+<li>Goal: Find optimal policy \(\pi^*\)</li>
 </ul>
-<p><strong>Value Function:</strong> <span class="math display">\[V^\pi(s) = \mathbb{E}_\pi \left[
-\sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s \right]\]</span></p>
-<p><strong>Q-Function (Action-Value):</strong> <span class="math display">\[Q^\pi(s, a) = \mathbb{E}_\pi \left[
-\sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s, A_0 = a \right]\]</span>
-<span style="color: #666666">Q-function: expected return starting from
-state s, taking action a</span></p>
 
+<strong>Value Function:</strong>
+\[
+V^\pi(s) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s \right]
+\]
+
+<strong>Q-Function (Action-Value):</strong>
+\[
+Q^\pi(s, a) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s, A_0 = a \right]
+\]
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Q-function: expected return starting from state s, taking action a</em></p>
 </section>
 
 <section>
 <h2>Bellman Equation</h2>
+<strong>Optimal Q-Function:</strong>
+\[
+Q^*(s, a) = \mathbb{E} \left[ R + \gamma \max_{a'} Q^*(s', a') \right]
+\]
 
-<p> <strong>Optimal Q-Function:</strong>
-<span class="math display">\[Q^*(s, a) = \mathbb{E} \left[ R + \gamma
-\max_{a'} Q^*(s', a') \right]\]</span>
-<strong>Interpretation:</strong></p>
+<strong>Interpretation:</strong>
 <ul>
-<li><p>Value = immediate reward + discounted future value</p></li>
-<li><p>Recursive definition enables dynamic programming</p></li>
+<li>Value = immediate reward + discounted future value</li>
+<li>Recursive definition enables dynamic programming</li>
 </ul>
-<p><strong>Optimal Policy:</strong> <span class="math display">\[\pi^*(s) = \arg\max_a Q^*(s, a)\]</span> <span style="color: #666666">Bellman equation: foundation of all value-based RL
-methods</span></p>
 
+<strong>Optimal Policy:</strong>
+\[
+\pi^*(s) = \arg\max_a Q^*(s, a)
+\]
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Bellman equation: foundation of all value-based RL methods</em></p>
 </section>
 
 <section>
 <h2>Q-Learning Algorithm</h2>
+<strong>Update Rule:</strong>
+\[
+Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
+\]
 
-<p> <strong>Update Rule:</strong> <span class="math display">\[Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r +
-\gamma \max_{a'} Q(s', a') - Q(s, a) \right]\]</span>
-<strong>Algorithm:</strong></p>
+<strong>Algorithm:</strong>
 <ol>
-<li><p>Initialize <span class="math inline">\(Q(s,a)\)</span>
-arbitrarily</p></li>
-<li><p>For each episode:</p>
+<li>Initialize \(Q(s,a)\) arbitrarily</li>
+<li>For each episode:
 <ul>
-<li><p>Observe state <span class="math inline">\(s\)</span></p></li>
-<li><p>Choose action <span class="math inline">\(a\)</span> (<span class="math inline">\(\epsilon\)</span>-greedy)</p></li>
-<li><p>Execute <span class="math inline">\(a\)</span>, observe <span class="math inline">\(r\)</span>, <span class="math inline">\(s'\)</span></p></li>
-<li><p>Update <span class="math inline">\(Q(s, a)\)</span></p></li>
+<li>Observe state \(s\)</li>
+<li>Choose action \(a\) (\(\epsilon\)-greedy)</li>
+<li>Execute \(a\), observe \(r\), \(s'\)</li>
+<li>Update \(Q(s, a)\)</li>
 </ul></li>
 </ol>
-<p><span style="color: #666666">Q-learning is off-policy: learns optimal Q
-regardless of policy followed</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Q-learning is off-policy: learns optimal Q regardless of policy followed</em></p>
 </section>
 
 <section>
 <h2>Q-Values Visualization</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/04_q_learning_grid.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/04_q_learning_grid.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Arrows show policy; colors show Q-values
-(green=high, red=negative)</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Arrows show policy; colors show Q-values (green=high, red=negative)</em></p>
 </section>
 
 <section>
 <h2>Exploration vs Exploitation</h2>
-
-<p> <strong>The
-Dilemma:</strong></p>
+<strong>The Dilemma:</strong>
 <ul>
-<li><p><strong>Exploit</strong>: Choose best known action
-(greedy)</p></li>
-<li><p><strong>Explore</strong>: Try new actions (discover better
-options)</p></li>
+<li><strong>Exploit</strong>: Choose best known action (greedy)</li>
+<li><strong>Explore</strong>: Try new actions (discover better options)</li>
 </ul>
-<p><strong><span class="math inline">\(\epsilon\)</span>-Greedy
-Strategy:</strong> <span class="math display">\[a = \begin{cases}
-\arg\max_a Q(s,a) &amp; \text{with probability } 1-\epsilon \\
-\text{random action} &amp; \text{with probability } \epsilon
-\end{cases}\]</span> <strong>Decay Schedule:</strong></p>
-<ul>
-<li><p>Start with high <span class="math inline">\(\epsilon\)</span>
-(explore more)</p></li>
-<li><p>Decay <span class="math inline">\(\epsilon\)</span> over time
-(exploit more)</p></li>
-</ul>
-<p><span style="color: #666666">Balance: too much exploration wastes time;
-too little misses optima</span></p>
 
+<strong>\(\epsilon\)-Greedy Strategy:</strong>
+\[
+a = \begin{cases}
+\arg\max_a Q(s,a) & \text{with probability } 1-\epsilon <br>
+\text{random action} & \text{with probability } \epsilon
+\end{cases}
+\]
+
+<strong>Decay Schedule:</strong>
+<ul>
+<li>Start with high \(\epsilon\) (explore more)</li>
+<li>Decay \(\epsilon\) over time (exploit more)</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Balance: too much exploration wastes time; too little misses optima</em></p>
 </section>
 
 <section>
 <h2>Learning Curves</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/05_reward_curves.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/05_reward_curves.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Reward improves as agent learns; DQN often
-outperforms tabular Q-learning</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Reward improves as agent learns; DQN often outperforms tabular Q-learning</em></p>
 </section>
 
 <section>
 <h2>Part 3: RL for Trading</h2>
-
-<p> <strong>Formulation:</strong></p>
+<strong>Formulation:</strong>
 <ul>
-<li><p><strong>State</strong>: Price history, portfolio, technical
-indicators</p></li>
-<li><p><strong>Action</strong>: Buy, sell, hold (+ position
-size)</p></li>
-<li><p><strong>Reward</strong>: Profit/loss, risk-adjusted
-return</p></li>
+<li><strong>State</strong>: Price history, portfolio, technical indicators</li>
+<li><strong>Action</strong>: Buy, sell, hold (+ position size)</li>
+<li><strong>Reward</strong>: Profit/loss, risk-adjusted return</li>
 </ul>
-<p><strong>Challenges:</strong></p>
-<ul>
-<li><p>Non-stationary environment</p></li>
-<li><p>High noise, low signal-to-noise ratio</p></li>
-<li><p>Transaction costs</p></li>
-<li><p>Partial observability</p></li>
-</ul>
-<p><span style="color: #666666">RL for trading is active research area; not
-solved problem</span></p>
 
+<strong>Challenges:</strong>
+<ul>
+<li>Non-stationary environment</li>
+<li>High noise, low signal-to-noise ratio</li>
+<li>Transaction costs</li>
+<li>Partial observability</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>RL for trading is active research area; not solved problem</em></p>
 </section>
 
 <section>
 <h2>Trading Policy</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/06_policy_viz.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/06_policy_viz.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Learned policy: buy when oversold/high
-momentum, sell when overbought</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Learned policy: buy when oversold/high momentum, sell when overbought</em></p>
 </section>
 
 <section>
 <h2>Deep Q-Networks (DQN)</h2>
+<strong>Idea</strong>: Use neural network to approximate Q-function
+\[
+Q(s, a; \theta) \approx Q^*(s, a)
+\]
 
-<p> <strong>Idea</strong>: Use neural
-network to approximate Q-function <span class="math display">\[Q(s, a;
-\theta) \approx Q^*(s, a)\]</span> <strong>Key Innovations:</strong></p>
+<strong>Key Innovations:</strong>
 <ul>
-<li><p><strong>Experience Replay</strong>: Store transitions, sample
-randomly</p></li>
-<li><p><strong>Target Network</strong>: Separate network for
-stability</p></li>
-<li><p><strong>Function Approximation</strong>: Handle large state
-spaces</p></li>
+<li><strong>Experience Replay</strong>: Store transitions, sample randomly</li>
+<li><strong>Target Network</strong>: Separate network for stability</li>
+<li><strong>Function Approximation</strong>: Handle large state spaces</li>
 </ul>
-<p><span style="color: #666666">DQN: breakthrough for RL on Atari games
-(Mnih et al., 2015)</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>DQN: breakthrough for RL on Atari games (Mnih et al., 2015)</em></p>
 </section>
 
 <section>
 <h2>Policy Gradient Methods</h2>
+<strong>Direct Policy Optimization:</strong>
+\[
+\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log \pi_\theta(a|s) \cdot Q^{\pi_\theta}(s, a) \right]
+\]
 
-<p> <strong>Direct Policy
-Optimization:</strong> <span class="math display">\[\nabla_\theta
-J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log
-\pi_\theta(a|s) \cdot Q^{\pi_\theta}(s, a) \right]\]</span>
-<strong>Algorithms:</strong></p>
+<strong>Algorithms:</strong>
 <ul>
-<li><p>REINFORCE (vanilla policy gradient)</p></li>
-<li><p>Actor-Critic (combine value and policy)</p></li>
-<li><p>PPO (Proximal Policy Optimization)</p></li>
-<li><p>A3C (Asynchronous Advantage Actor-Critic)</p></li>
+<li>REINFORCE (vanilla policy gradient)</li>
+<li>Actor-Critic (combine value and policy)</li>
+<li>PPO (Proximal Policy Optimization)</li>
+<li>A3C (Asynchronous Advantage Actor-Critic)</li>
 </ul>
-<p><span style="color: #666666">Policy gradient: directly optimize policy,
-can handle continuous actions</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Policy gradient: directly optimize policy, can handle continuous actions</em></p>
 </section>
 
 <section>
 <h2>Part 4: When to Use What</h2>
-
-
 <div class="center">
-<p><img src="images/L06_Embeddings_RL/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L06_Embeddings_RL/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Embeddings for text/categorical; RL for
-sequential decisions</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Embeddings for text/categorical; RL for sequential decisions</em></p>
 </section>
 
 <section>
 <h2>Comparison Table</h2>
-
-
 <div class="center">
-<table>
-<thead>
-<tr>
-<th style="text-align: left;"><strong>Aspect</strong></th>
-<th style="text-align: center;"><strong>Embeddings</strong></th>
-<th style="text-align: center;"><strong>RL</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Input</td>
-<td style="text-align: center;">Text, categorical</td>
-<td style="text-align: center;">State sequence</td>
-</tr>
-<tr>
-<td style="text-align: left;">Output</td>
-<td style="text-align: center;">Dense vectors</td>
-<td style="text-align: center;">Actions/policy</td>
-</tr>
-<tr>
-<td style="text-align: left;">Learning</td>
-<td style="text-align: center;">Unsupervised/supervised</td>
-<td style="text-align: center;">Trial and error</td>
-</tr>
-<tr>
-<td style="text-align: left;">Signal</td>
-<td style="text-align: center;">Context (words)</td>
-<td style="text-align: center;">Rewards</td>
-</tr>
-<tr>
-<td style="text-align: left;">Key challenge</td>
-<td style="text-align: center;">Semantics</td>
-<td style="text-align: center;">Credit assignment</td>
-</tr>
-<tr>
-<td style="text-align: left;">Finance use</td>
-<td style="text-align: center;">Sentiment</td>
-<td style="text-align: center;">Trading</td>
-</tr>
-</tbody>
-</table>
+\small
+\begin{tabular}{l|cc}
+\toprule
+<strong>Aspect</strong> & <strong>Embeddings</strong> & <strong>RL</strong> <br>
+\midrule
+Input & Text, categorical & State sequence <br>
+Output & Dense vectors & Actions/policy <br>
+Learning & Unsupervised/supervised & Trial and error <br>
+Signal & Context (words) & Rewards <br>
+Key challenge & Semantics & Credit assignment <br>
+Finance use & Sentiment & Trading <br>
+\bottomrule
+\end{tabular}
 </div>
-<p><span style="color: #666666">Both transform complex inputs into
-learnable representations</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Both transform complex inputs into learnable representations</em></p>
 </section>
 
 <section>
 <h2>Part 5: Implementation</h2>
-
-<p> <strong>Embeddings in
-Python:</strong></p>
+<strong>Embeddings in Python:</strong>
+\small
 <ul>
-<li><p><code>gensim.models.Word2Vec</code>: Train your own</p></li>
-<li><p><code>gensim.downloader.load(’glove-wiki-gigaword-100’)</code>:
-Pre-trained</p></li>
-<li><p><code>transformers.BertModel</code>: BERT embeddings</p></li>
+<li>\texttt{gensim.models.Word2Vec}: Train your own</li>
+<li>\texttt{gensim.downloader.load('glove-wiki-gigaword-100')}: Pre-trained</li>
+<li>\texttt{transformers.BertModel}: BERT embeddings</li>
 </ul>
-<p><strong>RL Libraries:</strong></p>
-<ul>
-<li><p><code>gymnasium</code>: Environment interface (formerly OpenAI
-Gym)</p></li>
-<li><p><code>stable-baselines3</code>: Pre-implemented
-algorithms</p></li>
-<li><p><code>ray[rllib]</code>: Scalable RL</p></li>
-</ul>
-<p><span style="color: #666666">Start with pre-trained embeddings; use
-stable-baselines3 for RL</span></p>
+\normalsize
 
+<strong>RL Libraries:</strong>
+\small
+<ul>
+<li>\texttt{gymnasium}: Environment interface (formerly OpenAI Gym)</li>
+<li>\texttt{stable-baselines3}: Pre-implemented algorithms</li>
+<li>\texttt{ray[rllib]}: Scalable RL</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Start with pre-trained embeddings; use stable-baselines3 for RL</em></p>
 </section>
 
 <section>
 <h2>Practical Tips</h2>
-
-<p> <strong>Embeddings:</strong></p>
+<strong>Embeddings:</strong>
 <ul>
-<li><p>Start with pre-trained, fine-tune if needed</p></li>
-<li><p>Check domain match (general vs financial)</p></li>
-<li><p>Visualize with t-SNE/UMAP to verify quality</p></li>
+<li>Start with pre-trained, fine-tune if needed</li>
+<li>Check domain match (general vs financial)</li>
+<li>Visualize with t-SNE/UMAP to verify quality</li>
 </ul>
-<p><strong>RL:</strong></p>
-<ul>
-<li><p>Start simple (tabular Q-learning before DQN)</p></li>
-<li><p>Reward shaping is crucial (sparse rewards are hard)</p></li>
-<li><p>Normalize observations</p></li>
-<li><p>Use established environments first (Gym, FinRL)</p></li>
-</ul>
-<p><span style="color: #666666">Both domains: start simple, iterate,
-validate thoroughly</span></p>
 
+<strong>RL:</strong>
+<ul>
+<li>Start simple (tabular Q-learning before DQN)</li>
+<li>Reward shaping is crucial (sparse rewards are hard)</li>
+<li>Normalize observations</li>
+<li>Use established environments first (Gym, FinRL)</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Both domains: start simple, iterate, validate thoroughly</em></p>
 </section>
 
 <section>
 <h2>Summary</h2>
-
-<p> <strong>Embeddings:</strong></p>
+<strong>Embeddings:</strong>
 <ul>
-<li><p>Dense vector representations of text/categories</p></li>
-<li><p>Capture semantic similarity</p></li>
-<li><p>Use pre-trained (Word2Vec, GloVe, BERT)</p></li>
+<li>Dense vector representations of text/categories</li>
+<li>Capture semantic similarity</li>
+<li>Use pre-trained (Word2Vec, GloVe, BERT)</li>
 </ul>
-<p><strong>Reinforcement Learning:</strong></p>
-<ul>
-<li><p>Agent learns from environment interaction</p></li>
-<li><p>Q-learning: value-based, tabular or deep (DQN)</p></li>
-<li><p>Applications: trading, portfolio optimization</p></li>
-</ul>
-<p><strong>Key Takeaway:</strong> Different tools for different problems
-<span style="color: #666666">Course complete! Apply these methods in your
-capstone project</span></p>
 
+<strong>Reinforcement Learning:</strong>
+<ul>
+<li>Agent learns from environment interaction</li>
+<li>Q-learning: value-based, tabular or deep (DQN)</li>
+<li>Applications: trading, portfolio optimization</li>
+</ul>
+
+<strong>Key Takeaway:</strong> Different tools for different problems
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Course complete! Apply these methods in your capstone project</em></p>
 </section>
 
 <section>
 <h2>References</h2>
+\small
+<strong>Embeddings:</strong>
+<ul>
+<li>Mikolov et al. (2013). Word2Vec</li>
+<li>Pennington et al. (2014). GloVe</li>
+<li>Devlin et al. (2019). BERT</li>
+</ul>
 
-<p> <strong>Embeddings:</strong></p>
+<strong>Reinforcement Learning:</strong>
 <ul>
-<li><p>Mikolov et al. (2013). Word2Vec</p></li>
-<li><p>Pennington et al. (2014). GloVe</p></li>
-<li><p>Devlin et al. (2019). BERT</p></li>
+<li>Sutton &amp; Barto (2018). RL: An Introduction (free online)</li>
+<li>Mnih et al. (2015). DQN (Atari)</li>
+<li>Schulman et al. (2017). PPO</li>
 </ul>
-<p><strong>Reinforcement Learning:</strong></p>
-<ul>
-<li><p>Sutton &amp; Barto (2018). RL: An Introduction (free
-online)</p></li>
-<li><p>Mnih et al. (2015). DQN (Atari)</p></li>
-<li><p>Schulman et al. (2017). PPO</p></li>
-</ul>
-<p><strong>Finance Applications:</strong></p>
-<ul>
-<li><p>Liu et al. (2021). FinRL: Deep RL for Trading</p></li>
-<li><p>Araci (2019). FinBERT</p></li>
-</ul>
-<p><span style="color: #666666">Sutton &amp; Barto: the definitive RL
-textbook (free at incompleteideas.net)</span></p>
 
+<strong>Finance Applications:</strong>
+<ul>
+<li>Liu et al. (2021). FinRL: Deep RL for Trading</li>
+<li>Araci (2019). FinBERT</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Sutton \& Barto: the definitive RL textbook (free at incompleteideas.net)</em></p>
 </section>
         </div>
 
@@ -636,10 +539,10 @@ textbook (free at incompleteideas.net)</span></p>
         </div>
     </div>
 
-    <!-- PDF Export Button -->
-    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+    <!-- PDF Download Button -->
+    <a href="pdf/L06_deepdive.pdf" class="pdf-export-btn" download title="Download PDF">
         <i class="fas fa-file-pdf"></i> PDF
-    </button>
+    </a>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -685,16 +588,19 @@ textbook (free at incompleteideas.net)</span></p>
             }
         }
 
-        // PDF Export function
-        function exportPDF() {
-            // Open print dialog with PDF-optimized settings
-            const printUrl = window.location.href + '?print-pdf';
-            window.open(printUrl, '_blank');
-        }
-
-        // Check if we're in print mode
-        if (window.location.search.includes('print-pdf')) {
-            document.querySelector('.pdf-export-btn').style.display = 'none';
+        // Hide PDF button if PDF doesn't exist
+        const pdfLink = document.querySelector('.pdf-export-btn');
+        if (pdfLink) {
+            fetch(pdfLink.href, { method: 'HEAD' })
+                .then(response => {
+                    if (!response.ok) {
+                        pdfLink.style.display = 'none';
+                    }
+                })
+                .catch(() => {
+                    // PDF not available, hide button
+                    pdfLink.style.display = 'none';
+                });
         }
 
         Reveal.initialize({
@@ -768,8 +674,8 @@ textbook (free at incompleteideas.net)</span></p>
                                 <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
                                     <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
                                 </li>
-                                <li class="slide-menu-item" onclick="exportPDF();">
-                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                <li class="slide-menu-item" onclick="window.open('pdf/L06_deepdive.pdf', '_blank');">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
                                 </li>
                             </ul>
                         `

@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="pandoc + custom post-processor">
+    <meta name="generator" content="custom beamer parser">
     <meta name="author" content="Methods and Algorithms">
-    <title>Introduction & Linear Regression</title>
+    <title>Introduction &amp; Linear Regression</title>
 
     <!-- Reveal.js core -->
     <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
@@ -59,7 +59,7 @@
             transform: translate(-50%, -50%);
         }
 
-        /* PDF export button */
+        /* PDF download button */
         .pdf-export-btn {
             position: fixed;
             bottom: 20px;
@@ -77,9 +77,11 @@
             gap: 8px;
             opacity: 0.8;
             transition: opacity 0.2s;
+            text-decoration: none;
         }
         .pdf-export-btn:hover {
             opacity: 1;
+            color: white;
         }
 
         /* Hide export button in print mode */
@@ -95,7 +97,7 @@
         <div class="slides">
             <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
     <div style="color: white; text-align: center;">
-        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Introduction & Linear Regression</h1>
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Introduction &amp; Linear Regression</h1>
         <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Overview</p>
         <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms</p>
         <div style="margin-top: 2em;">
@@ -107,238 +109,208 @@
 
 <section>
 <h2>Learning Objectives</h2>
+<p>By the end of this session, you will be able to:</p>
 
-<p> By the end of this session, you will
-be able to:</p>
 <ol>
-<li><p><strong>Understand</strong> the ordinary least squares (OLS)
-framework</p></li>
-<li><p><strong>Apply</strong> gradient descent for parameter
-optimization</p></li>
-<li><p><strong>Interpret</strong> regression coefficients in business
-contexts</p></li>
+<li><strong>Understand</strong> the ordinary least squares (OLS) framework</li>
+<li><strong>Apply</strong> gradient descent for parameter optimization</li>
+<li><strong>Interpret</strong> regression coefficients in business contexts</li>
 </ol>
-<p><strong>Finance Application:</strong> House price prediction, factor
-models</p>
-<p><em>Foundation for all supervised learning methods</em></p>
 
+<strong>Finance Application:</strong> House price prediction, factor models
+
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Foundation for all supervised learning methods</em></p>
 </section>
 
 <section>
 <h2>The Business Problem</h2>
+<strong>Finance Use Case: Predicting House Prices</strong>
 
-<p> <strong>Finance Use Case:
-Predicting House Prices</strong></p>
 <ul>
-<li><p>Banks need accurate property valuations for mortgages</p></li>
-<li><p>Insurance companies assess property risk</p></li>
-<li><p>Investors evaluate real estate portfolios</p></li>
+<li>Banks need accurate property valuations for mortgages</li>
+<li>Insurance companies assess property risk</li>
+<li>Investors evaluate real estate portfolios</li>
 </ul>
-<p><strong>The Question:</strong> Given features (size, location, age),
-what price?</p>
-<p><strong>Why Linear Regression?</strong></p>
-<ul>
-<li><p>Interpretable coefficients (price per square meter)</p></li>
-<li><p>Fast, well-understood method</p></li>
-<li><p>Strong baseline for comparison</p></li>
-</ul>
-<p><em>Linear regression: the “hello world” of machine learning</em></p>
 
+<strong>The Question:</strong> Given features (size, location, age), what price?
+
+<strong>Why Linear Regression?</strong>
+  <ul>
+<li>Interpretable coefficients (price per square meter)</li>
+<li>Fast, well-understood method</li>
+<li>Strong baseline for comparison</li>
+</ul>
+
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Linear regression: the "hello world" of machine learning</em></p>
 </section>
 
 <section>
 <h2>What is Linear Regression?</h2>
+<strong>Core Idea:</strong> Model the relationship between inputs and a continuous output
 
-<p> <strong>Core Idea:</strong>
-Model the relationship between inputs and a continuous output</p>
-<p><span class="math display">\[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2
-+ \cdots + \beta_p x_p + \varepsilon\]</span></p>
+\[
+    y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
+  \]
+
 <ul>
-<li><p><span class="math inline">\(y\)</span>: Target variable (house
-price)</p></li>
-<li><p><span class="math inline">\(x_1, \ldots, x_p\)</span>: Features
-(size, bedrooms, age)</p></li>
-<li><p><span class="math inline">\(\beta_0, \ldots, \beta_p\)</span>:
-Coefficients to learn</p></li>
-<li><p><span class="math inline">\(\varepsilon\)</span>: Random error
-term</p></li>
+<li>\(y\): Target variable (house price)</li>
+<li>\(x_1, \ldots, x_p\): Features (size, bedrooms, age)</li>
+<li>\(\beta_0, \ldots, \beta_p\): Coefficients to learn</li>
+<li>\(\varepsilon\): Random error term</li>
 </ul>
-<p><em>Goal: Find coefficients that minimize prediction error</em></p>
 
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Goal: Find coefficients that minimize prediction error</em></p>
 </section>
 
 <section>
 <h2>The Optimization Problem</h2>
+<strong>Objective:</strong> Minimize the sum of squared errors (SSE)
 
-<p> <strong>Objective:</strong>
-Minimize the sum of squared errors (SSE)</p>
-<p><span class="math display">\[\min_{\boldsymbol{\beta}} \sum_{i=1}^{n}
-(y_i - \hat{y}_i)^2 = \min_{\boldsymbol{\beta}} \| \mathbf{y} -
-\mathbf{X}\boldsymbol{\beta} \|^2\]</span></p>
-<p><strong>Why Squared Errors?</strong></p>
-<ul>
-<li><p>Penalizes large errors more than small errors</p></li>
-<li><p>Differentiable (enables gradient-based optimization)</p></li>
-<li><p>Leads to closed-form solution</p></li>
+\[
+    \min_{\boldsymbol{\beta}} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \min_{\boldsymbol{\beta}} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2
+  \]
+
+<strong>Why Squared Errors?</strong>
+  <ul>
+<li>Penalizes large errors more than small errors</li>
+<li>Differentiable (enables gradient-based optimization)</li>
+<li>Leads to closed-form solution</li>
 </ul>
-<p><em>This objective function defines “ordinary least squares”
-(OLS)</em></p>
 
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>This objective function defines "ordinary least squares" (OLS)</em></p>
 </section>
 
 <section>
 <h2>Two Solution Approaches</h2>
-
-
 <div class="columns">
-<div class="column">
-<p> <strong>1. Closed-Form (Normal Equation)</strong>
-<span class="math display">\[\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top
-\mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}\]</span></p>
-<p><span style="color: #2CA02C">Pros:</span></p>
-<ul>
-<li><p>Exact solution</p></li>
-<li><p>One computation</p></li>
-</ul>
-<p><span style="color: #D62728">Cons:</span></p>
-<ul>
-<li><p>Slow for large <span class="math inline">\(p\)</span></p></li>
-<li><p>Memory intensive</p></li>
-</ul>
-</div><div class="column">
-<p> <strong>2. Gradient Descent</strong> <span class="math display">\[\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t -
-\alpha \nabla L(\boldsymbol{\beta}_t)\]</span></p>
-<p><span style="color: #2CA02C">Pros:</span></p>
-<ul>
-<li><p>Scales to big data</p></li>
-<li><p>Memory efficient</p></li>
-</ul>
-<p><span style="color: #D62728">Cons:</span></p>
-<ul>
-<li><p>Requires tuning <span class="math inline">\(\alpha\)</span></p></li>
-<li><p>Iterative process</p></li>
-</ul>
-</div>
-</div>
-<p><em>Both methods yield the same solution for OLS</em></p>
+<div class="column"><strong>1. Closed-Form (Normal Equation)</strong>
+      \[
+        \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
+      \]
 
+<span style="color: #2CA02C">Pros:</span>
+      <ul>
+<li>Exact solution</li>
+<li>One computation</li>
+</ul>
+
+<span style="color: #D62728">Cons:</span>
+      <ul>
+<li>Slow for large \(p\)</li>
+<li>Memory intensive</li>
+</ul></div>
+<div class="column"><strong>2. Gradient Descent</strong>
+      \[
+        \boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \alpha \nabla L(\boldsymbol{\beta}_t)
+      \]
+
+<span style="color: #2CA02C">Pros:</span>
+      <ul>
+<li>Scales to big data</li>
+<li>Memory efficient</li>
+</ul>
+
+<span style="color: #D62728">Cons:</span>
+      <ul>
+<li>Requires tuning \(\alpha\)</li>
+<li>Iterative process</li>
+</ul></div>
+</div>
+
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Both methods yield the same solution for OLS</em></p>
 </section>
 
 <section>
 <h2>Interpreting Coefficients</h2>
+<strong>Example:</strong> House price model
 
-<p> <strong>Example:</strong>
-House price model</p>
-<p><span class="math display">\[\text{Price} = 50,000 + 200 \times
-\text{Size} + 15,000 \times \text{Bedrooms} - 1,000 \times
-\text{Age}\]</span></p>
-<p><strong>Interpretation:</strong></p>
-<ul>
-<li><p><span class="math inline">\(\beta_0 = 50,000\)</span>: Base price
-(all features = 0)</p></li>
-<li><p><span class="math inline">\(\beta_1 = 200\)</span>: Each extra
-sqm adds $200</p></li>
-<li><p><span class="math inline">\(\beta_2 = 15,000\)</span>: Each
-bedroom adds $15,000</p></li>
-<li><p><span class="math inline">\(\beta_3 = -1,000\)</span>: Each year
-of age subtracts $1,000</p></li>
+\[
+    \text{Price} = 50,000 + 200 \times \text{Size} + 15,000 \times \text{Bedrooms} - 1,000 \times \text{Age}
+  \]
+
+<strong>Interpretation:</strong>
+  <ul>
+<li>\(\beta_0 = 50,000\): Base price (all features = 0)</li>
+<li>\(\beta_1 = 200\): Each extra sqm adds <br>(200</li>
+<li>\(\beta_2 = 15,000\): Each bedroom adds <br>)15,000</li>
+<li>\(\beta_3 = -1,000\): Each year of age subtracts \$1,000</li>
 </ul>
-<p><em>Coefficients show marginal effect, holding others
-constant</em></p>
 
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Coefficients show marginal effect, holding others constant</em></p>
 </section>
 
 <section>
 <h2>Model Evaluation</h2>
+<strong>Key Metrics:</strong>
 
-<p> <strong>Key Metrics:</strong></p>
 <ul>
-<li><p><strong><span class="math inline">\(R^2\)</span> (Coefficient of
-Determination):</strong> Variance explained <span class="math display">\[R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i
-- \bar{y})^2}\]</span></p></li>
-<li><p><strong>RMSE (Root Mean Squared Error):</strong> Prediction
-accuracy <span class="math display">\[\text{RMSE} =
-\sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}\]</span></p></li>
+<li><strong>\(R^2\) (Coefficient of Determination):</strong> Variance explained
+    \[
+      R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
+    \]</li>
+<li><strong>RMSE (Root Mean Squared Error):</strong> Prediction accuracy
+    \[
+      \text{RMSE} = \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}
+    \]</li>
 </ul>
-<p><strong>In Practice:</strong> <span class="math inline">\(R^2 =
-0.75\)</span> means model explains 75% of price variance</p>
-<p><em>Always evaluate on held-out test data</em></p>
 
+<strong>In Practice:</strong> \(R^2 = 0.75\) means model explains 75% of price variance
+
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Always evaluate on held-out test data</em></p>
 </section>
 
 <section>
 <h2>When to Use Linear Regression</h2>
-
-
 <div class="columns">
-<div class="column">
-<p> <strong><span style="color: #2CA02C">Use
-When:</span></strong></p>
-<ul>
-<li><p>Target is continuous</p></li>
-<li><p>Linear relationships expected</p></li>
-<li><p>Interpretability matters</p></li>
-<li><p>Fast inference needed</p></li>
-</ul>
-</div><div class="column">
-<p> <strong><span style="color: #D62728">Avoid
-When:</span></strong></p>
-<ul>
-<li><p>Target is categorical</p></li>
-<li><p>Strong non-linearities</p></li>
-<li><p>High multicollinearity</p></li>
-<li><p>Many outliers present</p></li>
-</ul>
+<div class="column"><strong>\textcolor{MLGreen</strong>{Use When:}}
+      <ul>
+<li>Target is continuous</li>
+<li>Linear relationships expected</li>
+<li>Interpretability matters</li>
+<li>Fast inference needed</li>
+</ul></div>
+<div class="column"><strong>\textcolor{MLRed</strong>{Avoid When:}}
+      <ul>
+<li>Target is categorical</li>
+<li>Strong non-linearities</li>
+<li>High multicollinearity</li>
+<li>Many outliers present</li>
+</ul></div>
 </div>
-</div>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;"><strong>Pros</strong></th>
-<th style="text-align: left;"><strong>Cons</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Interpretable</td>
-<td style="text-align: left;">Assumes linearity</td>
-</tr>
-<tr>
-<td style="text-align: left;">Fast training</td>
-<td style="text-align: left;">Sensitive to outliers</td>
-</tr>
-<tr>
-<td style="text-align: left;">Well-understood</td>
-<td style="text-align: left;">Limited flexibility</td>
-</tr>
-</tbody>
-</table>
 
+\begin{table}
+    
+    \small
+    \begin{tabular}{ll}
+      \toprule
+      <strong>Pros</strong> & <strong>Cons</strong> <br>
+      \midrule
+      Interpretable & Assumes linearity <br>
+      Fast training & Sensitive to outliers <br>
+      Well-understood & Limited flexibility <br>
+      \bottomrule
+    \end{tabular}
+  \end{table}
 </section>
 
 <section>
 <h2>Key Takeaways</h2>
-
-
 <ol>
-<li><p>Linear regression models continuous outcomes as weighted sum of
-features</p></li>
-<li><p>OLS minimizes sum of squared errors</p></li>
-<li><p>Solve via normal equation (small data) or gradient descent (big
-data)</p></li>
-<li><p>Coefficients are directly interpretable as marginal
-effects</p></li>
-<li><p>Evaluate using <span class="math inline">\(R^2\)</span> (variance
-explained) and RMSE (prediction error)</p></li>
+<li>Linear regression models continuous outcomes as weighted sum of features</li>
+<li>OLS minimizes sum of squared errors</li>
+<li>Solve via normal equation (small data) or gradient descent (big data)</li>
+<li>Coefficients are directly interpretable as marginal effects</li>
+<li>Evaluate using \(R^2\) (variance explained) and RMSE (prediction error)</li>
 </ol>
-<p><strong>Next:</strong> Deep dive into mathematics and
-implementation</p>
-<p><strong>References:</strong></p>
-<ul>
-<li><p>ISLR Chapter 3: Linear Regression</p></li>
-<li><p>ESL Chapter 3: Linear Methods for Regression</p></li>
-</ul>
 
+<strong>Next:</strong> Deep dive into mathematics and implementation
+
+<strong>References:</strong>
+  <ul>
+<li>\footnotesize</li>
+<li>ISLR Chapter 3: Linear Regression</li>
+<li>ESL Chapter 3: Linear Methods for Regression</li>
+</ul>
 </section>
         </div>
 
@@ -350,10 +322,10 @@ implementation</p>
         </div>
     </div>
 
-    <!-- PDF Export Button -->
-    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+    <!-- PDF Download Button -->
+    <a href="pdf/L01_overview.pdf" class="pdf-export-btn" download title="Download PDF">
         <i class="fas fa-file-pdf"></i> PDF
-    </button>
+    </a>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -399,16 +371,19 @@ implementation</p>
             }
         }
 
-        // PDF Export function
-        function exportPDF() {
-            // Open print dialog with PDF-optimized settings
-            const printUrl = window.location.href + '?print-pdf';
-            window.open(printUrl, '_blank');
-        }
-
-        // Check if we're in print mode
-        if (window.location.search.includes('print-pdf')) {
-            document.querySelector('.pdf-export-btn').style.display = 'none';
+        // Hide PDF button if PDF doesn't exist
+        const pdfLink = document.querySelector('.pdf-export-btn');
+        if (pdfLink) {
+            fetch(pdfLink.href, { method: 'HEAD' })
+                .then(response => {
+                    if (!response.ok) {
+                        pdfLink.style.display = 'none';
+                    }
+                })
+                .catch(() => {
+                    // PDF not available, hide button
+                    pdfLink.style.display = 'none';
+                });
         }
 
         Reveal.initialize({
@@ -482,8 +457,8 @@ implementation</p>
                                 <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
                                     <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
                                 </li>
-                                <li class="slide-menu-item" onclick="exportPDF();">
-                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                <li class="slide-menu-item" onclick="window.open('pdf/L01_overview.pdf', '_blank');">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
                                 </li>
                             </ul>
                         `

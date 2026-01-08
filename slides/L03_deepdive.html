@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="pandoc + custom post-processor">
-    <meta name="author" content="Methods and Algorithms – MSc Data Science">
-    <title>L03: KNN & K-Means</title>
+    <meta name="generator" content="custom beamer parser">
+    <meta name="author" content="Methods and Algorithms - MSc Data Science">
+    <title>L03: KNN &amp; K-Means</title>
 
     <!-- Reveal.js core -->
     <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.5.0/dist/reset.css">
@@ -59,7 +59,7 @@
             transform: translate(-50%, -50%);
         }
 
-        /* PDF export button */
+        /* PDF download button */
         .pdf-export-btn {
             position: fixed;
             bottom: 20px;
@@ -77,9 +77,11 @@
             gap: 8px;
             opacity: 0.8;
             transition: opacity 0.2s;
+            text-decoration: none;
         }
         .pdf-export-btn:hover {
             opacity: 1;
+            color: white;
         }
 
         /* Hide export button in print mode */
@@ -95,9 +97,9 @@
         <div class="slides">
             <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
     <div style="color: white; text-align: center;">
-        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L03: KNN & K-Means</h1>
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L03: KNN &amp; K-Means</h1>
         <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Mathematical Foundations and Implementation</p>
-        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms - MSc Data Science</p>
         <div style="margin-top: 2em;">
             <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
             <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
@@ -107,641 +109,514 @@
 
 <section>
 <h2>KNN: The Lazy Learner</h2>
-
-<p> <strong>Key Insight</strong></p>
+<strong>Key Insight</strong>
 <ul>
-<li><p>No explicit model training (store all data)</p></li>
-<li><p>Classification by majority vote of K nearest neighbors</p></li>
-<li><p>“Lazy” because work is done at prediction time</p></li>
+<li>No explicit model training (store all data)</li>
+<li>Classification by majority vote of K nearest neighbors</li>
+<li>"Lazy" because work is done at prediction time</li>
 </ul>
-<p><strong>The Algorithm</strong></p>
-<ol>
-<li><p>Store all training examples</p></li>
-<li><p>For new query <span class="math inline">\(\mathbf{x}\)</span>:
-find K nearest training points</p></li>
-<li><p>Return majority class among neighbors</p></li>
-</ol>
-<p><span style="color: #666666">Instance-based learning: the training data
-IS the model</span></p>
 
+<strong>The Algorithm</strong>
+<ol>
+<li>Store all training examples</li>
+<li>For new query \(\mathbf{x}\): find K nearest training points</li>
+<li>Return majority class among neighbors</li>
+</ol>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Instance-based learning: the training data IS the model</em></p>
 </section>
 
 <section>
 <h2>Distance Metrics</h2>
-
-
 <div class="center">
-<p><img src="images/L03_KNN_KMeans/02_distance_metrics.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L03_KNN_KMeans/02_distance_metrics.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><strong>Common Metrics</strong></p>
+<strong>Common Metrics</strong>
 <ul>
-<li><p>Euclidean: <span class="math inline">\(d = \sqrt{\sum_i(x_i -
-y_i)^2}\)</span> (straight line)</p></li>
-<li><p>Manhattan: <span class="math inline">\(d = \sum_i|x_i -
-y_i|\)</span> (city block)</p></li>
+<li>Euclidean: \(d = \sqrt{\sum_i(x_i - y_i)^2}\) (straight line)</li>
+<li>Manhattan: \(d = \sum_i|x_i - y_i|\) (city block)</li>
 </ul>
-
 </section>
 
 <section>
 <h2>Distance Metrics: Minkowski Family</h2>
+<strong>Minkowski Distance</strong>
+$$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i - y_i|^p\right)^{1/p}$$
 
-<p> <strong>Minkowski
-Distance</strong> <span class="math display">\[d_p(\mathbf{x},
-\mathbf{y}) = \left(\sum_{i=1}^{n}|x_i -
-y_i|^p\right)^{1/p}\]</span></p>
 <ul>
-<li><p><span class="math inline">\(p=1\)</span>: Manhattan (L1)</p></li>
-<li><p><span class="math inline">\(p=2\)</span>: Euclidean (L2)</p></li>
-<li><p><span class="math inline">\(p=\infty\)</span>: Chebyshev (max
-absolute difference)</p></li>
+<li>\(p=1\): Manhattan (L1)</li>
+<li>\(p=2\): Euclidean (L2)</li>
+<li>\(p=\infty\): Chebyshev (max absolute difference)</li>
 </ul>
-<p><strong>Choosing p</strong></p>
-<ul>
-<li><p><span class="math inline">\(p=2\)</span>: Default, works well in
-most cases</p></li>
-<li><p><span class="math inline">\(p=1\)</span>: More robust to
-outliers</p></li>
-<li><p>Higher <span class="math inline">\(p\)</span>: Sensitive to large
-single differences</p></li>
-</ul>
-<p><span style="color: #666666">In high dimensions, all distances become
-similar (curse of dimensionality)</span></p>
 
+<strong>Choosing p</strong>
+<ul>
+<li>\(p=2\): Default, works well in most cases</li>
+<li>\(p=1\): More robust to outliers</li>
+<li>Higher \(p\): Sensitive to large single differences</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>In high dimensions, all distances become similar (curse of dimensionality)</em></p>
 </section>
 
 <section>
 <h2>KNN Decision Boundaries</h2>
-
-
 <div class="center">
-<p><img src="images/L03_KNN_KMeans/01_knn_boundaries.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L03_KNN_KMeans/01_knn_boundaries.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><strong>Boundary Properties</strong></p>
+<strong>Boundary Properties</strong>
 <ul>
-<li><p>Non-linear, locally adaptive</p></li>
-<li><p>Small K: complex boundary, may overfit</p></li>
-<li><p>Large K: smoother boundary, may underfit</p></li>
+<li>Non-linear, locally adaptive</li>
+<li>Small K: complex boundary, may overfit</li>
+<li>Large K: smoother boundary, may underfit</li>
 </ul>
-
 </section>
 
 <section>
 <h2>Choosing K</h2>
-
-<p> <strong>The Bias-Variance
-Trade-off</strong></p>
+<strong>The Bias-Variance Trade-off</strong>
 <ul>
-<li><p><span class="math inline">\(K=1\)</span>: High variance, low bias
-(very flexible)</p></li>
-<li><p><span class="math inline">\(K=n\)</span>: High bias, low variance
-(always predicts majority class)</p></li>
+<li>\(K=1\): High variance, low bias (very flexible)</li>
+<li>\(K=n\): High bias, low variance (always predicts majority class)</li>
 </ul>
-<p><strong>Practical Guidelines</strong></p>
-<ul>
-<li><p>Start with <span class="math inline">\(K = \sqrt{n}\)</span>
-where <span class="math inline">\(n\)</span> is training size</p></li>
-<li><p>Use odd K for binary classification (avoid ties)</p></li>
-<li><p>Cross-validation to find optimal K</p></li>
-</ul>
-<p><strong>Common Choices</strong>: <span class="math inline">\(K \in
-\{3, 5, 7, 11\}\)</span> <span style="color: #666666">Small K for complex
-patterns, larger K for noisy data</span></p>
 
+<strong>Practical Guidelines</strong>
+<ul>
+<li>Start with \(K = \sqrt{n}\) where \(n\) is training size</li>
+<li>Use odd K for binary classification (avoid ties)</li>
+<li>Cross-validation to find optimal K</li>
+</ul>
+
+<strong>Common Choices</strong>: \(K \in \{3, 5, 7, 11\}\)
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Small K for complex patterns, larger K for noisy data</em></p>
 </section>
 
 <section>
 <h2>Weighted KNN</h2>
+<strong>Problem with Equal Voting</strong>
+<ul>
+<li>All K neighbors have equal influence</li>
+<li>A distant neighbor counts as much as closest neighbor</li>
+</ul>
 
-<p> <strong>Problem with Equal
-Voting</strong></p>
+<strong>Solution: Distance Weighting</strong>
+$$w_i = \frac{1}{d(\mathbf{x}, \mathbf{x}_i)^2}$$
 <ul>
-<li><p>All K neighbors have equal influence</p></li>
-<li><p>A distant neighbor counts as much as closest neighbor</p></li>
+<li>Closer neighbors get higher weight</li>
+<li>Reduces sensitivity to K choice</li>
 </ul>
-<p><strong>Solution: Distance Weighting</strong> <span class="math display">\[w_i = \frac{1}{d(\mathbf{x},
-\mathbf{x}_i)^2}\]</span></p>
-<ul>
-<li><p>Closer neighbors get higher weight</p></li>
-<li><p>Reduces sensitivity to K choice</p></li>
-</ul>
-<p><strong>In scikit-learn</strong></p>
-<ul>
-<li><p><code>weights=’uniform’</code>: equal weights (default)</p></li>
-<li><p><code>weights=’distance’</code>: inverse distance
-weighting</p></li>
-</ul>
-<p><span style="color: #666666">Distance weighting often improves
-performance</span></p>
 
+<strong>In scikit-learn</strong>
+<ul>
+<li>\texttt{weights='uniform'}: equal weights (default)</li>
+<li>\texttt{weights='distance'}: inverse distance weighting</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Distance weighting often improves performance</em></p>
 </section>
 
 <section>
 <h2>Feature Scaling for KNN</h2>
+<strong>Why Scaling Matters</strong>
 
-<p> <strong>Why Scaling
-Matters</strong></p>
-<p>Without scaling:</p>
+<p>Without scaling:
 <ul>
-<li><p>Income: ranges 20,000–200,000</p></li>
-<li><p>Age: ranges 20–80</p></li>
-<li><p>Distance dominated by income (larger scale)!</p></li>
-</ul>
-<p><strong>Scaling Methods</strong></p>
-<ul>
-<li><p><strong>Standardization</strong>: <span class="math inline">\(z =
-\frac{x - \mu}{\sigma}\)</span> (mean=0, std=1)</p></li>
-<li><p><strong>Min-Max</strong>: <span class="math inline">\(x' =
-\frac{x - x_{min}}{x_{max} - x_{min}}\)</span> (range [0,1])</p></li>
-</ul>
-<p><strong>Rule</strong>: Always scale features for distance-based
-methods! <span style="color: #666666">StandardScaler for Gaussian-like
-features, MinMaxScaler for bounded</span></p>
+<li>Income: ranges 20,000-200,000</li>
+<li>Age: ranges 20-80</li>
+<li>Distance dominated by income (larger scale)!</li>
+</ul></p>
 
+<strong>Scaling Methods</strong>
+<ul>
+<li><strong>Standardization</strong>: \(z = \frac{x - \mu}{\sigma}\) (mean=0, std=1)</li>
+<li><strong>Min-Max</strong>: \(x' = \frac{x - x_{min}}{x_{max} - x_{min}}\) (range [0,1])</li>
+</ul>
+
+<strong>Rule</strong>: Always scale features for distance-based methods!
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>StandardScaler for Gaussian-like features, MinMaxScaler for bounded</em></p>
 </section>
 
 <section>
 <h2>KNN: Curse of Dimensionality</h2>
+<strong>The Problem</strong>
 
-<p> <strong>The
-Problem</strong></p>
-<p>In high dimensions:</p>
+<p>In high dimensions:
 <ul>
-<li><p>All points become approximately equidistant</p></li>
-<li><p>“Nearest neighbor” becomes meaningless</p></li>
-<li><p>Exponentially more data needed</p></li>
-</ul>
-<p><strong>Solutions</strong></p>
-<ul>
-<li><p><strong>Dimensionality reduction</strong>: PCA before
-KNN</p></li>
-<li><p><strong>Feature selection</strong>: keep only relevant
-features</p></li>
-<li><p><strong>Use domain knowledge</strong>: select meaningful
-features</p></li>
-</ul>
-<p><span style="color: #666666">KNN works best with moderate number of
-features (&lt;20)</span></p>
+<li>All points become approximately equidistant</li>
+<li>"Nearest neighbor" becomes meaningless</li>
+<li>Exponentially more data needed</li>
+</ul></p>
 
+<strong>Solutions</strong>
+<ul>
+<li><strong>Dimensionality reduction</strong>: PCA before KNN</li>
+<li><strong>Feature selection</strong>: keep only relevant features</li>
+<li><strong>Use domain knowledge</strong>: select meaningful features</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>KNN works best with moderate number of features (<20)</em></p>
 </section>
 
 <section>
 <h2>KNN: Computational Considerations</h2>
+<strong>Time Complexity</strong>
+<ul>
+<li>Training: \(O(1)\) - just store data!</li>
+<li>Prediction: \(O(nd)\) for brute force (\(n\) samples, \(d\) features)</li>
+</ul>
 
-<p> <strong>Time
-Complexity</strong></p>
+<strong>Acceleration Techniques</strong>
 <ul>
-<li><p>Training: <span class="math inline">\(O(1)\)</span> – just store
-data!</p></li>
-<li><p>Prediction: <span class="math inline">\(O(nd)\)</span> for brute
-force (<span class="math inline">\(n\)</span> samples, <span class="math inline">\(d\)</span> features)</p></li>
+<li><strong>KD-Tree</strong>: \(O(d \log n)\) average for low \(d\)</li>
+<li><strong>Ball Tree</strong>: Works better in higher dimensions</li>
+<li><strong>Approximate NN</strong>: Trade accuracy for speed</li>
 </ul>
-<p><strong>Acceleration Techniques</strong></p>
-<ul>
-<li><p><strong>KD-Tree</strong>: <span class="math inline">\(O(d \log
-n)\)</span> average for low <span class="math inline">\(d\)</span></p></li>
-<li><p><strong>Ball Tree</strong>: Works better in higher
-dimensions</p></li>
-<li><p><strong>Approximate NN</strong>: Trade accuracy for
-speed</p></li>
-</ul>
-<p><strong>In scikit-learn</strong></p>
-<ul>
-<li><p><code>algorithm=’auto’</code>: automatically chooses
-best</p></li>
-<li><p><code>algorithm=’brute’</code>: force brute force</p></li>
-</ul>
-<p><span style="color: #666666">For large datasets: consider approximate
-methods or trees</span></p>
 
+<strong>In scikit-learn</strong>
+<ul>
+<li>\texttt{algorithm='auto'}: automatically chooses best</li>
+<li>\texttt{algorithm='brute'}: force brute force</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>For large datasets: consider approximate methods or trees</em></p>
 </section>
 
 <section>
 <h2>KNN: scikit-learn Implementation</h2>
-
-<p>
-<strong>Classification</strong></p>
+<strong>Classification</strong>
 <ul>
-<li><p><code>from sklearn.neighbors import KNeighborsClassifier</code></p></li>
-<li><p><code>knn = KNeighborsClassifier(n_neighbors=5)</code></p></li>
-<li><p><code>knn.fit(X_train, y_train)</code></p></li>
-<li><p><code>y_pred = knn.predict(X_test)</code></p></li>
+<li>\texttt{from sklearn.neighbors import KNeighborsClassifier}</li>
+<li>\texttt{knn = KNeighborsClassifier(n\_neighbors=5)}</li>
+<li>\texttt{knn.fit(X\_train, y\_train)}</li>
+<li>\texttt{y\_pred = knn.predict(X\_test)}</li>
 </ul>
-<p><strong>Key Parameters</strong></p>
-<ul>
-<li><p><code>n_neighbors</code>: K value</p></li>
-<li><p><code>weights</code>: ’uniform’ or ’distance’</p></li>
-<li><p><code>metric</code>: ’euclidean’, ’manhattan’, etc.</p></li>
-<li><p><code>algorithm</code>: ’auto’, ’ball_tree’, ’kd_tree’,
-’brute’</p></li>
-</ul>
-<p><span style="color: #666666">Also available: KNeighborsRegressor for
-regression tasks</span></p>
 
+<strong>Key Parameters</strong>
+<ul>
+<li>\texttt{n\_neighbors}: K value</li>
+<li>\texttt{weights}: 'uniform' or 'distance'</li>
+<li>\texttt{metric}: 'euclidean', 'manhattan', etc.</li>
+<li>\texttt{algorithm}: 'auto', 'ball\_tree', 'kd\_tree', 'brute'</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Also available: KNeighborsRegressor for regression tasks</em></p>
 </section>
 
 <section>
 <h2>K-Means: The Idea</h2>
+<strong>Goal</strong>: Partition \(n\) points into \(K\) clusters
 
-<p> <strong>Goal</strong>: Partition <span class="math inline">\(n\)</span> points into <span class="math inline">\(K\)</span> clusters</p>
-<p><strong>Objective</strong>: Minimize within-cluster sum of squares
-(WCSS) <span class="math display">\[\sum_{k=1}^{K}\sum_{\mathbf{x} \in
-C_k}\|\mathbf{x} - \mu_k\|^2\]</span> where <span class="math inline">\(\mu_k\)</span> is the centroid of cluster <span class="math inline">\(C_k\)</span></p>
-<p><strong>Key Insight</strong></p>
+<strong>Objective</strong>: Minimize within-cluster sum of squares (WCSS)
+$$\sum_{k=1}^{K}\sum_{\mathbf{x} \in C_k}\|\mathbf{x} - \mu_k\|^2$$
+where \(\mu_k\) is the centroid of cluster \(C_k\)
+
+<strong>Key Insight</strong>
 <ul>
-<li><p>Each point assigned to nearest centroid</p></li>
-<li><p>Centroids are cluster means</p></li>
-<li><p>Iterative refinement until convergence</p></li>
+<li>Each point assigned to nearest centroid</li>
+<li>Centroids are cluster means</li>
+<li>Iterative refinement until convergence</li>
 </ul>
-<p><span style="color: #666666">K-Means finds locally optimal solution (not
-guaranteed global)</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>K-Means finds locally optimal solution (not guaranteed global)</em></p>
 </section>
 
 <section>
 <h2>K-Means Algorithm</h2>
+\begin{algorithmic}[1]
+\STATE <strong>Input</strong>: Data \(\mathbf{X}\), number of clusters \(K\)
+\STATE Initialize \(K\) centroids randomly
+\REPEAT
+\STATE <strong>Assignment</strong>: assign each point to nearest centroid
+\STATE <strong>Update</strong>: recompute centroids as cluster means
+\UNTIL{centroids don't change (or max iterations)}
+\STATE <strong>return</strong> cluster assignments, centroids
+\end{algorithmic}
 
-
-<div class="algorithmic">
-<p><strong>Input</strong>: Data <span class="math inline">\(\mathbf{X}\)</span>, number of clusters <span class="math inline">\(K\)</span> Initialize <span class="math inline">\(K\)</span> centroids randomly
-<strong>Assignment</strong>: assign each point to nearest centroid
-<strong>Update</strong>: recompute centroids as cluster means
-<strong>return</strong> cluster assignments, centroids</p>
-</div>
-<p><strong>Convergence</strong></p>
+<strong>Convergence</strong>
 <ul>
-<li><p>Guaranteed to converge (WCSS decreases each iteration)</p></li>
-<li><p>May converge to local optimum</p></li>
+<li>Guaranteed to converge (WCSS decreases each iteration)</li>
+<li>May converge to local optimum</li>
 </ul>
-<p><span style="color: #666666">Each iteration: <span class="math inline">\(O(nKd)\)</span> where <span class="math inline">\(n\)</span> = samples, <span class="math inline">\(K\)</span> = clusters, <span class="math inline">\(d\)</span> = features</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Each iteration: \(O(nKd)\) where \(n\) = samples, \(K\) = clusters, \(d\) = features</em></p>
 </section>
 
 <section>
 <h2>K-Means: Visualization</h2>
-
-
 <div class="center">
-<p><img src="images/L03_KNN_KMeans/03_kmeans_iteration.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L03_KNN_KMeans/03_kmeans_iteration.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Final state after convergence: points
-colored by cluster, X marks centroids</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Final state after convergence: points colored by cluster, X marks centroids</em></p>
 </section>
 
 <section>
 <h2>Initialization Strategies</h2>
-
-<p> <strong>Random
-Initialization</strong></p>
+<strong>Random Initialization</strong>
 <ul>
-<li><p>Pick K random points as initial centroids</p></li>
-<li><p>Sensitive to choice, may get poor solution</p></li>
-<li><p>Run multiple times, keep best result</p></li>
+<li>Pick K random points as initial centroids</li>
+<li>Sensitive to choice, may get poor solution</li>
+<li>Run multiple times, keep best result</li>
 </ul>
-<p><strong>K-Means++ (Default in scikit-learn)</strong></p>
-<ul>
-<li><p>Smart initialization: spread out initial centroids</p></li>
-<li><p>First centroid: random</p></li>
-<li><p>Next centroids: probability proportional to squared
-distance</p></li>
-</ul>
-<p><strong>Result</strong>: Much better starting point, fewer iterations
-<span style="color: #666666">K-Means++ gives provably better initialization
-with theoretical guarantees</span></p>
 
+<strong>K-Means++ (Default in scikit-learn)</strong>
+<ul>
+<li>Smart initialization: spread out initial centroids</li>
+<li>First centroid: random</li>
+<li>Next centroids: probability proportional to squared distance</li>
+</ul>
+
+<strong>Result</strong>: Much better starting point, fewer iterations
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>K-Means++ gives provably better initialization with theoretical guarantees</em></p>
 </section>
 
 <section>
 <h2>Choosing K: Elbow Method</h2>
-
-
 <div class="center">
-<p><img src="images/L03_KNN_KMeans/04_elbow_method.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L03_KNN_KMeans/04_elbow_method.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><strong>Interpretation</strong>: Look for the “elbow” where WCSS
-stops dropping sharply</p>
-
+<strong>Interpretation</strong>: Look for the "elbow" where WCSS stops dropping sharply
 </section>
 
 <section>
 <h2>Choosing K: Silhouette Score</h2>
-
-<p> <strong>For each point
-<span class="math inline">\(i\)</span></strong></p>
+<strong>For each point \(i\)</strong>
 <ul>
-<li><p><span class="math inline">\(a(i)\)</span>: average distance to
-points in same cluster</p></li>
-<li><p><span class="math inline">\(b(i)\)</span>: average distance to
-points in nearest other cluster</p></li>
+<li>\(a(i)\): average distance to points in same cluster</li>
+<li>\(b(i)\): average distance to points in nearest other cluster</li>
 </ul>
-<p><strong>Silhouette score</strong> <span class="math display">\[s(i) =
-\frac{b(i) - a(i)}{\max(a(i), b(i))}\]</span></p>
-<ul>
-<li><p>Range: <span class="math inline">\([-1, 1]\)</span></p></li>
-<li><p><span class="math inline">\(s \approx 1\)</span>: point is
-well-matched to cluster</p></li>
-<li><p><span class="math inline">\(s \approx 0\)</span>: point is on
-boundary</p></li>
-<li><p><span class="math inline">\(s &lt; 0\)</span>: point may be in
-wrong cluster</p></li>
-</ul>
-<p><span style="color: #666666">Average silhouette score summarizes overall
-clustering quality</span></p>
 
+<strong>Silhouette score</strong>
+$$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}$$
+<ul>
+<li>Range: \([-1, 1]\)</li>
+<li>\(s \approx 1\): point is well-matched to cluster</li>
+<li>\(s \approx 0\): point is on boundary</li>
+<li>\(s < 0\): point may be in wrong cluster</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Average silhouette score summarizes overall clustering quality</em></p>
 </section>
 
 <section>
 <h2>Silhouette Plot</h2>
-
-
 <div class="center">
-<p><img src="images/L03_KNN_KMeans/05_silhouette.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L03_KNN_KMeans/05_silhouette.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">All clusters should have similar width and
-scores above average line</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>All clusters should have similar width and scores above average line</em></p>
 </section>
 
 <section>
 <h2>K-Means: Decision Regions</h2>
-
-
 <div class="center">
-<p><img src="images/L03_KNN_KMeans/06_voronoi.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L03_KNN_KMeans/06_voronoi.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">K-Means creates Voronoi tessellation around
-centroids</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>K-Means creates Voronoi tessellation around centroids</em></p>
 </section>
 
 <section>
 <h2>K-Means Assumptions</h2>
-
-<p> <strong>What K-Means
-Assumes</strong></p>
+<strong>What K-Means Assumes</strong>
 <ul>
-<li><p>Clusters are spherical (isotropic)</p></li>
-<li><p>Clusters have similar sizes</p></li>
-<li><p>Clusters have similar densities</p></li>
+<li>Clusters are spherical (isotropic)</li>
+<li>Clusters have similar sizes</li>
+<li>Clusters have similar densities</li>
 </ul>
-<p><strong>When K-Means Fails</strong></p>
-<ul>
-<li><p>Non-convex shapes (e.g., crescents)</p></li>
-<li><p>Very different cluster sizes</p></li>
-<li><p>Different densities</p></li>
-<li><p>Outliers (pull centroids away)</p></li>
-</ul>
-<p><span style="color: #666666">Consider DBSCAN or Gaussian Mixture Models
-for these cases</span></p>
 
+<strong>When K-Means Fails</strong>
+<ul>
+<li>Non-convex shapes (e.g., crescents)</li>
+<li>Very different cluster sizes</li>
+<li>Different densities</li>
+<li>Outliers (pull centroids away)</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Consider DBSCAN or Gaussian Mixture Models for these cases</em></p>
 </section>
 
 <section>
 <h2>K-Means Variants</h2>
+<strong>Mini-Batch K-Means</strong>
+<ul>
+<li>Uses random subsets for updates</li>
+<li>Much faster for large datasets</li>
+<li>Slightly worse results</li>
+</ul>
 
-<p> <strong>Mini-Batch K-Means</strong></p>
+<strong>K-Medoids</strong>
 <ul>
-<li><p>Uses random subsets for updates</p></li>
-<li><p>Much faster for large datasets</p></li>
-<li><p>Slightly worse results</p></li>
+<li>Centroids must be actual data points</li>
+<li>More robust to outliers</li>
+<li>Slower than K-Means</li>
 </ul>
-<p><strong>K-Medoids</strong></p>
-<ul>
-<li><p>Centroids must be actual data points</p></li>
-<li><p>More robust to outliers</p></li>
-<li><p>Slower than K-Means</p></li>
-</ul>
-<p><strong>K-Means for Mixed Data</strong></p>
-<ul>
-<li><p>K-Modes: for categorical data</p></li>
-<li><p>K-Prototypes: mixed continuous and categorical</p></li>
-</ul>
-<p><span style="color: #666666">Mini-Batch K-Means: good for &gt;10k
-samples</span></p>
 
+<strong>K-Means for Mixed Data</strong>
+<ul>
+<li>K-Modes: for categorical data</li>
+<li>K-Prototypes: mixed continuous and categorical</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Mini-Batch K-Means: good for >10k samples</em></p>
 </section>
 
 <section>
 <h2>K-Means: scikit-learn</h2>
-
-<p> <strong>Basic Usage</strong></p>
+<strong>Basic Usage</strong>
 <ul>
-<li><p><code>from sklearn.cluster import KMeans</code></p></li>
-<li><p><code>kmeans = KMeans(n_clusters=3, random_state=42)</code></p></li>
-<li><p><code>labels = kmeans.fit_predict(X)</code></p></li>
-<li><p><code>centroids = kmeans.cluster_centers_</code></p></li>
+<li>\texttt{from sklearn.cluster import KMeans}</li>
+<li>\texttt{kmeans = KMeans(n\_clusters=3, random\_state=42)}</li>
+<li>\texttt{labels = kmeans.fit\_predict(X)}</li>
+<li>\texttt{centroids = kmeans.cluster\_centers\_}</li>
 </ul>
-<p><strong>Key Parameters</strong></p>
-<ul>
-<li><p><code>n_clusters</code>: K (required)</p></li>
-<li><p><code>init</code>: ’k-means++’ (default) or ’random’</p></li>
-<li><p><code>n_init</code>: number of runs (default 10)</p></li>
-<li><p><code>max_iter</code>: max iterations per run</p></li>
-</ul>
-<p><span style="color: #666666">inertia_ attribute gives WCSS after
-fitting</span></p>
 
+<strong>Key Parameters</strong>
+<ul>
+<li>\texttt{n\_clusters}: K (required)</li>
+<li>\texttt{init}: 'k-means++' (default) or 'random'</li>
+<li>\texttt{n\_init}: number of runs (default 10)</li>
+<li>\texttt{max\_iter}: max iterations per run</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>inertia\_ attribute gives WCSS after fitting</em></p>
 </section>
 
 <section>
 <h2>KNN vs K-Means: Key Differences</h2>
-
-
 <div class="center">
-<table>
-<thead>
-<tr>
-<th style="text-align: left;"><strong>Aspect</strong></th>
-<th style="text-align: left;"><strong>KNN</strong></th>
-<th style="text-align: left;"><strong>K-Means</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Task</td>
-<td style="text-align: left;">Classification/Regression</td>
-<td style="text-align: left;">Clustering</td>
-</tr>
-<tr>
-<td style="text-align: left;">Learning</td>
-<td style="text-align: left;">Supervised (needs labels)</td>
-<td style="text-align: left;">Unsupervised</td>
-</tr>
-<tr>
-<td style="text-align: left;">K meaning</td>
-<td style="text-align: left;">Number of neighbors</td>
-<td style="text-align: left;">Number of clusters</td>
-</tr>
-<tr>
-<td style="text-align: left;">Training</td>
-<td style="text-align: left;">None (lazy)</td>
-<td style="text-align: left;">Iterative optimization</td>
-</tr>
-<tr>
-<td style="text-align: left;">Prediction</td>
-<td style="text-align: left;">Compute distances</td>
-<td style="text-align: left;">Assign to centroid</td>
-</tr>
-<tr>
-<td style="text-align: left;">Output</td>
-<td style="text-align: left;">Class label</td>
-<td style="text-align: left;">Cluster ID</td>
-</tr>
-</tbody>
-</table>
+\begin{tabular}{lll}
+\toprule
+<strong>Aspect</strong> & <strong>KNN</strong> & <strong>K-Means</strong> <br>
+\midrule
+Task & Classification/Regression & Clustering <br>
+Learning & Supervised (needs labels) & Unsupervised <br>
+K meaning & Number of neighbors & Number of clusters <br>
+Training & None (lazy) & Iterative optimization <br>
+Prediction & Compute distances & Assign to centroid <br>
+Output & Class label & Cluster ID <br>
+\bottomrule
+\end{tabular}
 </div>
-<p><span style="color: #666666">The “K” in KNN and K-Means mean completely
-different things!</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The "K" in KNN and K-Means mean completely different things!</em></p>
 </section>
 
 <section>
 <h2>Finance Application: Customer Segmentation</h2>
+<strong>Problem</strong>: Group customers for targeted marketing
 
-<p>
-<strong>Problem</strong>: Group customers for targeted marketing</p>
-<p><strong>Features</strong></p>
+<strong>Features</strong>
 <ul>
-<li><p>Transaction frequency</p></li>
-<li><p>Average transaction amount</p></li>
-<li><p>Account balance</p></li>
-<li><p>Product holdings</p></li>
+<li>Transaction frequency</li>
+<li>Average transaction amount</li>
+<li>Account balance</li>
+<li>Product holdings</li>
 </ul>
-<p><strong>K-Means Solution</strong></p>
-<ul>
-<li><p>Cluster into segments (e.g., K=4)</p></li>
-<li><p>Profile each segment</p></li>
-<li><p>Tailor offerings to segment needs</p></li>
-</ul>
-<p><span style="color: #666666">Example segments: High-value frequent,
-Dormant, New/Growing, Price-sensitive</span></p>
 
+<strong>K-Means Solution</strong>
+<ul>
+<li>Cluster into segments (e.g., K=4)</li>
+<li>Profile each segment</li>
+<li>Tailor offerings to segment needs</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Example segments: High-value frequent, Dormant, New/Growing, Price-sensitive</em></p>
 </section>
 
 <section>
 <h2>Finance Application: Fraud Detection</h2>
+<strong>Problem</strong>: Flag suspicious transactions
 
-<p>
-<strong>Problem</strong>: Flag suspicious transactions</p>
-<p><strong>KNN Approach</strong></p>
+<strong>KNN Approach</strong>
 <ul>
-<li><p>Features: amount, time, location, merchant category</p></li>
-<li><p>Find K similar past transactions</p></li>
-<li><p>If most neighbors are fraud, flag as suspicious</p></li>
+<li>Features: amount, time, location, merchant category</li>
+<li>Find K similar past transactions</li>
+<li>If most neighbors are fraud, flag as suspicious</li>
 </ul>
-<p><strong>K-Means Approach</strong></p>
-<ul>
-<li><p>Cluster “normal” transactions</p></li>
-<li><p>New transaction far from all centroids = anomaly</p></li>
-<li><p>Combined with distance threshold</p></li>
-</ul>
-<p><span style="color: #666666">KNN needs labeled fraud examples, K-Means
-detects deviation from normal</span></p>
 
+<strong>K-Means Approach</strong>
+<ul>
+<li>Cluster "normal" transactions</li>
+<li>New transaction far from all centroids = anomaly</li>
+<li>Combined with distance threshold</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>KNN needs labeled fraud examples, K-Means detects deviation from normal</em></p>
 </section>
 
 <section>
 <h2>When to Use What</h2>
-
-<p> <strong>Use KNN When</strong></p>
+<strong>Use KNN When</strong>
 <ul>
-<li><p>You have labeled training data</p></li>
-<li><p>Local patterns matter (non-linear boundaries)</p></li>
-<li><p>Interpretability: “similar to these examples”</p></li>
-<li><p>Moderate dataset size</p></li>
+<li>You have labeled training data</li>
+<li>Local patterns matter (non-linear boundaries)</li>
+<li>Interpretability: "similar to these examples"</li>
+<li>Moderate dataset size</li>
 </ul>
-<p><strong>Use K-Means When</strong></p>
-<ul>
-<li><p>No labels available</p></li>
-<li><p>Looking for natural groupings</p></li>
-<li><p>Clusters are roughly spherical</p></li>
-<li><p>Need fast clustering of large data</p></li>
-</ul>
-<p><span style="color: #666666">K-Means often used as preprocessing before
-supervised learning</span></p>
 
+<strong>Use K-Means When</strong>
+<ul>
+<li>No labels available</li>
+<li>Looking for natural groupings</li>
+<li>Clusters are roughly spherical</li>
+<li>Need fast clustering of large data</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>K-Means often used as preprocessing before supervised learning</em></p>
 </section>
 
 <section>
 <h2>Decision Framework</h2>
-
-
 <div class="center">
-<p><img src="images/L03_KNN_KMeans/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L03_KNN_KMeans/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Start with KNN for classification, K-Means
-for clustering</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Start with KNN for classification, K-Means for clustering</em></p>
 </section>
 
 <section>
 <h2>Alternatives to Consider</h2>
-
-<p> <strong>Instead of
-KNN</strong></p>
+<strong>Instead of KNN</strong>
 <ul>
-<li><p>Large data: use ball tree or approximate NN</p></li>
-<li><p>Need probability: logistic regression</p></li>
-<li><p>Many features: random forest</p></li>
+<li>Large data: use ball tree or approximate NN</li>
+<li>Need probability: logistic regression</li>
+<li>Many features: random forest</li>
 </ul>
-<p><strong>Instead of K-Means</strong></p>
-<ul>
-<li><p>Unknown K: DBSCAN (density-based)</p></li>
-<li><p>Hierarchical structure: agglomerative clustering</p></li>
-<li><p>Soft assignments: Gaussian Mixture Models</p></li>
-<li><p>Non-spherical: spectral clustering</p></li>
-</ul>
-<p><span style="color: #666666">DBSCAN automatically determines number of
-clusters</span></p>
 
+<strong>Instead of K-Means</strong>
+<ul>
+<li>Unknown K: DBSCAN (density-based)</li>
+<li>Hierarchical structure: agglomerative clustering</li>
+<li>Soft assignments: Gaussian Mixture Models</li>
+<li>Non-spherical: spectral clustering</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>DBSCAN automatically determines number of clusters</em></p>
 </section>
 
 <section>
 <h2>Key Takeaways</h2>
+<strong>K-Nearest Neighbors</strong>
+<ul>
+<li>Instance-based, lazy learner</li>
+<li>Scale features, choose K via cross-validation</li>
+<li>Works best with moderate features, moderate data size</li>
+</ul>
 
-<p> <strong>K-Nearest Neighbors</strong></p>
+<strong>K-Means</strong>
 <ul>
-<li><p>Instance-based, lazy learner</p></li>
-<li><p>Scale features, choose K via cross-validation</p></li>
-<li><p>Works best with moderate features, moderate data size</p></li>
+<li>Iterative: assign points, update centroids</li>
+<li>K-Means++ for initialization, elbow/silhouette for K</li>
+<li>Assumes spherical, similar-size clusters</li>
 </ul>
-<p><strong>K-Means</strong></p>
-<ul>
-<li><p>Iterative: assign points, update centroids</p></li>
-<li><p>K-Means++ for initialization, elbow/silhouette for K</p></li>
-<li><p>Assumes spherical, similar-size clusters</p></li>
-</ul>
-<p><strong>Common Considerations</strong></p>
-<ul>
-<li><p>Feature scaling is critical for both</p></li>
-<li><p>“K” means different things in each algorithm</p></li>
-</ul>
-<p><span style="color: #666666">Both are foundational algorithms: simple,
-interpretable, widely used</span></p>
 
+<strong>Common Considerations</strong>
+<ul>
+<li>Feature scaling is critical for both</li>
+<li>"K" means different things in each algorithm</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Both are foundational algorithms: simple, interpretable, widely used</em></p>
 </section>
 
 <section>
 <h2>References</h2>
-
-<p> <strong>Textbooks</strong></p>
+<strong>Textbooks</strong>
 <ul>
-<li><p>James et al. (2021). <em>ISLR</em>, Chapters 2, 12</p></li>
-<li><p>Hastie et al. (2009). <em>ESL</em>, Chapters 13, 14</p></li>
-</ul>
-<p><strong>Key Papers</strong></p>
-<ul>
-<li><p>Arthur &amp; Vassilvitskii (2007). K-Means++</p></li>
-<li><p>Cover &amp; Hart (1967). Nearest Neighbor Pattern
-Classification</p></li>
-</ul>
-<p><strong>Next Lecture</strong></p>
-<ul>
-<li><p>L04: Random Forests</p></li>
-<li><p>Ensemble methods and feature importance</p></li>
+<li>James et al. (2021). <em>ISLR</em>, Chapters 2, 12</li>
+<li>Hastie et al. (2009). <em>ESL</em>, Chapters 13, 14</li>
 </ul>
 
+<strong>Key Papers</strong>
+<ul>
+<li>Arthur &amp; Vassilvitskii (2007). K-Means++</li>
+<li>Cover &amp; Hart (1967). Nearest Neighbor Pattern Classification</li>
+</ul>
+
+<strong>Next Lecture</strong>
+<ul>
+<li>L04: Random Forests</li>
+<li>Ensemble methods and feature importance</li>
+</ul>
 </section>
         </div>
 
@@ -753,10 +628,10 @@ Classification</p></li>
         </div>
     </div>
 
-    <!-- PDF Export Button -->
-    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+    <!-- PDF Download Button -->
+    <a href="pdf/L03_deepdive.pdf" class="pdf-export-btn" download title="Download PDF">
         <i class="fas fa-file-pdf"></i> PDF
-    </button>
+    </a>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -802,16 +677,19 @@ Classification</p></li>
             }
         }
 
-        // PDF Export function
-        function exportPDF() {
-            // Open print dialog with PDF-optimized settings
-            const printUrl = window.location.href + '?print-pdf';
-            window.open(printUrl, '_blank');
-        }
-
-        // Check if we're in print mode
-        if (window.location.search.includes('print-pdf')) {
-            document.querySelector('.pdf-export-btn').style.display = 'none';
+        // Hide PDF button if PDF doesn't exist
+        const pdfLink = document.querySelector('.pdf-export-btn');
+        if (pdfLink) {
+            fetch(pdfLink.href, { method: 'HEAD' })
+                .then(response => {
+                    if (!response.ok) {
+                        pdfLink.style.display = 'none';
+                    }
+                })
+                .catch(() => {
+                    // PDF not available, hide button
+                    pdfLink.style.display = 'none';
+                });
         }
 
         Reveal.initialize({
@@ -885,8 +763,8 @@ Classification</p></li>
                                 <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
                                     <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
                                 </li>
-                                <li class="slide-menu-item" onclick="exportPDF();">
-                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                <li class="slide-menu-item" onclick="window.open('pdf/L03_deepdive.pdf', '_blank');">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
                                 </li>
                             </ul>
                         `

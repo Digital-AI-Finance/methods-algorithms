@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="pandoc + custom post-processor">
-    <meta name="author" content="Methods and Algorithms – MSc Data Science">
+    <meta name="generator" content="custom beamer parser">
+    <meta name="author" content="Methods and Algorithms - MSc Data Science">
     <title>L04: Random Forests</title>
 
     <!-- Reveal.js core -->
@@ -59,7 +59,7 @@
             transform: translate(-50%, -50%);
         }
 
-        /* PDF export button */
+        /* PDF download button */
         .pdf-export-btn {
             position: fixed;
             bottom: 20px;
@@ -77,9 +77,11 @@
             gap: 8px;
             opacity: 0.8;
             transition: opacity 0.2s;
+            text-decoration: none;
         }
         .pdf-export-btn:hover {
             opacity: 1;
+            color: white;
         }
 
         /* Hide export button in print mode */
@@ -97,7 +99,7 @@
     <div style="color: white; text-align: center;">
         <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L04: Random Forests</h1>
         <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Ensemble Learning for Robust Predictions</p>
-        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms - MSc Data Science</p>
         <div style="margin-top: 2em;">
             <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
             <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
@@ -107,126 +109,90 @@
 
 <section>
 <h2>Learning Objectives</h2>
-
-<p> <strong>By the end of this lecture,
-you will be able to:</strong></p>
+<strong>By the end of this lecture, you will be able to:</strong>
 <ol>
-<li><p>Explain how decision trees partition feature space</p></li>
-<li><p>Implement Random Forests using bagging and feature
-randomization</p></li>
-<li><p>Interpret feature importance and out-of-bag error</p></li>
-<li><p>Apply ensemble methods to fraud detection problems</p></li>
+<li>Explain how decision trees partition feature space</li>
+<li>Implement Random Forests using bagging and feature randomization</li>
+<li>Interpret feature importance and out-of-bag error</li>
+<li>Apply ensemble methods to fraud detection problems</li>
 </ol>
-<p><strong>Finance Application:</strong> Fraud detection with
-interpretable feature importance <span style="color: #666666">From single
-models to ensemble methods that combine many weak learners</span></p>
 
+<strong>Finance Application:</strong> Fraud detection with interpretable feature importance
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>From single models to ensemble methods that combine many weak learners</em></p>
 </section>
 
 <section>
 <h2>The Business Problem</h2>
-
-<p> <strong>Fraud Detection
-Challenge</strong></p>
+<strong>Fraud Detection Challenge</strong>
 <ul>
-<li><p>Need high accuracy: fraudulent transactions cost
-millions</p></li>
-<li><p>Need interpretability: explain why transaction flagged</p></li>
-<li><p>Complex patterns: fraud evolves and adapts</p></li>
+<li>Need high accuracy: fraudulent transactions cost millions</li>
+<li>Need interpretability: explain why transaction flagged</li>
+<li>Complex patterns: fraud evolves and adapts</li>
 </ul>
-<p><strong>Why Random Forests?</strong></p>
-<ul>
-<li><p>Combines many trees for robust predictions</p></li>
-<li><p>Built-in feature importance ranking</p></li>
-<li><p>Handles non-linear relationships naturally</p></li>
-</ul>
-<p><span style="color: #666666">Ensemble methods: “wisdom of crowds” for
-machine learning</span></p>
 
+<strong>Why Random Forests?</strong>
+<ul>
+<li>Combines many trees for robust predictions</li>
+<li>Built-in feature importance ranking</li>
+<li>Handles non-linear relationships naturally</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Ensemble methods: "wisdom of crowds" for machine learning</em></p>
 </section>
 
 <section>
 <h2>Decision Tree Structure</h2>
-
-
 <div class="center">
-<p><img src="images/L04_Random_Forests/01_decision_tree.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L04_Random_Forests/01_decision_tree.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Trees split data using simple rules at each
-node until reaching a prediction</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Trees split data using simple rules at each node until reaching a prediction</em></p>
 </section>
 
 <section>
 <h2>Feature Importance</h2>
-
-
 <div class="center">
-<p><img src="images/L04_Random_Forests/02_feature_importance.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L04_Random_Forests/02_feature_importance.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Random Forests automatically rank which
-features matter most for prediction</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Random Forests automatically rank which features matter most for prediction</em></p>
 </section>
 
 <section>
 <h2>Bootstrap Aggregating (Bagging)</h2>
-
-
 <div class="center">
-<p><img src="images/L04_Random_Forests/03_bootstrap.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L04_Random_Forests/03_bootstrap.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Each tree trains on a different random
-sample, reducing overfitting</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Each tree trains on a different random sample, reducing overfitting</em></p>
 </section>
 
 <section>
 <h2>Out-of-Bag Error</h2>
-
-
 <div class="center">
-<p><img src="images/L04_Random_Forests/04_oob_error.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L04_Random_Forests/04_oob_error.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">OOB error provides free cross-validation
-without held-out test set</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>OOB error provides free cross-validation without held-out test set</em></p>
 </section>
 
 <section>
 <h2>Ensemble Voting</h2>
-
-
 <div class="center">
-<p><img src="images/L04_Random_Forests/05_ensemble_voting.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L04_Random_Forests/05_ensemble_voting.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Final prediction combines votes from all
-trees (majority for classification)</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Final prediction combines votes from all trees (majority for classification)</em></p>
 </section>
 
 <section>
 <h2>Bias-Variance Tradeoff</h2>
-
-
 <div class="center">
-<p><img src="images/L04_Random_Forests/06_bias_variance.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L04_Random_Forests/06_bias_variance.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Averaging many high-variance trees produces
-low-variance ensemble</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Averaging many high-variance trees produces low-variance ensemble</em></p>
 </section>
 
 <section>
 <h2>Decision Framework</h2>
-
-
 <div class="center">
-<p><img src="images/L04_Random_Forests/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L04_Random_Forests/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Random Forests excel when accuracy and
-feature importance both matter</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Random Forests excel when accuracy and feature importance both matter</em></p>
 </section>
         </div>
 
@@ -238,10 +204,10 @@ feature importance both matter</span></p>
         </div>
     </div>
 
-    <!-- PDF Export Button -->
-    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+    <!-- PDF Download Button -->
+    <a href="pdf/L04_overview.pdf" class="pdf-export-btn" download title="Download PDF">
         <i class="fas fa-file-pdf"></i> PDF
-    </button>
+    </a>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -287,16 +253,19 @@ feature importance both matter</span></p>
             }
         }
 
-        // PDF Export function
-        function exportPDF() {
-            // Open print dialog with PDF-optimized settings
-            const printUrl = window.location.href + '?print-pdf';
-            window.open(printUrl, '_blank');
-        }
-
-        // Check if we're in print mode
-        if (window.location.search.includes('print-pdf')) {
-            document.querySelector('.pdf-export-btn').style.display = 'none';
+        // Hide PDF button if PDF doesn't exist
+        const pdfLink = document.querySelector('.pdf-export-btn');
+        if (pdfLink) {
+            fetch(pdfLink.href, { method: 'HEAD' })
+                .then(response => {
+                    if (!response.ok) {
+                        pdfLink.style.display = 'none';
+                    }
+                })
+                .catch(() => {
+                    // PDF not available, hide button
+                    pdfLink.style.display = 'none';
+                });
         }
 
         Reveal.initialize({
@@ -370,8 +339,8 @@ feature importance both matter</span></p>
                                 <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
                                     <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
                                 </li>
-                                <li class="slide-menu-item" onclick="exportPDF();">
-                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                <li class="slide-menu-item" onclick="window.open('pdf/L04_overview.pdf', '_blank');">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
                                 </li>
                             </ul>
                         `

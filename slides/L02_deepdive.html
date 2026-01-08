@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="pandoc + custom post-processor">
-    <meta name="author" content="Methods and Algorithms – MSc Data Science">
+    <meta name="generator" content="custom beamer parser">
+    <meta name="author" content="Methods and Algorithms - MSc Data Science">
     <title>L02: Logistic Regression</title>
 
     <!-- Reveal.js core -->
@@ -59,7 +59,7 @@
             transform: translate(-50%, -50%);
         }
 
-        /* PDF export button */
+        /* PDF download button */
         .pdf-export-btn {
             position: fixed;
             bottom: 20px;
@@ -77,9 +77,11 @@
             gap: 8px;
             opacity: 0.8;
             transition: opacity 0.2s;
+            text-decoration: none;
         }
         .pdf-export-btn:hover {
             opacity: 1;
+            color: white;
         }
 
         /* Hide export button in print mode */
@@ -97,7 +99,7 @@
     <div style="color: white; text-align: center;">
         <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L02: Logistic Regression</h1>
         <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Mathematical Foundations and Implementation</p>
-        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms - MSc Data Science</p>
         <div style="margin-top: 2em;">
             <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
             <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
@@ -107,691 +109,559 @@
 
 <section>
 <h2>From Linear to Logistic</h2>
-
-<p> <strong>The Classification
-Problem</strong></p>
+<strong>The Classification Problem</strong>
 <ul>
-<li><p>Given features <span class="math inline">\(\mathbf{x} \in
-\mathbb{R}^p\)</span>, predict <span class="math inline">\(y \in \{0,
-1\}\)</span></p></li>
-<li><p>Linear regression: <span class="math inline">\(\hat{y} =
-\mathbf{w}^T\mathbf{x} + b\)</span> (unbounded)</p></li>
-<li><p>Need: <span class="math inline">\(P(y=1|\mathbf{x}) \in [0,
-1]\)</span></p></li>
+<li>Given features \(\mathbf{x} \in \mathbb{R}^p\), predict \(y \in \{0, 1\}\)</li>
+<li>Linear regression: \(\hat{y} = \mathbf{w}^T\mathbf{x} + b\) (unbounded)</li>
+<li>Need: \(P(y=1|\mathbf{x}) \in [0, 1]\)</li>
 </ul>
-<p><strong>Solution: The Logistic Function</strong> <span class="math display">\[P(y=1|\mathbf{x}) = \sigma(\mathbf{w}^T\mathbf{x}
-+ b) = \frac{1}{1 + e^{-(\mathbf{w}^T\mathbf{x} + b)}}\]</span> <span style="color: #666666">The logistic function is also called the sigmoid
-function</span></p>
 
+<strong>Solution: The Logistic Function</strong>
+$$P(y=1|\mathbf{x}) = \sigma(\mathbf{w}^T\mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^T\mathbf{x} + b)}}$$
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The logistic function is also called the sigmoid function</em></p>
 </section>
 
 <section>
 <h2>The Sigmoid Function</h2>
-
-
 <div class="center">
-<p><img src="images/L02_Logistic_Regression/01_sigmoid_function.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L02_Logistic_Regression/01_sigmoid_function.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><strong>Key Properties:</strong></p>
+<strong>Key Properties:</strong>
 <ul>
-<li><p>Range: <span class="math inline">\((0, 1)\)</span> – perfect for
-probabilities</p></li>
-<li><p><span class="math inline">\(\sigma(0) = 0.5\)</span> – threshold
-for classification</p></li>
-<li><p><span class="math inline">\(\sigma'(z) = \sigma(z)(1 -
-\sigma(z))\)</span> – simple gradient</p></li>
+<li>Range: \((0, 1)\) - perfect for probabilities</li>
+<li>\(\sigma(0) = 0.5\) - threshold for classification</li>
+<li>\(\sigma'(z) = \sigma(z)(1 - \sigma(z))\) - simple gradient</li>
 </ul>
-
 </section>
 
 <section>
 <h2>Odds and Log-Odds</h2>
-
-<p> <strong>Understanding the
-Model</strong></p>
+<strong>Understanding the Model</strong>
 <ul>
-<li><p>Odds: <span class="math inline">\(\frac{P(y=1)}{P(y=0)} =
-\frac{p}{1-p}\)</span></p></li>
-<li><p>Log-odds (logit): <span class="math inline">\(\log\left(\frac{p}{1-p}\right) =
-\mathbf{w}^T\mathbf{x} + b\)</span></p></li>
+<li>Odds: \(\frac{P(y=1)}{P(y=0)} = \frac{p}{1-p}\)</li>
+<li>Log-odds (logit): \(\log\left(\frac{p}{1-p}\right) = \mathbf{w}^T\mathbf{x} + b\)</li>
 </ul>
-<p><strong>Coefficient Interpretation</strong></p>
-<ul>
-<li><p><span class="math inline">\(w_j\)</span>: change in log-odds per
-unit increase in <span class="math inline">\(x_j\)</span></p></li>
-<li><p><span class="math inline">\(e^{w_j}\)</span>: odds ratio –
-multiplicative effect on odds</p></li>
-<li><p>Example: <span class="math inline">\(w_{\text{income}} = 0.5
-\Rightarrow\)</span> each unit increase in income multiplies odds by
-<span class="math inline">\(e^{0.5} \approx 1.65\)</span></p></li>
-</ul>
-<p><span style="color: #666666">Log-odds interpretation is key for
-regulatory compliance in banking</span></p>
 
+<strong>Coefficient Interpretation</strong>
+<ul>
+<li>\(w_j\): change in log-odds per unit increase in \(x_j\)</li>
+<li>\(e^{w_j}\): odds ratio - multiplicative effect on odds</li>
+<li>Example: \(w_{\text{income}} = 0.5 \Rightarrow\) each unit increase in income multiplies odds by \(e^{0.5} \approx 1.65\)</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Log-odds interpretation is key for regulatory compliance in banking</em></p>
 </section>
 
 <section>
 <h2>Maximum Likelihood Estimation</h2>
+<strong>The Likelihood Function</strong>
 
-<p> <strong>The Likelihood
-Function</strong></p>
-<p>For observations <span class="math inline">\((x_i, y_i)\)</span>, the
-likelihood is: <span class="math display">\[L(\mathbf{w}) =
-\prod_{i=1}^{n} p_i^{y_i}(1-p_i)^{1-y_i}\]</span> where <span class="math inline">\(p_i = \sigma(\mathbf{w}^T\mathbf{x}_i +
-b)\)</span></p>
-<p><strong>Log-Likelihood (easier to optimize)</strong> <span class="math display">\[\ell(\mathbf{w}) = \sum_{i=1}^{n} \left[ y_i
-\log(p_i) + (1-y_i)\log(1-p_i) \right]\]</span> <span style="color: #666666">Maximize log-likelihood = minimize negative
-log-likelihood (cross-entropy)</span></p>
+<p>For observations \((x_i, y_i)\), the likelihood is:
+$$L(\mathbf{w}) = \prod_{i=1}^{n} p_i^{y_i}(1-p_i)^{1-y_i}$$
+where \(p_i = \sigma(\mathbf{w}^T\mathbf{x}_i + b)\)</p>
 
+<strong>Log-Likelihood (easier to optimize)</strong>
+$$\ell(\mathbf{w}) = \sum_{i=1}^{n} \left[ y_i \log(p_i) + (1-y_i)\log(1-p_i) \right]$$
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Maximize log-likelihood = minimize negative log-likelihood (cross-entropy)</em></p>
 </section>
 
 <section>
 <h2>Binary Cross-Entropy Loss</h2>
-
-
 <div class="center">
-<p><img src="images/L02_Logistic_Regression/03_log_loss.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L02_Logistic_Regression/03_log_loss.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><strong>Loss Function</strong> <span class="math display">\[\mathcal{L} =
--\frac{1}{n}\sum_{i=1}^{n}\left[y_i\log(p_i) +
-(1-y_i)\log(1-p_i)\right]\]</span> <span style="color: #666666">Cross-entropy loss is convex in the weights –
-guaranteed global optimum</span></p>
-
+<strong>Loss Function</strong>
+$$\mathcal{L} = -\frac{1}{n}\sum_{i=1}^{n}\left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]$$
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Cross-entropy loss is convex in the weights -- guaranteed global optimum</em></p>
 </section>
 
 <section>
 <h2>Gradient Derivation</h2>
+<strong>Computing the Gradient</strong>
 
-<p> <strong>Computing the
-Gradient</strong></p>
-<p>For a single sample: <span class="math display">\[\frac{\partial
-\mathcal{L}}{\partial w_j} = (p - y) x_j\]</span> <strong>In Matrix
-Form</strong> <span class="math display">\[\nabla_{\mathbf{w}}
-\mathcal{L} = \frac{1}{n}\mathbf{X}^T(\mathbf{p} - \mathbf{y})\]</span>
-where <span class="math inline">\(\mathbf{p} =
-\sigma(\mathbf{X}\mathbf{w})\)</span></p>
-<p><strong>Key Insight</strong>: Same form as linear regression
-gradient! <span style="color: #666666">The elegance of logistic regression:
-gradient has the same form as linear regression</span></p>
+<p>For a single sample:
+$$\frac{\partial \mathcal{L}}{\partial w_j} = (p - y) x_j$$</p>
 
+<strong>In Matrix Form</strong>
+$$\nabla_{\mathbf{w}} \mathcal{L} = \frac{1}{n}\mathbf{X}^T(\mathbf{p} - \mathbf{y})$$
+where \(\mathbf{p} = \sigma(\mathbf{X}\mathbf{w})\)
+
+<strong>Key Insight</strong>: Same form as linear regression gradient!
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The elegance of logistic regression: gradient has the same form as linear regression</em></p>
 </section>
 
 <section>
 <h2>Gradient Descent Update</h2>
+<strong>Update Rule</strong>
+$$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \eta \nabla_{\mathbf{w}} \mathcal{L}$$
+$$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \frac{\eta}{n}\mathbf{X}^T(\sigma(\mathbf{X}\mathbf{w}^{(t)}) - \mathbf{y})$$
 
-<p> <strong>Update Rule</strong>
-<span class="math display">\[\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} -
-\eta \nabla_{\mathbf{w}} \mathcal{L}\]</span> <span class="math display">\[\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} -
-\frac{\eta}{n}\mathbf{X}^T(\sigma(\mathbf{X}\mathbf{w}^{(t)}) -
-\mathbf{y})\]</span> <strong>Practical Considerations</strong></p>
+<strong>Practical Considerations</strong>
 <ul>
-<li><p>Feature scaling: standardize inputs for faster
-convergence</p></li>
-<li><p>Learning rate: start with <span class="math inline">\(\eta =
-0.01\)</span>, use line search or decay</p></li>
-<li><p>Convergence: monitor loss, check gradient norm &lt;
-tolerance</p></li>
+<li>Feature scaling: standardize inputs for faster convergence</li>
+<li>Learning rate: start with \(\eta = 0.01\), use line search or decay</li>
+<li>Convergence: monitor loss, check gradient norm < tolerance</li>
 </ul>
-<p><span style="color: #666666">No closed-form solution like normal
-equation – must use iterative optimization</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>No closed-form solution like normal equation -- must use iterative optimization</em></p>
 </section>
 
 <section>
 <h2>Linear Decision Boundary</h2>
-
-
 <div class="center">
-<p><img src="images/L02_Logistic_Regression/02_decision_boundary.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L02_Logistic_Regression/02_decision_boundary.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><strong>Decision Rule</strong>: Predict <span class="math inline">\(\hat{y} = 1\)</span> if <span class="math inline">\(\mathbf{w}^T\mathbf{x} + b \geq 0\)</span> <span style="color: #666666">The decision boundary is always a hyperplane in the
-feature space</span></p>
-
+<strong>Decision Rule</strong>: Predict \(\hat{y} = 1\) if \(\mathbf{w}^T\mathbf{x} + b \geq 0\)
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The decision boundary is always a hyperplane in the feature space</em></p>
 </section>
 
 <section>
 <h2>Threshold Selection</h2>
+<strong>Default Threshold: 0.5</strong>
+<ul>
+<li>Predict 1 if \(P(y=1|\mathbf{x}) \geq 0.5\)</li>
+<li>Equivalent to: \(\mathbf{w}^T\mathbf{x} + b \geq 0\)</li>
+</ul>
 
-<p> <strong>Default Threshold:
-0.5</strong></p>
+<strong>Custom Thresholds</strong>
 <ul>
-<li><p>Predict 1 if <span class="math inline">\(P(y=1|\mathbf{x}) \geq
-0.5\)</span></p></li>
-<li><p>Equivalent to: <span class="math inline">\(\mathbf{w}^T\mathbf{x}
-+ b \geq 0\)</span></p></li>
+<li>Lower threshold: more sensitive (higher recall)</li>
+<li>Higher threshold: more specific (higher precision)</li>
+<li>Choose based on business costs of FP vs FN</li>
 </ul>
-<p><strong>Custom Thresholds</strong></p>
-<ul>
-<li><p>Lower threshold: more sensitive (higher recall)</p></li>
-<li><p>Higher threshold: more specific (higher precision)</p></li>
-<li><p>Choose based on business costs of FP vs FN</p></li>
-</ul>
-<p><strong>Example: Fraud Detection</strong></p>
-<ul>
-<li><p>Cost of missing fraud (FN) &gt;&gt; Cost of false alarm
-(FP)</p></li>
-<li><p>Use lower threshold, e.g., 0.3</p></li>
-</ul>
-<p><span style="color: #666666">Optimal threshold depends on the cost
-matrix of your application</span></p>
 
+<strong>Example: Fraud Detection</strong>
+<ul>
+<li>Cost of missing fraud (FN) >> Cost of false alarm (FP)</li>
+<li>Use lower threshold, e.g., 0.3</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Optimal threshold depends on the cost matrix of your application</em></p>
 </section>
 
 <section>
 <h2>Non-Linear Boundaries via Features</h2>
-
-<p> <strong>Polynomial
-Features</strong></p>
+<strong>Polynomial Features</strong>
 <ul>
-<li><p>Original: <span class="math inline">\([x_1,
-x_2]\)</span></p></li>
-<li><p>Expanded: <span class="math inline">\([x_1, x_2, x_1^2, x_2^2,
-x_1 x_2]\)</span></p></li>
-<li><p>Creates curved decision boundaries</p></li>
+<li>Original: \([x_1, x_2]\)</li>
+<li>Expanded: \([x_1, x_2, x_1^2, x_2^2, x_1 x_2]\)</li>
+<li>Creates curved decision boundaries</li>
 </ul>
-<p><strong>Trade-offs</strong></p>
-<ul>
-<li><p>More features: more flexible boundaries</p></li>
-<li><p>Risk: overfitting to training data</p></li>
-<li><p>Solution: regularization</p></li>
-</ul>
-<p><span style="color: #666666">Logistic regression is linear in
-parameters, but can model non-linear boundaries</span></p>
 
+<strong>Trade-offs</strong>
+<ul>
+<li>More features: more flexible boundaries</li>
+<li>Risk: overfitting to training data</li>
+<li>Solution: regularization</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Logistic regression is linear in parameters, but can model non-linear boundaries</em></p>
 </section>
 
 <section>
 <h2>Multiclass Extension: Softmax</h2>
-
-<p> <strong>One-vs-Rest
-(OvR)</strong></p>
+<strong>One-vs-Rest (OvR)</strong>
 <ul>
-<li><p>Train <span class="math inline">\(K\)</span> binary
-classifiers</p></li>
-<li><p>Predict class with highest probability</p></li>
+<li>Train \(K\) binary classifiers</li>
+<li>Predict class with highest probability</li>
 </ul>
-<p><strong>Multinomial (Softmax) Logistic Regression</strong> <span class="math display">\[P(y=k|\mathbf{x}) =
-\frac{e^{\mathbf{w}_k^T\mathbf{x}}}{\sum_{j=1}^{K}e^{\mathbf{w}_j^T\mathbf{x}}}\]</span></p>
-<ul>
-<li><p>Single model, probabilities sum to 1</p></li>
-<li><p>Loss: categorical cross-entropy</p></li>
-</ul>
-<p><span style="color: #666666">scikit-learn: multi_class=’multinomial’ for
-true softmax regression</span></p>
 
+<strong>Multinomial (Softmax) Logistic Regression</strong>
+$$P(y=k|\mathbf{x}) = \frac{e^{\mathbf{w}_k^T\mathbf{x}}}{\sum_{j=1}^{K}e^{\mathbf{w}_j^T\mathbf{x}}}$$
+<ul>
+<li>Single model, probabilities sum to 1</li>
+<li>Loss: categorical cross-entropy</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>scikit-learn: multi\_class='multinomial' for true softmax regression</em></p>
 </section>
 
 <section>
 <h2>Confusion Matrix</h2>
-
-
 <div class="center">
-<p><img src="images/L02_Logistic_Regression/06_confusion_matrix.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L02_Logistic_Regression/06_confusion_matrix.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Always start evaluation by examining the
-confusion matrix</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Always start evaluation by examining the confusion matrix</em></p>
 </section>
 
 <section>
 <h2>Classification Metrics</h2>
-
-<p> <strong>From the Confusion
-Matrix</strong></p>
+<strong>From the Confusion Matrix</strong>
 <ul>
-<li><p><strong>Accuracy</strong>: <span class="math inline">\(\frac{TP +
-TN}{TP + TN + FP + FN}\)</span> – overall correctness</p></li>
-<li><p><strong>Precision</strong>: <span class="math inline">\(\frac{TP}{TP + FP}\)</span> – of predicted
-positives, how many correct?</p></li>
-<li><p><strong>Recall</strong>: <span class="math inline">\(\frac{TP}{TP
-+ FN}\)</span> – of actual positives, how many found?</p></li>
-<li><p><strong>F1 Score</strong>: <span class="math inline">\(\frac{2
-\cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} +
-\text{Recall}}\)</span></p></li>
+<li><strong>Accuracy</strong>: \(\frac{TP + TN}{TP + TN + FP + FN}\) - overall correctness</li>
+<li><strong>Precision</strong>: \(\frac{TP}{TP + FP}\) - of predicted positives, how many correct?</li>
+<li><strong>Recall</strong>: \(\frac{TP}{TP + FN}\) - of actual positives, how many found?</li>
+<li><strong>F1 Score</strong>: \(\frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}\)</li>
 </ul>
-<p><strong>When Accuracy Fails</strong></p>
-<ul>
-<li><p>Imbalanced data: 99% negative class</p></li>
-<li><p>Predicting all negatives gives 99% accuracy!</p></li>
-</ul>
-<p><span style="color: #666666">Accuracy is misleading for imbalanced
-datasets</span></p>
 
+<strong>When Accuracy Fails</strong>
+<ul>
+<li>Imbalanced data: 99% negative class</li>
+<li>Predicting all negatives gives 99% accuracy!</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Accuracy is misleading for imbalanced datasets</em></p>
 </section>
 
 <section>
 <h2>ROC Curve</h2>
-
-
 <div class="center">
-<p><img src="images/L02_Logistic_Regression/04_roc_curve.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L02_Logistic_Regression/04_roc_curve.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><strong>ROC = Receiver Operating Characteristic</strong></p>
+<strong>ROC = Receiver Operating Characteristic</strong>
 <ul>
-<li><p>X-axis: FPR (1 - Specificity)</p></li>
-<li><p>Y-axis: TPR (Recall/Sensitivity)</p></li>
+<li>X-axis: FPR (1 - Specificity)</li>
+<li>Y-axis: TPR (Recall/Sensitivity)</li>
 </ul>
-
 </section>
 
 <section>
 <h2>Area Under ROC (AUC)</h2>
-
-<p> <strong>Interpretation</strong></p>
+<strong>Interpretation</strong>
 <ul>
-<li><p>AUC = 0.5: random guessing</p></li>
-<li><p>AUC = 1.0: perfect classifier</p></li>
-<li><p>AUC = probability(random positive &gt; random negative)</p></li>
+<li>AUC = 0.5: random guessing</li>
+<li>AUC = 1.0: perfect classifier</li>
+<li>AUC = probability(random positive > random negative)</li>
 </ul>
-<p><strong>Guidelines</strong></p>
-<ul>
-<li><p>0.9–1.0: Excellent</p></li>
-<li><p>0.8–0.9: Good</p></li>
-<li><p>0.7–0.8: Fair</p></li>
-<li><p>0.6–0.7: Poor</p></li>
-<li><p>0.5–0.6: Fail</p></li>
-</ul>
-<p><span style="color: #666666">AUC is threshold-independent – summarizes
-performance across all thresholds</span></p>
 
+<strong>Guidelines</strong>
+<ul>
+<li>0.9-1.0: Excellent</li>
+<li>0.8-0.9: Good</li>
+<li>0.7-0.8: Fair</li>
+<li>0.6-0.7: Poor</li>
+<li>0.5-0.6: Fail</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>AUC is threshold-independent -- summarizes performance across all thresholds</em></p>
 </section>
 
 <section>
 <h2>Precision-Recall Curve</h2>
-
-
 <div class="center">
-<p><img src="images/L02_Logistic_Regression/05_precision_recall.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L02_Logistic_Regression/05_precision_recall.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Use PR curves for imbalanced datasets where
-positive class is rare</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Use PR curves for imbalanced datasets where positive class is rare</em></p>
 </section>
 
 <section>
 <h2>ROC vs Precision-Recall</h2>
-
-<p> <strong>When to Use
-ROC</strong></p>
+<strong>When to Use ROC</strong>
 <ul>
-<li><p>Balanced classes</p></li>
-<li><p>Care equally about both classes</p></li>
-<li><p>Comparing models at specific FPR</p></li>
+<li>Balanced classes</li>
+<li>Care equally about both classes</li>
+<li>Comparing models at specific FPR</li>
 </ul>
-<p><strong>When to Use Precision-Recall</strong></p>
-<ul>
-<li><p>Imbalanced classes (fraud, disease)</p></li>
-<li><p>Positive class is more important</p></li>
-<li><p>High precision required</p></li>
-</ul>
-<p><span style="color: #666666">ROC can be overly optimistic with
-imbalanced data</span></p>
 
+<strong>When to Use Precision-Recall</strong>
+<ul>
+<li>Imbalanced classes (fraud, disease)</li>
+<li>Positive class is more important</li>
+<li>High precision required</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>ROC can be overly optimistic with imbalanced data</em></p>
 </section>
 
 <section>
 <h2>Calibration</h2>
+<strong>What is Calibration?</strong>
+<ul>
+<li>Predicted 70% probability should mean 70% actually positive</li>
+<li>Well-calibrated: predicted probabilities match observed frequencies</li>
+</ul>
 
-<p> <strong>What is Calibration?</strong></p>
+<strong>Checking Calibration</strong>
 <ul>
-<li><p>Predicted 70% probability should mean 70% actually
-positive</p></li>
-<li><p>Well-calibrated: predicted probabilities match observed
-frequencies</p></li>
+<li>Reliability diagram (calibration plot)</li>
+<li>Brier score: \(\frac{1}{n}\sum(p_i - y_i)^2\)</li>
 </ul>
-<p><strong>Checking Calibration</strong></p>
-<ul>
-<li><p>Reliability diagram (calibration plot)</p></li>
-<li><p>Brier score: <span class="math inline">\(\frac{1}{n}\sum(p_i -
-y_i)^2\)</span></p></li>
-</ul>
-<p><strong>Logistic Regression Advantage</strong></p>
-<ul>
-<li><p>Naturally well-calibrated (MLE property)</p></li>
-<li><p>Unlike trees/random forests that may need calibration</p></li>
-</ul>
-<p><span style="color: #666666">Calibration is crucial when probabilities
-are used for decision-making</span></p>
 
+<strong>Logistic Regression Advantage</strong>
+<ul>
+<li>Naturally well-calibrated (MLE property)</li>
+<li>Unlike trees/random forests that may need calibration</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Calibration is crucial when probabilities are used for decision-making</em></p>
 </section>
 
 <section>
 <h2>Regularization Motivation</h2>
-
-<p> <strong>The Overfitting
-Problem</strong></p>
+<strong>The Overfitting Problem</strong>
 <ul>
-<li><p>Many features, limited data</p></li>
-<li><p>Model fits noise, not signal</p></li>
-<li><p>Perfect training accuracy, poor test performance</p></li>
+<li>Many features, limited data</li>
+<li>Model fits noise, not signal</li>
+<li>Perfect training accuracy, poor test performance</li>
 </ul>
-<p><strong>Solution: Penalize Large Coefficients</strong> <span class="math display">\[\mathcal{L}_{\text{regularized}} = \mathcal{L} +
-\lambda \cdot \text{penalty}(\mathbf{w})\]</span></p>
-<ul>
-<li><p><span class="math inline">\(\lambda\)</span>: regularization
-strength (hyperparameter)</p></li>
-<li><p>Larger <span class="math inline">\(\lambda\)</span> = simpler
-model</p></li>
-</ul>
-<p><span style="color: #666666">Regularization trades bias for
-variance</span></p>
 
+<strong>Solution: Penalize Large Coefficients</strong>
+$$\mathcal{L}_{\text{regularized}} = \mathcal{L} + \lambda \cdot \text{penalty}(\mathbf{w})$$
+<ul>
+<li>\(\lambda\): regularization strength (hyperparameter)</li>
+<li>Larger \(\lambda\) = simpler model</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Regularization trades bias for variance</em></p>
 </section>
 
 <section>
 <h2>L1 vs L2 Regularization</h2>
-
-<p> <strong>L2 (Ridge)</strong>
-<span class="math display">\[\mathcal{L}_{\text{Ridge}} = \mathcal{L} +
-\lambda \sum_{j=1}^{p} w_j^2\]</span></p>
+<strong>L2 (Ridge)</strong>
+$$\mathcal{L}_{\text{Ridge}} = \mathcal{L} + \lambda \sum_{j=1}^{p} w_j^2$$
 <ul>
-<li><p>Shrinks coefficients toward zero</p></li>
-<li><p>Keeps all features, reduces magnitude</p></li>
+<li>Shrinks coefficients toward zero</li>
+<li>Keeps all features, reduces magnitude</li>
 </ul>
-<p><strong>L1 (Lasso)</strong> <span class="math display">\[\mathcal{L}_{\text{Lasso}} = \mathcal{L} +
-\lambda \sum_{j=1}^{p} |w_j|\]</span></p>
-<ul>
-<li><p>Some coefficients exactly zero</p></li>
-<li><p>Automatic feature selection</p></li>
-</ul>
-<p><span style="color: #666666">L1 for sparse models, L2 when all features
-likely relevant</span></p>
 
+<strong>L1 (Lasso)</strong>
+$$\mathcal{L}_{\text{Lasso}} = \mathcal{L} + \lambda \sum_{j=1}^{p} |w_j|$$
+<ul>
+<li>Some coefficients exactly zero</li>
+<li>Automatic feature selection</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>L1 for sparse models, L2 when all features likely relevant</em></p>
 </section>
 
 <section>
 <h2>Elastic Net</h2>
+<strong>Best of Both Worlds</strong>
+$$\mathcal{L}_{\text{ElasticNet}} = \mathcal{L} + \lambda_1 \sum |w_j| + \lambda_2 \sum w_j^2$$
 
-<p> <strong>Best of Both Worlds</strong> <span class="math display">\[\mathcal{L}_{\text{ElasticNet}} = \mathcal{L} +
-\lambda_1 \sum |w_j| + \lambda_2 \sum w_j^2\]</span>
-<strong>Advantages</strong></p>
+<strong>Advantages</strong>
 <ul>
-<li><p>Handles correlated features better than Lasso alone</p></li>
-<li><p>Can select groups of correlated features</p></li>
-<li><p>More stable feature selection</p></li>
+<li>Handles correlated features better than Lasso alone</li>
+<li>Can select groups of correlated features</li>
+<li>More stable feature selection</li>
 </ul>
-<p><strong>In scikit-learn</strong></p>
-<ul>
-<li><p><code>LogisticRegression(penalty=’elasticnet’, solver=’saga’, l1_ratio=0.5)</code></p></li>
-</ul>
-<p><span style="color: #666666">Elastic Net: l1_ratio = 1 is pure L1,
-l1_ratio = 0 is pure L2</span></p>
 
+<strong>In scikit-learn</strong>
+<ul>
+<li>\texttt{LogisticRegression(penalty='elasticnet', solver='saga', l1\_ratio=0.5)}</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Elastic Net: l1\_ratio = 1 is pure L1, l1\_ratio = 0 is pure L2</em></p>
 </section>
 
 <section>
-<h2>Choosing\(\lambda\)</h2>
-
-<p>
-<strong>Cross-Validation</strong></p>
+<h2>Choosing \(\lambda\)</h2>
+<strong>Cross-Validation</strong>
 <ul>
-<li><p>Try grid of <span class="math inline">\(\lambda\)</span> values:
-[0.001, 0.01, 0.1, 1, 10, 100]</p></li>
-<li><p>Use k-fold CV to estimate test performance</p></li>
-<li><p>Select <span class="math inline">\(\lambda\)</span> with best CV
-score</p></li>
+<li>Try grid of \(\lambda\) values: [0.001, 0.01, 0.1, 1, 10, 100]</li>
+<li>Use k-fold CV to estimate test performance</li>
+<li>Select \(\lambda\) with best CV score</li>
 </ul>
-<p><strong>scikit-learn Convenience</strong></p>
-<ul>
-<li><p><code>LogisticRegressionCV</code>: automatic <span class="math inline">\(\lambda\)</span> search</p></li>
-<li><p><code>Cs</code>: inverse of <span class="math inline">\(\lambda\)</span> (larger C = less
-regularization)</p></li>
-</ul>
-<p><span style="color: #666666">LogisticRegressionCV does cross-validation
-internally</span></p>
 
+<strong>scikit-learn Convenience</strong>
+<ul>
+<li>\texttt{LogisticRegressionCV}: automatic \(\lambda\) search</li>
+<li>\texttt{Cs}: inverse of \(\lambda\) (larger C = less regularization)</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>LogisticRegressionCV does cross-validation internally</em></p>
 </section>
 
 <section>
 <h2>Algorithm: Gradient Descent</h2>
-
-
-<div class="algorithmic">
-<p><strong>Input</strong>: <span class="math inline">\(\mathbf{X}\)</span>, <span class="math inline">\(\mathbf{y}\)</span>, learning rate <span class="math inline">\(\eta\)</span>, max iterations <span class="math inline">\(T\)</span> Initialize <span class="math inline">\(\mathbf{w} = \mathbf{0}\)</span> <span class="math inline">\(\mathbf{p} = \sigma(\mathbf{X}\mathbf{w})\)</span>
-<span class="math inline">\(\nabla = \frac{1}{n}\mathbf{X}^T(\mathbf{p}
-- \mathbf{y})\)</span> <span class="math inline">\(\mathbf{w} =
-\mathbf{w} - \eta \nabla\)</span> <strong>break</strong>
-<strong>return</strong> <span class="math inline">\(\mathbf{w}\)</span></p>
-</div>
-<p><span style="color: #666666">In practice, use quasi-Newton methods
-(L-BFGS) for faster convergence</span></p>
-
+\begin{algorithmic}[1]
+\STATE <strong>Input</strong>: \(\mathbf{X}\), \(\mathbf{y}\), learning rate \(\eta\), max iterations \(T\)
+\STATE Initialize \(\mathbf{w} = \mathbf{0}\)
+\FOR{\(t = 1\) to \(T\)}
+\STATE \(\mathbf{p} = \sigma(\mathbf{X}\mathbf{w})\)
+\STATE \(\nabla = \frac{1}{n}\mathbf{X}^T(\mathbf{p} - \mathbf{y})\)
+\STATE \(\mathbf{w} = \mathbf{w} - \eta \nabla\)
+\IF{\(\|\nabla\| < \epsilon\)}
+\STATE <strong>break</strong>
+\ENDIF
+\ENDFOR
+\STATE <strong>return</strong> \(\mathbf{w}\)
+\end{algorithmic}
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>In practice, use quasi-Newton methods (L-BFGS) for faster convergence</em></p>
 </section>
 
 <section>
 <h2>scikit-learn Implementation</h2>
-
-<p> <strong>Basic
-Usage</strong></p>
+<strong>Basic Usage</strong>
 <ul>
-<li><p><code>from sklearn.linear_model import LogisticRegression</code></p></li>
-<li><p><code>model = LogisticRegression()</code></p></li>
-<li><p><code>model.fit(X_train, y_train)</code></p></li>
-<li><p><code>y_pred = model.predict(X_test)</code></p></li>
-<li><p><code>y_proba = model.predict_proba(X_test)</code></p></li>
+<li>\texttt{from sklearn.linear\_model import LogisticRegression}</li>
+<li>\texttt{model = LogisticRegression()}</li>
+<li>\texttt{model.fit(X\_train, y\_train)}</li>
+<li>\texttt{y\_pred = model.predict(X\_test)}</li>
+<li>\texttt{y\_proba = model.predict\_proba(X\_test)}</li>
 </ul>
-<p><strong>Key Parameters</strong></p>
-<ul>
-<li><p><code>C</code>: inverse regularization strength
-(default=1.0)</p></li>
-<li><p><code>penalty</code>: ’l1’, ’l2’, ’elasticnet’, ’none’</p></li>
-<li><p><code>solver</code>: ’lbfgs’, ’liblinear’, ’saga’</p></li>
-<li><p><code>class_weight</code>: ’balanced’ for imbalanced
-data</p></li>
-</ul>
-<p><span style="color: #666666">predict_proba returns [P(y=0), P(y=1)] –
-use [:, 1] for positive class</span></p>
 
+<strong>Key Parameters</strong>
+<ul>
+<li>\texttt{C}: inverse regularization strength (default=1.0)</li>
+<li>\texttt{penalty}: 'l1', 'l2', 'elasticnet', 'none'</li>
+<li>\texttt{solver}: 'lbfgs', 'liblinear', 'saga'</li>
+<li>\texttt{class\_weight}: 'balanced' for imbalanced data</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>predict\_proba returns [P(y=0), P(y=1)] -- use [:, 1] for positive class</em></p>
 </section>
 
 <section>
 <h2>Handling Class Imbalance</h2>
-
-<p> <strong>The
-Problem</strong></p>
+<strong>The Problem</strong>
 <ul>
-<li><p>99% negatives, 1% positives</p></li>
-<li><p>Model predicts all negatives: 99% accuracy!</p></li>
+<li>99% negatives, 1% positives</li>
+<li>Model predicts all negatives: 99% accuracy!</li>
 </ul>
-<p><strong>Solutions</strong></p>
-<ul>
-<li><p><strong>Class weights</strong>:
-<code>class_weight=’balanced’</code></p></li>
-<li><p><strong>Oversampling</strong>: SMOTE, random
-oversampling</p></li>
-<li><p><strong>Undersampling</strong>: random undersampling</p></li>
-<li><p><strong>Threshold tuning</strong>: optimize for F1 or business
-metric</p></li>
-</ul>
-<p><strong>Weighted Loss</strong> <span class="math display">\[\mathcal{L}_{\text{weighted}} = -\sum_i
-w_{y_i}[y_i\log p_i + (1-y_i)\log(1-p_i)]\]</span> <span style="color: #666666">class_weight=’balanced’ sets <span class="math inline">\(w_k \propto 1/n_k\)</span></span></p>
 
+<strong>Solutions</strong>
+<ul>
+<li><strong>Class weights</strong>: \texttt{class\_weight='balanced'}</li>
+<li><strong>Oversampling</strong>: SMOTE, random oversampling</li>
+<li><strong>Undersampling</strong>: random undersampling</li>
+<li><strong>Threshold tuning</strong>: optimize for F1 or business metric</li>
+</ul>
+
+<strong>Weighted Loss</strong>
+$$\mathcal{L}_{\text{weighted}} = -\sum_i w_{y_i}[y_i\log p_i + (1-y_i)\log(1-p_i)]$$
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>class\_weight='balanced' sets \(w_k \propto 1/n_k\)</em></p>
 </section>
 
 <section>
 <h2>Feature Engineering Tips</h2>
-
-<p> <strong>For Logistic
-Regression</strong></p>
+<strong>For Logistic Regression</strong>
 <ul>
-<li><p><strong>Standardization</strong>: mean=0, std=1 for all
-features</p></li>
-<li><p><strong>Missing values</strong>: impute or create indicator
-variable</p></li>
-<li><p><strong>Categorical</strong>: one-hot encoding (drop one
-level)</p></li>
-<li><p><strong>Interactions</strong>: <span class="math inline">\(x_1
-\times x_2\)</span> if domain suggests</p></li>
-<li><p><strong>Non-linearity</strong>: binning or polynomial
-features</p></li>
+<li><strong>Standardization</strong>: mean=0, std=1 for all features</li>
+<li><strong>Missing values</strong>: impute or create indicator variable</li>
+<li><strong>Categorical</strong>: one-hot encoding (drop one level)</li>
+<li><strong>Interactions</strong>: \(x_1 \times x_2\) if domain suggests</li>
+<li><strong>Non-linearity</strong>: binning or polynomial features</li>
 </ul>
-<p><strong>Credit Scoring Example</strong></p>
-<ul>
-<li><p>Age: may have non-linear effect (bin into groups)</p></li>
-<li><p>Debt-to-income ratio: interaction of two features</p></li>
-<li><p>Employment length: indicator for &lt; 2 years</p></li>
-</ul>
-<p><span style="color: #666666">Feature engineering often matters more than
-model selection</span></p>
 
+<strong>Credit Scoring Example</strong>
+<ul>
+<li>Age: may have non-linear effect (bin into groups)</li>
+<li>Debt-to-income ratio: interaction of two features</li>
+<li>Employment length: indicator for < 2 years</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Feature engineering often matters more than model selection</em></p>
 </section>
 
 <section>
 <h2>Model Interpretation</h2>
-
-<p> <strong>Coefficient
-Analysis</strong></p>
+<strong>Coefficient Analysis</strong>
 <ul>
-<li><p>Sign: direction of effect</p></li>
-<li><p>Magnitude: strength (after standardization)</p></li>
-<li><p>Odds ratio <span class="math inline">\(e^{w_j}\)</span>:
-multiplicative effect</p></li>
+<li>Sign: direction of effect</li>
+<li>Magnitude: strength (after standardization)</li>
+<li>Odds ratio \(e^{w_j}\): multiplicative effect</li>
 </ul>
-<p><strong>Example Interpretation</strong></p>
-<ul>
-<li><p><span class="math inline">\(w_{\text{income}} = 0.5\)</span>:
-each $1000 income increase multiplies odds of approval by <span class="math inline">\(e^{0.5} = 1.65\)</span></p></li>
-<li><p><span class="math inline">\(w_{\text{debt\_ratio}} =
--1.2\)</span>: each 0.1 increase in debt ratio multiplies odds by <span class="math inline">\(e^{-0.12} = 0.89\)</span> (11% decrease)</p></li>
-</ul>
-<p><span style="color: #666666">This interpretability makes logistic
-regression preferred in regulated industries</span></p>
 
+<strong>Example Interpretation</strong>
+<ul>
+<li>\(w_{\text{income}} = 0.5\): each <br>(1000 income increase multiplies odds of approval by \)e^{0.5} = 1.65$</li>
+<li>\(w_{\text{debt\_ratio}} = -1.2\): each 0.1 increase in debt ratio multiplies odds by \(e^{-0.12} = 0.89\) (11% decrease)</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>This interpretability makes logistic regression preferred in regulated industries</em></p>
 </section>
 
 <section>
 <h2>Solver Selection</h2>
-
-<p> <strong>Available Solvers in
-scikit-learn</strong></p>
+<strong>Available Solvers in scikit-learn</strong>
 <ul>
-<li><p><code>lbfgs</code>: default, works for L2 and no penalty</p></li>
-<li><p><code>liblinear</code>: fast for small data, supports L1</p></li>
-<li><p><code>saga</code>: supports all penalties, works for large
-data</p></li>
-<li><p><code>newton-cg</code>: similar to lbfgs</p></li>
-<li><p><code>sag</code>: stochastic, for very large data</p></li>
+<li>\texttt{lbfgs}: default, works for L2 and no penalty</li>
+<li>\texttt{liblinear}: fast for small data, supports L1</li>
+<li>\texttt{saga}: supports all penalties, works for large data</li>
+<li>\texttt{newton-cg}: similar to lbfgs</li>
+<li>\texttt{sag}: stochastic, for very large data</li>
 </ul>
-<p><strong>Guidelines</strong></p>
-<ul>
-<li><p>L1 penalty: use liblinear or saga</p></li>
-<li><p>Large data: saga or sag</p></li>
-<li><p>Default (L2): lbfgs</p></li>
-</ul>
-<p><span style="color: #666666">solver=’saga’ is the most versatile but may
-be slower for small datasets</span></p>
 
+<strong>Guidelines</strong>
+<ul>
+<li>L1 penalty: use liblinear or saga</li>
+<li>Large data: saga or sag</li>
+<li>Default (L2): lbfgs</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>solver='saga' is the most versatile but may be slower for small datasets</em></p>
 </section>
 
 <section>
 <h2>Convergence Issues</h2>
-
-<p> <strong>Warning: “Convergence
-Warning”</strong></p>
+<strong>Warning: "Convergence Warning"</strong>
 <ul>
-<li><p>Model did not converge in max_iter iterations</p></li>
-<li><p>May mean poor solution</p></li>
+<li>Model did not converge in max\_iter iterations</li>
+<li>May mean poor solution</li>
 </ul>
-<p><strong>Solutions</strong></p>
-<ul>
-<li><p>Increase <code>max_iter</code> (default=100)</p></li>
-<li><p>Standardize features</p></li>
-<li><p>Increase regularization (smaller C)</p></li>
-<li><p>Use different solver</p></li>
-</ul>
-<p><span style="color: #666666">Always check for convergence warnings in
-production code</span></p>
 
+<strong>Solutions</strong>
+<ul>
+<li>Increase \texttt{max\_iter} (default=100)</li>
+<li>Standardize features</li>
+<li>Increase regularization (smaller C)</li>
+<li>Use different solver</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Always check for convergence warnings in production code</em></p>
 </section>
 
 <section>
 <h2>Logistic vs Other Classifiers</h2>
+<strong>Strengths of Logistic Regression</strong>
+<ul>
+<li>Interpretable coefficients</li>
+<li>Well-calibrated probabilities</li>
+<li>Fast training and prediction</li>
+<li>Works well with few samples</li>
+</ul>
 
-<p> <strong>Strengths of
-Logistic Regression</strong></p>
+<strong>Limitations</strong>
 <ul>
-<li><p>Interpretable coefficients</p></li>
-<li><p>Well-calibrated probabilities</p></li>
-<li><p>Fast training and prediction</p></li>
-<li><p>Works well with few samples</p></li>
+<li>Linear decision boundary</li>
+<li>May underfit complex patterns</li>
+<li>Sensitive to outliers (compared to trees)</li>
 </ul>
-<p><strong>Limitations</strong></p>
-<ul>
-<li><p>Linear decision boundary</p></li>
-<li><p>May underfit complex patterns</p></li>
-<li><p>Sensitive to outliers (compared to trees)</p></li>
-</ul>
-<p><strong>When to Choose Alternatives</strong></p>
-<ul>
-<li><p>Complex patterns: Random Forests, Gradient Boosting</p></li>
-<li><p>High-dimensional: SVM with RBF kernel</p></li>
-<li><p>Interpretability not required: Neural Networks</p></li>
-</ul>
-<p><span style="color: #666666">Start with logistic regression as baseline,
-then try more complex models</span></p>
 
+<strong>When to Choose Alternatives</strong>
+<ul>
+<li>Complex patterns: Random Forests, Gradient Boosting</li>
+<li>High-dimensional: SVM with RBF kernel</li>
+<li>Interpretability not required: Neural Networks</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Start with logistic regression as baseline, then try more complex models</em></p>
 </section>
 
 <section>
 <h2>Decision Framework</h2>
-
-
 <div class="center">
-<p><img src="images/L02_Logistic_Regression/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
+<img src="images/L02_Logistic_Regression/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
 </div>
-<p><span style="color: #666666">Logistic regression: first choice for
-binary classification with interpretability</span></p>
-
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Logistic regression: first choice for binary classification with interpretability</em></p>
 </section>
 
 <section>
 <h2>Key Takeaways</h2>
+<strong>Mathematical Foundation</strong>
+<ul>
+<li>Sigmoid function maps linear combination to probability</li>
+<li>Maximum likelihood estimation via gradient descent</li>
+<li>Cross-entropy loss is convex, guaranteed global optimum</li>
+</ul>
 
-<p> <strong>Mathematical
-Foundation</strong></p>
+<strong>Evaluation</strong>
 <ul>
-<li><p>Sigmoid function maps linear combination to probability</p></li>
-<li><p>Maximum likelihood estimation via gradient descent</p></li>
-<li><p>Cross-entropy loss is convex, guaranteed global optimum</p></li>
+<li>Use confusion matrix, precision, recall, F1</li>
+<li>ROC/AUC for balanced data, PR curve for imbalanced</li>
+<li>Calibration matters when using probabilities</li>
 </ul>
-<p><strong>Evaluation</strong></p>
-<ul>
-<li><p>Use confusion matrix, precision, recall, F1</p></li>
-<li><p>ROC/AUC for balanced data, PR curve for imbalanced</p></li>
-<li><p>Calibration matters when using probabilities</p></li>
-</ul>
-<p><strong>Practice</strong></p>
-<ul>
-<li><p>Regularization prevents overfitting</p></li>
-<li><p>Class weights handle imbalance</p></li>
-<li><p>Coefficients are directly interpretable</p></li>
-</ul>
-<p><span style="color: #666666">Logistic regression: simple, fast,
-interpretable, and often competitive</span></p>
 
+<strong>Practice</strong>
+<ul>
+<li>Regularization prevents overfitting</li>
+<li>Class weights handle imbalance</li>
+<li>Coefficients are directly interpretable</li>
+</ul>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Logistic regression: simple, fast, interpretable, and often competitive</em></p>
 </section>
 
 <section>
 <h2>References</h2>
-
-<p> <strong>Textbooks</strong></p>
+<strong>Textbooks</strong>
 <ul>
-<li><p>James et al. (2021). <em>ISLR</em>, Chapter 4:
-Classification</p></li>
-<li><p>Hastie et al. (2009). <em>ESL</em>, Chapter 4: Linear
-Methods</p></li>
-</ul>
-<p><strong>Documentation</strong></p>
-<ul>
-<li><p>scikit-learn: LogisticRegression user guide</p></li>
-<li><p>statsmodels: Logit for statistical inference</p></li>
-</ul>
-<p><strong>Next Lecture</strong></p>
-<ul>
-<li><p>L03: KNN and K-Means</p></li>
-<li><p>From parametric to non-parametric methods</p></li>
+<li>James et al. (2021). <em>ISLR</em>, Chapter 4: Classification</li>
+<li>Hastie et al. (2009). <em>ESL</em>, Chapter 4: Linear Methods</li>
 </ul>
 
+<strong>Documentation</strong>
+<ul>
+<li>scikit-learn: LogisticRegression user guide</li>
+<li>statsmodels: Logit for statistical inference</li>
+</ul>
+
+<strong>Next Lecture</strong>
+<ul>
+<li>L03: KNN and K-Means</li>
+<li>From parametric to non-parametric methods</li>
+</ul>
 </section>
         </div>
 
@@ -803,10 +673,10 @@ Methods</p></li>
         </div>
     </div>
 
-    <!-- PDF Export Button -->
-    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+    <!-- PDF Download Button -->
+    <a href="pdf/L02_deepdive.pdf" class="pdf-export-btn" download title="Download PDF">
         <i class="fas fa-file-pdf"></i> PDF
-    </button>
+    </a>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -852,16 +722,19 @@ Methods</p></li>
             }
         }
 
-        // PDF Export function
-        function exportPDF() {
-            // Open print dialog with PDF-optimized settings
-            const printUrl = window.location.href + '?print-pdf';
-            window.open(printUrl, '_blank');
-        }
-
-        // Check if we're in print mode
-        if (window.location.search.includes('print-pdf')) {
-            document.querySelector('.pdf-export-btn').style.display = 'none';
+        // Hide PDF button if PDF doesn't exist
+        const pdfLink = document.querySelector('.pdf-export-btn');
+        if (pdfLink) {
+            fetch(pdfLink.href, { method: 'HEAD' })
+                .then(response => {
+                    if (!response.ok) {
+                        pdfLink.style.display = 'none';
+                    }
+                })
+                .catch(() => {
+                    // PDF not available, hide button
+                    pdfLink.style.display = 'none';
+                });
         }
 
         Reveal.initialize({
@@ -935,8 +808,8 @@ Methods</p></li>
                                 <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
                                     <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
                                 </li>
-                                <li class="slide-menu-item" onclick="exportPDF();">
-                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                <li class="slide-menu-item" onclick="window.open('pdf/L02_deepdive.pdf', '_blank');">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
                                 </li>
                             </ul>
                         `
