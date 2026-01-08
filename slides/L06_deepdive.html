@@ -24,6 +24,11 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* Additional inline styles */
         .reveal .sourceCode {
@@ -43,16 +48,62 @@
             flex: auto;
             overflow-x: auto;
         }
+
+        /* Spotlight cursor */
+        .spotlight-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+        }
+
+        /* PDF export button */
+        .pdf-export-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--ml-purple, #3333B2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .pdf-export-btn:hover {
+            opacity: 1;
+        }
+
+        /* Hide export button in print mode */
+        @media print {
+            .pdf-export-btn {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide">
-<h1 class="title">L06: Embeddings &amp; RL</h1>
-<p class="subtitle">Deep Dive: Theory, Implementation, and
+            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
+    <div style="color: white; text-align: center;">
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L06: Embeddings & RL</h1>
+        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Deep Dive: Theory, Implementation, and
 Applications</p>
-<p class="author">Methods and Algorithms – MSc Data Science</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <div style="margin-top: 2em;">
+            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
+            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
+        </div>
+    </div>
 </section>
 
 <section>
@@ -74,7 +125,7 @@ vectors</p></li>
 similar vectors</p></li>
 <li class="fragment"><p>Learn from context (distributional hypothesis)</p></li>
 </ul>
-<p><span style="color: gray">“You shall know a word by the company it
+<p><span style="color: #666666">“You shall know a word by the company it
 keeps” – Firth, 1957</span></p>
 
 </section>
@@ -92,7 +143,7 @@ v_{target})}\]</span></p>
 <li class="fragment"><p>For each word, predict surrounding words</p></li>
 <li class="fragment"><p>Update embeddings via gradient descent</p></li>
 </ul>
-<p><span style="color: gray">Skip-gram works well for rare words; CBOW
+<p><span style="color: #666666">Skip-gram works well for rare words; CBOW
 better for frequent words</span></p>
 
 </section>
@@ -102,9 +153,9 @@ better for frequent words</span></p>
 
 
 <div class="center">
-<p><embed data-src="01_word_embedding_space/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L06_Embeddings_RL/01_word_embedding_space.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Finance terms cluster by semantic category
+<p><span style="color: #666666">Finance terms cluster by semantic category
 in embedding space</span></p>
 
 </section>
@@ -126,7 +177,7 @@ in embedding space</span></p>
 <li class="fragment"><p>Vector arithmetic in embedding space</p></li>
 <li class="fragment"><p>Relationships encoded as directions</p></li>
 </ul>
-<p><span style="color: gray">Embeddings capture relational structure,
+<p><span style="color: #666666">Embeddings capture relational structure,
 not just similarity</span></p>
 
 </section>
@@ -142,9 +193,9 @@ not just similarity</span></p>
 <li class="fragment"><p>1 = identical direction, 0 = orthogonal, -1 = opposite</p></li>
 </ul>
 <div class="center">
-<p><embed data-src="02_similarity_heatmap/chart.pdf" style="width:35.0%"/></p>
+<p><img src="images/L06_Embeddings_RL/02_similarity_heatmap.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Cosine similarity ignores magnitude,
+<p><span style="color: #666666">Cosine similarity ignores magnitude,
 focuses on direction</span></p>
 
 </section>
@@ -166,7 +217,7 @@ robust)</p></li>
 <li class="fragment"><p>FinBERT: Pre-trained on financial text</p></li>
 <li class="fragment"><p>BioBERT: Biomedical domain</p></li>
 </ul>
-<p><span style="color: gray">Fine-tuning pre-trained embeddings usually
+<p><span style="color: #666666">Fine-tuning pre-trained embeddings usually
 outperforms training from scratch</span></p>
 
 </section>
@@ -190,7 +241,7 @@ announcements</p></li>
 <li class="fragment"><p>Doc2Vec (paragraph vectors)</p></li>
 <li class="fragment"><p>Sentence-BERT (state-of-the-art)</p></li>
 </ul>
-<p><span style="color: gray">Aggregate word embeddings to represent
+<p><span style="color: #666666">Aggregate word embeddings to represent
 documents</span></p>
 
 </section>
@@ -211,9 +262,9 @@ What agent can do</p></li>
 Feedback signal</p></li>
 </ul>
 <div class="center">
-<p><embed data-src="03_rl_loop/chart.pdf" style="width:40.0%"/></p>
+<p><img src="images/L06_Embeddings_RL/03_rl_loop.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">RL: Learning from interaction, not from
+<p><span style="color: #666666">RL: Learning from interaction, not from
 labeled examples</span></p>
 
 </section>
@@ -234,7 +285,7 @@ function</p></li>
 factor</p></li>
 </ul>
 <p><strong>Markov Property:</strong> <span class="math display">\[P(s_{t+1} | s_t, a_t, s_{t-1}, ...) = P(s_{t+1} |
-s_t, a_t)\]</span> <span style="color: gray">Future depends only on
+s_t, a_t)\]</span> <span style="color: #666666">Future depends only on
 current state, not history</span></p>
 
 </section>
@@ -252,7 +303,7 @@ current state, not history</span></p>
 \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s \right]\]</span></p>
 <p><strong>Q-Function (Action-Value):</strong> <span class="math display">\[Q^\pi(s, a) = \mathbb{E}_\pi \left[
 \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s, A_0 = a \right]\]</span>
-<span style="color: gray">Q-function: expected return starting from
+<span style="color: #666666">Q-function: expected return starting from
 state s, taking action a</span></p>
 
 </section>
@@ -268,7 +319,7 @@ state s, taking action a</span></p>
 <li class="fragment"><p>Value = immediate reward + discounted future value</p></li>
 <li class="fragment"><p>Recursive definition enables dynamic programming</p></li>
 </ul>
-<p><strong>Optimal Policy:</strong> <span class="math display">\[\pi^*(s) = \arg\max_a Q^*(s, a)\]</span> <span style="color: gray">Bellman equation: foundation of all value-based RL
+<p><strong>Optimal Policy:</strong> <span class="math display">\[\pi^*(s) = \arg\max_a Q^*(s, a)\]</span> <span style="color: #666666">Bellman equation: foundation of all value-based RL
 methods</span></p>
 
 </section>
@@ -290,7 +341,7 @@ arbitrarily</p></li>
 <li class="fragment"><p>Update <span class="math inline">\(Q(s, a)\)</span></p></li>
 </ul></li>
 </ol>
-<p><span style="color: gray">Q-learning is off-policy: learns optimal Q
+<p><span style="color: #666666">Q-learning is off-policy: learns optimal Q
 regardless of policy followed</span></p>
 
 </section>
@@ -300,9 +351,9 @@ regardless of policy followed</span></p>
 
 
 <div class="center">
-<p><embed data-src="04_q_learning_grid/chart.pdf" style="width:45.0%"/></p>
+<p><img src="images/L06_Embeddings_RL/04_q_learning_grid.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Arrows show policy; colors show Q-values
+<p><span style="color: #666666">Arrows show policy; colors show Q-values
 (green=high, red=negative)</span></p>
 
 </section>
@@ -329,7 +380,7 @@ Strategy:</strong> <span class="math display">\[a = \begin{cases}
 <li class="fragment"><p>Decay <span class="math inline">\(\epsilon\)</span> over time
 (exploit more)</p></li>
 </ul>
-<p><span style="color: gray">Balance: too much exploration wastes time;
+<p><span style="color: #666666">Balance: too much exploration wastes time;
 too little misses optima</span></p>
 
 </section>
@@ -339,9 +390,9 @@ too little misses optima</span></p>
 
 
 <div class="center">
-<p><embed data-src="05_reward_curves/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L06_Embeddings_RL/05_reward_curves.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Reward improves as agent learns; DQN often
+<p><span style="color: #666666">Reward improves as agent learns; DQN often
 outperforms tabular Q-learning</span></p>
 
 </section>
@@ -365,7 +416,7 @@ return</p></li>
 <li class="fragment"><p>Transaction costs</p></li>
 <li class="fragment"><p>Partial observability</p></li>
 </ul>
-<p><span style="color: gray">RL for trading is active research area; not
+<p><span style="color: #666666">RL for trading is active research area; not
 solved problem</span></p>
 
 </section>
@@ -375,9 +426,9 @@ solved problem</span></p>
 
 
 <div class="center">
-<p><embed data-src="06_policy_viz/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L06_Embeddings_RL/06_policy_viz.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Learned policy: buy when oversold/high
+<p><span style="color: #666666">Learned policy: buy when oversold/high
 momentum, sell when overbought</span></p>
 
 </section>
@@ -396,7 +447,7 @@ stability</p></li>
 <li class="fragment"><p><strong>Function Approximation</strong>: Handle large state
 spaces</p></li>
 </ul>
-<p><span style="color: gray">DQN: breakthrough for RL on Atari games
+<p><span style="color: #666666">DQN: breakthrough for RL on Atari games
 (Mnih et al., 2015)</span></p>
 
 </section>
@@ -415,7 +466,7 @@ J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log
 <li class="fragment"><p>PPO (Proximal Policy Optimization)</p></li>
 <li class="fragment"><p>A3C (Asynchronous Advantage Actor-Critic)</p></li>
 </ul>
-<p><span style="color: gray">Policy gradient: directly optimize policy,
+<p><span style="color: #666666">Policy gradient: directly optimize policy,
 can handle continuous actions</span></p>
 
 </section>
@@ -425,9 +476,9 @@ can handle continuous actions</span></p>
 
 
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:50.0%"/></p>
+<p><img src="images/L06_Embeddings_RL/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Embeddings for text/categorical; RL for
+<p><span style="color: #666666">Embeddings for text/categorical; RL for
 sequential decisions</span></p>
 
 </section>
@@ -479,7 +530,7 @@ sequential decisions</span></p>
 </tbody>
 </table>
 </div>
-<p><span style="color: gray">Both transform complex inputs into
+<p><span style="color: #666666">Both transform complex inputs into
 learnable representations</span></p>
 
 </section>
@@ -503,7 +554,7 @@ Gym)</p></li>
 algorithms</p></li>
 <li class="fragment"><p><code>ray[rllib]</code>: Scalable RL</p></li>
 </ul>
-<p><span style="color: gray">Start with pre-trained embeddings; use
+<p><span style="color: #666666">Start with pre-trained embeddings; use
 stable-baselines3 for RL</span></p>
 
 </section>
@@ -524,7 +575,7 @@ stable-baselines3 for RL</span></p>
 <li class="fragment"><p>Normalize observations</p></li>
 <li class="fragment"><p>Use established environments first (Gym, FinRL)</p></li>
 </ul>
-<p><span style="color: gray">Both domains: start simple, iterate,
+<p><span style="color: #666666">Both domains: start simple, iterate,
 validate thoroughly</span></p>
 
 </section>
@@ -545,7 +596,7 @@ validate thoroughly</span></p>
 <li class="fragment"><p>Applications: trading, portfolio optimization</p></li>
 </ul>
 <p><strong>Key Takeaway:</strong> Different tools for different problems
-<span style="color: gray">Course complete! Apply these methods in your
+<span style="color: #666666">Course complete! Apply these methods in your
 capstone project</span></p>
 
 </section>
@@ -571,7 +622,7 @@ online)</p></li>
 <li class="fragment"><p>Liu et al. (2021). FinRL: Deep RL for Trading</p></li>
 <li class="fragment"><p>Araci (2019). FinBERT</p></li>
 </ul>
-<p><span style="color: gray">Sutton &amp; Barto: the definitive RL
+<p><span style="color: #666666">Sutton &amp; Barto: the definitive RL
 textbook (free at incompleteideas.net)</span></p>
 
 </section>
@@ -584,6 +635,11 @@ textbook (free at incompleteideas.net)</span></p>
             <div class="footer-right"></div>
         </div>
     </div>
+
+    <!-- PDF Export Button -->
+    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+        <i class="fas fa-file-pdf"></i> PDF
+    </button>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -602,6 +658,45 @@ textbook (free at incompleteideas.net)</span></p>
     <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
     <script>
+        // Spotlight functionality
+        let spotlightEnabled = false;
+        let spotlightElement = null;
+
+        function toggleSpotlight() {
+            spotlightEnabled = !spotlightEnabled;
+            if (spotlightEnabled) {
+                spotlightElement = document.createElement('div');
+                spotlightElement.className = 'spotlight-cursor';
+                spotlightElement.style.width = '100px';
+                spotlightElement.style.height = '100px';
+                document.body.appendChild(spotlightElement);
+                document.addEventListener('mousemove', updateSpotlight);
+            } else if (spotlightElement) {
+                document.removeEventListener('mousemove', updateSpotlight);
+                spotlightElement.remove();
+                spotlightElement = null;
+            }
+        }
+
+        function updateSpotlight(e) {
+            if (spotlightElement) {
+                spotlightElement.style.left = e.clientX + 'px';
+                spotlightElement.style.top = e.clientY + 'px';
+            }
+        }
+
+        // PDF Export function
+        function exportPDF() {
+            // Open print dialog with PDF-optimized settings
+            const printUrl = window.location.href + '?print-pdf';
+            window.open(printUrl, '_blank');
+        }
+
+        // Check if we're in print mode
+        if (window.location.search.includes('print-pdf')) {
+            document.querySelector('.pdf-export-btn').style.display = 'none';
+        }
+
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -664,7 +759,22 @@ textbook (free at incompleteideas.net)</span></p>
                 useTextContentForMissingTitles: true,
                 hideMissingTitles: false,
                 markers: true,
-                custom: false,
+                custom: [
+                    {
+                        title: 'Tools',
+                        icon: '<i class="fas fa-tools"></i>',
+                        content: `
+                            <ul class="slide-menu-items">
+                                <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
+                                    <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
+                                </li>
+                                <li class="slide-menu-item" onclick="exportPDF();">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </li>
+                            </ul>
+                        `
+                    }
+                ],
                 themes: [
                     { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
                     { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
@@ -706,6 +816,9 @@ textbook (free at incompleteideas.net)</span></p>
             ]
         });
 
+        // Custom keyboard shortcuts
+        Reveal.addKeyBinding({ keyCode: 76, key: 'L' }, toggleSpotlight);  // L for spotlight
+
         // Update footer with slide number
         Reveal.on('slidechanged', event => {
             const footer = document.querySelector('.slide-footer .footer-right');
@@ -730,6 +843,7 @@ textbook (free at incompleteideas.net)</span></p>
         console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
+        console.log('  L - Spotlight/Laser pointer');
         console.log('  M - Menu');
         console.log('  O - Overview');
         console.log('  F - Fullscreen');

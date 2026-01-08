@@ -24,6 +24,11 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* Additional inline styles */
         .reveal .sourceCode {
@@ -43,15 +48,61 @@
             flex: auto;
             overflow-x: auto;
         }
+
+        /* Spotlight cursor */
+        .spotlight-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+        }
+
+        /* PDF export button */
+        .pdf-export-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--ml-purple, #3333B2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .pdf-export-btn:hover {
+            opacity: 1;
+        }
+
+        /* Hide export button in print mode */
+        @media print {
+            .pdf-export-btn {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide">
-<h1 class="title">L02: Logistic Regression</h1>
-<p class="subtitle">Mathematical Foundations and Implementation</p>
-<p class="author">Methods and Algorithms – MSc Data Science</p>
+            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
+    <div style="color: white; text-align: center;">
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L02: Logistic Regression</h1>
+        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Mathematical Foundations and Implementation</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <div style="margin-top: 2em;">
+            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
+            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
+        </div>
+    </div>
 </section>
 
 <section>
@@ -69,7 +120,7 @@ Problem</strong></p>
 1]\)</span></p></li>
 </ul>
 <p><strong>Solution: The Logistic Function</strong> <span class="math display">\[P(y=1|\mathbf{x}) = \sigma(\mathbf{w}^T\mathbf{x}
-+ b) = \frac{1}{1 + e^{-(\mathbf{w}^T\mathbf{x} + b)}}\]</span> <span style="color: gray">The logistic function is also called the sigmoid
++ b) = \frac{1}{1 + e^{-(\mathbf{w}^T\mathbf{x} + b)}}\]</span> <span style="color: #666666">The logistic function is also called the sigmoid
 function</span></p>
 
 </section>
@@ -79,7 +130,7 @@ function</span></p>
 
 
 <div class="center">
-<p><embed data-src="01_sigmoid_function/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/01_sigmoid_function.png" style="max-width:100%; max-height:500px;"></p>
 </div>
 <p><strong>Key Properties:</strong></p>
 <ul>
@@ -114,7 +165,7 @@ multiplicative effect on odds</p></li>
 \Rightarrow\)</span> each unit increase in income multiplies odds by
 <span class="math inline">\(e^{0.5} \approx 1.65\)</span></p></li>
 </ul>
-<p><span style="color: gray">Log-odds interpretation is key for
+<p><span style="color: #666666">Log-odds interpretation is key for
 regulatory compliance in banking</span></p>
 
 </section>
@@ -129,7 +180,7 @@ likelihood is: <span class="math display">\[L(\mathbf{w}) =
 \prod_{i=1}^{n} p_i^{y_i}(1-p_i)^{1-y_i}\]</span> where <span class="math inline">\(p_i = \sigma(\mathbf{w}^T\mathbf{x}_i +
 b)\)</span></p>
 <p><strong>Log-Likelihood (easier to optimize)</strong> <span class="math display">\[\ell(\mathbf{w}) = \sum_{i=1}^{n} \left[ y_i
-\log(p_i) + (1-y_i)\log(1-p_i) \right]\]</span> <span style="color: gray">Maximize log-likelihood = minimize negative
+\log(p_i) + (1-y_i)\log(1-p_i) \right]\]</span> <span style="color: #666666">Maximize log-likelihood = minimize negative
 log-likelihood (cross-entropy)</span></p>
 
 </section>
@@ -139,11 +190,11 @@ log-likelihood (cross-entropy)</span></p>
 
 
 <div class="center">
-<p><embed data-src="03_log_loss/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/03_log_loss.png" style="max-width:100%; max-height:500px;"></p>
 </div>
 <p><strong>Loss Function</strong> <span class="math display">\[\mathcal{L} =
 -\frac{1}{n}\sum_{i=1}^{n}\left[y_i\log(p_i) +
-(1-y_i)\log(1-p_i)\right]\]</span> <span style="color: gray">Cross-entropy loss is convex in the weights –
+(1-y_i)\log(1-p_i)\right]\]</span> <span style="color: #666666">Cross-entropy loss is convex in the weights –
 guaranteed global optimum</span></p>
 
 </section>
@@ -160,7 +211,7 @@ Form</strong> <span class="math display">\[\nabla_{\mathbf{w}}
 where <span class="math inline">\(\mathbf{p} =
 \sigma(\mathbf{X}\mathbf{w})\)</span></p>
 <p><strong>Key Insight</strong>: Same form as linear regression
-gradient! <span style="color: gray">The elegance of logistic regression:
+gradient! <span style="color: #666666">The elegance of logistic regression:
 gradient has the same form as linear regression</span></p>
 
 </section>
@@ -181,7 +232,7 @@ convergence</p></li>
 <li class="fragment"><p>Convergence: monitor loss, check gradient norm &lt;
 tolerance</p></li>
 </ul>
-<p><span style="color: gray">No closed-form solution like normal
+<p><span style="color: #666666">No closed-form solution like normal
 equation – must use iterative optimization</span></p>
 
 </section>
@@ -191,9 +242,9 @@ equation – must use iterative optimization</span></p>
 
 
 <div class="center">
-<p><embed data-src="02_decision_boundary/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/02_decision_boundary.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><strong>Decision Rule</strong>: Predict <span class="math inline">\(\hat{y} = 1\)</span> if <span class="math inline">\(\mathbf{w}^T\mathbf{x} + b \geq 0\)</span> <span style="color: gray">The decision boundary is always a hyperplane in the
+<p><strong>Decision Rule</strong>: Predict <span class="math inline">\(\hat{y} = 1\)</span> if <span class="math inline">\(\mathbf{w}^T\mathbf{x} + b \geq 0\)</span> <span style="color: #666666">The decision boundary is always a hyperplane in the
 feature space</span></p>
 
 </section>
@@ -221,7 +272,7 @@ feature space</span></p>
 (FP)</p></li>
 <li class="fragment"><p>Use lower threshold, e.g., 0.3</p></li>
 </ul>
-<p><span style="color: gray">Optimal threshold depends on the cost
+<p><span style="color: #666666">Optimal threshold depends on the cost
 matrix of your application</span></p>
 
 </section>
@@ -244,7 +295,7 @@ x_1 x_2]\)</span></p></li>
 <li class="fragment"><p>Risk: overfitting to training data</p></li>
 <li class="fragment"><p>Solution: regularization</p></li>
 </ul>
-<p><span style="color: gray">Logistic regression is linear in
+<p><span style="color: #666666">Logistic regression is linear in
 parameters, but can model non-linear boundaries</span></p>
 
 </section>
@@ -265,7 +316,7 @@ classifiers</p></li>
 <li class="fragment"><p>Single model, probabilities sum to 1</p></li>
 <li class="fragment"><p>Loss: categorical cross-entropy</p></li>
 </ul>
-<p><span style="color: gray">scikit-learn: multi_class=’multinomial’ for
+<p><span style="color: #666666">scikit-learn: multi_class=’multinomial’ for
 true softmax regression</span></p>
 
 </section>
@@ -275,9 +326,9 @@ true softmax regression</span></p>
 
 
 <div class="center">
-<p><embed data-src="06_confusion_matrix/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/06_confusion_matrix.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Always start evaluation by examining the
+<p><span style="color: #666666">Always start evaluation by examining the
 confusion matrix</span></p>
 
 </section>
@@ -303,7 +354,7 @@ positives, how many correct?</p></li>
 <li class="fragment"><p>Imbalanced data: 99% negative class</p></li>
 <li class="fragment"><p>Predicting all negatives gives 99% accuracy!</p></li>
 </ul>
-<p><span style="color: gray">Accuracy is misleading for imbalanced
+<p><span style="color: #666666">Accuracy is misleading for imbalanced
 datasets</span></p>
 
 </section>
@@ -313,7 +364,7 @@ datasets</span></p>
 
 
 <div class="center">
-<p><embed data-src="04_roc_curve/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/04_roc_curve.png" style="max-width:100%; max-height:500px;"></p>
 </div>
 <p><strong>ROC = Receiver Operating Characteristic</strong></p>
 <ul>
@@ -340,7 +391,7 @@ datasets</span></p>
 <li class="fragment"><p>0.6–0.7: Poor</p></li>
 <li class="fragment"><p>0.5–0.6: Fail</p></li>
 </ul>
-<p><span style="color: gray">AUC is threshold-independent – summarizes
+<p><span style="color: #666666">AUC is threshold-independent – summarizes
 performance across all thresholds</span></p>
 
 </section>
@@ -350,9 +401,9 @@ performance across all thresholds</span></p>
 
 
 <div class="center">
-<p><embed data-src="05_precision_recall/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/05_precision_recall.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Use PR curves for imbalanced datasets where
+<p><span style="color: #666666">Use PR curves for imbalanced datasets where
 positive class is rare</span></p>
 
 </section>
@@ -373,7 +424,7 @@ ROC</strong></p>
 <li class="fragment"><p>Positive class is more important</p></li>
 <li class="fragment"><p>High precision required</p></li>
 </ul>
-<p><span style="color: gray">ROC can be overly optimistic with
+<p><span style="color: #666666">ROC can be overly optimistic with
 imbalanced data</span></p>
 
 </section>
@@ -399,7 +450,7 @@ y_i)^2\)</span></p></li>
 <li class="fragment"><p>Naturally well-calibrated (MLE property)</p></li>
 <li class="fragment"><p>Unlike trees/random forests that may need calibration</p></li>
 </ul>
-<p><span style="color: gray">Calibration is crucial when probabilities
+<p><span style="color: #666666">Calibration is crucial when probabilities
 are used for decision-making</span></p>
 
 </section>
@@ -422,7 +473,7 @@ strength (hyperparameter)</p></li>
 <li class="fragment"><p>Larger <span class="math inline">\(\lambda\)</span> = simpler
 model</p></li>
 </ul>
-<p><span style="color: gray">Regularization trades bias for
+<p><span style="color: #666666">Regularization trades bias for
 variance</span></p>
 
 </section>
@@ -443,7 +494,7 @@ variance</span></p>
 <li class="fragment"><p>Some coefficients exactly zero</p></li>
 <li class="fragment"><p>Automatic feature selection</p></li>
 </ul>
-<p><span style="color: gray">L1 for sparse models, L2 when all features
+<p><span style="color: #666666">L1 for sparse models, L2 when all features
 likely relevant</span></p>
 
 </section>
@@ -463,7 +514,7 @@ likely relevant</span></p>
 <ul>
 <li class="fragment"><p><code>LogisticRegression(penalty=’elasticnet’, solver=’saga’, l1_ratio=0.5)</code></p></li>
 </ul>
-<p><span style="color: gray">Elastic Net: l1_ratio = 1 is pure L1,
+<p><span style="color: #666666">Elastic Net: l1_ratio = 1 is pure L1,
 l1_ratio = 0 is pure L2</span></p>
 
 </section>
@@ -486,7 +537,7 @@ score</p></li>
 <li class="fragment"><p><code>Cs</code>: inverse of <span class="math inline">\(\lambda\)</span> (larger C = less
 regularization)</p></li>
 </ul>
-<p><span style="color: gray">LogisticRegressionCV does cross-validation
+<p><span style="color: #666666">LogisticRegressionCV does cross-validation
 internally</span></p>
 
 </section>
@@ -502,7 +553,7 @@ internally</span></p>
 \mathbf{w} - \eta \nabla\)</span> <strong>break</strong>
 <strong>return</strong> <span class="math inline">\(\mathbf{w}\)</span></p>
 </div>
-<p><span style="color: gray">In practice, use quasi-Newton methods
+<p><span style="color: #666666">In practice, use quasi-Newton methods
 (L-BFGS) for faster convergence</span></p>
 
 </section>
@@ -528,7 +579,7 @@ Usage</strong></p>
 <li class="fragment"><p><code>class_weight</code>: ’balanced’ for imbalanced
 data</p></li>
 </ul>
-<p><span style="color: gray">predict_proba returns [P(y=0), P(y=1)] –
+<p><span style="color: #666666">predict_proba returns [P(y=0), P(y=1)] –
 use [:, 1] for positive class</span></p>
 
 </section>
@@ -553,7 +604,7 @@ oversampling</p></li>
 metric</p></li>
 </ul>
 <p><strong>Weighted Loss</strong> <span class="math display">\[\mathcal{L}_{\text{weighted}} = -\sum_i
-w_{y_i}[y_i\log p_i + (1-y_i)\log(1-p_i)]\]</span> <span style="color: gray">class_weight=’balanced’ sets <span class="math inline">\(w_k \propto 1/n_k\)</span></span></p>
+w_{y_i}[y_i\log p_i + (1-y_i)\log(1-p_i)]\]</span> <span style="color: #666666">class_weight=’balanced’ sets <span class="math inline">\(w_k \propto 1/n_k\)</span></span></p>
 
 </section>
 
@@ -580,7 +631,7 @@ features</p></li>
 <li class="fragment"><p>Debt-to-income ratio: interaction of two features</p></li>
 <li class="fragment"><p>Employment length: indicator for &lt; 2 years</p></li>
 </ul>
-<p><span style="color: gray">Feature engineering often matters more than
+<p><span style="color: #666666">Feature engineering often matters more than
 model selection</span></p>
 
 </section>
@@ -603,7 +654,7 @@ each $1000 income increase multiplies odds of approval by <span class="math inli
 <li class="fragment"><p><span class="math inline">\(w_{\text{debt\_ratio}} =
 -1.2\)</span>: each 0.1 increase in debt ratio multiplies odds by <span class="math inline">\(e^{-0.12} = 0.89\)</span> (11% decrease)</p></li>
 </ul>
-<p><span style="color: gray">This interpretability makes logistic
+<p><span style="color: #666666">This interpretability makes logistic
 regression preferred in regulated industries</span></p>
 
 </section>
@@ -627,7 +678,7 @@ data</p></li>
 <li class="fragment"><p>Large data: saga or sag</p></li>
 <li class="fragment"><p>Default (L2): lbfgs</p></li>
 </ul>
-<p><span style="color: gray">solver=’saga’ is the most versatile but may
+<p><span style="color: #666666">solver=’saga’ is the most versatile but may
 be slower for small datasets</span></p>
 
 </section>
@@ -648,7 +699,7 @@ Warning”</strong></p>
 <li class="fragment"><p>Increase regularization (smaller C)</p></li>
 <li class="fragment"><p>Use different solver</p></li>
 </ul>
-<p><span style="color: gray">Always check for convergence warnings in
+<p><span style="color: #666666">Always check for convergence warnings in
 production code</span></p>
 
 </section>
@@ -676,7 +727,7 @@ Logistic Regression</strong></p>
 <li class="fragment"><p>High-dimensional: SVM with RBF kernel</p></li>
 <li class="fragment"><p>Interpretability not required: Neural Networks</p></li>
 </ul>
-<p><span style="color: gray">Start with logistic regression as baseline,
+<p><span style="color: #666666">Start with logistic regression as baseline,
 then try more complex models</span></p>
 
 </section>
@@ -686,9 +737,9 @@ then try more complex models</span></p>
 
 
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L02_Logistic_Regression/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Logistic regression: first choice for
+<p><span style="color: #666666">Logistic regression: first choice for
 binary classification with interpretability</span></p>
 
 </section>
@@ -715,7 +766,7 @@ Foundation</strong></p>
 <li class="fragment"><p>Class weights handle imbalance</p></li>
 <li class="fragment"><p>Coefficients are directly interpretable</p></li>
 </ul>
-<p><span style="color: gray">Logistic regression: simple, fast,
+<p><span style="color: #666666">Logistic regression: simple, fast,
 interpretable, and often competitive</span></p>
 
 </section>
@@ -725,20 +776,20 @@ interpretable, and often competitive</span></p>
 
 <p> <strong>Textbooks</strong></p>
 <ul>
-<li class="fragment"><p>James et al. (2021). <em>ISLR</em>, Chapter 4:
+<li><p>James et al. (2021). <em>ISLR</em>, Chapter 4:
 Classification</p></li>
-<li class="fragment"><p>Hastie et al. (2009). <em>ESL</em>, Chapter 4: Linear
+<li><p>Hastie et al. (2009). <em>ESL</em>, Chapter 4: Linear
 Methods</p></li>
 </ul>
 <p><strong>Documentation</strong></p>
 <ul>
-<li class="fragment"><p>scikit-learn: LogisticRegression user guide</p></li>
-<li class="fragment"><p>statsmodels: Logit for statistical inference</p></li>
+<li><p>scikit-learn: LogisticRegression user guide</p></li>
+<li><p>statsmodels: Logit for statistical inference</p></li>
 </ul>
 <p><strong>Next Lecture</strong></p>
 <ul>
-<li class="fragment"><p>L03: KNN and K-Means</p></li>
-<li class="fragment"><p>From parametric to non-parametric methods</p></li>
+<li><p>L03: KNN and K-Means</p></li>
+<li><p>From parametric to non-parametric methods</p></li>
 </ul>
 
 </section>
@@ -751,6 +802,11 @@ Methods</p></li>
             <div class="footer-right"></div>
         </div>
     </div>
+
+    <!-- PDF Export Button -->
+    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+        <i class="fas fa-file-pdf"></i> PDF
+    </button>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -769,6 +825,45 @@ Methods</p></li>
     <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
     <script>
+        // Spotlight functionality
+        let spotlightEnabled = false;
+        let spotlightElement = null;
+
+        function toggleSpotlight() {
+            spotlightEnabled = !spotlightEnabled;
+            if (spotlightEnabled) {
+                spotlightElement = document.createElement('div');
+                spotlightElement.className = 'spotlight-cursor';
+                spotlightElement.style.width = '100px';
+                spotlightElement.style.height = '100px';
+                document.body.appendChild(spotlightElement);
+                document.addEventListener('mousemove', updateSpotlight);
+            } else if (spotlightElement) {
+                document.removeEventListener('mousemove', updateSpotlight);
+                spotlightElement.remove();
+                spotlightElement = null;
+            }
+        }
+
+        function updateSpotlight(e) {
+            if (spotlightElement) {
+                spotlightElement.style.left = e.clientX + 'px';
+                spotlightElement.style.top = e.clientY + 'px';
+            }
+        }
+
+        // PDF Export function
+        function exportPDF() {
+            // Open print dialog with PDF-optimized settings
+            const printUrl = window.location.href + '?print-pdf';
+            window.open(printUrl, '_blank');
+        }
+
+        // Check if we're in print mode
+        if (window.location.search.includes('print-pdf')) {
+            document.querySelector('.pdf-export-btn').style.display = 'none';
+        }
+
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -831,7 +926,22 @@ Methods</p></li>
                 useTextContentForMissingTitles: true,
                 hideMissingTitles: false,
                 markers: true,
-                custom: false,
+                custom: [
+                    {
+                        title: 'Tools',
+                        icon: '<i class="fas fa-tools"></i>',
+                        content: `
+                            <ul class="slide-menu-items">
+                                <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
+                                    <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
+                                </li>
+                                <li class="slide-menu-item" onclick="exportPDF();">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </li>
+                            </ul>
+                        `
+                    }
+                ],
                 themes: [
                     { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
                     { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
@@ -873,6 +983,9 @@ Methods</p></li>
             ]
         });
 
+        // Custom keyboard shortcuts
+        Reveal.addKeyBinding({ keyCode: 76, key: 'L' }, toggleSpotlight);  // L for spotlight
+
         // Update footer with slide number
         Reveal.on('slidechanged', event => {
             const footer = document.querySelector('.slide-footer .footer-right');
@@ -897,6 +1010,7 @@ Methods</p></li>
         console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
+        console.log('  L - Spotlight/Laser pointer');
         console.log('  M - Menu');
         console.log('  O - Overview');
         console.log('  F - Fullscreen');

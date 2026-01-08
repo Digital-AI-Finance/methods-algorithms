@@ -24,6 +24,11 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* Additional inline styles */
         .reveal .sourceCode {
@@ -43,15 +48,61 @@
             flex: auto;
             overflow-x: auto;
         }
+
+        /* Spotlight cursor */
+        .spotlight-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+        }
+
+        /* PDF export button */
+        .pdf-export-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--ml-purple, #3333B2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .pdf-export-btn:hover {
+            opacity: 1;
+        }
+
+        /* Hide export button in print mode */
+        @media print {
+            .pdf-export-btn {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="title-slide">
-<h1 class="title">L03: KNN &amp; K-Means</h1>
-<p class="subtitle">Mathematical Foundations and Implementation</p>
-<p class="author">Methods and Algorithms – MSc Data Science</p>
+            <section id="title-slide" data-background="linear-gradient(135deg, #3333B2 0%, #0066CC 100%)">
+    <div style="color: white; text-align: center;">
+        <h1 style="color: white; font-size: 2.5em; margin-bottom: 0.3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">L03: KNN & K-Means</h1>
+        <p style="font-size: 1.4em; color: #ADADE0; margin-bottom: 1.5em;">Mathematical Foundations and Implementation</p>
+        <p style="font-size: 1em; color: rgba(255,255,255,0.9);">Methods and Algorithms – MSc Data Science</p>
+        <div style="margin-top: 2em;">
+            <img src="images/qr_wiki.png" alt="QR Code" style="width: 120px; height: 120px; background: white; padding: 8px; border-radius: 8px;" onerror="this.style.display='none'">
+            <p style="font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 0.5em;">Scan for course materials</p>
+        </div>
+    </div>
 </section>
 
 <section>
@@ -70,7 +121,7 @@
 find K nearest training points</p></li>
 <li class="fragment"><p>Return majority class among neighbors</p></li>
 </ol>
-<p><span style="color: gray">Instance-based learning: the training data
+<p><span style="color: #666666">Instance-based learning: the training data
 IS the model</span></p>
 
 </section>
@@ -80,7 +131,7 @@ IS the model</span></p>
 
 
 <div class="center">
-<p><embed data-src="02_distance_metrics/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L03_KNN_KMeans/02_distance_metrics.png" style="max-width:100%; max-height:500px;"></p>
 </div>
 <p><strong>Common Metrics</strong></p>
 <ul>
@@ -114,7 +165,7 @@ outliers</p></li>
 <li class="fragment"><p>Higher <span class="math inline">\(p\)</span>: Sensitive to large
 single differences</p></li>
 </ul>
-<p><span style="color: gray">In high dimensions, all distances become
+<p><span style="color: #666666">In high dimensions, all distances become
 similar (curse of dimensionality)</span></p>
 
 </section>
@@ -124,7 +175,7 @@ similar (curse of dimensionality)</span></p>
 
 
 <div class="center">
-<p><embed data-src="01_knn_boundaries/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L03_KNN_KMeans/01_knn_boundaries.png" style="max-width:100%; max-height:500px;"></p>
 </div>
 <p><strong>Boundary Properties</strong></p>
 <ul>
@@ -154,7 +205,7 @@ where <span class="math inline">\(n\)</span> is training size</p></li>
 <li class="fragment"><p>Cross-validation to find optimal K</p></li>
 </ul>
 <p><strong>Common Choices</strong>: <span class="math inline">\(K \in
-\{3, 5, 7, 11\}\)</span> <span style="color: gray">Small K for complex
+\{3, 5, 7, 11\}\)</span> <span style="color: #666666">Small K for complex
 patterns, larger K for noisy data</span></p>
 
 </section>
@@ -180,7 +231,7 @@ Voting</strong></p>
 <li class="fragment"><p><code>weights=’distance’</code>: inverse distance
 weighting</p></li>
 </ul>
-<p><span style="color: gray">Distance weighting often improves
+<p><span style="color: #666666">Distance weighting often improves
 performance</span></p>
 
 </section>
@@ -204,7 +255,7 @@ Matters</strong></p>
 \frac{x - x_{min}}{x_{max} - x_{min}}\)</span> (range [0,1])</p></li>
 </ul>
 <p><strong>Rule</strong>: Always scale features for distance-based
-methods! <span style="color: gray">StandardScaler for Gaussian-like
+methods! <span style="color: #666666">StandardScaler for Gaussian-like
 features, MinMaxScaler for bounded</span></p>
 
 </section>
@@ -229,7 +280,7 @@ features</p></li>
 <li class="fragment"><p><strong>Use domain knowledge</strong>: select meaningful
 features</p></li>
 </ul>
-<p><span style="color: gray">KNN works best with moderate number of
+<p><span style="color: #666666">KNN works best with moderate number of
 features (&lt;20)</span></p>
 
 </section>
@@ -260,7 +311,7 @@ speed</p></li>
 best</p></li>
 <li class="fragment"><p><code>algorithm=’brute’</code>: force brute force</p></li>
 </ul>
-<p><span style="color: gray">For large datasets: consider approximate
+<p><span style="color: #666666">For large datasets: consider approximate
 methods or trees</span></p>
 
 </section>
@@ -284,7 +335,7 @@ methods or trees</span></p>
 <li class="fragment"><p><code>algorithm</code>: ’auto’, ’ball_tree’, ’kd_tree’,
 ’brute’</p></li>
 </ul>
-<p><span style="color: gray">Also available: KNeighborsRegressor for
+<p><span style="color: #666666">Also available: KNeighborsRegressor for
 regression tasks</span></p>
 
 </section>
@@ -302,7 +353,7 @@ C_k}\|\mathbf{x} - \mu_k\|^2\]</span> where <span class="math inline">\(\mu_k\)<
 <li class="fragment"><p>Centroids are cluster means</p></li>
 <li class="fragment"><p>Iterative refinement until convergence</p></li>
 </ul>
-<p><span style="color: gray">K-Means finds locally optimal solution (not
+<p><span style="color: #666666">K-Means finds locally optimal solution (not
 guaranteed global)</span></p>
 
 </section>
@@ -322,7 +373,7 @@ guaranteed global)</span></p>
 <li class="fragment"><p>Guaranteed to converge (WCSS decreases each iteration)</p></li>
 <li class="fragment"><p>May converge to local optimum</p></li>
 </ul>
-<p><span style="color: gray">Each iteration: <span class="math inline">\(O(nKd)\)</span> where <span class="math inline">\(n\)</span> = samples, <span class="math inline">\(K\)</span> = clusters, <span class="math inline">\(d\)</span> = features</span></p>
+<p><span style="color: #666666">Each iteration: <span class="math inline">\(O(nKd)\)</span> where <span class="math inline">\(n\)</span> = samples, <span class="math inline">\(K\)</span> = clusters, <span class="math inline">\(d\)</span> = features</span></p>
 
 </section>
 
@@ -331,9 +382,9 @@ guaranteed global)</span></p>
 
 
 <div class="center">
-<p><embed data-src="03_kmeans_iteration/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L03_KNN_KMeans/03_kmeans_iteration.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Final state after convergence: points
+<p><span style="color: #666666">Final state after convergence: points
 colored by cluster, X marks centroids</span></p>
 
 </section>
@@ -356,7 +407,7 @@ Initialization</strong></p>
 distance</p></li>
 </ul>
 <p><strong>Result</strong>: Much better starting point, fewer iterations
-<span style="color: gray">K-Means++ gives provably better initialization
+<span style="color: #666666">K-Means++ gives provably better initialization
 with theoretical guarantees</span></p>
 
 </section>
@@ -366,7 +417,7 @@ with theoretical guarantees</span></p>
 
 
 <div class="center">
-<p><embed data-src="04_elbow_method/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L03_KNN_KMeans/04_elbow_method.png" style="max-width:100%; max-height:500px;"></p>
 </div>
 <p><strong>Interpretation</strong>: Look for the “elbow” where WCSS
 stops dropping sharply</p>
@@ -395,7 +446,7 @@ boundary</p></li>
 <li class="fragment"><p><span class="math inline">\(s &lt; 0\)</span>: point may be in
 wrong cluster</p></li>
 </ul>
-<p><span style="color: gray">Average silhouette score summarizes overall
+<p><span style="color: #666666">Average silhouette score summarizes overall
 clustering quality</span></p>
 
 </section>
@@ -405,9 +456,9 @@ clustering quality</span></p>
 
 
 <div class="center">
-<p><embed data-src="05_silhouette/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L03_KNN_KMeans/05_silhouette.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">All clusters should have similar width and
+<p><span style="color: #666666">All clusters should have similar width and
 scores above average line</span></p>
 
 </section>
@@ -417,9 +468,9 @@ scores above average line</span></p>
 
 
 <div class="center">
-<p><embed data-src="06_voronoi/chart.pdf" style="width:55.0%"/></p>
+<p><img src="images/L03_KNN_KMeans/06_voronoi.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">K-Means creates Voronoi tessellation around
+<p><span style="color: #666666">K-Means creates Voronoi tessellation around
 centroids</span></p>
 
 </section>
@@ -441,7 +492,7 @@ Assumes</strong></p>
 <li class="fragment"><p>Different densities</p></li>
 <li class="fragment"><p>Outliers (pull centroids away)</p></li>
 </ul>
-<p><span style="color: gray">Consider DBSCAN or Gaussian Mixture Models
+<p><span style="color: #666666">Consider DBSCAN or Gaussian Mixture Models
 for these cases</span></p>
 
 </section>
@@ -466,7 +517,7 @@ for these cases</span></p>
 <li class="fragment"><p>K-Modes: for categorical data</p></li>
 <li class="fragment"><p>K-Prototypes: mixed continuous and categorical</p></li>
 </ul>
-<p><span style="color: gray">Mini-Batch K-Means: good for &gt;10k
+<p><span style="color: #666666">Mini-Batch K-Means: good for &gt;10k
 samples</span></p>
 
 </section>
@@ -488,7 +539,7 @@ samples</span></p>
 <li class="fragment"><p><code>n_init</code>: number of runs (default 10)</p></li>
 <li class="fragment"><p><code>max_iter</code>: max iterations per run</p></li>
 </ul>
-<p><span style="color: gray">inertia_ attribute gives WCSS after
+<p><span style="color: #666666">inertia_ attribute gives WCSS after
 fitting</span></p>
 
 </section>
@@ -540,7 +591,7 @@ fitting</span></p>
 </tbody>
 </table>
 </div>
-<p><span style="color: gray">The “K” in KNN and K-Means mean completely
+<p><span style="color: #666666">The “K” in KNN and K-Means mean completely
 different things!</span></p>
 
 </section>
@@ -563,7 +614,7 @@ different things!</span></p>
 <li class="fragment"><p>Profile each segment</p></li>
 <li class="fragment"><p>Tailor offerings to segment needs</p></li>
 </ul>
-<p><span style="color: gray">Example segments: High-value frequent,
+<p><span style="color: #666666">Example segments: High-value frequent,
 Dormant, New/Growing, Price-sensitive</span></p>
 
 </section>
@@ -585,7 +636,7 @@ Dormant, New/Growing, Price-sensitive</span></p>
 <li class="fragment"><p>New transaction far from all centroids = anomaly</p></li>
 <li class="fragment"><p>Combined with distance threshold</p></li>
 </ul>
-<p><span style="color: gray">KNN needs labeled fraud examples, K-Means
+<p><span style="color: #666666">KNN needs labeled fraud examples, K-Means
 detects deviation from normal</span></p>
 
 </section>
@@ -607,7 +658,7 @@ detects deviation from normal</span></p>
 <li class="fragment"><p>Clusters are roughly spherical</p></li>
 <li class="fragment"><p>Need fast clustering of large data</p></li>
 </ul>
-<p><span style="color: gray">K-Means often used as preprocessing before
+<p><span style="color: #666666">K-Means often used as preprocessing before
 supervised learning</span></p>
 
 </section>
@@ -617,9 +668,9 @@ supervised learning</span></p>
 
 
 <div class="center">
-<p><embed data-src="07_decision_flowchart/chart.pdf" style="width:60.0%"/></p>
+<p><img src="images/L03_KNN_KMeans/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></p>
 </div>
-<p><span style="color: gray">Start with KNN for classification, K-Means
+<p><span style="color: #666666">Start with KNN for classification, K-Means
 for clustering</span></p>
 
 </section>
@@ -641,7 +692,7 @@ KNN</strong></p>
 <li class="fragment"><p>Soft assignments: Gaussian Mixture Models</p></li>
 <li class="fragment"><p>Non-spherical: spectral clustering</p></li>
 </ul>
-<p><span style="color: gray">DBSCAN automatically determines number of
+<p><span style="color: #666666">DBSCAN automatically determines number of
 clusters</span></p>
 
 </section>
@@ -666,7 +717,7 @@ clusters</span></p>
 <li class="fragment"><p>Feature scaling is critical for both</p></li>
 <li class="fragment"><p>“K” means different things in each algorithm</p></li>
 </ul>
-<p><span style="color: gray">Both are foundational algorithms: simple,
+<p><span style="color: #666666">Both are foundational algorithms: simple,
 interpretable, widely used</span></p>
 
 </section>
@@ -676,19 +727,19 @@ interpretable, widely used</span></p>
 
 <p> <strong>Textbooks</strong></p>
 <ul>
-<li class="fragment"><p>James et al. (2021). <em>ISLR</em>, Chapters 2, 12</p></li>
-<li class="fragment"><p>Hastie et al. (2009). <em>ESL</em>, Chapters 13, 14</p></li>
+<li><p>James et al. (2021). <em>ISLR</em>, Chapters 2, 12</p></li>
+<li><p>Hastie et al. (2009). <em>ESL</em>, Chapters 13, 14</p></li>
 </ul>
 <p><strong>Key Papers</strong></p>
 <ul>
-<li class="fragment"><p>Arthur &amp; Vassilvitskii (2007). K-Means++</p></li>
-<li class="fragment"><p>Cover &amp; Hart (1967). Nearest Neighbor Pattern
+<li><p>Arthur &amp; Vassilvitskii (2007). K-Means++</p></li>
+<li><p>Cover &amp; Hart (1967). Nearest Neighbor Pattern
 Classification</p></li>
 </ul>
 <p><strong>Next Lecture</strong></p>
 <ul>
-<li class="fragment"><p>L04: Random Forests</p></li>
-<li class="fragment"><p>Ensemble methods and feature importance</p></li>
+<li><p>L04: Random Forests</p></li>
+<li><p>Ensemble methods and feature importance</p></li>
 </ul>
 
 </section>
@@ -701,6 +752,11 @@ Classification</p></li>
             <div class="footer-right"></div>
         </div>
     </div>
+
+    <!-- PDF Export Button -->
+    <button class="pdf-export-btn" onclick="exportPDF()" title="Export to PDF">
+        <i class="fas fa-file-pdf"></i> PDF
+    </button>
 
     <!-- Reveal.js core -->
     <script src="https://unpkg.com/reveal.js@4.5.0/dist/reveal.js"></script>
@@ -719,6 +775,45 @@ Classification</p></li>
     <script src="https://unpkg.com/reveal.js-plugins@latest/chalkboard/plugin.js"></script>
 
     <script>
+        // Spotlight functionality
+        let spotlightEnabled = false;
+        let spotlightElement = null;
+
+        function toggleSpotlight() {
+            spotlightEnabled = !spotlightEnabled;
+            if (spotlightEnabled) {
+                spotlightElement = document.createElement('div');
+                spotlightElement.className = 'spotlight-cursor';
+                spotlightElement.style.width = '100px';
+                spotlightElement.style.height = '100px';
+                document.body.appendChild(spotlightElement);
+                document.addEventListener('mousemove', updateSpotlight);
+            } else if (spotlightElement) {
+                document.removeEventListener('mousemove', updateSpotlight);
+                spotlightElement.remove();
+                spotlightElement = null;
+            }
+        }
+
+        function updateSpotlight(e) {
+            if (spotlightElement) {
+                spotlightElement.style.left = e.clientX + 'px';
+                spotlightElement.style.top = e.clientY + 'px';
+            }
+        }
+
+        // PDF Export function
+        function exportPDF() {
+            // Open print dialog with PDF-optimized settings
+            const printUrl = window.location.href + '?print-pdf';
+            window.open(printUrl, '_blank');
+        }
+
+        // Check if we're in print mode
+        if (window.location.search.includes('print-pdf')) {
+            document.querySelector('.pdf-export-btn').style.display = 'none';
+        }
+
         Reveal.initialize({
             // Display settings
             controls: true,
@@ -781,7 +876,22 @@ Classification</p></li>
                 useTextContentForMissingTitles: true,
                 hideMissingTitles: false,
                 markers: true,
-                custom: false,
+                custom: [
+                    {
+                        title: 'Tools',
+                        icon: '<i class="fas fa-tools"></i>',
+                        content: `
+                            <ul class="slide-menu-items">
+                                <li class="slide-menu-item" onclick="toggleSpotlight(); RevealMenu.toggle();">
+                                    <i class="fas fa-bullseye"></i> Toggle Spotlight (L)
+                                </li>
+                                <li class="slide-menu-item" onclick="exportPDF();">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </li>
+                            </ul>
+                        `
+                    }
+                ],
                 themes: [
                     { name: 'ML Theme (Light)', theme: 'css/ml-theme.css' },
                     { name: 'Black', theme: 'https://unpkg.com/reveal.js@4.5.0/dist/theme/black.css' },
@@ -823,6 +933,9 @@ Classification</p></li>
             ]
         });
 
+        // Custom keyboard shortcuts
+        Reveal.addKeyBinding({ keyCode: 76, key: 'L' }, toggleSpotlight);  // L for spotlight
+
         // Update footer with slide number
         Reveal.on('slidechanged', event => {
             const footer = document.querySelector('.slide-footer .footer-right');
@@ -847,6 +960,7 @@ Classification</p></li>
         console.log('  S - Speaker notes');
         console.log('  B - Chalkboard');
         console.log('  C - Canvas (draw on slide)');
+        console.log('  L - Spotlight/Laser pointer');
         console.log('  M - Menu');
         console.log('  O - Overview');
         console.log('  F - Fullscreen');
