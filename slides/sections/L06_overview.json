@@ -1,0 +1,8 @@
+{
+  "sections": [
+    {"name": "Introduction", "slides": [1, 2, 3]},
+    {"name": "Fundamentals", "slides": [4, 5, 6]},
+    {"name": "Applications", "slides": [7, 8]},
+    {"name": "Summary", "slides": [9, 10]}
+  ]
+}
