@@ -115,7 +115,6 @@
 <li>Project data onto these directions</li>
 <li>Reduce dimensions while preserving information</li>
 </ul>
-
 <strong>Key Properties:</strong>
 <ul>
 <li>Linear transformation</li>
@@ -128,79 +127,57 @@
 <section>
 <h2>Mathematical Foundation</h2>
 <strong>Covariance Matrix:</strong>
-\[
-\Sigma = \frac{1}{n-1} X^T X \quad \text{(centered data)}
-\]
-
+=1n-1X^T X(centered data)
 <strong>Eigendecomposition:</strong>
-\[
-\Sigma v = \lambda v
-\]
-where \(v\) = eigenvector (principal direction), \(\lambda\) = eigenvalue (variance)
-
+v =v
+where
+v
+= eigenvector (principal direction),
+= eigenvalue (variance)
 <strong>Projection:</strong>
-\[
-Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
-\]
+Z = X W_kwhereW_k =[v_1, v_2,, v_k]
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Eigenvalues tell us how much variance each component captures</em></p>
 </section>
 
 <section>
 <h2>Variance Explained</h2>
 <strong>Proportion of Variance:</strong>
-\[
-\text{Explained Variance Ratio}_i = \frac{\lambda_i}{\sum_{j=1}^{p} \lambda_j}
-\]
-
+Explained Variance Ratio_i =_i_j=1^p_j
 <strong>Cumulative Variance:</strong>
-\[
-\text{Cumulative}_k = \sum_{i=1}^{k} \frac{\lambda_i}{\sum_{j=1}^{p} \lambda_j}
-\]
-
+Cumulative_k =_i=1^k_i_j=1^p_j
 <strong>Rules of thumb for choosing k:</strong>
 <ul>
-<li>Keep 80-95% of total variance</li>
+<li>Keep 80-95%of total variance</li>
 <li>Use scree plot "elbow" method</li>
-<li>Kaiser criterion: keep components with \(\lambda > 1\)</li>
+<li>Kaiser criterion: keep components with> 1</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Balance dimensionality reduction with information preservation</em></p>
 </section>
 
 <section>
 <h2>Scree Plot</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/01_scree_plot.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/01_scree_plot.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Look for the "elbow" where variance explained drops off</em></p>
 </section>
 
 <section>
 <h2>Principal Components Visualization</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/02_principal_components.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/02_principal_components.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>PC1 captures the dominant trend, PC2 the residual variation</em></p>
 </section>
 
 <section>
 <h2>Reconstruction</h2>
 <strong>From k components back to original space:</strong>
-\[
-\hat{X} = Z W_k^T = X W_k W_k^T
-\]
-
+X= Z W_k^T = X W_k W_k^T
 <strong>Reconstruction Error:</strong>
-\[
-\text{Error} = ||X - \hat{X}||_F^2 = \sum_{i=k+1}^{p} \lambda_i
-\]
+Error= ||X -X||_F^2 =_i=k+1^p_i
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Reconstruction error = sum of discarded eigenvalues</em></p>
 </section>
 
 <section>
 <h2>Reconstruction Error vs Components</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/03_reconstruction.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/03_reconstruction.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Adding more components always reduces error (but diminishing returns)</em></p>
 </section>
 
@@ -212,7 +189,6 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 <li>PC2-3 may capture sector/size factors</li>
 <li>Higher PCs: idiosyncratic risk</li>
 </ul>
-
 <strong>Applications:</strong>
 <ul>
 <li>Risk factor modeling</li>
@@ -232,7 +208,6 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 <li>Discrete or categorical data</li>
 <li>Outliers heavily influence results</li>
 </ul>
-
 <strong>Solutions:</strong>
 <ul>
 <li>Kernel PCA (non-linear)</li>
@@ -250,7 +225,6 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 <li>Optimized for visualization (2D/3D)</li>
 <li>Preserves local neighborhood structure</li>
 </ul>
-
 <strong>Key Idea:</strong>
 <ul>
 <li>Convert distances to probabilities</li>
@@ -264,39 +238,29 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 <section>
 <h2>t-SNE: Mathematical Formulation</h2>
 <strong>High-dimensional similarity:</strong>
-\[
-p_{j|i} = \frac{\exp(-||x_i - x_j||^2 / 2\sigma_i^2)}{\sum_{k \neq i} \exp(-||x_i - x_k||^2 / 2\sigma_i^2)}
-\]
-
+p_j|i=(-||x_i - x_j||^2 / 2_i^2)_ki(-||x_i - x_k||^2 / 2_i^2)
 <strong>Low-dimensional similarity (t-distribution):</strong>
-\[
-q_{ij} = \frac{(1 + ||y_i - y_j||^2)^{-1}}{\sum_{k \neq l} (1 + ||y_k - y_l||^2)^{-1}}
-\]
-
+q_ij=(1 + ||y_i - y_j||^2)^-1_kl(1 + ||y_k - y_l||^2)^-1
 <strong>Objective: Minimize KL divergence</strong>
-\[
-KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
-\]
+KL(P||Q) =_ijp_ijp_ijq_ij
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>t-distribution has heavier tails, allowing better separation in low-D</em></p>
 </section>
 
 <section>
 <h2>Perplexity Parameter</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/04_tsne_perplexity.png" style="max-width:100%; max-height:500px;">
-</div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Perplexity \(\approx\) effective number of neighbors (try 5-50)</em></p>
+<div class="center"><img src="images/L05_PCA_tSNE/04_tsne_perplexity.png" style="max-width:100%; max-height:500px;"></div>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Perplexityeffective number of neighbors (try 5-50)</em></p>
 </section>
 
 <section>
 <h2>Perplexity Guidelines</h2>
-<strong>Perplexity</strong> controls the balance between local and global structure:
+<strong>Perplexity</strong>
+controls the balance between local and global structure:
 <ul>
 <li>Low perplexity (5-10): Focus on very local structure</li>
 <li>Medium perplexity (30-50): Balanced (default)</li>
 <li>High perplexity (100+): More global structure</li>
 </ul>
-
 <strong>Guidelines:</strong>
 <ul>
 <li>Should be smaller than number of points</li>
@@ -313,9 +277,8 @@ KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
 <li>Non-deterministic (run multiple times)</li>
 <li>Cluster sizes are not meaningful</li>
 <li>Distances between clusters are not meaningful</li>
-<li>Slow for large datasets (O(\(n^2\)))</li>
+<li>Slow for large datasets (O(n^2))</li>
 </ul>
-
 <strong>Best Practices:</strong>
 <ul>
 <li>Use PCA first to reduce to 30-50 dims</li>
@@ -328,38 +291,19 @@ KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
 
 <section>
 <h2>Part 4: PCA vs t-SNE</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/05_pca_vs_tsne.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/05_pca_vs_tsne.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>PCA: global structure, linear. t-SNE: local structure, non-linear</em></p>
 </section>
 
 <section>
 <h2>Comparison Table</h2>
-<div class="center">
-\small
-\begin{tabular}{l|cc}
-\toprule
-<strong>Aspect</strong> & <strong>PCA</strong> & <strong>t-SNE</strong> <br>
-\midrule
-Type & Linear & Non-linear <br>
-Speed & Fast \(O(np^2)\) & Slow \(O(n^2)\) <br>
-Deterministic & Yes & No <br>
-Preserves & Global variance & Local neighbors <br>
-Reversible & Yes & No <br>
-Use for ML & Yes (preprocessing) & No <br>
-Visualization & Okay & Excellent <br>
-\bottomrule
-\end{tabular}
-</div>
+<div class="center">l|cc<strong>Aspect</strong>&<strong>PCA</strong>&<strong>t-SNE</strong><br>Type & Linear & Non-linear<br>Speed & FastO(np^2)& SlowO(n^2)<br>Deterministic & Yes & No<br>Preserves & Global variance & Local neighbors<br>Reversible & Yes & No<br>Use for ML & Yes (preprocessing) & No<br>Visualization & Okay & Excellent<br></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Use PCA for preprocessing, t-SNE for visualization only</em></p>
 </section>
 
 <section>
 <h2>Cluster Preservation</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/06_cluster_preservation.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/06_cluster_preservation.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>t-SNE often reveals cluster structure better than PCA</em></p>
 </section>
 
@@ -372,7 +316,6 @@ Visualization & Okay & Excellent <br>
 <li>Need reversibility (reconstruction)</li>
 <li>Speed matters</li>
 </ul>
-
 <strong>Use t-SNE When:</strong>
 <ul>
 <li>Visualizing high-dimensional data</li>
@@ -385,28 +328,22 @@ Visualization & Okay & Excellent <br>
 
 <section>
 <h2>Decision Framework</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Consider purpose: preprocessing (PCA) vs visualization (t-SNE)</em></p>
 </section>
 
 <section>
 <h2>Part 5: Implementation</h2>
 <strong>PCA in scikit-learn:</strong>
-\small
 <ul>
-<li>\texttt{PCA(n\_components=k)}: Keep k components</li>
-<li>\texttt{PCA(n\_components=0.95)}: Keep 95% variance</li>
-<li>\texttt{pca.explained\_variance\_ratio\_}: Variance per component</li>
-<li>\texttt{pca.inverse\_transform()}: Reconstruct original</li>
+<li>PCA(n\_components=k): Keep k components</li>
+<li>PCA(n\_components=0.95): Keep 95%variance</li>
+<li>pca.explained\_variance\_ratio\_: Variance per component</li>
+<li>pca.inverse\_transform(): Reconstruct original</li>
 </ul>
-\normalsize
-
 <strong>t-SNE in scikit-learn:</strong>
-\small
 <ul>
-<li>\texttt{TSNE(n\_components=2, perplexity=30)}</li>
+<li>TSNE(n\_components=2, perplexity=30)</li>
 <li>Always normalize data first</li>
 <li>Consider PCA preprocessing for speed</li>
 </ul>
@@ -422,7 +359,6 @@ Visualization & Okay & Excellent <br>
 <li>Can embed new points (unlike t-SNE)</li>
 <li>Hyperparameters: n\_neighbors, min\_dist</li>
 </ul>
-
 <strong>When to use UMAP:</strong>
 <ul>
 <li>Large datasets (faster than t-SNE)</li>
@@ -440,38 +376,36 @@ Visualization & Okay & Excellent <br>
 <li>Use for preprocessing and feature extraction</li>
 <li>Choose k by variance explained or elbow</li>
 </ul>
-
 <strong>t-SNE:</strong>
 <ul>
 <li>Non-linear, slow, visualization-only</li>
 <li>Excellent for exploring cluster structure</li>
 <li>Don't interpret distances or sizes literally</li>
 </ul>
-
-<strong>Common Pipeline:</strong> Standardize \(\rightarrow\) PCA (30-50) \(\rightarrow\) t-SNE (2D)
+<strong>Common Pipeline:</strong>
+Standardize
+PCA (30-50)
+t-SNE (2D)
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Next: Embeddings and Reinforcement Learning</em></p>
 </section>
 
 <section>
 <h2>References</h2>
-\small
 <strong>Textbooks:</strong>
 <ul>
-<li>James et al. (2021). <em>ISLR</em>, Chapter 12: Unsupervised Learning</li>
-<li>Hastie et al. (2009). <em>ESL</em>, Chapter 14: Unsupervised Learning</li>
+<li>James et al. (2021).<em>ISLR</em>, Chapter 12: Unsupervised Learning</li>
+<li>Hastie et al. (2009).<em>ESL</em>, Chapter 14: Unsupervised Learning</li>
 </ul>
-
 <strong>Original Papers:</strong>
 <ul>
 <li>Pearson (1901). On Lines and Planes of Closest Fit</li>
-<li>van der Maaten &amp; Hinton (2008). Visualizing Data using t-SNE</li>
+<li>van der Maaten&amp;Hinton (2008). Visualizing Data using t-SNE</li>
 <li>McInnes et al. (2018). UMAP</li>
 </ul>
-
 <strong>Documentation:</strong>
 <ul>
-<li>scikit-learn: \texttt{sklearn.decomposition.PCA}</li>
-<li>scikit-learn: \texttt{sklearn.manifold.TSNE}</li>
+<li>scikit-learn:sklearn.decomposition.PCA</li>
+<li>scikit-learn:sklearn.manifold.TSNE</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>t-SNE paper: one of the most influential visualization papers</em></p>
 </section>

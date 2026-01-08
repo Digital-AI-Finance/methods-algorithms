@@ -116,8 +116,8 @@
 <li>Use t-SNE for visualization of high-dimensional data</li>
 <li>Compare linear (PCA) vs non-linear (t-SNE) methods</li>
 </ol>
-
-<strong>Finance Application:</strong> Portfolio risk decomposition, asset clustering
+<strong>Finance Application:</strong>
+Portfolio risk decomposition, asset clustering
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>From many features to meaningful low-dimensional representations</em></p>
 </section>
 
@@ -129,7 +129,6 @@
 <li>Customer data with dozens of features: redundant information</li>
 <li>High dimensions cause sparsity and computational issues</li>
 </ul>
-
 <strong>Solutions</strong>
 <ul>
 <li><strong>PCA</strong>: Linear projection preserving maximum variance</li>
@@ -140,57 +139,43 @@
 
 <section>
 <h2>Scree Plot: Choosing Components</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/01_scree_plot.png" style="max-width:100%; max-height:500px;">
-</div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Choose k components capturing 80-95% of variance, or at the "elbow"</em></p>
+<div class="center"><img src="images/L05_PCA_tSNE/01_scree_plot.png" style="max-width:100%; max-height:500px;"></div>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Choose k components capturing 80-95%of variance, or at the "elbow"</em></p>
 </section>
 
 <section>
 <h2>Principal Components</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/02_principal_components.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/02_principal_components.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Principal components are orthogonal directions of maximum variance</em></p>
 </section>
 
 <section>
 <h2>Reconstruction Error</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/03_reconstruction.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/03_reconstruction.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>More components = lower error, but diminishing returns after elbow</em></p>
 </section>
 
 <section>
 <h2>t-SNE: Perplexity Effect</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/04_tsne_perplexity.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/04_tsne_perplexity.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Perplexity controls local vs global structure preservation (try 5-50)</em></p>
 </section>
 
 <section>
 <h2>PCA vs t-SNE</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/05_pca_vs_tsne.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/05_pca_vs_tsne.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>PCA: linear projections. t-SNE: non-linear manifold unfolding</em></p>
 </section>
 
 <section>
 <h2>Cluster Preservation</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/06_cluster_preservation.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/06_cluster_preservation.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>t-SNE better preserves cluster structure for visualization</em></p>
 </section>
 
 <section>
 <h2>Decision Framework</h2>
-<div class="center">
-<img src="images/L05_PCA_tSNE/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L05_PCA_tSNE/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>PCA for preprocessing/speed, t-SNE for visualization only</em></p>
 </section>
         </div>

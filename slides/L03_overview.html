@@ -116,21 +116,19 @@
 <li>Compare distance metrics and their effects on results</li>
 <li>Distinguish between supervised (KNN) and unsupervised (K-Means)</li>
 </ol>
-
-<strong>Finance Applications:</strong> Customer segmentation, fraud detection
+<strong>Finance Applications:</strong>
+Customer segmentation, fraud detection
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>From parametric models (regression) to instance-based methods</em></p>
 </section>
 
 <section>
 <h2>The Business Problem</h2>
 <strong>Two Distinct Problems</strong>
-
 <strong>1. Classification (Supervised)</strong>
 <ul>
 <li>Given labeled examples: is this transaction fraudulent?</li>
 <li>"Show me similar past transactions and their outcomes"</li>
 </ul>
-
 <strong>2. Clustering (Unsupervised)</strong>
 <ul>
 <li>No labels: what natural customer segments exist?</li>
@@ -141,57 +139,43 @@
 
 <section>
 <h2>KNN: Decision Boundaries</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/01_knn_boundaries.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/01_knn_boundaries.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>KNN creates non-linear, flexible decision boundaries based on local data</em></p>
 </section>
 
 <section>
 <h2>Distance Metrics</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/02_distance_metrics.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/02_distance_metrics.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Choice of metric affects which points are considered "nearest"</em></p>
 </section>
 
 <section>
 <h2>K-Means: The Algorithm</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/03_kmeans_iteration.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/03_kmeans_iteration.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Iteratively assign points and update centroids until convergence</em></p>
 </section>
 
 <section>
 <h2>Choosing K: Elbow Method</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/04_elbow_method.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/04_elbow_method.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Look for the "elbow" where adding clusters gives diminishing returns</em></p>
 </section>
 
 <section>
 <h2>Cluster Quality: Silhouette Analysis</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/05_silhouette.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/05_silhouette.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Silhouette score measures how similar points are to their own cluster</em></p>
 </section>
 
 <section>
 <h2>K-Means Decision Regions</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/06_voronoi.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/06_voronoi.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Each region contains all points closest to one centroid</em></p>
 </section>
 
 <section>
 <h2>Decision Framework</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>KNN for labeled data classification, K-Means for unlabeled clustering</em></p>
 </section>
         </div>

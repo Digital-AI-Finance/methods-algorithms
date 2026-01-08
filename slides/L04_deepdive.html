@@ -115,7 +115,6 @@
 <li>Each node splits data based on a feature threshold</li>
 <li>Leaves contain predictions (class or value)</li>
 </ul>
-
 <strong>Key Questions</strong>
 <ul>
 <li>How to choose the best split?</li>
@@ -127,16 +126,18 @@
 
 <section>
 <h2>Splitting Criteria: Gini Impurity</h2>
-<strong>Gini Impurity</strong> measures class mixture at a node:
-\[
-G = 1 - \sum_{k=1}^{K} p_k^2
-\]
-where \(p_k\) is the proportion of class \(k\) samples.
-
+<strong>Gini Impurity</strong>
+measures class mixture at a node:
+G = 1 -_k=1^Kp_k^2
+where
+p_k
+is the proportion of class
+k
+samples.
 <strong>Properties:</strong>
 <ul>
-<li>\(G = 0\): pure node (all samples same class)</li>
-<li>\(G = 0.5\): maximum impurity for binary classification</li>
+<li>G = 0: pure node (all samples same class)</li>
+<li>G = 0.5: maximum impurity for binary classification</li>
 <li>Lower Gini = better split</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Gini impurity: probability of misclassifying a random sample</em></p>
@@ -144,16 +145,12 @@ where \(p_k\) is the proportion of class \(k\) samples.
 
 <section>
 <h2>Splitting Criteria: Information Gain</h2>
-<strong>Entropy</strong> measures disorder:
-\[
-H = -\sum_{k=1}^{K} p_k \log_2(p_k)
-\]
-
-<strong>Information Gain</strong>:
-\[
-IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
-\]
-
+<strong>Entropy</strong>
+measures disorder:
+H = -_k=1^Kp_k_2(p_k)
+<strong>Information Gain</strong>
+:
+IG = H(parent) -_jn_jnH(child_j)
 <strong>Comparison:</strong>
 <ul>
 <li>Gini: faster to compute, tends to isolate most frequent class</li>
@@ -165,17 +162,14 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Regression Trees: MSE Criterion</h2>
-<strong>For regression</strong>, use Mean Squared Error:
-\[
-\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \bar{y})^2
-\]
-
-<strong>Split quality</strong>:
-\[
-\text{Reduction} = \text{MSE}(\text{parent}) - \sum_{j} \frac{n_j}{n} \text{MSE}(\text{child}_j)
-\]
-
-<strong>Leaf prediction</strong>: mean of samples in leaf
+<strong>For regression</strong>
+, use Mean Squared Error:
+MSE=1n_i=1^n(y_i -y)^2
+<strong>Split quality</strong>
+:
+Reduction=MSE(parent) -_jn_jnMSE(child_j)
+<strong>Leaf prediction</strong>
+: mean of samples in leaf
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Trees can handle both classification and regression tasks</em></p>
 </section>
 
@@ -184,15 +178,13 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 <strong>Recursive Partitioning:</strong>
 <ol>
 <li>Start with all samples at root</li>
-<li>For each feature and threshold:
-    <ul>
+<li>For each feature and threshold:<ul>
 <li>Calculate impurity reduction</li>
 <li>Select split with maximum reduction</li>
 </ul></li>
 <li>Create child nodes with split samples</li>
 <li>Recurse until stopping criterion met</li>
 </ol>
-
 <strong>Stopping Criteria:</strong>
 <ul>
 <li>Maximum depth reached</li>
@@ -204,9 +196,7 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Decision Tree: Fraud Detection Example</h2>
-<div class="center">
-<img src="images/L04_Random_Forests/01_decision_tree.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L04_Random_Forests/01_decision_tree.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Each path through the tree represents a fraud detection rule</em></p>
 </section>
 
@@ -214,11 +204,10 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 <h2>Part 2: Why Ensembles?</h2>
 <strong>Problem with Single Trees:</strong>
 <ul>
-<li>High variance: small data changes \(\rightarrow\) very different trees</li>
+<li>High variance: small data changesvery different trees</li>
 <li>Prone to overfitting</li>
 <li>Unstable predictions</li>
 </ul>
-
 <strong>Ensemble Solution:</strong>
 <ul>
 <li>Train multiple diverse models</li>
@@ -230,15 +219,14 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Bootstrap Sampling</h2>
-<strong>Bootstrap</strong>: sample with replacement from original data
-
+<strong>Bootstrap</strong>
+: sample with replacement from original data
 <strong>Properties:</strong>
 <ul>
-<li>Each sample: same size as original (\(n\) observations)</li>
-<li>Expected unique samples: \(\approx 63.2%\) (probability \(1 - (1-1/n)^n\))</li>
-<li>Remaining \(\sim 37%\): out-of-bag (OOB) samples</li>
+<li>Each sample: same size as original (nobservations)</li>
+<li>Expected unique samples:63.2%(probability1 - (1-1/n)^n)</li>
+<li>Remaining37%: out-of-bag (OOB) samples</li>
 </ul>
-
 <strong>Effect:</strong>
 <ul>
 <li>Each tree sees different data subset</li>
@@ -250,27 +238,24 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Bagging Visualization</h2>
-<div class="center">
-<img src="images/L04_Random_Forests/03_bootstrap.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L04_Random_Forests/03_bootstrap.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Bootstrap Aggregating: train on random samples, aggregate predictions</em></p>
 </section>
 
 <section>
 <h2>Bagging: Mathematical Foundation</h2>
 <strong>Variance Reduction by Averaging</strong>
-
-<p>For \(B\) independent predictions with variance \(\sigma^2\):
-\[
-\text{Var}\left(\frac{1}{B}\sum_{b=1}^{B} \hat{f}_b(x)\right) = \frac{\sigma^2}{B}
-\]</p>
-
-<strong>With correlation \(\rho\)</strong>:
-\[
-\text{Var} = \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2
-\]
-
-<strong>Key insight</strong>: Reduce correlation between trees to maximize variance reduction
+For
+B
+independent predictions with variance
+^2
+:
+Var1B_b=1^Bf_b(x)=^2B
+<strong>With correlation</strong>
+:
+Var=^2 +1-B^2
+<strong>Key insight</strong>
+: Reduce correlation between trees to maximize variance reduction
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Lower correlation between trees = greater ensemble benefit</em></p>
 </section>
 
@@ -281,11 +266,11 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 <li><strong>Bootstrap sampling</strong>: each tree trained on random sample</li>
 <li><strong>Feature randomization</strong>: each split considers random subset</li>
 </ol>
-
-<strong>Feature Subset Size</strong> (at each split):
+<strong>Feature Subset Size</strong>
+(at each split):
 <ul>
-<li>Classification: \(\sqrt{p}\) features (default)</li>
-<li>Regression: \(p/3\) features (default)</li>
+<li>Classification:pfeatures (default)</li>
+<li>Regression:p/3features (default)</li>
 <li>Decorrelates trees more than bagging alone</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Feature randomization: Breiman's key innovation over bagging</em></p>
@@ -293,21 +278,17 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Random Forest Algorithm</h2>
-\small
 <strong>Training:</strong>
 <ol>
-<li>For \(b = 1\) to \(B\) trees:
-    <ul>
-<li>Draw bootstrap sample of size \(n\)</li>
-<li>Grow tree:
-        \begin{itemize}</li>
-<li>At each node, select \(m\) features randomly</li>
-<li>Find best split among \(m\) features</li>
+<li>Forb = 1toBtrees:<ul>
+<li>Draw bootstrap sample of sizen</li>
+<li>Grow tree:<ul>
+<li>At each node, selectmfeatures randomly</li>
+<li>Find best split amongmfeatures</li>
 <li>Split until stopping criterion</li>
-</ul>
-    \end{itemize}</li>
+</ul></li>
+</ul></li>
 </ol>
-
 <strong>Prediction:</strong>
 <ul>
 <li>Classification: majority vote across trees</li>
@@ -318,9 +299,7 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Feature Importance</h2>
-<div class="center">
-<img src="images/L04_Random_Forests/02_feature_importance.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L04_Random_Forests/02_feature_importance.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Mean Decrease in Impurity: sum of impurity reductions from splits on feature</em></p>
 </section>
 
@@ -332,7 +311,6 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 <li>Fast to compute (comes free from training)</li>
 <li>Bias toward high-cardinality features</li>
 </ul>
-
 <strong>2. Permutation Importance:</strong>
 <ul>
 <li>Permute feature values, measure accuracy drop</li>
@@ -344,25 +322,22 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Out-of-Bag Error</h2>
-<div class="center">
-<img src="images/L04_Random_Forests/04_oob_error.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L04_Random_Forests/04_oob_error.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>OOB error: free cross-validation using samples not in bootstrap</em></p>
 </section>
 
 <section>
 <h2>Out-of-Bag Error: How It Works</h2>
-<strong>For each observation \(i\):</strong>
+<strong>For each observationi:</strong>
 <ol>
-<li>Identify trees where \(i\) was OOB (not in bootstrap sample)</li>
+<li>Identify trees whereiwas OOB (not in bootstrap sample)</li>
 <li>Aggregate predictions from only those trees</li>
 <li>Compare to true label</li>
 </ol>
-
 <strong>Benefits:</strong>
 <ul>
 <li>No separate validation set needed</li>
-<li>Uses \(\sim 37%\) of trees per sample</li>
+<li>Uses37%of trees per sample</li>
 <li>Unbiased estimate of generalization error</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>OOB error converges to leave-one-out cross-validation error</em></p>
@@ -370,50 +345,42 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Ensemble Voting</h2>
-<div class="center">
-<img src="images/L04_Random_Forests/05_ensemble_voting.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L04_Random_Forests/05_ensemble_voting.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Classification: majority vote. Regression: average prediction</em></p>
 </section>
 
 <section>
 <h2>Part 4: Bias-Variance Decomposition</h2>
 <strong>Expected Prediction Error:</strong>
-\[
-\mathbb{E}[(y - \hat{f}(x))^2] = \text{Bias}^2 + \text{Variance} + \text{Irreducible Error}
-\]
-
+E(y -f(x))^2=Bias^2 +Variance+Irreducible Error
 <strong>Single Tree:</strong>
 <ul>
 <li>Low bias (can fit complex patterns)</li>
 <li>High variance (sensitive to training data)</li>
 </ul>
-
 <strong>Random Forest:</strong>
 <ul>
 <li>Bias: similar to single tree</li>
-<li>Variance: reduced by \(\approx\) factor of \(1/B\) (with decorrelation)</li>
+<li>Variance: reduced byfactor of1/B(with decorrelation)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Ensembles reduce variance without increasing bias</em></p>
 </section>
 
 <section>
 <h2>Bias-Variance: Visualization</h2>
-<div class="center">
-<img src="images/L04_Random_Forests/06_bias_variance.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L04_Random_Forests/06_bias_variance.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Averaging decorrelated trees dramatically reduces prediction variance</em></p>
 </section>
 
 <section>
 <h2>Hyperparameters: Number of Trees</h2>
-<strong>n\_estimators</strong> (number of trees):
+<strong>n\_estimators</strong>
+(number of trees):
 <ul>
 <li>More trees = lower variance, never overfits</li>
 <li>Diminishing returns after 100-500 trees</li>
 <li>Cost: linear increase in training/prediction time</li>
 </ul>
-
 <strong>Guidelines:</strong>
 <ul>
 <li>Start with 100, increase if OOB error still decreasing</li>
@@ -425,19 +392,20 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Hyperparameters: Tree Complexity</h2>
-<strong>max\_depth</strong>: Maximum tree depth
+<strong>max\_depth</strong>
+: Maximum tree depth
 <ul>
 <li>Deeper = more complex patterns, higher variance</li>
 <li>Default: unlimited (grow full trees)</li>
 </ul>
-
-<strong>min\_samples\_split</strong>: Minimum samples to split
+<strong>min\_samples\_split</strong>
+: Minimum samples to split
 <ul>
 <li>Higher = simpler trees, more regularization</li>
 <li>Default: 2 (full trees)</li>
 </ul>
-
-<strong>min\_samples\_leaf</strong>: Minimum samples in leaf
+<strong>min\_samples\_leaf</strong>
+: Minimum samples in leaf
 <ul>
 <li>Higher = smoother predictions</li>
 <li>Default: 1 (full trees)</li>
@@ -447,21 +415,20 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Hyperparameters: Feature Randomization</h2>
-<strong>max\_features</strong>: Features considered at each split
+<strong>max\_features</strong>
+: Features considered at each split
 <ul>
 <li>Lower = more decorrelated trees, higher bias</li>
 <li>Higher = less decorrelated, lower bias</li>
 </ul>
-
 <strong>Defaults:</strong>
 <ul>
-<li>Classification: \(\sqrt{p}\) (e.g., 10 features \(\rightarrow\) 3)</li>
-<li>Regression: \(p/3\) (e.g., 30 features \(\rightarrow\) 10)</li>
+<li>Classification:p(e.g., 10 features3)</li>
+<li>Regression:p/3(e.g., 30 features10)</li>
 </ul>
-
 <strong>Tuning:</strong>
 <ul>
-<li>Try: \(\sqrt{p}\), \(\log_2(p)\), \(p/3\)</li>
+<li>Try:p,_2(p),p/3</li>
 <li>Cross-validate to find optimal</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Feature randomization is key differentiator from bagged trees</em></p>
@@ -477,7 +444,6 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 <li>Robust to outliers and missing values</li>
 <li>Parallelizable (trees independent)</li>
 </ul>
-
 <strong>Limitations:</strong>
 <ul>
 <li>Less interpretable than single tree</li>
@@ -490,20 +456,7 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 
 <section>
 <h2>Comparison: Random Forest vs. Others</h2>
-<div class="center">
-\small
-\begin{tabular}{l|ccccc}
-\toprule
-<strong>Aspect</strong> & <strong>RF</strong> & <strong>Single Tree</strong> & <strong>Logistic</strong> & <strong>KNN</strong> <br>
-\midrule
-Accuracy & High & Medium & Medium & Medium <br>
-Interpretability & Medium & High & High & Low <br>
-Training Speed & Medium & Fast & Fast & Fast <br>
-Feature Importance & Yes & Yes & Yes & No <br>
-Non-linear & Yes & Yes & No & Yes <br>
-\bottomrule
-\end{tabular}
-</div>
+<div class="center">l|ccccc<strong>Aspect</strong>&<strong>RF</strong>&<strong>Single Tree</strong>&<strong>Logistic</strong>&<strong>KNN</strong><br>Accuracy & High & Medium & Medium & Medium<br>Interpretability & Medium & High & High & Low<br>Training Speed & Medium & Fast & Fast & Fast<br>Feature Importance & Yes & Yes & Yes & No<br>Non-linear & Yes & Yes & No & Yes<br></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>RF trades some interpretability for significant accuracy gains</em></p>
 </section>
 
@@ -516,7 +469,6 @@ Non-linear & Yes & Yes & No & Yes <br>
 <li>Feature importance needed</li>
 <li>Out-of-the-box performance matters</li>
 </ul>
-
 <strong>Consider Alternatives When:</strong>
 <ul>
 <li>Need fully interpretable model (use single tree)</li>
@@ -529,31 +481,25 @@ Non-linear & Yes & Yes & No & Yes <br>
 
 <section>
 <h2>Decision Framework</h2>
-<div class="center">
-<img src="images/L04_Random_Forests/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L04_Random_Forests/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Start with Random Forest; switch if specific constraints require it</em></p>
 </section>
 
 <section>
 <h2>Implementation: scikit-learn</h2>
+t,fragile
 <strong>Classification:</strong>
-\small
-\begin{verbatim}
 from sklearn.ensemble import RandomForestClassifier
 rf = RandomForestClassifier(n_estimators=100, max_features='sqrt',
                             oob_score=True, random_state=42)
 rf.fit(X_train, y_train)
 print(f"OOB Score: {rf.oob_score_:.3f}")
-\end{verbatim}
-\normalsize
-
 <strong>Key Parameters:</strong>
 <ul>
-<li>\texttt{n\_estimators}: number of trees</li>
-<li>\texttt{max\_features}: features per split</li>
-<li>\texttt{oob\_score}: compute OOB error</li>
-<li>\texttt{n\_jobs}: parallel trees (-1 for all cores)</li>
+<li>n\_estimators: number of trees</li>
+<li>max\_features: features per split</li>
+<li>oob\_score: compute OOB error</li>
+<li>n\_jobs: parallel trees (-1 for all cores)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Set random\_state for reproducibility</em></p>
 </section>
@@ -566,7 +512,6 @@ print(f"OOB Score: {rf.oob_score_:.3f}")
 <li>Reduces variance while maintaining low bias</li>
 <li>OOB error provides free cross-validation</li>
 </ul>
-
 <strong>Practical Takeaways:</strong>
 <ul>
 <li>Excellent default for tabular data</li>
@@ -579,22 +524,19 @@ print(f"OOB Score: {rf.oob_score_:.3f}")
 
 <section>
 <h2>References</h2>
-\small
 <strong>Textbooks:</strong>
 <ul>
-<li>James et al. (2021). <em>ISLR</em>, Chapter 8: Tree-Based Methods</li>
-<li>Hastie et al. (2009). <em>ESL</em>, Chapter 15: Random Forests</li>
+<li>James et al. (2021).<em>ISLR</em>, Chapter 8: Tree-Based Methods</li>
+<li>Hastie et al. (2009).<em>ESL</em>, Chapter 15: Random Forests</li>
 </ul>
-
 <strong>Original Papers:</strong>
 <ul>
-<li>Breiman, L. (2001). Random Forests. <em>Machine Learning</em>, 45(1), 5-32.</li>
-<li>Breiman, L. (1996). Bagging Predictors. <em>Machine Learning</em>, 24(2), 123-140.</li>
+<li>Breiman, L. (2001). Random Forests.<em>Machine Learning</em>, 45(1), 5-32.</li>
+<li>Breiman, L. (1996). Bagging Predictors.<em>Machine Learning</em>, 24(2), 123-140.</li>
 </ul>
-
 <strong>Documentation:</strong>
 <ul>
-<li>scikit-learn: \texttt{sklearn.ensemble.RandomForestClassifier}</li>
+<li>scikit-learn:sklearn.ensemble.RandomForestClassifier</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Breiman's 2001 paper: one of the most cited in ML</em></p>
 </section>
