@@ -1,18 +1,18 @@
 """Convert Beamer LaTeX slides to enhanced Reveal.js HTML presentations.
 
 Pipeline:
-1. Custom Python parser converts .tex directly to Reveal.js sections
+1. TexSoup-based parser converts .tex directly to Reveal.js sections
 2. Chart PDFs converted to PNGs for web display
 3. Template injection adds plugins and custom theme
 
-Note: Pandoc is no longer used - custom parser provides better control.
+Uses TexSoup for proper AST-based LaTeX parsing (no Pandoc needed).
 """
 
 import subprocess
 import re
 import shutil
 from pathlib import Path
-from beamer_parser import BeamerParser
+from beamer_parser_v2 import BeamerParserV2 as BeamerParser
 
 # Paths
 PROJECT_ROOT = Path(__file__).parent.parent

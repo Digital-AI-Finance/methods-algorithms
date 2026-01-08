@@ -111,27 +111,24 @@
 <h2>Part 1: Word Embeddings Introduction</h2>
 <strong>The Problem with One-Hot Encoding</strong>
 <ul>
-<li>Vocabulary of 10,000 words \(\rightarrow\) 10,000-dim sparse vectors</li>
+<li>Vocabulary of 10,000 words10,000-dim sparse vectors</li>
 <li>No semantic similarity: "king" and "queen" equally distant from "car"</li>
 <li>Curse of dimensionality</li>
 </ul>
-
 <strong>Solution: Dense Embeddings</strong>
 <ul>
 <li>Map words to dense vectors (50-300 dimensions)</li>
-<li>Similar words \(\rightarrow\) similar vectors</li>
+<li>Similar wordssimilar vectors</li>
 <li>Learn from context (distributional hypothesis)</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>"You shall know a word by the company it keeps" -- Firth, 1957</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>"You shall know a word by the company it keeps" - Firth, 1957</em></p>
 </section>
 
 <section>
 <h2>Word2Vec: Skip-gram</h2>
-<strong>Objective:</strong> Predict context words given target word
-\[
-P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in V} \exp(v_w^T v_{target})}
-\]
-
+<strong>Objective:</strong>
+Predict context words given target word
+P(w_context| w_target) =(v_context^T v_target)_wV(v_w^T v_target)
 <strong>Training:</strong>
 <ul>
 <li>Slide window over text corpus</li>
@@ -143,25 +140,19 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 
 <section>
 <h2>Word Embedding Space</h2>
-<div class="center">
-<img src="images/L06_Embeddings_RL/01_word_embedding_space.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L06_Embeddings_RL/01_word_embedding_space.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Finance terms cluster by semantic category in embedding space</em></p>
 </section>
 
 <section>
 <h2>Word Analogies</h2>
 <strong>Famous Example:</strong>
-\[
-\vec{king} - \vec{man} + \vec{woman} \approx \vec{queen}
-\]
-
+king-man+womanqueen
 <strong>Finance Examples:</strong>
 <ul>
-<li>\(\vec{stock} - \vec{equity} + \vec{debt} \approx \vec{bond}\)</li>
-<li>\(\vec{CEO} - \vec{company} + \vec{country} \approx \vec{president}\)</li>
+<li>stock-equity+debtbond</li>
+<li>CEO-company+countrypresident</li>
 </ul>
-
 <strong>How it works:</strong>
 <ul>
 <li>Vector arithmetic in embedding space</li>
@@ -173,16 +164,12 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 <section>
 <h2>Similarity Measures</h2>
 <strong>Cosine Similarity:</strong>
-\[
-\text{sim}(u, v) = \frac{u \cdot v}{||u|| \cdot ||v||} = \cos(\theta)
-\]
+sim(u, v) =uv||u||||v||=()
 <ul>
-<li>Range: \([-1, 1]\)</li>
+<li>Range:[-1, 1]</li>
 <li>1 = identical direction, 0 = orthogonal, -1 = opposite</li>
 </ul>
-<div class="center">
-<img src="images/L06_Embeddings_RL/02_similarity_heatmap.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L06_Embeddings_RL/02_similarity_heatmap.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Cosine similarity ignores magnitude, focuses on direction</em></p>
 </section>
 
@@ -194,7 +181,6 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 <li><strong>GloVe</strong>: Stanford, trained on Wikipedia + Common Crawl</li>
 <li><strong>FastText</strong>: Facebook, handles subwords (OOV robust)</li>
 </ul>
-
 <strong>Domain-Specific:</strong>
 <ul>
 <li>FinBERT: Pre-trained on financial text</li>
@@ -207,12 +193,11 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 <h2>Embeddings in Finance</h2>
 <strong>Applications:</strong>
 <ul>
-<li><strong>Sentiment Analysis</strong>: News \(\rightarrow\) embedding \(\rightarrow\) positive/negative</li>
+<li><strong>Sentiment Analysis</strong>: Newsembeddingpositive/negative</li>
 <li><strong>Document Similarity</strong>: Find similar SEC filings</li>
 <li><strong>Named Entity Recognition</strong>: Extract company names</li>
 <li><strong>Event Detection</strong>: Identify earnings announcements</li>
 </ul>
-
 <strong>Sentence Embeddings:</strong>
 <ul>
 <li>Average word vectors (simple baseline)</li>
@@ -228,90 +213,71 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 <ul>
 <li><strong>Agent</strong>: Learner/decision-maker</li>
 <li><strong>Environment</strong>: What agent interacts with</li>
-<li><strong>State</strong> \(s\): Current situation</li>
-<li><strong>Action</strong> \(a\): What agent can do</li>
-<li><strong>Reward</strong> \(r\): Feedback signal</li>
+<li><strong>State</strong>s: Current situation</li>
+<li><strong>Action</strong>a: What agent can do</li>
+<li><strong>Reward</strong>r: Feedback signal</li>
 </ul>
-<div class="center">
-<img src="images/L06_Embeddings_RL/03_rl_loop.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L06_Embeddings_RL/03_rl_loop.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>RL: Learning from interaction, not from labeled examples</em></p>
 </section>
 
 <section>
 <h2>Markov Decision Process</h2>
-<strong>MDP Tuple:</strong> \((S, A, P, R, \gamma)\)
+<strong>MDP Tuple:</strong>
+(S, A, P, R,)
 <ul>
-<li>\(S\): Set of states</li>
-<li>\(A\): Set of actions</li>
-<li>\(P(s'|s, a)\): Transition probability</li>
-<li>\(R(s, a, s')\): Reward function</li>
-<li>\(\gamma \in [0,1]\): Discount factor</li>
+<li>S: Set of states</li>
+<li>A: Set of actions</li>
+<li>P(s'|s, a): Transition probability</li>
+<li>R(s, a, s'): Reward function</li>
+<li>[0,1]: Discount factor</li>
 </ul>
-
 <strong>Markov Property:</strong>
-\[
-P(s_{t+1} | s_t, a_t, s_{t-1}, ...) = P(s_{t+1} | s_t, a_t)
-\]
+P(s_t+1| s_t, a_t, s_t-1, ...) = P(s_t+1| s_t, a_t)
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Future depends only on current state, not history</em></p>
 </section>
 
 <section>
 <h2>Policy and Value Functions</h2>
-<strong>Policy:</strong> \(\pi(a|s) = P(A_t = a | S_t = s)\)
+<strong>Policy:</strong>
+(a|s) = P(A_t = a | S_t = s)
 <ul>
 <li>Maps states to action probabilities</li>
-<li>Goal: Find optimal policy \(\pi^*\)</li>
+<li>Goal: Find optimal policy^*</li>
 </ul>
-
 <strong>Value Function:</strong>
-\[
-V^\pi(s) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s \right]
-\]
-
+V^(s) =E__t=0^^t R_t+1| S_0 = s
 <strong>Q-Function (Action-Value):</strong>
-\[
-Q^\pi(s, a) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s, A_0 = a \right]
-\]
+Q^(s, a) =E__t=0^^t R_t+1| S_0 = s, A_0 = a
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Q-function: expected return starting from state s, taking action a</em></p>
 </section>
 
 <section>
 <h2>Bellman Equation</h2>
 <strong>Optimal Q-Function:</strong>
-\[
-Q^*(s, a) = \mathbb{E} \left[ R + \gamma \max_{a'} Q^*(s', a') \right]
-\]
-
+Q^*(s, a) =ER +_a'Q^*(s', a')
 <strong>Interpretation:</strong>
 <ul>
 <li>Value = immediate reward + discounted future value</li>
 <li>Recursive definition enables dynamic programming</li>
 </ul>
-
 <strong>Optimal Policy:</strong>
-\[
-\pi^*(s) = \arg\max_a Q^*(s, a)
-\]
+^*(s) =_a Q^*(s, a)
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Bellman equation: foundation of all value-based RL methods</em></p>
 </section>
 
 <section>
 <h2>Q-Learning Algorithm</h2>
 <strong>Update Rule:</strong>
-\[
-Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
-\]
-
+Q(s, a)Q(s, a) +r +_a'Q(s', a') - Q(s, a)
 <strong>Algorithm:</strong>
 <ol>
-<li>Initialize \(Q(s,a)\) arbitrarily</li>
-<li>For each episode:
-<ul>
-<li>Observe state \(s\)</li>
-<li>Choose action \(a\) (\(\epsilon\)-greedy)</li>
-<li>Execute \(a\), observe \(r\), \(s'\)</li>
-<li>Update \(Q(s, a)\)</li>
+<li>InitializeQ(s,a)arbitrarily</li>
+<li>For each episode:<ul>
+<li>Observe states</li>
+<li>Choose actiona(-greedy)</li>
+<li>Executea, observer,s'</li>
+<li>UpdateQ(s, a)</li>
 </ul></li>
 </ol>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Q-learning is off-policy: learns optimal Q regardless of policy followed</em></p>
@@ -319,9 +285,7 @@ Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s,
 
 <section>
 <h2>Q-Values Visualization</h2>
-<div class="center">
-<img src="images/L06_Embeddings_RL/04_q_learning_grid.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L06_Embeddings_RL/04_q_learning_grid.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Arrows show policy; colors show Q-values (green=high, red=negative)</em></p>
 </section>
 
@@ -332,28 +296,19 @@ Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s,
 <li><strong>Exploit</strong>: Choose best known action (greedy)</li>
 <li><strong>Explore</strong>: Try new actions (discover better options)</li>
 </ul>
-
-<strong>\(\epsilon\)-Greedy Strategy:</strong>
-\[
-a = \begin{cases}
-\arg\max_a Q(s,a) & \text{with probability } 1-\epsilon <br>
-\text{random action} & \text{with probability } \epsilon
-\end{cases}
-\]
-
+<strong>-Greedy Strategy:</strong>
+a =_a Q(s,a) &with probability1-<br>random action&with probability
 <strong>Decay Schedule:</strong>
 <ul>
-<li>Start with high \(\epsilon\) (explore more)</li>
-<li>Decay \(\epsilon\) over time (exploit more)</li>
+<li>Start with high(explore more)</li>
+<li>Decayover time (exploit more)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Balance: too much exploration wastes time; too little misses optima</em></p>
 </section>
 
 <section>
 <h2>Learning Curves</h2>
-<div class="center">
-<img src="images/L06_Embeddings_RL/05_reward_curves.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L06_Embeddings_RL/05_reward_curves.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Reward improves as agent learns; DQN often outperforms tabular Q-learning</em></p>
 </section>
 
@@ -365,7 +320,6 @@ a = \begin{cases}
 <li><strong>Action</strong>: Buy, sell, hold (+ position size)</li>
 <li><strong>Reward</strong>: Profit/loss, risk-adjusted return</li>
 </ul>
-
 <strong>Challenges:</strong>
 <ul>
 <li>Non-stationary environment</li>
@@ -378,19 +332,15 @@ a = \begin{cases}
 
 <section>
 <h2>Trading Policy</h2>
-<div class="center">
-<img src="images/L06_Embeddings_RL/06_policy_viz.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L06_Embeddings_RL/06_policy_viz.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Learned policy: buy when oversold/high momentum, sell when overbought</em></p>
 </section>
 
 <section>
 <h2>Deep Q-Networks (DQN)</h2>
-<strong>Idea</strong>: Use neural network to approximate Q-function
-\[
-Q(s, a; \theta) \approx Q^*(s, a)
-\]
-
+<strong>Idea</strong>
+: Use neural network to approximate Q-function
+Q(s, a;)Q^*(s, a)
 <strong>Key Innovations:</strong>
 <ul>
 <li><strong>Experience Replay</strong>: Store transitions, sample randomly</li>
@@ -403,10 +353,7 @@ Q(s, a; \theta) \approx Q^*(s, a)
 <section>
 <h2>Policy Gradient Methods</h2>
 <strong>Direct Policy Optimization:</strong>
-\[
-\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log \pi_\theta(a|s) \cdot Q^{\pi_\theta}(s, a) \right]
-\]
-
+_J() =E____(a|s)Q^_(s, a)
 <strong>Algorithms:</strong>
 <ul>
 <li>REINFORCE (vanilla policy gradient)</li>
@@ -419,49 +366,30 @@ Q(s, a; \theta) \approx Q^*(s, a)
 
 <section>
 <h2>Part 4: When to Use What</h2>
-<div class="center">
-<img src="images/L06_Embeddings_RL/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L06_Embeddings_RL/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Embeddings for text/categorical; RL for sequential decisions</em></p>
 </section>
 
 <section>
 <h2>Comparison Table</h2>
-<div class="center">
-\small
-\begin{tabular}{l|cc}
-\toprule
-<strong>Aspect</strong> & <strong>Embeddings</strong> & <strong>RL</strong> <br>
-\midrule
-Input & Text, categorical & State sequence <br>
-Output & Dense vectors & Actions/policy <br>
-Learning & Unsupervised/supervised & Trial and error <br>
-Signal & Context (words) & Rewards <br>
-Key challenge & Semantics & Credit assignment <br>
-Finance use & Sentiment & Trading <br>
-\bottomrule
-\end{tabular}
-</div>
+<div class="center">l|cc<strong>Aspect</strong>&<strong>Embeddings</strong>&<strong>RL</strong><br>Input & Text, categorical & State sequence<br>Output & Dense vectors & Actions/policy<br>Learning & Unsupervised/supervised & Trial and error<br>Signal & Context (words) & Rewards<br>Key challenge & Semantics & Credit assignment<br>Finance use & Sentiment & Trading<br></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Both transform complex inputs into learnable representations</em></p>
 </section>
 
 <section>
 <h2>Part 5: Implementation</h2>
+t,fragile
 <strong>Embeddings in Python:</strong>
-\small
 <ul>
-<li>\texttt{gensim.models.Word2Vec}: Train your own</li>
-<li>\texttt{gensim.downloader.load('glove-wiki-gigaword-100')}: Pre-trained</li>
-<li>\texttt{transformers.BertModel}: BERT embeddings</li>
+<li>gensim.models.Word2Vec: Train your own</li>
+<li>gensim.downloader.load('glove-wiki-gigaword-100'): Pre-trained</li>
+<li>transformers.BertModel: BERT embeddings</li>
 </ul>
-\normalsize
-
 <strong>RL Libraries:</strong>
-\small
 <ul>
-<li>\texttt{gymnasium}: Environment interface (formerly OpenAI Gym)</li>
-<li>\texttt{stable-baselines3}: Pre-implemented algorithms</li>
-<li>\texttt{ray[rllib]}: Scalable RL</li>
+<li>gymnasium: Environment interface (formerly OpenAI Gym)</li>
+<li>stable-baselines3: Pre-implemented algorithms</li>
+<li>ray[rllib]: Scalable RL</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Start with pre-trained embeddings; use stable-baselines3 for RL</em></p>
 </section>
@@ -474,7 +402,6 @@ Finance use & Sentiment & Trading <br>
 <li>Check domain match (general vs financial)</li>
 <li>Visualize with t-SNE/UMAP to verify quality</li>
 </ul>
-
 <strong>RL:</strong>
 <ul>
 <li>Start simple (tabular Q-learning before DQN)</li>
@@ -493,41 +420,37 @@ Finance use & Sentiment & Trading <br>
 <li>Capture semantic similarity</li>
 <li>Use pre-trained (Word2Vec, GloVe, BERT)</li>
 </ul>
-
 <strong>Reinforcement Learning:</strong>
 <ul>
 <li>Agent learns from environment interaction</li>
 <li>Q-learning: value-based, tabular or deep (DQN)</li>
 <li>Applications: trading, portfolio optimization</li>
 </ul>
-
-<strong>Key Takeaway:</strong> Different tools for different problems
+<strong>Key Takeaway:</strong>
+Different tools for different problems
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Course complete! Apply these methods in your capstone project</em></p>
 </section>
 
 <section>
 <h2>References</h2>
-\small
 <strong>Embeddings:</strong>
 <ul>
 <li>Mikolov et al. (2013). Word2Vec</li>
 <li>Pennington et al. (2014). GloVe</li>
 <li>Devlin et al. (2019). BERT</li>
 </ul>
-
 <strong>Reinforcement Learning:</strong>
 <ul>
-<li>Sutton &amp; Barto (2018). RL: An Introduction (free online)</li>
+<li>Sutton&amp;Barto (2018). RL: An Introduction (free online)</li>
 <li>Mnih et al. (2015). DQN (Atari)</li>
 <li>Schulman et al. (2017). PPO</li>
 </ul>
-
 <strong>Finance Applications:</strong>
 <ul>
 <li>Liu et al. (2021). FinRL: Deep RL for Trading</li>
 <li>Araci (2019). FinBERT</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Sutton \& Barto: the definitive RL textbook (free at incompleteideas.net)</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Sutton&amp;Barto: the definitive RL textbook (free at incompleteideas.net)</em></p>
 </section>
         </div>
 

@@ -109,188 +109,126 @@
 
 <section>
 <h2>Learning Objectives</h2>
-<p>By the end of this session, you will be able to:</p>
-
+By the end of this session, you will be able to:
 <ol>
-<li><strong>Understand</strong> the ordinary least squares (OLS) framework</li>
-<li><strong>Apply</strong> gradient descent for parameter optimization</li>
-<li><strong>Interpret</strong> regression coefficients in business contexts</li>
+<li><strong>Understand</strong>the ordinary least squares (OLS) framework</li>
+<li><strong>Apply</strong>gradient descent for parameter optimization</li>
+<li><strong>Interpret</strong>regression coefficients in business contexts</li>
 </ol>
-
-<strong>Finance Application:</strong> House price prediction, factor models
-
+<strong>Finance Application:</strong>
+House price prediction, factor models
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Foundation for all supervised learning methods</em></p>
 </section>
 
 <section>
 <h2>The Business Problem</h2>
 <strong>Finance Use Case: Predicting House Prices</strong>
-
 <ul>
 <li>Banks need accurate property valuations for mortgages</li>
 <li>Insurance companies assess property risk</li>
 <li>Investors evaluate real estate portfolios</li>
 </ul>
-
-<strong>The Question:</strong> Given features (size, location, age), what price?
-
+<strong>The Question:</strong>
+Given features (size, location, age), what price?
 <strong>Why Linear Regression?</strong>
-  <ul>
+<ul>
 <li>Interpretable coefficients (price per square meter)</li>
 <li>Fast, well-understood method</li>
 <li>Strong baseline for comparison</li>
 </ul>
-
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Linear regression: the "hello world" of machine learning</em></p>
 </section>
 
 <section>
 <h2>What is Linear Regression?</h2>
-<strong>Core Idea:</strong> Model the relationship between inputs and a continuous output
-
-\[
-    y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
-  \]
-
+<strong>Core Idea:</strong>
+Model the relationship between inputs and a continuous output
+\[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon\]
 <ul>
-<li>\(y\): Target variable (house price)</li>
-<li>\(x_1, \ldots, x_p\): Features (size, bedrooms, age)</li>
-<li>\(\beta_0, \ldots, \beta_p\): Coefficients to learn</li>
-<li>\(\varepsilon\): Random error term</li>
+<li>y: Target variable (house price)</li>
+<li>x_1,, x_p: Features (size, bedrooms, age)</li>
+<li>_0,,_p: Coefficients to learn</li>
+<li>: Random error term</li>
 </ul>
-
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Goal: Find coefficients that minimize prediction error</em></p>
 </section>
 
 <section>
 <h2>The Optimization Problem</h2>
-<strong>Objective:</strong> Minimize the sum of squared errors (SSE)
-
-\[
-    \min_{\boldsymbol{\beta}} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \min_{\boldsymbol{\beta}} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2
-  \]
-
+<strong>Objective:</strong>
+Minimize the sum of squared errors (SSE)
+\[\min_{\boldsymbol{\beta}} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \min_{\boldsymbol{\beta}} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2\]
 <strong>Why Squared Errors?</strong>
-  <ul>
+<ul>
 <li>Penalizes large errors more than small errors</li>
 <li>Differentiable (enables gradient-based optimization)</li>
 <li>Leads to closed-form solution</li>
 </ul>
-
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>This objective function defines "ordinary least squares" (OLS)</em></p>
 </section>
 
 <section>
 <h2>Two Solution Approaches</h2>
-<div class="columns">
-<div class="column"><strong>1. Closed-Form (Normal Equation)</strong>
-      \[
-        \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
-      \]
-
-<span style="color: #2CA02C">Pros:</span>
-      <ul>
+<div class="columns"><div class="column">0.48<strong>1. Closed-Form (Normal Equation)</strong>\[\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}\]<span style="color: #2CA02C">Pros:</span><ul>
 <li>Exact solution</li>
 <li>One computation</li>
-</ul>
-
-<span style="color: #D62728">Cons:</span>
-      <ul>
-<li>Slow for large \(p\)</li>
+</ul><span style="color: #D62728">Cons:</span><ul>
+<li>Slow for largep</li>
 <li>Memory intensive</li>
-</ul></div>
-<div class="column"><strong>2. Gradient Descent</strong>
-      \[
-        \boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \alpha \nabla L(\boldsymbol{\beta}_t)
-      \]
-
-<span style="color: #2CA02C">Pros:</span>
-      <ul>
+</ul></div><div class="column">0.48<strong>2. Gradient Descent</strong>\[\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \alpha \nabla L(\boldsymbol{\beta}_t)\]<span style="color: #2CA02C">Pros:</span><ul>
 <li>Scales to big data</li>
 <li>Memory efficient</li>
-</ul>
-
-<span style="color: #D62728">Cons:</span>
-      <ul>
-<li>Requires tuning \(\alpha\)</li>
+</ul><span style="color: #D62728">Cons:</span><ul>
+<li>Requires tuning</li>
 <li>Iterative process</li>
-</ul></div>
-</div>
-
+</ul></div></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Both methods yield the same solution for OLS</em></p>
 </section>
 
 <section>
 <h2>Interpreting Coefficients</h2>
-<strong>Example:</strong> House price model
-
-\[
-    \text{Price} = 50,000 + 200 \times \text{Size} + 15,000 \times \text{Bedrooms} - 1,000 \times \text{Age}
-  \]
-
+<strong>Example:</strong>
+House price model
+\[\text{Price} = 50,000 + 200 \times \text{Size} + 15,000 \times \text{Bedrooms} - 1,000 \times \text{Age}\]
 <strong>Interpretation:</strong>
-  <ul>
-<li>\(\beta_0 = 50,000\): Base price (all features = 0)</li>
-<li>\(\beta_1 = 200\): Each extra sqm adds <br>(200</li>
-<li>\(\beta_2 = 15,000\): Each bedroom adds <br>)15,000</li>
-<li>\(\beta_3 = -1,000\): Each year of age subtracts \$1,000</li>
+<ul>
+<li>_0 = 50,000: Base price (all features = 0)</li>
+<li>_1 = 200: Each extra sqm adds\$200</li>
+<li>_2 = 15,000: Each bedroom adds\$15,000</li>
+<li>_3 = -1,000: Each year of age subtracts\$1,000</li>
 </ul>
-
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Coefficients show marginal effect, holding others constant</em></p>
 </section>
 
 <section>
 <h2>Model Evaluation</h2>
 <strong>Key Metrics:</strong>
-
 <ul>
-<li><strong>\(R^2\) (Coefficient of Determination):</strong> Variance explained
-    \[
-      R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
-    \]</li>
-<li><strong>RMSE (Root Mean Squared Error):</strong> Prediction accuracy
-    \[
-      \text{RMSE} = \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}
-    \]</li>
+<li><strong>R^2(Coefficient of Determination):</strong>Variance explained\[R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}\]</li>
+<li><strong>RMSE (Root Mean Squared Error):</strong>Prediction accuracy\[\text{RMSE} = \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}\]</li>
 </ul>
-
-<strong>In Practice:</strong> \(R^2 = 0.75\) means model explains 75% of price variance
-
+<strong>In Practice:</strong>
+R^2 = 0.75
+means model explains 75
+%
+of price variance
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Always evaluate on held-out test data</em></p>
 </section>
 
 <section>
 <h2>When to Use Linear Regression</h2>
-<div class="columns">
-<div class="column"><strong>\textcolor{MLGreen</strong>{Use When:}}
-      <ul>
+<div class="columns"><div class="column">0.48<strong><span style="color: #2CA02C">Use When:</span></strong><ul>
 <li>Target is continuous</li>
 <li>Linear relationships expected</li>
 <li>Interpretability matters</li>
 <li>Fast inference needed</li>
-</ul></div>
-<div class="column"><strong>\textcolor{MLRed</strong>{Avoid When:}}
-      <ul>
+</ul></div><div class="column">0.48<strong><span style="color: #D62728">Avoid When:</span></strong><ul>
 <li>Target is categorical</li>
 <li>Strong non-linearities</li>
 <li>High multicollinearity</li>
 <li>Many outliers present</li>
-</ul></div>
-</div>
-
-\begin{table}
-    
-    \small
-    \begin{tabular}{ll}
-      \toprule
-      <strong>Pros</strong> & <strong>Cons</strong> <br>
-      \midrule
-      Interpretable & Assumes linearity <br>
-      Fast training & Sensitive to outliers <br>
-      Well-understood & Limited flexibility <br>
-      \bottomrule
-    \end{tabular}
-  \end{table}
+</ul></div></div>
+ll<strong>Pros</strong>&<strong>Cons</strong><br>Interpretable & Assumes linearity<br>Fast training & Sensitive to outliers<br>Well-understood & Limited flexibility<br>
 </section>
 
 <section>
@@ -300,14 +238,12 @@
 <li>OLS minimizes sum of squared errors</li>
 <li>Solve via normal equation (small data) or gradient descent (big data)</li>
 <li>Coefficients are directly interpretable as marginal effects</li>
-<li>Evaluate using \(R^2\) (variance explained) and RMSE (prediction error)</li>
+<li>Evaluate usingR^2(variance explained) and RMSE (prediction error)</li>
 </ol>
-
-<strong>Next:</strong> Deep dive into mathematics and implementation
-
+<strong>Next:</strong>
+Deep dive into mathematics and implementation
 <strong>References:</strong>
-  <ul>
-<li>\footnotesize</li>
+<ul>
 <li>ISLR Chapter 3: Linear Regression</li>
 <li>ESL Chapter 3: Linear Methods for Regression</li>
 </ul>

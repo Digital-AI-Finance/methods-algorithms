@@ -116,8 +116,8 @@
 <li>Interpret classification metrics (precision, recall, AUC)</li>
 <li>Apply logistic regression for credit scoring decisions</li>
 </ol>
-
-<strong>Finance Application:</strong> Credit default prediction
+<strong>Finance Application:</strong>
+Credit default prediction
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>These objectives span Bloom's levels: Understand, Apply, Analyze</em></p>
 </section>
 
@@ -129,10 +129,9 @@
 <li>Need probability of default, not just yes/no prediction</li>
 <li>Regulatory requirement: interpretable, auditable models</li>
 </ul>
-
 <strong>Why Not Linear Regression?</strong>
 <ul>
-<li>Linear regression can predict values outside [0,1]</li>
+<li>Linear regression can predict values outside[0,1]</li>
 <li>Binary outcomes need probability-based approach</li>
 <li>Logistic regression outputs calibrated probabilities</li>
 </ul>
@@ -146,18 +145,14 @@
 <li>Maps any real number to (0, 1) range</li>
 <li>Smooth, differentiable, interpretable</li>
 </ul>
-<div class="center">
-<img src="images/L02_Logistic_Regression/01_sigmoid_function.png" style="max-width:100%; max-height:500px;">
-</div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>\(\sigma(z) = 1/(1+e^{-z</em></p>)\) transforms linear combination to probability}
+<div class="center"><img src="images/L02_Logistic_Regression/01_sigmoid_function.png" style="max-width:100%; max-height:500px;"></div>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>(z) = 1/(1+e^-z)transforms linear combination to probability</em></p>
 </section>
 
 <section>
 <h2>Decision Boundary</h2>
-<div class="center">
-<img src="images/L02_Logistic_Regression/02_decision_boundary.png" style="max-width:100%; max-height:500px;">
-</div>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The decision boundary is where \(P(y=1|x) = 0.5\), i.e., \(w'x + b = 0\)</em></p>
+<div class="center"><img src="images/L02_Logistic_Regression/02_decision_boundary.png" style="max-width:100%; max-height:500px;"></div>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The decision boundary is whereP(y=1|x) = 0.5, i.e.,w'x + b = 0</em></p>
 </section>
 
 <section>
@@ -167,41 +162,31 @@
 <li>MSE with sigmoid creates non-convex loss landscape</li>
 <li>Cross-entropy is convex, guarantees global optimum</li>
 </ul>
-<div class="center">
-<img src="images/L02_Logistic_Regression/03_log_loss.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L02_Logistic_Regression/03_log_loss.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Heavily penalizes confident wrong predictions</em></p>
 </section>
 
 <section>
 <h2>ROC Curve and AUC</h2>
-<div class="center">
-<img src="images/L02_Logistic_Regression/04_roc_curve.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L02_Logistic_Regression/04_roc_curve.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>AUC = probability that random positive ranks higher than random negative</em></p>
 </section>
 
 <section>
 <h2>Precision-Recall Trade-off</h2>
-<div class="center">
-<img src="images/L02_Logistic_Regression/05_precision_recall.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L02_Logistic_Regression/05_precision_recall.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Use PR curve when classes are imbalanced (common in fraud detection)</em></p>
 </section>
 
 <section>
 <h2>Confusion Matrix: Reading the Results</h2>
-<div class="center">
-<img src="images/L02_Logistic_Regression/06_confusion_matrix.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L02_Logistic_Regression/06_confusion_matrix.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>FP = approve bad loans (costly), FN = reject good customers (lost revenue)</em></p>
 </section>
 
 <section>
 <h2>When to Use Logistic Regression</h2>
-<div class="center">
-<img src="images/L02_Logistic_Regression/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L02_Logistic_Regression/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Key strengths: interpretable coefficients, probability outputs, fast training</em></p>
 </section>
         </div>

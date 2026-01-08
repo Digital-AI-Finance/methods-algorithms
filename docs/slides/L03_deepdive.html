@@ -115,11 +115,10 @@
 <li>Classification by majority vote of K nearest neighbors</li>
 <li>"Lazy" because work is done at prediction time</li>
 </ul>
-
 <strong>The Algorithm</strong>
 <ol>
 <li>Store all training examples</li>
-<li>For new query \(\mathbf{x}\): find K nearest training points</li>
+<li>For new queryx: find K nearest training points</li>
 <li>Return majority class among neighbors</li>
 </ol>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Instance-based learning: the training data IS the model</em></p>
@@ -127,41 +126,35 @@
 
 <section>
 <h2>Distance Metrics</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/02_distance_metrics.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/02_distance_metrics.png" style="max-width:100%; max-height:500px;"></div>
 <strong>Common Metrics</strong>
 <ul>
-<li>Euclidean: \(d = \sqrt{\sum_i(x_i - y_i)^2}\) (straight line)</li>
-<li>Manhattan: \(d = \sum_i|x_i - y_i|\) (city block)</li>
+<li>Euclidean:d =_i(x_i - y_i)^2(straight line)</li>
+<li>Manhattan:d =_i|x_i - y_i|(city block)</li>
 </ul>
 </section>
 
 <section>
 <h2>Distance Metrics: Minkowski Family</h2>
 <strong>Minkowski Distance</strong>
-$$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i - y_i|^p\right)^{1/p}$$
-
+d_p(x,y) =_i=1^n|x_i - y_i|^p^1/p
 <ul>
-<li>\(p=1\): Manhattan (L1)</li>
-<li>\(p=2\): Euclidean (L2)</li>
-<li>\(p=\infty\): Chebyshev (max absolute difference)</li>
+<li>p=1: Manhattan (L1)</li>
+<li>p=2: Euclidean (L2)</li>
+<li>p=: Chebyshev (max absolute difference)</li>
 </ul>
-
 <strong>Choosing p</strong>
 <ul>
-<li>\(p=2\): Default, works well in most cases</li>
-<li>\(p=1\): More robust to outliers</li>
-<li>Higher \(p\): Sensitive to large single differences</li>
+<li>p=2: Default, works well in most cases</li>
+<li>p=1: More robust to outliers</li>
+<li>Higherp: Sensitive to large single differences</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>In high dimensions, all distances become similar (curse of dimensionality)</em></p>
 </section>
 
 <section>
 <h2>KNN Decision Boundaries</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/01_knn_boundaries.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/01_knn_boundaries.png" style="max-width:100%; max-height:500px;"></div>
 <strong>Boundary Properties</strong>
 <ul>
 <li>Non-linear, locally adaptive</li>
@@ -174,18 +167,18 @@ $$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i - y_i|^p\right)^{1/p}$$
 <h2>Choosing K</h2>
 <strong>The Bias-Variance Trade-off</strong>
 <ul>
-<li>\(K=1\): High variance, low bias (very flexible)</li>
-<li>\(K=n\): High bias, low variance (always predicts majority class)</li>
+<li>K=1: High variance, low bias (very flexible)</li>
+<li>K=n: High bias, low variance (always predicts majority class)</li>
 </ul>
-
 <strong>Practical Guidelines</strong>
 <ul>
-<li>Start with \(K = \sqrt{n}\) where \(n\) is training size</li>
+<li>Start withK =nwherenis training size</li>
 <li>Use odd K for binary classification (avoid ties)</li>
 <li>Cross-validation to find optimal K</li>
 </ul>
-
-<strong>Common Choices</strong>: \(K \in \{3, 5, 7, 11\}\)
+<strong>Common Choices</strong>
+:
+K\{3, 5, 7, 11\}
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Small K for complex patterns, larger K for noisy data</em></p>
 </section>
 
@@ -196,18 +189,16 @@ $$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i - y_i|^p\right)^{1/p}$$
 <li>All K neighbors have equal influence</li>
 <li>A distant neighbor counts as much as closest neighbor</li>
 </ul>
-
 <strong>Solution: Distance Weighting</strong>
-$$w_i = \frac{1}{d(\mathbf{x}, \mathbf{x}_i)^2}$$
+w_i =1d(x,x_i)^2
 <ul>
 <li>Closer neighbors get higher weight</li>
 <li>Reduces sensitivity to K choice</li>
 </ul>
-
 <strong>In scikit-learn</strong>
 <ul>
-<li>\texttt{weights='uniform'}: equal weights (default)</li>
-<li>\texttt{weights='distance'}: inverse distance weighting</li>
+<li>weights='uniform': equal weights (default)</li>
+<li>weights='distance': inverse distance weighting</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Distance weighting often improves performance</em></p>
 </section>
@@ -215,35 +206,31 @@ $$w_i = \frac{1}{d(\mathbf{x}, \mathbf{x}_i)^2}$$
 <section>
 <h2>Feature Scaling for KNN</h2>
 <strong>Why Scaling Matters</strong>
-
-<p>Without scaling:
+Without scaling:
 <ul>
 <li>Income: ranges 20,000-200,000</li>
 <li>Age: ranges 20-80</li>
 <li>Distance dominated by income (larger scale)!</li>
-</ul></p>
-
+</ul>
 <strong>Scaling Methods</strong>
 <ul>
-<li><strong>Standardization</strong>: \(z = \frac{x - \mu}{\sigma}\) (mean=0, std=1)</li>
-<li><strong>Min-Max</strong>: \(x' = \frac{x - x_{min}}{x_{max} - x_{min}}\) (range [0,1])</li>
+<li><strong>Standardization</strong>:z =x -(mean=0, std=1)</li>
+<li><strong>Min-Max</strong>:x' =x - x_minx_max- x_min(range[0,1])</li>
 </ul>
-
-<strong>Rule</strong>: Always scale features for distance-based methods!
+<strong>Rule</strong>
+: Always scale features for distance-based methods!
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>StandardScaler for Gaussian-like features, MinMaxScaler for bounded</em></p>
 </section>
 
 <section>
 <h2>KNN: Curse of Dimensionality</h2>
 <strong>The Problem</strong>
-
-<p>In high dimensions:
+In high dimensions:
 <ul>
 <li>All points become approximately equidistant</li>
 <li>"Nearest neighbor" becomes meaningless</li>
 <li>Exponentially more data needed</li>
-</ul></p>
-
+</ul>
 <strong>Solutions</strong>
 <ul>
 <li><strong>Dimensionality reduction</strong>: PCA before KNN</li>
@@ -257,21 +244,19 @@ $$w_i = \frac{1}{d(\mathbf{x}, \mathbf{x}_i)^2}$$
 <h2>KNN: Computational Considerations</h2>
 <strong>Time Complexity</strong>
 <ul>
-<li>Training: \(O(1)\) - just store data!</li>
-<li>Prediction: \(O(nd)\) for brute force (\(n\) samples, \(d\) features)</li>
+<li>Training:O(1)- just store data!</li>
+<li>Prediction:O(nd)for brute force (nsamples,dfeatures)</li>
 </ul>
-
 <strong>Acceleration Techniques</strong>
 <ul>
-<li><strong>KD-Tree</strong>: \(O(d \log n)\) average for low \(d\)</li>
+<li><strong>KD-Tree</strong>:O(dn)average for lowd</li>
 <li><strong>Ball Tree</strong>: Works better in higher dimensions</li>
 <li><strong>Approximate NN</strong>: Trade accuracy for speed</li>
 </ul>
-
 <strong>In scikit-learn</strong>
 <ul>
-<li>\texttt{algorithm='auto'}: automatically chooses best</li>
-<li>\texttt{algorithm='brute'}: force brute force</li>
+<li>algorithm='auto': automatically chooses best</li>
+<li>algorithm='brute': force brute force</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>For large datasets: consider approximate methods or trees</em></p>
 </section>
@@ -280,30 +265,36 @@ $$w_i = \frac{1}{d(\mathbf{x}, \mathbf{x}_i)^2}$$
 <h2>KNN: scikit-learn Implementation</h2>
 <strong>Classification</strong>
 <ul>
-<li>\texttt{from sklearn.neighbors import KNeighborsClassifier}</li>
-<li>\texttt{knn = KNeighborsClassifier(n\_neighbors=5)}</li>
-<li>\texttt{knn.fit(X\_train, y\_train)}</li>
-<li>\texttt{y\_pred = knn.predict(X\_test)}</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>knn = KNeighborsClassifier(n\_neighbors=5)</li>
+<li>knn.fit(X\_train, y\_train)</li>
+<li>y\_pred = knn.predict(X\_test)</li>
 </ul>
-
 <strong>Key Parameters</strong>
 <ul>
-<li>\texttt{n\_neighbors}: K value</li>
-<li>\texttt{weights}: 'uniform' or 'distance'</li>
-<li>\texttt{metric}: 'euclidean', 'manhattan', etc.</li>
-<li>\texttt{algorithm}: 'auto', 'ball\_tree', 'kd\_tree', 'brute'</li>
+<li>n\_neighbors: K value</li>
+<li>weights: 'uniform' or 'distance'</li>
+<li>metric: 'euclidean', 'manhattan', etc.</li>
+<li>algorithm: 'auto', 'ball\_tree', 'kd\_tree', 'brute'</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Also available: KNeighborsRegressor for regression tasks</em></p>
 </section>
 
 <section>
 <h2>K-Means: The Idea</h2>
-<strong>Goal</strong>: Partition \(n\) points into \(K\) clusters
-
-<strong>Objective</strong>: Minimize within-cluster sum of squares (WCSS)
-$$\sum_{k=1}^{K}\sum_{\mathbf{x} \in C_k}\|\mathbf{x} - \mu_k\|^2$$
-where \(\mu_k\) is the centroid of cluster \(C_k\)
-
+<strong>Goal</strong>
+: Partition
+n
+points into
+K
+clusters
+<strong>Objective</strong>
+: Minimize within-cluster sum of squares (WCSS)
+_k=1^K_xC_k\|x-_k\|^2
+where
+_k
+is the centroid of cluster
+C_k
 <strong>Key Insight</strong>
 <ul>
 <li>Each point assigned to nearest centroid</li>
@@ -315,29 +306,18 @@ where \(\mu_k\) is the centroid of cluster \(C_k\)
 
 <section>
 <h2>K-Means Algorithm</h2>
-\begin{algorithmic}[1]
-\STATE <strong>Input</strong>: Data \(\mathbf{X}\), number of clusters \(K\)
-\STATE Initialize \(K\) centroids randomly
-\REPEAT
-\STATE <strong>Assignment</strong>: assign each point to nearest centroid
-\STATE <strong>Update</strong>: recompute centroids as cluster means
-\UNTIL{centroids don't change (or max iterations)}
-\STATE <strong>return</strong> cluster assignments, centroids
-\end{algorithmic}
-
+1<strong>Input</strong>: DataX, number of clustersKInitializeKcentroids randomly<strong>Assignment</strong>: assign each point to nearest centroid<strong>Update</strong>: recompute centroids as cluster meanscentroids don't change (or max iterations)<strong>return</strong>cluster assignments, centroids
 <strong>Convergence</strong>
 <ul>
 <li>Guaranteed to converge (WCSS decreases each iteration)</li>
 <li>May converge to local optimum</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Each iteration: \(O(nKd)\) where \(n\) = samples, \(K\) = clusters, \(d\) = features</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Each iteration:O(nKd)wheren= samples,K= clusters,d= features</em></p>
 </section>
 
 <section>
 <h2>K-Means: Visualization</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/03_kmeans_iteration.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/03_kmeans_iteration.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Final state after convergence: points colored by cluster, X marks centroids</em></p>
 </section>
 
@@ -349,58 +329,51 @@ where \(\mu_k\) is the centroid of cluster \(C_k\)
 <li>Sensitive to choice, may get poor solution</li>
 <li>Run multiple times, keep best result</li>
 </ul>
-
 <strong>K-Means++ (Default in scikit-learn)</strong>
 <ul>
 <li>Smart initialization: spread out initial centroids</li>
 <li>First centroid: random</li>
 <li>Next centroids: probability proportional to squared distance</li>
 </ul>
-
-<strong>Result</strong>: Much better starting point, fewer iterations
+<strong>Result</strong>
+: Much better starting point, fewer iterations
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>K-Means++ gives provably better initialization with theoretical guarantees</em></p>
 </section>
 
 <section>
 <h2>Choosing K: Elbow Method</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/04_elbow_method.png" style="max-width:100%; max-height:500px;">
-</div>
-<strong>Interpretation</strong>: Look for the "elbow" where WCSS stops dropping sharply
+<div class="center"><img src="images/L03_KNN_KMeans/04_elbow_method.png" style="max-width:100%; max-height:500px;"></div>
+<strong>Interpretation</strong>
+: Look for the "elbow" where WCSS stops dropping sharply
 </section>
 
 <section>
 <h2>Choosing K: Silhouette Score</h2>
-<strong>For each point \(i\)</strong>
+<strong>For each pointi</strong>
 <ul>
-<li>\(a(i)\): average distance to points in same cluster</li>
-<li>\(b(i)\): average distance to points in nearest other cluster</li>
+<li>a(i): average distance to points in same cluster</li>
+<li>b(i): average distance to points in nearest other cluster</li>
 </ul>
-
 <strong>Silhouette score</strong>
-$$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}$$
+s(i) =b(i) - a(i)(a(i), b(i))
 <ul>
-<li>Range: \([-1, 1]\)</li>
-<li>\(s \approx 1\): point is well-matched to cluster</li>
-<li>\(s \approx 0\): point is on boundary</li>
-<li>\(s < 0\): point may be in wrong cluster</li>
+<li>Range:[-1, 1]</li>
+<li>s1: point is well-matched to cluster</li>
+<li>s0: point is on boundary</li>
+<li>s < 0: point may be in wrong cluster</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Average silhouette score summarizes overall clustering quality</em></p>
 </section>
 
 <section>
 <h2>Silhouette Plot</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/05_silhouette.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/05_silhouette.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>All clusters should have similar width and scores above average line</em></p>
 </section>
 
 <section>
 <h2>K-Means: Decision Regions</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/06_voronoi.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/06_voronoi.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>K-Means creates Voronoi tessellation around centroids</em></p>
 </section>
 
@@ -412,7 +385,6 @@ $$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}$$
 <li>Clusters have similar sizes</li>
 <li>Clusters have similar densities</li>
 </ul>
-
 <strong>When K-Means Fails</strong>
 <ul>
 <li>Non-convex shapes (e.g., crescents)</li>
@@ -431,14 +403,12 @@ $$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}$$
 <li>Much faster for large datasets</li>
 <li>Slightly worse results</li>
 </ul>
-
 <strong>K-Medoids</strong>
 <ul>
 <li>Centroids must be actual data points</li>
 <li>More robust to outliers</li>
 <li>Slower than K-Means</li>
 </ul>
-
 <strong>K-Means for Mixed Data</strong>
 <ul>
 <li>K-Modes: for categorical data</li>
@@ -451,45 +421,31 @@ $$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}$$
 <h2>K-Means: scikit-learn</h2>
 <strong>Basic Usage</strong>
 <ul>
-<li>\texttt{from sklearn.cluster import KMeans}</li>
-<li>\texttt{kmeans = KMeans(n\_clusters=3, random\_state=42)}</li>
-<li>\texttt{labels = kmeans.fit\_predict(X)}</li>
-<li>\texttt{centroids = kmeans.cluster\_centers\_}</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>kmeans = KMeans(n\_clusters=3, random\_state=42)</li>
+<li>labels = kmeans.fit\_predict(X)</li>
+<li>centroids = kmeans.cluster\_centers\_</li>
 </ul>
-
 <strong>Key Parameters</strong>
 <ul>
-<li>\texttt{n\_clusters}: K (required)</li>
-<li>\texttt{init}: 'k-means++' (default) or 'random'</li>
-<li>\texttt{n\_init}: number of runs (default 10)</li>
-<li>\texttt{max\_iter}: max iterations per run</li>
+<li>n\_clusters: K (required)</li>
+<li>init: 'k-means++' (default) or 'random'</li>
+<li>n\_init: number of runs (default 10)</li>
+<li>max\_iter: max iterations per run</li>
 </ul>
-<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>inertia\_ attribute gives WCSS after fitting</em></p>
+<p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>inertia\_attribute gives WCSS after fitting</em></p>
 </section>
 
 <section>
 <h2>KNN vs K-Means: Key Differences</h2>
-<div class="center">
-\begin{tabular}{lll}
-\toprule
-<strong>Aspect</strong> & <strong>KNN</strong> & <strong>K-Means</strong> <br>
-\midrule
-Task & Classification/Regression & Clustering <br>
-Learning & Supervised (needs labels) & Unsupervised <br>
-K meaning & Number of neighbors & Number of clusters <br>
-Training & None (lazy) & Iterative optimization <br>
-Prediction & Compute distances & Assign to centroid <br>
-Output & Class label & Cluster ID <br>
-\bottomrule
-\end{tabular}
-</div>
+<div class="center">lll<strong>Aspect</strong>&<strong>KNN</strong>&<strong>K-Means</strong><br>Task & Classification/Regression & Clustering<br>Learning & Supervised (needs labels) & Unsupervised<br>K meaning & Number of neighbors & Number of clusters<br>Training & None (lazy) & Iterative optimization<br>Prediction & Compute distances & Assign to centroid<br>Output & Class label & Cluster ID<br></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>The "K" in KNN and K-Means mean completely different things!</em></p>
 </section>
 
 <section>
 <h2>Finance Application: Customer Segmentation</h2>
-<strong>Problem</strong>: Group customers for targeted marketing
-
+<strong>Problem</strong>
+: Group customers for targeted marketing
 <strong>Features</strong>
 <ul>
 <li>Transaction frequency</li>
@@ -497,7 +453,6 @@ Output & Class label & Cluster ID <br>
 <li>Account balance</li>
 <li>Product holdings</li>
 </ul>
-
 <strong>K-Means Solution</strong>
 <ul>
 <li>Cluster into segments (e.g., K=4)</li>
@@ -509,15 +464,14 @@ Output & Class label & Cluster ID <br>
 
 <section>
 <h2>Finance Application: Fraud Detection</h2>
-<strong>Problem</strong>: Flag suspicious transactions
-
+<strong>Problem</strong>
+: Flag suspicious transactions
 <strong>KNN Approach</strong>
 <ul>
 <li>Features: amount, time, location, merchant category</li>
 <li>Find K similar past transactions</li>
 <li>If most neighbors are fraud, flag as suspicious</li>
 </ul>
-
 <strong>K-Means Approach</strong>
 <ul>
 <li>Cluster "normal" transactions</li>
@@ -536,7 +490,6 @@ Output & Class label & Cluster ID <br>
 <li>Interpretability: "similar to these examples"</li>
 <li>Moderate dataset size</li>
 </ul>
-
 <strong>Use K-Means When</strong>
 <ul>
 <li>No labels available</li>
@@ -549,9 +502,7 @@ Output & Class label & Cluster ID <br>
 
 <section>
 <h2>Decision Framework</h2>
-<div class="center">
-<img src="images/L03_KNN_KMeans/07_decision_flowchart.png" style="max-width:100%; max-height:500px;">
-</div>
+<div class="center"><img src="images/L03_KNN_KMeans/07_decision_flowchart.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Start with KNN for classification, K-Means for clustering</em></p>
 </section>
 
@@ -563,7 +514,6 @@ Output & Class label & Cluster ID <br>
 <li>Need probability: logistic regression</li>
 <li>Many features: random forest</li>
 </ul>
-
 <strong>Instead of K-Means</strong>
 <ul>
 <li>Unknown K: DBSCAN (density-based)</li>
@@ -582,14 +532,12 @@ Output & Class label & Cluster ID <br>
 <li>Scale features, choose K via cross-validation</li>
 <li>Works best with moderate features, moderate data size</li>
 </ul>
-
 <strong>K-Means</strong>
 <ul>
 <li>Iterative: assign points, update centroids</li>
 <li>K-Means++ for initialization, elbow/silhouette for K</li>
 <li>Assumes spherical, similar-size clusters</li>
 </ul>
-
 <strong>Common Considerations</strong>
 <ul>
 <li>Feature scaling is critical for both</li>
@@ -602,16 +550,14 @@ Output & Class label & Cluster ID <br>
 <h2>References</h2>
 <strong>Textbooks</strong>
 <ul>
-<li>James et al. (2021). <em>ISLR</em>, Chapters 2, 12</li>
-<li>Hastie et al. (2009). <em>ESL</em>, Chapters 13, 14</li>
+<li>James et al. (2021).<em>ISLR</em>, Chapters 2, 12</li>
+<li>Hastie et al. (2009).<em>ESL</em>, Chapters 13, 14</li>
 </ul>
-
 <strong>Key Papers</strong>
 <ul>
-<li>Arthur &amp; Vassilvitskii (2007). K-Means++</li>
-<li>Cover &amp; Hart (1967). Nearest Neighbor Pattern Classification</li>
+<li>Arthur&amp;Vassilvitskii (2007). K-Means++</li>
+<li>Cover&amp;Hart (1967). Nearest Neighbor Pattern Classification</li>
 </ul>
-
 <strong>Next Lecture</strong>
 <ul>
 <li>L04: Random Forests</li>
