@@ -56,7 +56,7 @@ def generate_revealjs_html(
     for i, slide in enumerate(slide_paths, 1):
         sections.append(f'''<section data-slide="{i}">
     <img src="{images_subdir}/{slide.name}"
-         style="max-width:100%; max-height:85vh; object-fit:contain;"
+         style="max-width:100%; max-height:95vh; object-fit:contain;"
          alt="Slide {i}">
 </section>''')
 
@@ -236,7 +236,7 @@ def generate_revealjs_html(
             // Sizing (16:9 aspect ratio - matches Beamer)
             width: 1600,
             height: 900,
-            margin: 0.02,
+            margin: 0,
             minScale: 0.2,
             maxScale: 2.0,
             center: true,
