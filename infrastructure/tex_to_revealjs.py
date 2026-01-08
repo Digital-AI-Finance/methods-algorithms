@@ -234,12 +234,8 @@ def split_frames_to_sections(soup: BeautifulSoup) -> list:
                         if not first_p.get_text(strip=True):
                             first_p.decompose()
 
-            # Add remaining content with fragment animations on list items
+            # Add remaining content (no fragment animations - show all at once)
             frame_html = str(frame)
-
-            # Add fragment class to li elements (but not in References section)
-            if 'References' not in frame_html and 'ISLR' not in frame_html:
-                frame_html = re.sub(r'<li(?![^>]*class="fragment")', '<li class="fragment"', frame_html)
 
             # Remove the outer frame div
             frame_html = re.sub(r'^<div class="frame"[^>]*>', '', frame_html)

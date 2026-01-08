@@ -112,15 +112,15 @@ Applications</p>
 <p> <strong>Principal Component
 Analysis (PCA)</strong></p>
 <ul>
-<li class="fragment"><p>Find orthogonal directions of maximum variance</p></li>
-<li class="fragment"><p>Project data onto these directions</p></li>
-<li class="fragment"><p>Reduce dimensions while preserving information</p></li>
+<li><p>Find orthogonal directions of maximum variance</p></li>
+<li><p>Project data onto these directions</p></li>
+<li><p>Reduce dimensions while preserving information</p></li>
 </ul>
 <p><strong>Key Properties:</strong></p>
 <ul>
-<li class="fragment"><p>Linear transformation</p></li>
-<li class="fragment"><p>Components are uncorrelated</p></li>
-<li class="fragment"><p>Reversible (can reconstruct original data)</p></li>
+<li><p>Linear transformation</p></li>
+<li><p>Components are uncorrelated</p></li>
+<li><p>Reversible (can reconstruct original data)</p></li>
 </ul>
 <p><span style="color: #666666">PCA: one of the most fundamental tools in
 data science</span></p>
@@ -151,9 +151,9 @@ Ratio}_i = \frac{\lambda_i}{\sum_{j=1}^{p} \lambda_j}\]</span></p>
 \frac{\lambda_i}{\sum_{j=1}^{p} \lambda_j}\]</span> <strong>Rules of
 thumb for choosing k:</strong></p>
 <ul>
-<li class="fragment"><p>Keep 80-95% of total variance</p></li>
-<li class="fragment"><p>Use scree plot “elbow” method</p></li>
-<li class="fragment"><p>Kaiser criterion: keep components with <span class="math inline">\(\lambda &gt; 1\)</span></p></li>
+<li><p>Keep 80-95% of total variance</p></li>
+<li><p>Use scree plot “elbow” method</p></li>
+<li><p>Kaiser criterion: keep components with <span class="math inline">\(\lambda &gt; 1\)</span></p></li>
 </ul>
 <p><span style="color: #666666">Balance dimensionality reduction with
 information preservation</span></p>
@@ -214,16 +214,16 @@ eigenvalues</span></p>
 <p> <strong>Portfolio Risk
 Decomposition:</strong></p>
 <ul>
-<li class="fragment"><p>PC1 often represents “market factor”</p></li>
-<li class="fragment"><p>PC2-3 may capture sector/size factors</p></li>
-<li class="fragment"><p>Higher PCs: idiosyncratic risk</p></li>
+<li><p>PC1 often represents “market factor”</p></li>
+<li><p>PC2-3 may capture sector/size factors</p></li>
+<li><p>Higher PCs: idiosyncratic risk</p></li>
 </ul>
 <p><strong>Applications:</strong></p>
 <ul>
-<li class="fragment"><p>Risk factor modeling</p></li>
-<li class="fragment"><p>Dimensionality reduction for trading signals</p></li>
-<li class="fragment"><p>Noise reduction in time series</p></li>
-<li class="fragment"><p>Feature extraction for ML models</p></li>
+<li><p>Risk factor modeling</p></li>
+<li><p>Dimensionality reduction for trading signals</p></li>
+<li><p>Noise reduction in time series</p></li>
+<li><p>Feature extraction for ML models</p></li>
 </ul>
 <p><span style="color: #666666">PCA reveals latent structure in financial
 data</span></p>
@@ -236,16 +236,16 @@ data</span></p>
 <p> <strong>When PCA Falls
 Short:</strong></p>
 <ul>
-<li class="fragment"><p>Non-linear relationships (curved manifolds)</p></li>
-<li class="fragment"><p>Cluster structure not aligned with variance</p></li>
-<li class="fragment"><p>Discrete or categorical data</p></li>
-<li class="fragment"><p>Outliers heavily influence results</p></li>
+<li><p>Non-linear relationships (curved manifolds)</p></li>
+<li><p>Cluster structure not aligned with variance</p></li>
+<li><p>Discrete or categorical data</p></li>
+<li><p>Outliers heavily influence results</p></li>
 </ul>
 <p><strong>Solutions:</strong></p>
 <ul>
-<li class="fragment"><p>Kernel PCA (non-linear)</p></li>
-<li class="fragment"><p>Robust PCA (outlier-resistant)</p></li>
-<li class="fragment"><p>t-SNE/UMAP (for visualization)</p></li>
+<li><p>Kernel PCA (non-linear)</p></li>
+<li><p>Robust PCA (outlier-resistant)</p></li>
+<li><p>t-SNE/UMAP (for visualization)</p></li>
 </ul>
 <p><span style="color: #666666">PCA assumes linear structure and
 Gaussian-like distributions</span></p>
@@ -258,16 +258,16 @@ Gaussian-like distributions</span></p>
 <p> <strong>t-Distributed
 Stochastic Neighbor Embedding</strong></p>
 <ul>
-<li class="fragment"><p>Non-linear dimensionality reduction</p></li>
-<li class="fragment"><p>Optimized for visualization (2D/3D)</p></li>
-<li class="fragment"><p>Preserves local neighborhood structure</p></li>
+<li><p>Non-linear dimensionality reduction</p></li>
+<li><p>Optimized for visualization (2D/3D)</p></li>
+<li><p>Preserves local neighborhood structure</p></li>
 </ul>
 <p><strong>Key Idea:</strong></p>
 <ul>
-<li class="fragment"><p>Convert distances to probabilities</p></li>
-<li class="fragment"><p>In high-D: Gaussian similarities</p></li>
-<li class="fragment"><p>In low-D: t-distribution similarities</p></li>
-<li class="fragment"><p>Minimize KL divergence between distributions</p></li>
+<li><p>Convert distances to probabilities</p></li>
+<li><p>In high-D: Gaussian similarities</p></li>
+<li><p>In low-D: t-distribution similarities</p></li>
+<li><p>Minimize KL divergence between distributions</p></li>
 </ul>
 <p><span style="color: #666666">t-SNE: visualization method, NOT for
 preprocessing</span></p>
@@ -307,15 +307,15 @@ has heavier tails, allowing better separation in low-D</span></p>
 <p> <strong>Perplexity</strong>
 controls the balance between local and global structure:</p>
 <ul>
-<li class="fragment"><p>Low perplexity (5-10): Focus on very local structure</p></li>
-<li class="fragment"><p>Medium perplexity (30-50): Balanced (default)</p></li>
-<li class="fragment"><p>High perplexity (100+): More global structure</p></li>
+<li><p>Low perplexity (5-10): Focus on very local structure</p></li>
+<li><p>Medium perplexity (30-50): Balanced (default)</p></li>
+<li><p>High perplexity (100+): More global structure</p></li>
 </ul>
 <p><strong>Guidelines:</strong></p>
 <ul>
-<li class="fragment"><p>Should be smaller than number of points</p></li>
-<li class="fragment"><p>Larger datasets can use higher perplexity</p></li>
-<li class="fragment"><p>Run multiple perplexities to validate findings</p></li>
+<li><p>Should be smaller than number of points</p></li>
+<li><p>Larger datasets can use higher perplexity</p></li>
+<li><p>Run multiple perplexities to validate findings</p></li>
 </ul>
 <p><span style="color: #666666">Results can vary significantly with
 perplexity choice</span></p>
@@ -328,17 +328,17 @@ perplexity choice</span></p>
 <p> <strong>Important
 Limitations:</strong></p>
 <ul>
-<li class="fragment"><p>Non-deterministic (run multiple times)</p></li>
-<li class="fragment"><p>Cluster sizes are not meaningful</p></li>
-<li class="fragment"><p>Distances between clusters are not meaningful</p></li>
-<li class="fragment"><p>Slow for large datasets (O(<span class="math inline">\(n^2\)</span>))</p></li>
+<li><p>Non-deterministic (run multiple times)</p></li>
+<li><p>Cluster sizes are not meaningful</p></li>
+<li><p>Distances between clusters are not meaningful</p></li>
+<li><p>Slow for large datasets (O(<span class="math inline">\(n^2\)</span>))</p></li>
 </ul>
 <p><strong>Best Practices:</strong></p>
 <ul>
-<li class="fragment"><p>Use PCA first to reduce to 30-50 dims</p></li>
-<li class="fragment"><p>Run multiple times with different seeds</p></li>
-<li class="fragment"><p>Don’t over-interpret cluster sizes/distances</p></li>
-<li class="fragment"><p>Use for exploration, not final conclusions</p></li>
+<li><p>Use PCA first to reduce to 30-50 dims</p></li>
+<li><p>Run multiple times with different seeds</p></li>
+<li><p>Don’t over-interpret cluster sizes/distances</p></li>
+<li><p>Use for exploration, not final conclusions</p></li>
 </ul>
 <p><span style="color: #666666">t-SNE shows IF clusters exist, not HOW they
 relate</span></p>
@@ -431,17 +431,17 @@ better than PCA</span></p>
 
 <p> <strong>Use PCA When:</strong></p>
 <ul>
-<li class="fragment"><p>Preprocessing for ML (reduce features)</p></li>
-<li class="fragment"><p>Linear relationships expected</p></li>
-<li class="fragment"><p>Need reversibility (reconstruction)</p></li>
-<li class="fragment"><p>Speed matters</p></li>
+<li><p>Preprocessing for ML (reduce features)</p></li>
+<li><p>Linear relationships expected</p></li>
+<li><p>Need reversibility (reconstruction)</p></li>
+<li><p>Speed matters</p></li>
 </ul>
 <p><strong>Use t-SNE When:</strong></p>
 <ul>
-<li class="fragment"><p>Visualizing high-dimensional data</p></li>
-<li class="fragment"><p>Looking for cluster structure</p></li>
-<li class="fragment"><p>Non-linear manifolds expected</p></li>
-<li class="fragment"><p>Exploratory analysis</p></li>
+<li><p>Visualizing high-dimensional data</p></li>
+<li><p>Looking for cluster structure</p></li>
+<li><p>Non-linear manifolds expected</p></li>
+<li><p>Exploratory analysis</p></li>
 </ul>
 <p><span style="color: #666666">Often use both: PCA first to 30-50 dims,
 then t-SNE for visualization</span></p>
@@ -466,18 +466,18 @@ visualization (t-SNE)</span></p>
 <p> <strong>PCA in
 scikit-learn:</strong></p>
 <ul>
-<li class="fragment"><p><code>PCA(n_components=k)</code>: Keep k components</p></li>
-<li class="fragment"><p><code>PCA(n_components=0.95)</code>: Keep 95% variance</p></li>
-<li class="fragment"><p><code>pca.explained_variance_ratio_</code>: Variance per
+<li><p><code>PCA(n_components=k)</code>: Keep k components</p></li>
+<li><p><code>PCA(n_components=0.95)</code>: Keep 95% variance</p></li>
+<li><p><code>pca.explained_variance_ratio_</code>: Variance per
 component</p></li>
-<li class="fragment"><p><code>pca.inverse_transform()</code>: Reconstruct
+<li><p><code>pca.inverse_transform()</code>: Reconstruct
 original</p></li>
 </ul>
 <p><strong>t-SNE in scikit-learn:</strong></p>
 <ul>
-<li class="fragment"><p><code>TSNE(n_components=2, perplexity=30)</code></p></li>
-<li class="fragment"><p>Always normalize data first</p></li>
-<li class="fragment"><p>Consider PCA preprocessing for speed</p></li>
+<li><p><code>TSNE(n_components=2, perplexity=30)</code></p></li>
+<li><p>Always normalize data first</p></li>
+<li><p>Consider PCA preprocessing for speed</p></li>
 </ul>
 <p><span style="color: #666666">Standardize data before PCA; normalize
 before t-SNE</span></p>
@@ -490,16 +490,16 @@ before t-SNE</span></p>
 <p> <strong>Uniform Manifold
 Approximation and Projection</strong></p>
 <ul>
-<li class="fragment"><p>Faster than t-SNE</p></li>
-<li class="fragment"><p>Better preserves global structure</p></li>
-<li class="fragment"><p>Can embed new points (unlike t-SNE)</p></li>
-<li class="fragment"><p>Hyperparameters: n_neighbors, min_dist</p></li>
+<li><p>Faster than t-SNE</p></li>
+<li><p>Better preserves global structure</p></li>
+<li><p>Can embed new points (unlike t-SNE)</p></li>
+<li><p>Hyperparameters: n_neighbors, min_dist</p></li>
 </ul>
 <p><strong>When to use UMAP:</strong></p>
 <ul>
-<li class="fragment"><p>Large datasets (faster than t-SNE)</p></li>
-<li class="fragment"><p>Need to embed new data points</p></li>
-<li class="fragment"><p>Want more preserved global structure</p></li>
+<li><p>Large datasets (faster than t-SNE)</p></li>
+<li><p>Need to embed new data points</p></li>
+<li><p>Want more preserved global structure</p></li>
 </ul>
 <p><span style="color: #666666">UMAP often preferred over t-SNE in modern
 practice</span></p>
@@ -511,15 +511,15 @@ practice</span></p>
 
 <p> <strong>PCA:</strong></p>
 <ul>
-<li class="fragment"><p>Linear, fast, reversible</p></li>
-<li class="fragment"><p>Use for preprocessing and feature extraction</p></li>
-<li class="fragment"><p>Choose k by variance explained or elbow</p></li>
+<li><p>Linear, fast, reversible</p></li>
+<li><p>Use for preprocessing and feature extraction</p></li>
+<li><p>Choose k by variance explained or elbow</p></li>
 </ul>
 <p><strong>t-SNE:</strong></p>
 <ul>
-<li class="fragment"><p>Non-linear, slow, visualization-only</p></li>
-<li class="fragment"><p>Excellent for exploring cluster structure</p></li>
-<li class="fragment"><p>Don’t interpret distances or sizes literally</p></li>
+<li><p>Non-linear, slow, visualization-only</p></li>
+<li><p>Excellent for exploring cluster structure</p></li>
+<li><p>Don’t interpret distances or sizes literally</p></li>
 </ul>
 <p><strong>Common Pipeline:</strong> Standardize <span class="math inline">\(\rightarrow\)</span> PCA (30-50) <span class="math inline">\(\rightarrow\)</span> t-SNE (2D) <span style="color: #666666">Next: Embeddings and Reinforcement
 Learning</span></p>

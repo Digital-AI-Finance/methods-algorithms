@@ -111,12 +111,12 @@
 <p> <strong>By the end of this lecture,
 you will be able to:</strong></p>
 <ol>
-<li class="fragment"><p>Explain how logistic regression models binary outcomes</p></li>
-<li class="fragment"><p>Derive the maximum likelihood estimation for logistic
+<li><p>Explain how logistic regression models binary outcomes</p></li>
+<li><p>Derive the maximum likelihood estimation for logistic
 regression</p></li>
-<li class="fragment"><p>Interpret classification metrics (precision, recall,
+<li><p>Interpret classification metrics (precision, recall,
 AUC)</p></li>
-<li class="fragment"><p>Apply logistic regression for credit scoring decisions</p></li>
+<li><p>Apply logistic regression for credit scoring decisions</p></li>
 </ol>
 <p><strong>Finance Application:</strong> Credit default prediction <span style="color: #666666">These objectives span Bloom’s levels: Understand,
 Apply, Analyze</span></p>
@@ -129,15 +129,15 @@ Apply, Analyze</span></p>
 <p> <strong>The Business
 Problem</strong></p>
 <ul>
-<li class="fragment"><p>Banks must decide: approve or reject loan applications</p></li>
-<li class="fragment"><p>Need probability of default, not just yes/no prediction</p></li>
-<li class="fragment"><p>Regulatory requirement: interpretable, auditable models</p></li>
+<li><p>Banks must decide: approve or reject loan applications</p></li>
+<li><p>Need probability of default, not just yes/no prediction</p></li>
+<li><p>Regulatory requirement: interpretable, auditable models</p></li>
 </ul>
 <p><strong>Why Not Linear Regression?</strong></p>
 <ul>
-<li class="fragment"><p>Linear regression can predict values outside [0,1]</p></li>
-<li class="fragment"><p>Binary outcomes need probability-based approach</p></li>
-<li class="fragment"><p>Logistic regression outputs calibrated probabilities</p></li>
+<li><p>Linear regression can predict values outside [0,1]</p></li>
+<li><p>Binary outcomes need probability-based approach</p></li>
+<li><p>Logistic regression outputs calibrated probabilities</p></li>
 </ul>
 <p><span style="color: #666666">Logistic regression: the industry standard
 for credit scoring since 1980s</span></p>
@@ -150,8 +150,8 @@ for credit scoring since 1980s</span></p>
 <p> <strong>From Linear to
 Probability</strong></p>
 <ul>
-<li class="fragment"><p>Maps any real number to (0, 1) range</p></li>
-<li class="fragment"><p>Smooth, differentiable, interpretable</p></li>
+<li><p>Maps any real number to (0, 1) range</p></li>
+<li><p>Smooth, differentiable, interpretable</p></li>
 </ul>
 <div class="center">
 <p><img src="images/L02_Logistic_Regression/01_sigmoid_function.png" style="max-width:100%; max-height:500px;"></p>
@@ -179,8 +179,8 @@ probability</span></p>
 <p> <strong>Why Not
 MSE?</strong></p>
 <ul>
-<li class="fragment"><p>MSE with sigmoid creates non-convex loss landscape</p></li>
-<li class="fragment"><p>Cross-entropy is convex, guarantees global optimum</p></li>
+<li><p>MSE with sigmoid creates non-convex loss landscape</p></li>
+<li><p>Cross-entropy is convex, guarantees global optimum</p></li>
 </ul>
 <div class="center">
 <p><img src="images/L02_Logistic_Regression/03_log_loss.png" style="max-width:100%; max-height:500px;"></p>

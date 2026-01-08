@@ -110,16 +110,16 @@
 
 <p> <strong>Key Insight</strong></p>
 <ul>
-<li class="fragment"><p>No explicit model training (store all data)</p></li>
-<li class="fragment"><p>Classification by majority vote of K nearest neighbors</p></li>
-<li class="fragment"><p>“Lazy” because work is done at prediction time</p></li>
+<li><p>No explicit model training (store all data)</p></li>
+<li><p>Classification by majority vote of K nearest neighbors</p></li>
+<li><p>“Lazy” because work is done at prediction time</p></li>
 </ul>
 <p><strong>The Algorithm</strong></p>
 <ol>
-<li class="fragment"><p>Store all training examples</p></li>
-<li class="fragment"><p>For new query <span class="math inline">\(\mathbf{x}\)</span>:
+<li><p>Store all training examples</p></li>
+<li><p>For new query <span class="math inline">\(\mathbf{x}\)</span>:
 find K nearest training points</p></li>
-<li class="fragment"><p>Return majority class among neighbors</p></li>
+<li><p>Return majority class among neighbors</p></li>
 </ol>
 <p><span style="color: #666666">Instance-based learning: the training data
 IS the model</span></p>
@@ -135,9 +135,9 @@ IS the model</span></p>
 </div>
 <p><strong>Common Metrics</strong></p>
 <ul>
-<li class="fragment"><p>Euclidean: <span class="math inline">\(d = \sqrt{\sum_i(x_i -
+<li><p>Euclidean: <span class="math inline">\(d = \sqrt{\sum_i(x_i -
 y_i)^2}\)</span> (straight line)</p></li>
-<li class="fragment"><p>Manhattan: <span class="math inline">\(d = \sum_i|x_i -
+<li><p>Manhattan: <span class="math inline">\(d = \sum_i|x_i -
 y_i|\)</span> (city block)</p></li>
 </ul>
 
@@ -151,18 +151,18 @@ Distance</strong> <span class="math display">\[d_p(\mathbf{x},
 \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i -
 y_i|^p\right)^{1/p}\]</span></p>
 <ul>
-<li class="fragment"><p><span class="math inline">\(p=1\)</span>: Manhattan (L1)</p></li>
-<li class="fragment"><p><span class="math inline">\(p=2\)</span>: Euclidean (L2)</p></li>
-<li class="fragment"><p><span class="math inline">\(p=\infty\)</span>: Chebyshev (max
+<li><p><span class="math inline">\(p=1\)</span>: Manhattan (L1)</p></li>
+<li><p><span class="math inline">\(p=2\)</span>: Euclidean (L2)</p></li>
+<li><p><span class="math inline">\(p=\infty\)</span>: Chebyshev (max
 absolute difference)</p></li>
 </ul>
 <p><strong>Choosing p</strong></p>
 <ul>
-<li class="fragment"><p><span class="math inline">\(p=2\)</span>: Default, works well in
+<li><p><span class="math inline">\(p=2\)</span>: Default, works well in
 most cases</p></li>
-<li class="fragment"><p><span class="math inline">\(p=1\)</span>: More robust to
+<li><p><span class="math inline">\(p=1\)</span>: More robust to
 outliers</p></li>
-<li class="fragment"><p>Higher <span class="math inline">\(p\)</span>: Sensitive to large
+<li><p>Higher <span class="math inline">\(p\)</span>: Sensitive to large
 single differences</p></li>
 </ul>
 <p><span style="color: #666666">In high dimensions, all distances become
@@ -179,9 +179,9 @@ similar (curse of dimensionality)</span></p>
 </div>
 <p><strong>Boundary Properties</strong></p>
 <ul>
-<li class="fragment"><p>Non-linear, locally adaptive</p></li>
-<li class="fragment"><p>Small K: complex boundary, may overfit</p></li>
-<li class="fragment"><p>Large K: smoother boundary, may underfit</p></li>
+<li><p>Non-linear, locally adaptive</p></li>
+<li><p>Small K: complex boundary, may overfit</p></li>
+<li><p>Large K: smoother boundary, may underfit</p></li>
 </ul>
 
 </section>
@@ -192,17 +192,17 @@ similar (curse of dimensionality)</span></p>
 <p> <strong>The Bias-Variance
 Trade-off</strong></p>
 <ul>
-<li class="fragment"><p><span class="math inline">\(K=1\)</span>: High variance, low bias
+<li><p><span class="math inline">\(K=1\)</span>: High variance, low bias
 (very flexible)</p></li>
-<li class="fragment"><p><span class="math inline">\(K=n\)</span>: High bias, low variance
+<li><p><span class="math inline">\(K=n\)</span>: High bias, low variance
 (always predicts majority class)</p></li>
 </ul>
 <p><strong>Practical Guidelines</strong></p>
 <ul>
-<li class="fragment"><p>Start with <span class="math inline">\(K = \sqrt{n}\)</span>
+<li><p>Start with <span class="math inline">\(K = \sqrt{n}\)</span>
 where <span class="math inline">\(n\)</span> is training size</p></li>
-<li class="fragment"><p>Use odd K for binary classification (avoid ties)</p></li>
-<li class="fragment"><p>Cross-validation to find optimal K</p></li>
+<li><p>Use odd K for binary classification (avoid ties)</p></li>
+<li><p>Cross-validation to find optimal K</p></li>
 </ul>
 <p><strong>Common Choices</strong>: <span class="math inline">\(K \in
 \{3, 5, 7, 11\}\)</span> <span style="color: #666666">Small K for complex
@@ -216,19 +216,19 @@ patterns, larger K for noisy data</span></p>
 <p> <strong>Problem with Equal
 Voting</strong></p>
 <ul>
-<li class="fragment"><p>All K neighbors have equal influence</p></li>
-<li class="fragment"><p>A distant neighbor counts as much as closest neighbor</p></li>
+<li><p>All K neighbors have equal influence</p></li>
+<li><p>A distant neighbor counts as much as closest neighbor</p></li>
 </ul>
 <p><strong>Solution: Distance Weighting</strong> <span class="math display">\[w_i = \frac{1}{d(\mathbf{x},
 \mathbf{x}_i)^2}\]</span></p>
 <ul>
-<li class="fragment"><p>Closer neighbors get higher weight</p></li>
-<li class="fragment"><p>Reduces sensitivity to K choice</p></li>
+<li><p>Closer neighbors get higher weight</p></li>
+<li><p>Reduces sensitivity to K choice</p></li>
 </ul>
 <p><strong>In scikit-learn</strong></p>
 <ul>
-<li class="fragment"><p><code>weights=’uniform’</code>: equal weights (default)</p></li>
-<li class="fragment"><p><code>weights=’distance’</code>: inverse distance
+<li><p><code>weights=’uniform’</code>: equal weights (default)</p></li>
+<li><p><code>weights=’distance’</code>: inverse distance
 weighting</p></li>
 </ul>
 <p><span style="color: #666666">Distance weighting often improves
@@ -243,15 +243,15 @@ performance</span></p>
 Matters</strong></p>
 <p>Without scaling:</p>
 <ul>
-<li class="fragment"><p>Income: ranges 20,000–200,000</p></li>
-<li class="fragment"><p>Age: ranges 20–80</p></li>
-<li class="fragment"><p>Distance dominated by income (larger scale)!</p></li>
+<li><p>Income: ranges 20,000–200,000</p></li>
+<li><p>Age: ranges 20–80</p></li>
+<li><p>Distance dominated by income (larger scale)!</p></li>
 </ul>
 <p><strong>Scaling Methods</strong></p>
 <ul>
-<li class="fragment"><p><strong>Standardization</strong>: <span class="math inline">\(z =
+<li><p><strong>Standardization</strong>: <span class="math inline">\(z =
 \frac{x - \mu}{\sigma}\)</span> (mean=0, std=1)</p></li>
-<li class="fragment"><p><strong>Min-Max</strong>: <span class="math inline">\(x' =
+<li><p><strong>Min-Max</strong>: <span class="math inline">\(x' =
 \frac{x - x_{min}}{x_{max} - x_{min}}\)</span> (range [0,1])</p></li>
 </ul>
 <p><strong>Rule</strong>: Always scale features for distance-based
@@ -267,17 +267,17 @@ features, MinMaxScaler for bounded</span></p>
 Problem</strong></p>
 <p>In high dimensions:</p>
 <ul>
-<li class="fragment"><p>All points become approximately equidistant</p></li>
-<li class="fragment"><p>“Nearest neighbor” becomes meaningless</p></li>
-<li class="fragment"><p>Exponentially more data needed</p></li>
+<li><p>All points become approximately equidistant</p></li>
+<li><p>“Nearest neighbor” becomes meaningless</p></li>
+<li><p>Exponentially more data needed</p></li>
 </ul>
 <p><strong>Solutions</strong></p>
 <ul>
-<li class="fragment"><p><strong>Dimensionality reduction</strong>: PCA before
+<li><p><strong>Dimensionality reduction</strong>: PCA before
 KNN</p></li>
-<li class="fragment"><p><strong>Feature selection</strong>: keep only relevant
+<li><p><strong>Feature selection</strong>: keep only relevant
 features</p></li>
-<li class="fragment"><p><strong>Use domain knowledge</strong>: select meaningful
+<li><p><strong>Use domain knowledge</strong>: select meaningful
 features</p></li>
 </ul>
 <p><span style="color: #666666">KNN works best with moderate number of
@@ -291,25 +291,25 @@ features (&lt;20)</span></p>
 <p> <strong>Time
 Complexity</strong></p>
 <ul>
-<li class="fragment"><p>Training: <span class="math inline">\(O(1)\)</span> – just store
+<li><p>Training: <span class="math inline">\(O(1)\)</span> – just store
 data!</p></li>
-<li class="fragment"><p>Prediction: <span class="math inline">\(O(nd)\)</span> for brute
+<li><p>Prediction: <span class="math inline">\(O(nd)\)</span> for brute
 force (<span class="math inline">\(n\)</span> samples, <span class="math inline">\(d\)</span> features)</p></li>
 </ul>
 <p><strong>Acceleration Techniques</strong></p>
 <ul>
-<li class="fragment"><p><strong>KD-Tree</strong>: <span class="math inline">\(O(d \log
+<li><p><strong>KD-Tree</strong>: <span class="math inline">\(O(d \log
 n)\)</span> average for low <span class="math inline">\(d\)</span></p></li>
-<li class="fragment"><p><strong>Ball Tree</strong>: Works better in higher
+<li><p><strong>Ball Tree</strong>: Works better in higher
 dimensions</p></li>
-<li class="fragment"><p><strong>Approximate NN</strong>: Trade accuracy for
+<li><p><strong>Approximate NN</strong>: Trade accuracy for
 speed</p></li>
 </ul>
 <p><strong>In scikit-learn</strong></p>
 <ul>
-<li class="fragment"><p><code>algorithm=’auto’</code>: automatically chooses
+<li><p><code>algorithm=’auto’</code>: automatically chooses
 best</p></li>
-<li class="fragment"><p><code>algorithm=’brute’</code>: force brute force</p></li>
+<li><p><code>algorithm=’brute’</code>: force brute force</p></li>
 </ul>
 <p><span style="color: #666666">For large datasets: consider approximate
 methods or trees</span></p>
@@ -322,17 +322,17 @@ methods or trees</span></p>
 <p>
 <strong>Classification</strong></p>
 <ul>
-<li class="fragment"><p><code>from sklearn.neighbors import KNeighborsClassifier</code></p></li>
-<li class="fragment"><p><code>knn = KNeighborsClassifier(n_neighbors=5)</code></p></li>
-<li class="fragment"><p><code>knn.fit(X_train, y_train)</code></p></li>
-<li class="fragment"><p><code>y_pred = knn.predict(X_test)</code></p></li>
+<li><p><code>from sklearn.neighbors import KNeighborsClassifier</code></p></li>
+<li><p><code>knn = KNeighborsClassifier(n_neighbors=5)</code></p></li>
+<li><p><code>knn.fit(X_train, y_train)</code></p></li>
+<li><p><code>y_pred = knn.predict(X_test)</code></p></li>
 </ul>
 <p><strong>Key Parameters</strong></p>
 <ul>
-<li class="fragment"><p><code>n_neighbors</code>: K value</p></li>
-<li class="fragment"><p><code>weights</code>: ’uniform’ or ’distance’</p></li>
-<li class="fragment"><p><code>metric</code>: ’euclidean’, ’manhattan’, etc.</p></li>
-<li class="fragment"><p><code>algorithm</code>: ’auto’, ’ball_tree’, ’kd_tree’,
+<li><p><code>n_neighbors</code>: K value</p></li>
+<li><p><code>weights</code>: ’uniform’ or ’distance’</p></li>
+<li><p><code>metric</code>: ’euclidean’, ’manhattan’, etc.</p></li>
+<li><p><code>algorithm</code>: ’auto’, ’ball_tree’, ’kd_tree’,
 ’brute’</p></li>
 </ul>
 <p><span style="color: #666666">Also available: KNeighborsRegressor for
@@ -349,9 +349,9 @@ regression tasks</span></p>
 C_k}\|\mathbf{x} - \mu_k\|^2\]</span> where <span class="math inline">\(\mu_k\)</span> is the centroid of cluster <span class="math inline">\(C_k\)</span></p>
 <p><strong>Key Insight</strong></p>
 <ul>
-<li class="fragment"><p>Each point assigned to nearest centroid</p></li>
-<li class="fragment"><p>Centroids are cluster means</p></li>
-<li class="fragment"><p>Iterative refinement until convergence</p></li>
+<li><p>Each point assigned to nearest centroid</p></li>
+<li><p>Centroids are cluster means</p></li>
+<li><p>Iterative refinement until convergence</p></li>
 </ul>
 <p><span style="color: #666666">K-Means finds locally optimal solution (not
 guaranteed global)</span></p>
@@ -370,8 +370,8 @@ guaranteed global)</span></p>
 </div>
 <p><strong>Convergence</strong></p>
 <ul>
-<li class="fragment"><p>Guaranteed to converge (WCSS decreases each iteration)</p></li>
-<li class="fragment"><p>May converge to local optimum</p></li>
+<li><p>Guaranteed to converge (WCSS decreases each iteration)</p></li>
+<li><p>May converge to local optimum</p></li>
 </ul>
 <p><span style="color: #666666">Each iteration: <span class="math inline">\(O(nKd)\)</span> where <span class="math inline">\(n\)</span> = samples, <span class="math inline">\(K\)</span> = clusters, <span class="math inline">\(d\)</span> = features</span></p>
 
@@ -395,15 +395,15 @@ colored by cluster, X marks centroids</span></p>
 <p> <strong>Random
 Initialization</strong></p>
 <ul>
-<li class="fragment"><p>Pick K random points as initial centroids</p></li>
-<li class="fragment"><p>Sensitive to choice, may get poor solution</p></li>
-<li class="fragment"><p>Run multiple times, keep best result</p></li>
+<li><p>Pick K random points as initial centroids</p></li>
+<li><p>Sensitive to choice, may get poor solution</p></li>
+<li><p>Run multiple times, keep best result</p></li>
 </ul>
 <p><strong>K-Means++ (Default in scikit-learn)</strong></p>
 <ul>
-<li class="fragment"><p>Smart initialization: spread out initial centroids</p></li>
-<li class="fragment"><p>First centroid: random</p></li>
-<li class="fragment"><p>Next centroids: probability proportional to squared
+<li><p>Smart initialization: spread out initial centroids</p></li>
+<li><p>First centroid: random</p></li>
+<li><p>Next centroids: probability proportional to squared
 distance</p></li>
 </ul>
 <p><strong>Result</strong>: Much better starting point, fewer iterations
@@ -430,20 +430,20 @@ stops dropping sharply</p>
 <p> <strong>For each point
 <span class="math inline">\(i\)</span></strong></p>
 <ul>
-<li class="fragment"><p><span class="math inline">\(a(i)\)</span>: average distance to
+<li><p><span class="math inline">\(a(i)\)</span>: average distance to
 points in same cluster</p></li>
-<li class="fragment"><p><span class="math inline">\(b(i)\)</span>: average distance to
+<li><p><span class="math inline">\(b(i)\)</span>: average distance to
 points in nearest other cluster</p></li>
 </ul>
 <p><strong>Silhouette score</strong> <span class="math display">\[s(i) =
 \frac{b(i) - a(i)}{\max(a(i), b(i))}\]</span></p>
 <ul>
-<li class="fragment"><p>Range: <span class="math inline">\([-1, 1]\)</span></p></li>
-<li class="fragment"><p><span class="math inline">\(s \approx 1\)</span>: point is
+<li><p>Range: <span class="math inline">\([-1, 1]\)</span></p></li>
+<li><p><span class="math inline">\(s \approx 1\)</span>: point is
 well-matched to cluster</p></li>
-<li class="fragment"><p><span class="math inline">\(s \approx 0\)</span>: point is on
+<li><p><span class="math inline">\(s \approx 0\)</span>: point is on
 boundary</p></li>
-<li class="fragment"><p><span class="math inline">\(s &lt; 0\)</span>: point may be in
+<li><p><span class="math inline">\(s &lt; 0\)</span>: point may be in
 wrong cluster</p></li>
 </ul>
 <p><span style="color: #666666">Average silhouette score summarizes overall
@@ -481,16 +481,16 @@ centroids</span></p>
 <p> <strong>What K-Means
 Assumes</strong></p>
 <ul>
-<li class="fragment"><p>Clusters are spherical (isotropic)</p></li>
-<li class="fragment"><p>Clusters have similar sizes</p></li>
-<li class="fragment"><p>Clusters have similar densities</p></li>
+<li><p>Clusters are spherical (isotropic)</p></li>
+<li><p>Clusters have similar sizes</p></li>
+<li><p>Clusters have similar densities</p></li>
 </ul>
 <p><strong>When K-Means Fails</strong></p>
 <ul>
-<li class="fragment"><p>Non-convex shapes (e.g., crescents)</p></li>
-<li class="fragment"><p>Very different cluster sizes</p></li>
-<li class="fragment"><p>Different densities</p></li>
-<li class="fragment"><p>Outliers (pull centroids away)</p></li>
+<li><p>Non-convex shapes (e.g., crescents)</p></li>
+<li><p>Very different cluster sizes</p></li>
+<li><p>Different densities</p></li>
+<li><p>Outliers (pull centroids away)</p></li>
 </ul>
 <p><span style="color: #666666">Consider DBSCAN or Gaussian Mixture Models
 for these cases</span></p>
@@ -502,20 +502,20 @@ for these cases</span></p>
 
 <p> <strong>Mini-Batch K-Means</strong></p>
 <ul>
-<li class="fragment"><p>Uses random subsets for updates</p></li>
-<li class="fragment"><p>Much faster for large datasets</p></li>
-<li class="fragment"><p>Slightly worse results</p></li>
+<li><p>Uses random subsets for updates</p></li>
+<li><p>Much faster for large datasets</p></li>
+<li><p>Slightly worse results</p></li>
 </ul>
 <p><strong>K-Medoids</strong></p>
 <ul>
-<li class="fragment"><p>Centroids must be actual data points</p></li>
-<li class="fragment"><p>More robust to outliers</p></li>
-<li class="fragment"><p>Slower than K-Means</p></li>
+<li><p>Centroids must be actual data points</p></li>
+<li><p>More robust to outliers</p></li>
+<li><p>Slower than K-Means</p></li>
 </ul>
 <p><strong>K-Means for Mixed Data</strong></p>
 <ul>
-<li class="fragment"><p>K-Modes: for categorical data</p></li>
-<li class="fragment"><p>K-Prototypes: mixed continuous and categorical</p></li>
+<li><p>K-Modes: for categorical data</p></li>
+<li><p>K-Prototypes: mixed continuous and categorical</p></li>
 </ul>
 <p><span style="color: #666666">Mini-Batch K-Means: good for &gt;10k
 samples</span></p>
@@ -527,17 +527,17 @@ samples</span></p>
 
 <p> <strong>Basic Usage</strong></p>
 <ul>
-<li class="fragment"><p><code>from sklearn.cluster import KMeans</code></p></li>
-<li class="fragment"><p><code>kmeans = KMeans(n_clusters=3, random_state=42)</code></p></li>
-<li class="fragment"><p><code>labels = kmeans.fit_predict(X)</code></p></li>
-<li class="fragment"><p><code>centroids = kmeans.cluster_centers_</code></p></li>
+<li><p><code>from sklearn.cluster import KMeans</code></p></li>
+<li><p><code>kmeans = KMeans(n_clusters=3, random_state=42)</code></p></li>
+<li><p><code>labels = kmeans.fit_predict(X)</code></p></li>
+<li><p><code>centroids = kmeans.cluster_centers_</code></p></li>
 </ul>
 <p><strong>Key Parameters</strong></p>
 <ul>
-<li class="fragment"><p><code>n_clusters</code>: K (required)</p></li>
-<li class="fragment"><p><code>init</code>: ’k-means++’ (default) or ’random’</p></li>
-<li class="fragment"><p><code>n_init</code>: number of runs (default 10)</p></li>
-<li class="fragment"><p><code>max_iter</code>: max iterations per run</p></li>
+<li><p><code>n_clusters</code>: K (required)</p></li>
+<li><p><code>init</code>: ’k-means++’ (default) or ’random’</p></li>
+<li><p><code>n_init</code>: number of runs (default 10)</p></li>
+<li><p><code>max_iter</code>: max iterations per run</p></li>
 </ul>
 <p><span style="color: #666666">inertia_ attribute gives WCSS after
 fitting</span></p>
@@ -603,16 +603,16 @@ different things!</span></p>
 <strong>Problem</strong>: Group customers for targeted marketing</p>
 <p><strong>Features</strong></p>
 <ul>
-<li class="fragment"><p>Transaction frequency</p></li>
-<li class="fragment"><p>Average transaction amount</p></li>
-<li class="fragment"><p>Account balance</p></li>
-<li class="fragment"><p>Product holdings</p></li>
+<li><p>Transaction frequency</p></li>
+<li><p>Average transaction amount</p></li>
+<li><p>Account balance</p></li>
+<li><p>Product holdings</p></li>
 </ul>
 <p><strong>K-Means Solution</strong></p>
 <ul>
-<li class="fragment"><p>Cluster into segments (e.g., K=4)</p></li>
-<li class="fragment"><p>Profile each segment</p></li>
-<li class="fragment"><p>Tailor offerings to segment needs</p></li>
+<li><p>Cluster into segments (e.g., K=4)</p></li>
+<li><p>Profile each segment</p></li>
+<li><p>Tailor offerings to segment needs</p></li>
 </ul>
 <p><span style="color: #666666">Example segments: High-value frequent,
 Dormant, New/Growing, Price-sensitive</span></p>
@@ -626,15 +626,15 @@ Dormant, New/Growing, Price-sensitive</span></p>
 <strong>Problem</strong>: Flag suspicious transactions</p>
 <p><strong>KNN Approach</strong></p>
 <ul>
-<li class="fragment"><p>Features: amount, time, location, merchant category</p></li>
-<li class="fragment"><p>Find K similar past transactions</p></li>
-<li class="fragment"><p>If most neighbors are fraud, flag as suspicious</p></li>
+<li><p>Features: amount, time, location, merchant category</p></li>
+<li><p>Find K similar past transactions</p></li>
+<li><p>If most neighbors are fraud, flag as suspicious</p></li>
 </ul>
 <p><strong>K-Means Approach</strong></p>
 <ul>
-<li class="fragment"><p>Cluster “normal” transactions</p></li>
-<li class="fragment"><p>New transaction far from all centroids = anomaly</p></li>
-<li class="fragment"><p>Combined with distance threshold</p></li>
+<li><p>Cluster “normal” transactions</p></li>
+<li><p>New transaction far from all centroids = anomaly</p></li>
+<li><p>Combined with distance threshold</p></li>
 </ul>
 <p><span style="color: #666666">KNN needs labeled fraud examples, K-Means
 detects deviation from normal</span></p>
@@ -646,17 +646,17 @@ detects deviation from normal</span></p>
 
 <p> <strong>Use KNN When</strong></p>
 <ul>
-<li class="fragment"><p>You have labeled training data</p></li>
-<li class="fragment"><p>Local patterns matter (non-linear boundaries)</p></li>
-<li class="fragment"><p>Interpretability: “similar to these examples”</p></li>
-<li class="fragment"><p>Moderate dataset size</p></li>
+<li><p>You have labeled training data</p></li>
+<li><p>Local patterns matter (non-linear boundaries)</p></li>
+<li><p>Interpretability: “similar to these examples”</p></li>
+<li><p>Moderate dataset size</p></li>
 </ul>
 <p><strong>Use K-Means When</strong></p>
 <ul>
-<li class="fragment"><p>No labels available</p></li>
-<li class="fragment"><p>Looking for natural groupings</p></li>
-<li class="fragment"><p>Clusters are roughly spherical</p></li>
-<li class="fragment"><p>Need fast clustering of large data</p></li>
+<li><p>No labels available</p></li>
+<li><p>Looking for natural groupings</p></li>
+<li><p>Clusters are roughly spherical</p></li>
+<li><p>Need fast clustering of large data</p></li>
 </ul>
 <p><span style="color: #666666">K-Means often used as preprocessing before
 supervised learning</span></p>
@@ -681,16 +681,16 @@ for clustering</span></p>
 <p> <strong>Instead of
 KNN</strong></p>
 <ul>
-<li class="fragment"><p>Large data: use ball tree or approximate NN</p></li>
-<li class="fragment"><p>Need probability: logistic regression</p></li>
-<li class="fragment"><p>Many features: random forest</p></li>
+<li><p>Large data: use ball tree or approximate NN</p></li>
+<li><p>Need probability: logistic regression</p></li>
+<li><p>Many features: random forest</p></li>
 </ul>
 <p><strong>Instead of K-Means</strong></p>
 <ul>
-<li class="fragment"><p>Unknown K: DBSCAN (density-based)</p></li>
-<li class="fragment"><p>Hierarchical structure: agglomerative clustering</p></li>
-<li class="fragment"><p>Soft assignments: Gaussian Mixture Models</p></li>
-<li class="fragment"><p>Non-spherical: spectral clustering</p></li>
+<li><p>Unknown K: DBSCAN (density-based)</p></li>
+<li><p>Hierarchical structure: agglomerative clustering</p></li>
+<li><p>Soft assignments: Gaussian Mixture Models</p></li>
+<li><p>Non-spherical: spectral clustering</p></li>
 </ul>
 <p><span style="color: #666666">DBSCAN automatically determines number of
 clusters</span></p>
@@ -702,20 +702,20 @@ clusters</span></p>
 
 <p> <strong>K-Nearest Neighbors</strong></p>
 <ul>
-<li class="fragment"><p>Instance-based, lazy learner</p></li>
-<li class="fragment"><p>Scale features, choose K via cross-validation</p></li>
-<li class="fragment"><p>Works best with moderate features, moderate data size</p></li>
+<li><p>Instance-based, lazy learner</p></li>
+<li><p>Scale features, choose K via cross-validation</p></li>
+<li><p>Works best with moderate features, moderate data size</p></li>
 </ul>
 <p><strong>K-Means</strong></p>
 <ul>
-<li class="fragment"><p>Iterative: assign points, update centroids</p></li>
-<li class="fragment"><p>K-Means++ for initialization, elbow/silhouette for K</p></li>
-<li class="fragment"><p>Assumes spherical, similar-size clusters</p></li>
+<li><p>Iterative: assign points, update centroids</p></li>
+<li><p>K-Means++ for initialization, elbow/silhouette for K</p></li>
+<li><p>Assumes spherical, similar-size clusters</p></li>
 </ul>
 <p><strong>Common Considerations</strong></p>
 <ul>
-<li class="fragment"><p>Feature scaling is critical for both</p></li>
-<li class="fragment"><p>“K” means different things in each algorithm</p></li>
+<li><p>Feature scaling is critical for both</p></li>
+<li><p>“K” means different things in each algorithm</p></li>
 </ul>
 <p><span style="color: #666666">Both are foundational algorithms: simple,
 interpretable, widely used</span></p>
