@@ -111,14 +111,14 @@
 <h2>Part 1: Word Embeddings Introduction</h2>
 <strong>The Problem with One-Hot Encoding</strong>
 <ul>
-<li>Vocabulary of 10,000 words10,000-dim sparse vectors</li>
+<li>Vocabulary of 10,000 words \(\rightarrow\) 10,000-dim sparse vectors</li>
 <li>No semantic similarity: "king" and "queen" equally distant from "car"</li>
 <li>Curse of dimensionality</li>
 </ul>
 <strong>Solution: Dense Embeddings</strong>
 <ul>
 <li>Map words to dense vectors (50-300 dimensions)</li>
-<li>Similar wordssimilar vectors</li>
+<li>Similar words \(\rightarrow\) similar vectors</li>
 <li>Learn from context (distributional hypothesis)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>"You shall know a word by the company it keeps" - Firth, 1957</em></p>
@@ -150,8 +150,8 @@ P(w_context| w_target) =(v_context^T v_target)_wV(v_w^T v_target)
 king-man+womanqueen
 <strong>Finance Examples:</strong>
 <ul>
-<li>stock-equity+debtbond</li>
-<li>CEO-company+countrypresident</li>
+<li>\(\vec{stock} - \vec{equity} + \vec{debt} \approx \vec{bond}\)</li>
+<li>\(\vec{CEO} - \vec{company} + \vec{country} \approx \vec{president}\)</li>
 </ul>
 <strong>How it works:</strong>
 <ul>
@@ -166,7 +166,7 @@ king-man+womanqueen
 <strong>Cosine Similarity:</strong>
 sim(u, v) =uv||u||||v||=()
 <ul>
-<li>Range:[-1, 1]</li>
+<li>Range: \([-1, 1]\)</li>
 <li>1 = identical direction, 0 = orthogonal, -1 = opposite</li>
 </ul>
 <div class="center"><img src="images/L06_Embeddings_RL/02_similarity_heatmap.png" style="max-width:100%; max-height:500px;"></div>
@@ -193,7 +193,7 @@ sim(u, v) =uv||u||||v||=()
 <h2>Embeddings in Finance</h2>
 <strong>Applications:</strong>
 <ul>
-<li><strong>Sentiment Analysis</strong>: Newsembeddingpositive/negative</li>
+<li><strong>Sentiment Analysis</strong>: News \(\rightarrow\) embedding \(\rightarrow\) positive/negative</li>
 <li><strong>Document Similarity</strong>: Find similar SEC filings</li>
 <li><strong>Named Entity Recognition</strong>: Extract company names</li>
 <li><strong>Event Detection</strong>: Identify earnings announcements</li>
@@ -213,9 +213,9 @@ sim(u, v) =uv||u||||v||=()
 <ul>
 <li><strong>Agent</strong>: Learner/decision-maker</li>
 <li><strong>Environment</strong>: What agent interacts with</li>
-<li><strong>State</strong>s: Current situation</li>
-<li><strong>Action</strong>a: What agent can do</li>
-<li><strong>Reward</strong>r: Feedback signal</li>
+<li><strong>State</strong>\(s\): Current situation</li>
+<li><strong>Action</strong>\(a\): What agent can do</li>
+<li><strong>Reward</strong>\(r\): Feedback signal</li>
 </ul>
 <div class="center"><img src="images/L06_Embeddings_RL/03_rl_loop.png" style="max-width:100%; max-height:500px;"></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>RL: Learning from interaction, not from labeled examples</em></p>
@@ -224,13 +224,13 @@ sim(u, v) =uv||u||||v||=()
 <section>
 <h2>Markov Decision Process</h2>
 <strong>MDP Tuple:</strong>
-(S, A, P, R,)
+\((S, A, P, R, \gamma)\)
 <ul>
-<li>S: Set of states</li>
-<li>A: Set of actions</li>
-<li>P(s'|s, a): Transition probability</li>
-<li>R(s, a, s'): Reward function</li>
-<li>[0,1]: Discount factor</li>
+<li>\(S\): Set of states</li>
+<li>\(A\): Set of actions</li>
+<li>\(P(s'|s, a)\): Transition probability</li>
+<li>\(R(s, a, s')\): Reward function</li>
+<li>\(\gamma \in [0,1]\): Discount factor</li>
 </ul>
 <strong>Markov Property:</strong>
 P(s_t+1| s_t, a_t, s_t-1, ...) = P(s_t+1| s_t, a_t)
@@ -240,10 +240,10 @@ P(s_t+1| s_t, a_t, s_t-1, ...) = P(s_t+1| s_t, a_t)
 <section>
 <h2>Policy and Value Functions</h2>
 <strong>Policy:</strong>
-(a|s) = P(A_t = a | S_t = s)
+\(\pi(a|s) = P(A_t = a | S_t = s)\)
 <ul>
 <li>Maps states to action probabilities</li>
-<li>Goal: Find optimal policy^*</li>
+<li>Goal: Find optimal policy \(\pi^*\)</li>
 </ul>
 <strong>Value Function:</strong>
 V^(s) =E__t=0^^t R_t+1| S_0 = s
@@ -272,12 +272,12 @@ Q^*(s, a) =ER +_a'Q^*(s', a')
 Q(s, a)Q(s, a) +r +_a'Q(s', a') - Q(s, a)
 <strong>Algorithm:</strong>
 <ol>
-<li>InitializeQ(s,a)arbitrarily</li>
+<li>Initialize \(Q(s,a)\) arbitrarily</li>
 <li>For each episode:<ul>
-<li>Observe states</li>
-<li>Choose actiona(-greedy)</li>
-<li>Executea, observer,s'</li>
-<li>UpdateQ(s, a)</li>
+<li>Observe state \(s\)</li>
+<li>Choose action \(a\) (\(\epsilon\)-greedy)</li>
+<li>Execute \(a\), observe \(r\), \(s'\)</li>
+<li>Update \(Q(s, a)\)</li>
 </ul></li>
 </ol>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Q-learning is off-policy: learns optimal Q regardless of policy followed</em></p>
@@ -296,12 +296,12 @@ Q(s, a)Q(s, a) +r +_a'Q(s', a') - Q(s, a)
 <li><strong>Exploit</strong>: Choose best known action (greedy)</li>
 <li><strong>Explore</strong>: Try new actions (discover better options)</li>
 </ul>
-<strong>-Greedy Strategy:</strong>
+<strong>\(\epsilon\)-Greedy Strategy:</strong>
 a =_a Q(s,a) &with probability1-<br>random action&with probability
 <strong>Decay Schedule:</strong>
 <ul>
-<li>Start with high(explore more)</li>
-<li>Decayover time (exploit more)</li>
+<li>Start with high \(\epsilon\) (explore more)</li>
+<li>Decay \(\epsilon\) over time (exploit more)</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Balance: too much exploration wastes time; too little misses optima</em></p>
 </section>
@@ -372,7 +372,15 @@ _J() =E____(a|s)Q^_(s, a)
 
 <section>
 <h2>Comparison Table</h2>
-<div class="center">l|cc<strong>Aspect</strong>&<strong>Embeddings</strong>&<strong>RL</strong><br>Input & Text, categorical & State sequence<br>Output & Dense vectors & Actions/policy<br>Learning & Unsupervised/supervised & Trial and error<br>Signal & Context (words) & Rewards<br>Key challenge & Semantics & Credit assignment<br>Finance use & Sentiment & Trading<br></div>
+<div class="center"><table class="beamer-table">
+<tr><th><strong>Aspect</strong></th><th><strong>Embeddings</strong></th><th><strong>RL</strong></th></tr>
+<tr><td>Input</td><td>Text, categorical</td><td>State sequence</td></tr>
+<tr><td>Output</td><td>Dense vectors</td><td>Actions/policy</td></tr>
+<tr><td>Learning</td><td>Unsupervised/supervised</td><td>Trial and error</td></tr>
+<tr><td>Signal</td><td>Context (words)</td><td>Rewards</td></tr>
+<tr><td>Key challenge</td><td>Semantics</td><td>Credit assignment</td></tr>
+<tr><td>Finance use</td><td>Sentiment</td><td>Trading</td></tr>
+</table></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Both transform complex inputs into learnable representations</em></p>
 </section>
 

@@ -47,6 +47,34 @@ class BeamerParserV2:
 
     def _preprocess(self, content: str) -> str:
         """Pre-process LaTeX to help TexSoup parse correctly."""
+        # First, protect escaped dollar signs by replacing with placeholder
+        content = content.replace('\\$', 'ESCAPEDDOLLAR')
+
+        # Protect inline math $...$ by converting to HTML-style marker
+        # Use @@MATH@@ markers that TexSoup won't try to parse as commands
+        # Match $...$ but not $$ (display math)
+        def protect_inline_math(match):
+            math_content = match.group(1)
+            # Use base64-like encoding to avoid any parsing issues
+            import base64
+            encoded = base64.b64encode(math_content.encode()).decode()
+            return f'@@INLINEMATH:{encoded}@@'
+
+        # Use greedy matching but exclude $$
+        content = re.sub(r'(?<!\$)\$([^$]+)\$(?!\$)', protect_inline_math, content)
+
+        # Also protect display math $$...$$
+        def protect_display_math(match):
+            math_content = match.group(1)
+            import base64
+            encoded = base64.b64encode(math_content.encode()).decode()
+            return f'@@DISPLAYMATH:{encoded}@@'
+
+        content = re.sub(r'\$\$(.+?)\$\$', protect_display_math, content, flags=re.DOTALL)
+
+        # Restore escaped dollar signs
+        content = content.replace('ESCAPEDDOLLAR', '\\$')
+
         # Remove comments
         lines = []
         for line in content.split('\n'):
@@ -182,7 +210,45 @@ class BeamerParserV2:
                 html_parts.append(child_html)
 
         html_parts.append('</section>')
-        return '\n'.join(html_parts)
+
+        # Post-process to convert any remaining INLINEMATH/DISPLAYMATH markers
+        result = '\n'.join(html_parts)
+        result = self._postprocess_math(result)
+        return result
+
+    def _postprocess_math(self, html: str) -> str:
+        """Convert @@INLINEMATH:base64@@ and @@DISPLAYMATH:base64@@ markers to MathJax format."""
+        import base64
+
+        def decode_inline(match):
+            encoded = match.group(1)
+            try:
+                content = base64.b64decode(encoded.encode()).decode()
+                return f'\\({content}\\)'
+            except:
+                return match.group(0)  # Return as-is if decode fails
+
+        def decode_display(match):
+            encoded = match.group(1)
+            try:
+                content = base64.b64decode(encoded.encode()).decode()
+                return f'\\[{content}\\]'
+            except:
+                return match.group(0)
+
+        # Decode base64 math markers
+        html = re.sub(r'@@INLINEMATH:([A-Za-z0-9+/=]+)@@', decode_inline, html)
+        html = re.sub(r'@@DISPLAYMATH:([A-Za-z0-9+/=]+)@@', decode_display, html)
+
+        # Also handle any old-style INLINEMATH{} markers for backwards compatibility
+        html = re.sub(r'INLINEMATH\{([^{}]+)\}', lambda m: f'\\({m.group(1)}\\)', html)
+        html = re.sub(r'DISPLAYMATH\{([^{}]+)\}', lambda m: f'\\[{m.group(1)}\\]', html)
+
+        # Clean up any remaining INLINEMATH text (edge cases)
+        html = re.sub(r'INLINEMATH([a-zA-Z0-9_\\^{}]+?)(?=[^a-zA-Z0-9_\\{}]|$)',
+                      lambda m: f'\\({m.group(1)}\\)', html)
+
+        return html
 
     def _convert_node(self, node) -> str:
         """Convert a TexSoup node to HTML."""
@@ -219,6 +285,8 @@ class BeamerParserV2:
             return self._convert_block(node)
         elif name in ('equation', 'equation*', 'align', 'align*'):
             return self._convert_display_math(node)
+        elif name in ('tabular', 'table'):
+            return self._convert_table(node)
 
         # Command handlers
         elif name == 'textbf':
@@ -292,10 +360,29 @@ class BeamerParserV2:
 
         html = '<div class="columns">'
         for col in columns:
-            col_content = self._convert_contents(col)
+            col_content = self._convert_column_contents(col)
             html += f'<div class="column">{col_content}</div>'
         html += '</div>'
         return html
+
+    def _convert_column_contents(self, node) -> str:
+        """Convert column contents, filtering out width specifications."""
+        if not hasattr(node, 'contents'):
+            return self._get_node_text(node)
+
+        parts = []
+        for child in node.contents:
+            child_str = str(child).strip()
+            # Skip column width specifications like {0.48\textwidth}
+            if 'textwidth' in child_str:
+                continue
+            # Skip bare numbers that are width values like "0.48"
+            if re.match(r'^[\d.]+$', child_str):
+                continue
+            child_html = self._convert_node(child)
+            if child_html:
+                parts.append(child_html)
+        return ''.join(parts)
 
     def _convert_block(self, node) -> str:
         """Convert block environment."""
@@ -325,6 +412,57 @@ class BeamerParserV2:
             math = self._get_node_text(node)
 
         return f'\\[{math}\\]'
+
+    def _convert_table(self, node) -> str:
+        """Convert tabular/table environment to HTML table."""
+        content = str(node)
+
+        # For table environment, find the nested tabular
+        if 'tabular' in content:
+            tabular_match = re.search(r'\\begin\{tabular\}(\{[^}]*\})?(.*?)\\end\{tabular\}',
+                                      content, re.DOTALL)
+            if tabular_match:
+                content = tabular_match.group(2)
+        else:
+            # Extract content between begin{tabular} and end{tabular}
+            match = re.search(r'\\begin\{[^}]+\}(\{[^}]*\})?(.*?)\\end\{[^}]+\}',
+                              content, re.DOTALL)
+            if match:
+                content = match.group(2)
+
+        # Parse rows - split by \\ (row separator)
+        # Also handle \toprule, \midrule, \bottomrule, \hline
+        content = re.sub(r'\\(toprule|midrule|bottomrule|hline)', '', content)
+
+        rows = re.split(r'\\\\', content)
+        html_rows = []
+
+        for row in rows:
+            row = row.strip()
+            if not row:
+                continue
+
+            cells = row.split('&')
+            html_cells = []
+            for cell in cells:
+                cell_raw = cell.strip()
+                # Check if it should be a header (has \textbf)
+                is_header = '\\textbf' in cell_raw or 'textbf' in cell_raw
+                # Process textbf
+                cell_text = re.sub(r'\\textbf\{([^}]+)\}', r'<strong>\1</strong>', cell_raw)
+                cell_text = self._clean_text(cell_text)
+                if cell_text:
+                    if is_header:
+                        html_cells.append(f'<th>{cell_text}</th>')
+                    else:
+                        html_cells.append(f'<td>{cell_text}</td>')
+
+            if html_cells:
+                html_rows.append('<tr>' + ''.join(html_cells) + '</tr>')
+
+        if html_rows:
+            return '<table class="beamer-table">\n' + '\n'.join(html_rows) + '\n</table>'
+        return ''
 
     def _convert_textcolor(self, node) -> str:
         """Convert \\textcolor{color}{text}."""
@@ -387,8 +525,8 @@ class BeamerParserV2:
         # Clean LaTeX escapes
         text = self._clean_text(text)
 
-        # Convert inline math $...$ to \(...\)
-        text = re.sub(r'(?<!\$)\$([^$]+)\$(?!\$)', r'\\(\1\\)', text)
+        # Note: Inline math $...$ is now handled in _preprocess() and _convert_node()
+        # Any remaining $ should be treated as text (e.g., currency)
 
         return text
 
@@ -398,6 +536,9 @@ class BeamerParserV2:
             return ''
 
         result = str(text).strip()
+
+        # Handle escaped dollar signs FIRST (before other processing)
+        result = result.replace('\\$', '$')
 
         # LaTeX escapes
         result = re.sub(r'\\\\(?:\[.*?\])?', '<br>', result)  # Line breaks

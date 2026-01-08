@@ -145,10 +145,10 @@ Given features (size, location, age), what price?
 Model the relationship between inputs and a continuous output
 \[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon\]
 <ul>
-<li>y: Target variable (house price)</li>
-<li>x_1,, x_p: Features (size, bedrooms, age)</li>
-<li>_0,,_p: Coefficients to learn</li>
-<li>: Random error term</li>
+<li>\(y\): Target variable (house price)</li>
+<li>\(x_1, \ldots, x_p\): Features (size, bedrooms, age)</li>
+<li>\(\beta_0, \ldots, \beta_p\): Coefficients to learn</li>
+<li>\(\varepsilon\): Random error term</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Goal: Find coefficients that minimize prediction error</em></p>
 </section>
@@ -169,17 +169,17 @@ Minimize the sum of squared errors (SSE)
 
 <section>
 <h2>Two Solution Approaches</h2>
-<div class="columns"><div class="column">0.48<strong>1. Closed-Form (Normal Equation)</strong>\[\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}\]<span style="color: #2CA02C">Pros:</span><ul>
+<div class="columns"><div class="column"><strong>1. Closed-Form (Normal Equation)</strong>\[\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}\]<span style="color: #2CA02C">Pros:</span><ul>
 <li>Exact solution</li>
 <li>One computation</li>
 </ul><span style="color: #D62728">Cons:</span><ul>
-<li>Slow for largep</li>
+<li>Slow for large \(p\)</li>
 <li>Memory intensive</li>
-</ul></div><div class="column">0.48<strong>2. Gradient Descent</strong>\[\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \alpha \nabla L(\boldsymbol{\beta}_t)\]<span style="color: #2CA02C">Pros:</span><ul>
+</ul></div><div class="column"><strong>2. Gradient Descent</strong>\[\boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \alpha \nabla L(\boldsymbol{\beta}_t)\]<span style="color: #2CA02C">Pros:</span><ul>
 <li>Scales to big data</li>
 <li>Memory efficient</li>
 </ul><span style="color: #D62728">Cons:</span><ul>
-<li>Requires tuning</li>
+<li>Requires tuning \(\alpha\)</li>
 <li>Iterative process</li>
 </ul></div></div>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Both methods yield the same solution for OLS</em></p>
@@ -192,10 +192,10 @@ House price model
 \[\text{Price} = 50,000 + 200 \times \text{Size} + 15,000 \times \text{Bedrooms} - 1,000 \times \text{Age}\]
 <strong>Interpretation:</strong>
 <ul>
-<li>_0 = 50,000: Base price (all features = 0)</li>
-<li>_1 = 200: Each extra sqm adds\$200</li>
-<li>_2 = 15,000: Each bedroom adds\$15,000</li>
-<li>_3 = -1,000: Each year of age subtracts\$1,000</li>
+<li>\(\beta_0 = 50,000\): Base price (all features = 0)</li>
+<li>\(\beta_1 = 200\): Each extra sqm adds$200</li>
+<li>\(\beta_2 = 15,000\): Each bedroom adds$15,000</li>
+<li>\(\beta_3 = -1,000\): Each year of age subtracts$1,000</li>
 </ul>
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Coefficients show marginal effect, holding others constant</em></p>
 </section>
@@ -204,12 +204,11 @@ House price model
 <h2>Model Evaluation</h2>
 <strong>Key Metrics:</strong>
 <ul>
-<li><strong>R^2(Coefficient of Determination):</strong>Variance explained\[R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}\]</li>
+<li><strong>\(R^2\) (Coefficient of Determination):</strong>Variance explained\[R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}\]</li>
 <li><strong>RMSE (Root Mean Squared Error):</strong>Prediction accuracy\[\text{RMSE} = \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}\]</li>
 </ul>
 <strong>In Practice:</strong>
-R^2 = 0.75
-means model explains 75
+\(R^2 = 0.75\) means model explains 75
 %
 of price variance
 <p class="bottomnote" style="color: #666666; font-size: 0.85em; margin-top: 1em;"><em>Always evaluate on held-out test data</em></p>
@@ -217,18 +216,23 @@ of price variance
 
 <section>
 <h2>When to Use Linear Regression</h2>
-<div class="columns"><div class="column">0.48<strong><span style="color: #2CA02C">Use When:</span></strong><ul>
+<div class="columns"><div class="column"><strong><span style="color: #2CA02C">Use When:</span></strong><ul>
 <li>Target is continuous</li>
 <li>Linear relationships expected</li>
 <li>Interpretability matters</li>
 <li>Fast inference needed</li>
-</ul></div><div class="column">0.48<strong><span style="color: #D62728">Avoid When:</span></strong><ul>
+</ul></div><div class="column"><strong><span style="color: #D62728">Avoid When:</span></strong><ul>
 <li>Target is categorical</li>
 <li>Strong non-linearities</li>
 <li>High multicollinearity</li>
 <li>Many outliers present</li>
 </ul></div></div>
-ll<strong>Pros</strong>&<strong>Cons</strong><br>Interpretable & Assumes linearity<br>Fast training & Sensitive to outliers<br>Well-understood & Limited flexibility<br>
+<table class="beamer-table">
+<tr><th><strong>Pros</strong></th><th><strong>Cons</strong></th></tr>
+<tr><td>Interpretable</td><td>Assumes linearity</td></tr>
+<tr><td>Fast training</td><td>Sensitive to outliers</td></tr>
+<tr><td>Well-understood</td><td>Limited flexibility</td></tr>
+</table>
 </section>
 
 <section>
@@ -238,7 +242,7 @@ ll<strong>Pros</strong>&<strong>Cons</strong><br>Interpretable & Assumes lineari
 <li>OLS minimizes sum of squared errors</li>
 <li>Solve via normal equation (small data) or gradient descent (big data)</li>
 <li>Coefficients are directly interpretable as marginal effects</li>
-<li>Evaluate usingR^2(variance explained) and RMSE (prediction error)</li>
+<li>Evaluate using \(R^2\) (variance explained) and RMSE (prediction error)</li>
 </ol>
 <strong>Next:</strong>
 Deep dive into mathematics and implementation
