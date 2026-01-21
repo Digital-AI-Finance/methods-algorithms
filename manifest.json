@@ -5,23 +5,50 @@
     "version": "1.0.0",
     "semester": "Spring 2026",
     "created": "2026-01-07",
-    "updated": "2026-01-07"
+    "updated": "2026-01-10"
   },
   "topics": [
     {
       "id": "L01",
       "title": "Introduction & Linear Regression",
-      "status": "pending",
+      "status": "complete",
       "finance_case": "House price prediction, factor models",
       "problem_statement": "How do we model continuous outcomes from multiple features?",
       "learning_objectives": [
-        {"id": "L01-O1", "text": "Derive the OLS estimator mathematically", "bloom_level": "understand"},
-        {"id": "L01-O2", "text": "Implement gradient descent from scratch", "bloom_level": "apply"},
-        {"id": "L01-O3", "text": "Interpret regression coefficients in business context", "bloom_level": "analyze"},
-        {"id": "L01-O4", "text": "Choose between Ridge and Lasso regularization", "bloom_level": "evaluate"}
+        {
+          "id": "L01-O1",
+          "text": "Derive the OLS estimator mathematically",
+          "bloom_level": "understand"
+        },
+        {
+          "id": "L01-O2",
+          "text": "Implement gradient descent from scratch",
+          "bloom_level": "apply"
+        },
+        {
+          "id": "L01-O3",
+          "text": "Interpret regression coefficients in business context",
+          "bloom_level": "analyze"
+        },
+        {
+          "id": "L01-O4",
+          "text": "Choose between Ridge and Lasso regularization",
+          "bloom_level": "evaluate"
+        }
       ],
-      "prerequisites": ["linear_algebra", "calculus", "python_basics"],
-      "keywords": ["regression", "OLS", "gradient descent", "MSE", "R-squared", "regularization"],
+      "prerequisites": [
+        "linear_algebra",
+        "calculus",
+        "python_basics"
+      ],
+      "keywords": [
+        "regression",
+        "OLS",
+        "gradient descent",
+        "MSE",
+        "R-squared",
+        "regularization"
+      ],
       "estimated_time_minutes": 180,
       "difficulty": "intermediate",
       "decision_framework": {
@@ -37,42 +64,128 @@
           "High multicollinearity",
           "Many irrelevant features"
         ],
-        "pros": ["Interpretable coefficients", "Fast training", "Well-understood theory", "Closed-form solution"],
-        "cons": ["Assumes linearity", "Sensitive to outliers", "Requires feature scaling", "Multicollinearity issues"]
+        "pros": [
+          "Interpretable coefficients",
+          "Fast training",
+          "Well-understood theory",
+          "Closed-form solution"
+        ],
+        "cons": [
+          "Assumes linearity",
+          "Sensitive to outliers",
+          "Requires feature scaling",
+          "Multicollinearity issues"
+        ]
       },
       "assets": {
-        "overview_slides": {"file": "slides/L01_Introduction_Linear_Regression/L01_overview.tex", "status": "pending"},
-        "deepdive_slides": {"file": "slides/L01_Introduction_Linear_Regression/L01_deepdive.tex", "status": "pending"},
+        "overview_slides": {
+          "file": "slides/L01_Introduction_Linear_Regression/L01_overview.tex",
+          "status": "complete"
+        },
+        "deepdive_slides": {
+          "file": "slides/L01_Introduction_Linear_Regression/L01_deepdive.tex",
+          "status": "complete"
+        },
         "charts": [
-          {"id": "01_simple_regression", "file": "slides/L01_Introduction_Linear_Regression/01_simple_regression/chart.py", "status": "pending"},
-          {"id": "02_multiple_regression", "file": "slides/L01_Introduction_Linear_Regression/02_multiple_regression/chart.py", "status": "pending"},
-          {"id": "03_residual_plots", "file": "slides/L01_Introduction_Linear_Regression/03_residual_plots/chart.py", "status": "pending"},
-          {"id": "04_gradient_descent", "file": "slides/L01_Introduction_Linear_Regression/04_gradient_descent/chart.py", "status": "pending"},
-          {"id": "05_learning_curves", "file": "slides/L01_Introduction_Linear_Regression/05_learning_curves/chart.py", "status": "pending"},
-          {"id": "06_regularization", "file": "slides/L01_Introduction_Linear_Regression/06_regularization/chart.py", "status": "pending"},
-          {"id": "07_bias_variance", "file": "slides/L01_Introduction_Linear_Regression/07_bias_variance/chart.py", "status": "pending"},
-          {"id": "08_decision_flowchart", "file": "slides/L01_Introduction_Linear_Regression/08_decision_flowchart/chart.py", "status": "pending"}
+          {
+            "id": "01_simple_regression",
+            "file": "slides/L01_Introduction_Linear_Regression/01_simple_regression/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "02_multiple_regression_3d",
+            "file": "slides/L01_Introduction_Linear_Regression/02_multiple_regression_3d/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "03_residual_plots",
+            "file": "slides/L01_Introduction_Linear_Regression/03_residual_plots/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "04_gradient_descent",
+            "file": "slides/L01_Introduction_Linear_Regression/04_gradient_descent/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "05_learning_curves",
+            "file": "slides/L01_Introduction_Linear_Regression/05_learning_curves/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "06_regularization_comparison",
+            "file": "slides/L01_Introduction_Linear_Regression/06_regularization_comparison/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "07_bias_variance",
+            "file": "slides/L01_Introduction_Linear_Regression/07_bias_variance/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "08_decision_flowchart",
+            "file": "slides/L01_Introduction_Linear_Regression/08_decision_flowchart/chart.py",
+            "status": "complete"
+          }
         ],
-        "notebook": {"file": "notebooks/L01_linear_regression.ipynb", "status": "pending"},
-        "dataset": {"file": "datasets/housing_synthetic.csv", "status": "pending"},
-        "instructor_guide": {"file": "slides/L01_Introduction_Linear_Regression/L01_instructor_guide.md", "status": "pending"}
+        "notebook": {
+          "file": "notebooks/L01_linear_regression.ipynb",
+          "status": "complete"
+        },
+        "dataset": {
+          "file": "datasets/housing_synthetic.csv",
+          "status": "complete"
+        },
+        "instructor_guide": {
+          "file": "slides/L01_Introduction_Linear_Regression/L01_instructor_guide.md",
+          "status": "complete"
+        }
       },
-      "related_topics": ["L02", "L04"]
+      "related_topics": [
+        "L02",
+        "L04"
+      ]
     },
     {
       "id": "L02",
       "title": "Logistic Regression",
-      "status": "pending",
+      "status": "complete",
       "finance_case": "Credit scoring, default prediction",
       "problem_statement": "How do we predict binary outcomes with probability estimates?",
       "learning_objectives": [
-        {"id": "L02-O1", "text": "Derive logistic regression from maximum likelihood", "bloom_level": "understand"},
-        {"id": "L02-O2", "text": "Implement binary classification with gradient descent", "bloom_level": "apply"},
-        {"id": "L02-O3", "text": "Interpret odds ratios for business decisions", "bloom_level": "analyze"},
-        {"id": "L02-O4", "text": "Evaluate classifiers using ROC and PR curves", "bloom_level": "evaluate"}
+        {
+          "id": "L02-O1",
+          "text": "Derive logistic regression from maximum likelihood",
+          "bloom_level": "understand"
+        },
+        {
+          "id": "L02-O2",
+          "text": "Implement binary classification with gradient descent",
+          "bloom_level": "apply"
+        },
+        {
+          "id": "L02-O3",
+          "text": "Interpret odds ratios for business decisions",
+          "bloom_level": "analyze"
+        },
+        {
+          "id": "L02-O4",
+          "text": "Evaluate classifiers using ROC and PR curves",
+          "bloom_level": "evaluate"
+        }
       ],
-      "prerequisites": ["L01", "probability"],
-      "keywords": ["classification", "sigmoid", "cross-entropy", "ROC", "AUC", "confusion matrix"],
+      "prerequisites": [
+        "L01",
+        "probability"
+      ],
+      "keywords": [
+        "classification",
+        "sigmoid",
+        "cross-entropy",
+        "ROC",
+        "AUC",
+        "confusion matrix"
+      ],
       "estimated_time_minutes": 180,
       "difficulty": "intermediate",
       "decision_framework": {
@@ -88,41 +201,125 @@
           "High-dimensional sparse data",
           "Need for feature interactions"
         ],
-        "pros": ["Probability outputs", "Interpretable odds ratios", "Fast training", "Regularization available"],
-        "cons": ["Linear decision boundary", "Sensitive to outliers", "Assumes independence", "Requires feature engineering"]
+        "pros": [
+          "Probability outputs",
+          "Interpretable odds ratios",
+          "Fast training",
+          "Regularization available"
+        ],
+        "cons": [
+          "Linear decision boundary",
+          "Sensitive to outliers",
+          "Assumes independence",
+          "Requires feature engineering"
+        ]
       },
       "assets": {
-        "overview_slides": {"file": "slides/L02_Logistic_Regression/L02_overview.tex", "status": "pending"},
-        "deepdive_slides": {"file": "slides/L02_Logistic_Regression/L02_deepdive.tex", "status": "pending"},
+        "overview_slides": {
+          "file": "slides/L02_Logistic_Regression/L02_overview.tex",
+          "status": "complete"
+        },
+        "deepdive_slides": {
+          "file": "slides/L02_Logistic_Regression/L02_deepdive.tex",
+          "status": "complete"
+        },
         "charts": [
-          {"id": "01_sigmoid_function", "file": "slides/L02_Logistic_Regression/01_sigmoid_function/chart.py", "status": "pending"},
-          {"id": "02_decision_boundary", "file": "slides/L02_Logistic_Regression/02_decision_boundary/chart.py", "status": "pending"},
-          {"id": "03_log_loss", "file": "slides/L02_Logistic_Regression/03_log_loss/chart.py", "status": "pending"},
-          {"id": "04_roc_curve", "file": "slides/L02_Logistic_Regression/04_roc_curve/chart.py", "status": "pending"},
-          {"id": "05_precision_recall", "file": "slides/L02_Logistic_Regression/05_precision_recall/chart.py", "status": "pending"},
-          {"id": "06_confusion_matrix", "file": "slides/L02_Logistic_Regression/06_confusion_matrix/chart.py", "status": "pending"},
-          {"id": "07_decision_flowchart", "file": "slides/L02_Logistic_Regression/07_decision_flowchart/chart.py", "status": "pending"}
+          {
+            "id": "01_sigmoid_function",
+            "file": "slides/L02_Logistic_Regression/01_sigmoid_function/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "02_decision_boundary",
+            "file": "slides/L02_Logistic_Regression/02_decision_boundary/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "03_log_loss",
+            "file": "slides/L02_Logistic_Regression/03_log_loss/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "04_roc_curve",
+            "file": "slides/L02_Logistic_Regression/04_roc_curve/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "05_precision_recall",
+            "file": "slides/L02_Logistic_Regression/05_precision_recall/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "06_confusion_matrix",
+            "file": "slides/L02_Logistic_Regression/06_confusion_matrix/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "07_decision_flowchart",
+            "file": "slides/L02_Logistic_Regression/07_decision_flowchart/chart.py",
+            "status": "complete"
+          }
         ],
-        "notebook": {"file": "notebooks/L02_logistic_regression.ipynb", "status": "pending"},
-        "dataset": {"file": "datasets/credit_synthetic.csv", "status": "pending"},
-        "instructor_guide": {"file": "slides/L02_Logistic_Regression/L02_instructor_guide.md", "status": "pending"}
+        "notebook": {
+          "file": "notebooks/L02_logistic_regression.ipynb",
+          "status": "complete"
+        },
+        "dataset": {
+          "file": "datasets/credit_synthetic.csv",
+          "status": "complete"
+        },
+        "instructor_guide": {
+          "file": "slides/L02_Logistic_Regression/L02_instructor_guide.md",
+          "status": "complete"
+        }
       },
-      "related_topics": ["L01", "L03", "L04"]
+      "related_topics": [
+        "L01",
+        "L03",
+        "L04"
+      ]
     },
     {
       "id": "L03",
       "title": "K-Nearest Neighbours & K-Means",
-      "status": "pending",
+      "status": "complete",
       "finance_case": "Customer segmentation, anomaly detection",
       "problem_statement": "How do we group similar entities or find nearest matches?",
       "learning_objectives": [
-        {"id": "L03-O1", "text": "Explain distance metrics and their properties", "bloom_level": "understand"},
-        {"id": "L03-O2", "text": "Implement KNN and K-Means from scratch", "bloom_level": "apply"},
-        {"id": "L03-O3", "text": "Analyze cluster quality using silhouette scores", "bloom_level": "analyze"},
-        {"id": "L03-O4", "text": "Select optimal K using elbow and silhouette methods", "bloom_level": "evaluate"}
+        {
+          "id": "L03-O1",
+          "text": "Explain distance metrics and their properties",
+          "bloom_level": "understand"
+        },
+        {
+          "id": "L03-O2",
+          "text": "Implement KNN and K-Means from scratch",
+          "bloom_level": "apply"
+        },
+        {
+          "id": "L03-O3",
+          "text": "Analyze cluster quality using silhouette scores",
+          "bloom_level": "analyze"
+        },
+        {
+          "id": "L03-O4",
+          "text": "Select optimal K using elbow and silhouette methods",
+          "bloom_level": "evaluate"
+        }
       ],
-      "prerequisites": ["L01", "distance_metrics"],
-      "keywords": ["KNN", "K-Means", "clustering", "distance", "Euclidean", "silhouette", "elbow"],
+      "prerequisites": [
+        "L01",
+        "distance_metrics"
+      ],
+      "keywords": [
+        "KNN",
+        "K-Means",
+        "clustering",
+        "distance",
+        "Euclidean",
+        "silhouette",
+        "elbow"
+      ],
       "estimated_time_minutes": 180,
       "difficulty": "intermediate",
       "decision_framework": {
@@ -138,41 +335,123 @@
           "Non-spherical clusters (K-Means)",
           "Unknown number of clusters"
         ],
-        "pros": ["Simple to understand", "No training for KNN", "Works with any distance", "Non-parametric"],
-        "cons": ["Slow prediction (KNN)", "Sensitive to K choice", "Assumes spherical clusters", "Curse of dimensionality"]
+        "pros": [
+          "Simple to understand",
+          "No training for KNN",
+          "Works with any distance",
+          "Non-parametric"
+        ],
+        "cons": [
+          "Slow prediction (KNN)",
+          "Sensitive to K choice",
+          "Assumes spherical clusters",
+          "Curse of dimensionality"
+        ]
       },
       "assets": {
-        "overview_slides": {"file": "slides/L03_KNN_KMeans/L03_overview.tex", "status": "pending"},
-        "deepdive_slides": {"file": "slides/L03_KNN_KMeans/L03_deepdive.tex", "status": "pending"},
+        "overview_slides": {
+          "file": "slides/L03_KNN_KMeans/L03_overview.tex",
+          "status": "complete"
+        },
+        "deepdive_slides": {
+          "file": "slides/L03_KNN_KMeans/L03_deepdive.tex",
+          "status": "complete"
+        },
         "charts": [
-          {"id": "01_knn_decision_boundary", "file": "slides/L03_KNN_KMeans/01_knn_decision_boundary/chart.py", "status": "pending"},
-          {"id": "02_distance_metrics", "file": "slides/L03_KNN_KMeans/02_distance_metrics/chart.py", "status": "pending"},
-          {"id": "03_kmeans_iterations", "file": "slides/L03_KNN_KMeans/03_kmeans_iterations/chart.py", "status": "pending"},
-          {"id": "04_elbow_method", "file": "slides/L03_KNN_KMeans/04_elbow_method/chart.py", "status": "pending"},
-          {"id": "05_silhouette_analysis", "file": "slides/L03_KNN_KMeans/05_silhouette_analysis/chart.py", "status": "pending"},
-          {"id": "06_voronoi_diagram", "file": "slides/L03_KNN_KMeans/06_voronoi_diagram/chart.py", "status": "pending"},
-          {"id": "07_decision_flowchart", "file": "slides/L03_KNN_KMeans/07_decision_flowchart/chart.py", "status": "pending"}
+          {
+            "id": "01_knn_boundaries",
+            "file": "slides/L03_KNN_KMeans/01_knn_boundaries/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "02_distance_metrics",
+            "file": "slides/L03_KNN_KMeans/02_distance_metrics/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "03_kmeans_iteration",
+            "file": "slides/L03_KNN_KMeans/03_kmeans_iteration/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "04_elbow_method",
+            "file": "slides/L03_KNN_KMeans/04_elbow_method/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "05_silhouette",
+            "file": "slides/L03_KNN_KMeans/05_silhouette/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "06_voronoi",
+            "file": "slides/L03_KNN_KMeans/06_voronoi/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "07_decision_flowchart",
+            "file": "slides/L03_KNN_KMeans/07_decision_flowchart/chart.py",
+            "status": "complete"
+          }
         ],
-        "notebook": {"file": "notebooks/L03_knn_kmeans.ipynb", "status": "pending"},
-        "dataset": {"file": "datasets/customers_synthetic.csv", "status": "pending"},
-        "instructor_guide": {"file": "slides/L03_KNN_KMeans/L03_instructor_guide.md", "status": "pending"}
+        "notebook": {
+          "file": "notebooks/L03_knn_kmeans.ipynb",
+          "status": "complete"
+        },
+        "dataset": {
+          "file": "datasets/customers_synthetic.csv",
+          "status": "complete"
+        },
+        "instructor_guide": {
+          "file": "slides/L03_KNN_KMeans/L03_instructor_guide.md",
+          "status": "complete"
+        }
       },
-      "related_topics": ["L02", "L05"]
+      "related_topics": [
+        "L02",
+        "L05"
+      ]
     },
     {
       "id": "L04",
       "title": "Random Forests",
-      "status": "pending",
+      "status": "complete",
       "finance_case": "Fraud detection, feature importance",
       "problem_statement": "How do we build robust models and understand feature contributions?",
       "learning_objectives": [
-        {"id": "L04-O1", "text": "Explain bagging and feature randomization", "bloom_level": "understand"},
-        {"id": "L04-O2", "text": "Build decision trees and random forests", "bloom_level": "apply"},
-        {"id": "L04-O3", "text": "Interpret feature importance for business insights", "bloom_level": "analyze"},
-        {"id": "L04-O4", "text": "Tune hyperparameters using OOB error", "bloom_level": "evaluate"}
+        {
+          "id": "L04-O1",
+          "text": "Explain bagging and feature randomization",
+          "bloom_level": "understand"
+        },
+        {
+          "id": "L04-O2",
+          "text": "Build decision trees and random forests",
+          "bloom_level": "apply"
+        },
+        {
+          "id": "L04-O3",
+          "text": "Interpret feature importance for business insights",
+          "bloom_level": "analyze"
+        },
+        {
+          "id": "L04-O4",
+          "text": "Tune hyperparameters using OOB error",
+          "bloom_level": "evaluate"
+        }
       ],
-      "prerequisites": ["L01", "L02"],
-      "keywords": ["decision tree", "random forest", "bagging", "feature importance", "OOB", "ensemble"],
+      "prerequisites": [
+        "L01",
+        "L02"
+      ],
+      "keywords": [
+        "decision tree",
+        "random forest",
+        "bagging",
+        "feature importance",
+        "OOB",
+        "ensemble"
+      ],
       "estimated_time_minutes": 180,
       "difficulty": "intermediate",
       "decision_framework": {
@@ -188,41 +467,129 @@
           "Real-time predictions (many trees)",
           "Extrapolation required"
         ],
-        "pros": ["Handles non-linearity", "Feature importance", "Robust to overfitting", "Parallel training"],
-        "cons": ["Black box", "Memory intensive", "Slow prediction", "No extrapolation"]
+        "pros": [
+          "Handles non-linearity",
+          "Feature importance",
+          "Robust to overfitting",
+          "Parallel training"
+        ],
+        "cons": [
+          "Black box",
+          "Memory intensive",
+          "Slow prediction",
+          "No extrapolation"
+        ]
       },
       "assets": {
-        "overview_slides": {"file": "slides/L04_Random_Forests/L04_overview.tex", "status": "pending"},
-        "deepdive_slides": {"file": "slides/L04_Random_Forests/L04_deepdive.tex", "status": "pending"},
+        "overview_slides": {
+          "file": "slides/L04_Random_Forests/L04_overview.tex",
+          "status": "complete"
+        },
+        "deepdive_slides": {
+          "file": "slides/L04_Random_Forests/L04_deepdive.tex",
+          "status": "complete"
+        },
         "charts": [
-          {"id": "01_decision_tree", "file": "slides/L04_Random_Forests/01_decision_tree/chart.py", "status": "pending"},
-          {"id": "02_feature_importance", "file": "slides/L04_Random_Forests/02_feature_importance/chart.py", "status": "pending"},
-          {"id": "03_bootstrap_sampling", "file": "slides/L04_Random_Forests/03_bootstrap_sampling/chart.py", "status": "pending"},
-          {"id": "04_oob_error", "file": "slides/L04_Random_Forests/04_oob_error/chart.py", "status": "pending"},
-          {"id": "05_ensemble_voting", "file": "slides/L04_Random_Forests/05_ensemble_voting/chart.py", "status": "pending"},
-          {"id": "06_bias_variance", "file": "slides/L04_Random_Forests/06_bias_variance/chart.py", "status": "pending"},
-          {"id": "07_decision_flowchart", "file": "slides/L04_Random_Forests/07_decision_flowchart/chart.py", "status": "pending"}
+          {
+            "id": "01_decision_tree",
+            "file": "slides/L04_Random_Forests/01_decision_tree/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "02_feature_importance",
+            "file": "slides/L04_Random_Forests/02_feature_importance/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "03_bootstrap",
+            "file": "slides/L04_Random_Forests/03_bootstrap/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "04_oob_error",
+            "file": "slides/L04_Random_Forests/04_oob_error/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "05_ensemble_voting",
+            "file": "slides/L04_Random_Forests/05_ensemble_voting/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "06a_single_tree_variance",
+            "file": "slides/L04_Random_Forests/06a_single_tree_variance/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "06b_random_forest_variance",
+            "file": "slides/L04_Random_Forests/06b_random_forest_variance/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "07_decision_flowchart",
+            "file": "slides/L04_Random_Forests/07_decision_flowchart/chart.py",
+            "status": "complete"
+          }
         ],
-        "notebook": {"file": "notebooks/L04_random_forests.ipynb", "status": "pending"},
-        "dataset": {"file": "datasets/transactions_synthetic.csv", "status": "pending"},
-        "instructor_guide": {"file": "slides/L04_Random_Forests/L04_instructor_guide.md", "status": "pending"}
+        "notebook": {
+          "file": "notebooks/L04_random_forests.ipynb",
+          "status": "complete"
+        },
+        "dataset": {
+          "file": "datasets/transactions_synthetic.csv",
+          "status": "complete"
+        },
+        "instructor_guide": {
+          "file": "slides/L04_Random_Forests/L04_instructor_guide.md",
+          "status": "complete"
+        }
       },
-      "related_topics": ["L01", "L02", "L05"]
+      "related_topics": [
+        "L01",
+        "L02",
+        "L05"
+      ]
     },
     {
       "id": "L05",
       "title": "PCA & t-SNE",
-      "status": "pending",
+      "status": "complete",
       "finance_case": "Portfolio risk decomposition, visualization",
       "problem_statement": "How do we reduce dimensions while preserving structure?",
       "learning_objectives": [
-        {"id": "L05-O1", "text": "Derive PCA from eigenvalue decomposition", "bloom_level": "understand"},
-        {"id": "L05-O2", "text": "Apply PCA and t-SNE for visualization", "bloom_level": "apply"},
-        {"id": "L05-O3", "text": "Interpret principal components in finance context", "bloom_level": "analyze"},
-        {"id": "L05-O4", "text": "Choose between PCA and t-SNE for different tasks", "bloom_level": "evaluate"}
+        {
+          "id": "L05-O1",
+          "text": "Derive PCA from eigenvalue decomposition",
+          "bloom_level": "understand"
+        },
+        {
+          "id": "L05-O2",
+          "text": "Apply PCA and t-SNE for visualization",
+          "bloom_level": "apply"
+        },
+        {
+          "id": "L05-O3",
+          "text": "Interpret principal components in finance context",
+          "bloom_level": "analyze"
+        },
+        {
+          "id": "L05-O4",
+          "text": "Choose between PCA and t-SNE for different tasks",
+          "bloom_level": "evaluate"
+        }
       ],
-      "prerequisites": ["L01", "linear_algebra"],
-      "keywords": ["PCA", "t-SNE", "dimensionality reduction", "eigenvalues", "variance", "perplexity"],
+      "prerequisites": [
+        "L01",
+        "linear_algebra"
+      ],
+      "keywords": [
+        "PCA",
+        "t-SNE",
+        "dimensionality reduction",
+        "eigenvalues",
+        "variance",
+        "perplexity"
+      ],
       "estimated_time_minutes": 180,
       "difficulty": "advanced",
       "decision_framework": {
@@ -238,41 +605,150 @@
           "New data projection (t-SNE)",
           "Interpretable features required"
         ],
-        "pros": ["Reduces dimensions", "Noise filtering", "Visualization", "Unsupervised"],
-        "cons": ["Loss of interpretability", "Assumes linearity (PCA)", "Slow (t-SNE)", "Hyperparameter sensitive"]
+        "pros": [
+          "Reduces dimensions",
+          "Noise filtering",
+          "Visualization",
+          "Unsupervised"
+        ],
+        "cons": [
+          "Loss of interpretability",
+          "Assumes linearity (PCA)",
+          "Slow (t-SNE)",
+          "Hyperparameter sensitive"
+        ]
       },
       "assets": {
-        "overview_slides": {"file": "slides/L05_PCA_tSNE/L05_overview.tex", "status": "pending"},
-        "deepdive_slides": {"file": "slides/L05_PCA_tSNE/L05_deepdive.tex", "status": "pending"},
+        "overview_slides": {
+          "file": "slides/L05_PCA_tSNE/L05_overview.tex",
+          "status": "complete"
+        },
+        "deepdive_slides": {
+          "file": "slides/L05_PCA_tSNE/L05_deepdive.tex",
+          "status": "complete"
+        },
         "charts": [
-          {"id": "01_scree_plot", "file": "slides/L05_PCA_tSNE/01_scree_plot/chart.py", "status": "pending"},
-          {"id": "02_principal_components", "file": "slides/L05_PCA_tSNE/02_principal_components/chart.py", "status": "pending"},
-          {"id": "03_reconstruction_error", "file": "slides/L05_PCA_tSNE/03_reconstruction_error/chart.py", "status": "pending"},
-          {"id": "04_tsne_perplexity", "file": "slides/L05_PCA_tSNE/04_tsne_perplexity/chart.py", "status": "pending"},
-          {"id": "05_projection_comparison", "file": "slides/L05_PCA_tSNE/05_projection_comparison/chart.py", "status": "pending"},
-          {"id": "06_cluster_preservation", "file": "slides/L05_PCA_tSNE/06_cluster_preservation/chart.py", "status": "pending"},
-          {"id": "07_decision_flowchart", "file": "slides/L05_PCA_tSNE/07_decision_flowchart/chart.py", "status": "pending"}
+          {
+            "id": "01_scree_plot",
+            "file": "slides/L05_PCA_tSNE/01_scree_plot/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "02_principal_components",
+            "file": "slides/L05_PCA_tSNE/02_principal_components/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "03_reconstruction",
+            "file": "slides/L05_PCA_tSNE/03_reconstruction/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "04a_tsne_perplexity_5",
+            "file": "slides/L05_PCA_tSNE/04a_tsne_perplexity_5/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "04b_tsne_perplexity_30",
+            "file": "slides/L05_PCA_tSNE/04b_tsne_perplexity_30/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "04c_tsne_perplexity_100",
+            "file": "slides/L05_PCA_tSNE/04c_tsne_perplexity_100/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "05a_pca_swiss_roll",
+            "file": "slides/L05_PCA_tSNE/05a_pca_swiss_roll/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "05b_tsne_swiss_roll",
+            "file": "slides/L05_PCA_tSNE/05b_tsne_swiss_roll/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "06a_original_clusters",
+            "file": "slides/L05_PCA_tSNE/06a_original_clusters/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "06b_pca_cluster_projection",
+            "file": "slides/L05_PCA_tSNE/06b_pca_cluster_projection/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "06c_tsne_cluster_projection",
+            "file": "slides/L05_PCA_tSNE/06c_tsne_cluster_projection/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "07_decision_flowchart",
+            "file": "slides/L05_PCA_tSNE/07_decision_flowchart/chart.py",
+            "status": "complete"
+          }
         ],
-        "notebook": {"file": "notebooks/L05_pca_tsne.ipynb", "status": "pending"},
-        "dataset": {"file": "datasets/portfolio_synthetic.csv", "status": "pending"},
-        "instructor_guide": {"file": "slides/L05_PCA_tSNE/L05_instructor_guide.md", "status": "pending"}
+        "notebook": {
+          "file": "notebooks/L05_pca_tsne.ipynb",
+          "status": "complete"
+        },
+        "dataset": {
+          "file": "datasets/portfolio_synthetic.csv",
+          "status": "complete"
+        },
+        "instructor_guide": {
+          "file": "slides/L05_PCA_tSNE/L05_instructor_guide.md",
+          "status": "complete"
+        }
       },
-      "related_topics": ["L03", "L06"]
+      "related_topics": [
+        "L03",
+        "L06"
+      ]
     },
     {
       "id": "L06",
       "title": "Embeddings & Reinforcement Learning",
-      "status": "pending",
+      "status": "complete",
       "finance_case": "Sentiment analysis, trading strategies",
       "problem_statement": "How do we represent text and learn optimal sequential decisions?",
       "learning_objectives": [
-        {"id": "L06-O1", "text": "Explain word embeddings and similarity measures", "bloom_level": "understand"},
-        {"id": "L06-O2", "text": "Implement Q-learning for simple environments", "bloom_level": "apply"},
-        {"id": "L06-O3", "text": "Analyze embedding spaces for semantic relationships", "bloom_level": "analyze"},
-        {"id": "L06-O4", "text": "Design reward functions for trading agents", "bloom_level": "create"}
+        {
+          "id": "L06-O1",
+          "text": "Explain word embeddings and similarity measures",
+          "bloom_level": "understand"
+        },
+        {
+          "id": "L06-O2",
+          "text": "Implement Q-learning for simple environments",
+          "bloom_level": "apply"
+        },
+        {
+          "id": "L06-O3",
+          "text": "Analyze embedding spaces for semantic relationships",
+          "bloom_level": "analyze"
+        },
+        {
+          "id": "L06-O4",
+          "text": "Design reward functions for trading agents",
+          "bloom_level": "create"
+        }
       ],
-      "prerequisites": ["L01", "L02", "probability"],
-      "keywords": ["Word2Vec", "embeddings", "Q-learning", "MDP", "reward", "policy", "exploration"],
+      "prerequisites": [
+        "L01",
+        "L02",
+        "probability"
+      ],
+      "keywords": [
+        "Word2Vec",
+        "embeddings",
+        "Q-learning",
+        "MDP",
+        "reward",
+        "policy",
+        "exploration"
+      ],
       "estimated_time_minutes": 180,
       "difficulty": "advanced",
       "decision_framework": {
@@ -288,55 +764,119 @@
           "Real-time constraints (RL training)",
           "Need for interpretability"
         ],
-        "pros": ["Captures semantics", "Learns from experience", "Handles sequential data", "Adapts to environment"],
-        "cons": ["Need large corpora (embeddings)", "Slow training (RL)", "Reward design hard", "Exploration challenges"]
+        "pros": [
+          "Captures semantics",
+          "Learns from experience",
+          "Handles sequential data",
+          "Adapts to environment"
+        ],
+        "cons": [
+          "Need large corpora (embeddings)",
+          "Slow training (RL)",
+          "Reward design hard",
+          "Exploration challenges"
+        ]
       },
       "assets": {
-        "overview_slides": {"file": "slides/L06_Embeddings_RL/L06_overview.tex", "status": "pending"},
-        "deepdive_slides": {"file": "slides/L06_Embeddings_RL/L06_deepdive.tex", "status": "pending"},
+        "overview_slides": {
+          "file": "slides/L06_Embeddings_RL/L06_overview.tex",
+          "status": "complete"
+        },
+        "deepdive_slides": {
+          "file": "slides/L06_Embeddings_RL/L06_deepdive.tex",
+          "status": "complete"
+        },
         "charts": [
-          {"id": "01_word_embeddings", "file": "slides/L06_Embeddings_RL/01_word_embeddings/chart.py", "status": "pending"},
-          {"id": "02_similarity_heatmap", "file": "slides/L06_Embeddings_RL/02_similarity_heatmap/chart.py", "status": "pending"},
-          {"id": "03_rl_agent_environment", "file": "slides/L06_Embeddings_RL/03_rl_agent_environment/chart.py", "status": "pending"},
-          {"id": "04_qlearning_gridworld", "file": "slides/L06_Embeddings_RL/04_qlearning_gridworld/chart.py", "status": "pending"},
-          {"id": "05_reward_curves", "file": "slides/L06_Embeddings_RL/05_reward_curves/chart.py", "status": "pending"},
-          {"id": "06_exploration_exploitation", "file": "slides/L06_Embeddings_RL/06_exploration_exploitation/chart.py", "status": "pending"},
-          {"id": "07_decision_flowchart", "file": "slides/L06_Embeddings_RL/07_decision_flowchart/chart.py", "status": "pending"}
+          {
+            "id": "01_word_embedding_space",
+            "file": "slides/L06_Embeddings_RL/01_word_embedding_space/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "02_similarity_heatmap",
+            "file": "slides/L06_Embeddings_RL/02_similarity_heatmap/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "03_rl_loop",
+            "file": "slides/L06_Embeddings_RL/03_rl_loop/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "04_q_learning_grid",
+            "file": "slides/L06_Embeddings_RL/04_q_learning_grid/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "05_reward_curves",
+            "file": "slides/L06_Embeddings_RL/05_reward_curves/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "06_policy_viz",
+            "file": "slides/L06_Embeddings_RL/06_policy_viz/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "07_decision_flowchart",
+            "file": "slides/L06_Embeddings_RL/07_decision_flowchart/chart.py",
+            "status": "complete"
+          }
         ],
-        "notebook": {"file": "notebooks/L06_embeddings_rl.ipynb", "status": "pending"},
-        "dataset": {"file": "datasets/text_corpus_synthetic.json", "status": "pending"},
-        "instructor_guide": {"file": "slides/L06_Embeddings_RL/L06_instructor_guide.md", "status": "pending"}
+        "notebook": {
+          "file": "notebooks/L06_embeddings_rl.ipynb",
+          "status": "complete"
+        },
+        "dataset": {
+          "file": "datasets/text_corpus_synthetic.json",
+          "status": "complete"
+        },
+        "instructor_guide": {
+          "file": "slides/L06_Embeddings_RL/L06_instructor_guide.md",
+          "status": "complete"
+        }
       },
-      "related_topics": ["L05"]
+      "related_topics": [
+        "L05"
+      ]
     }
   ],
   "quizzes": [
     {
       "id": "quiz1",
       "title": "Quiz 1: Linear & Logistic Regression",
-      "topics": ["L01", "L02"],
+      "topics": [
+        "L01",
+        "L02"
+      ],
       "questions": 15,
       "duration_minutes": 30,
       "file": "quizzes/quiz1_topics_1_2.xml",
-      "status": "pending"
+      "status": "complete"
     },
     {
       "id": "quiz2",
       "title": "Quiz 2: KNN/K-Means & Random Forests",
-      "topics": ["L03", "L04"],
+      "topics": [
+        "L03",
+        "L04"
+      ],
       "questions": 15,
       "duration_minutes": 30,
       "file": "quizzes/quiz2_topics_3_4.xml",
-      "status": "pending"
+      "status": "complete"
     },
     {
       "id": "quiz3",
       "title": "Quiz 3: PCA/t-SNE & Embeddings/RL",
-      "topics": ["L05", "L06"],
+      "topics": [
+        "L05",
+        "L06"
+      ],
       "questions": 15,
       "duration_minutes": 30,
       "file": "quizzes/quiz3_topics_5_6.xml",
-      "status": "pending"
+      "status": "complete"
     }
   ],
   "presentations": {
