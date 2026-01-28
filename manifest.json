@@ -844,7 +844,7 @@
   "quizzes": [
     {
       "id": "quiz1",
-      "title": "Quiz 1: Linear & Logistic Regression",
+      "title": "Quiz 1: Regression Methods",
       "topics": [
         "L01",
         "L02"
@@ -856,7 +856,7 @@
     },
     {
       "id": "quiz2",
-      "title": "Quiz 2: KNN/K-Means & Random Forests",
+      "title": "Quiz 2: Classification & Ensembles",
       "topics": [
         "L03",
         "L04"
@@ -868,7 +868,7 @@
     },
     {
       "id": "quiz3",
-      "title": "Quiz 3: PCA/t-SNE & Embeddings/RL",
+      "title": "Quiz 3: Advanced Topics",
       "topics": [
         "L05",
         "L06"
@@ -884,7 +884,7 @@
     "selection_timing": "before_session_1",
     "duration_minutes": 15,
     "file": "presentations/topics.md",
-    "status": "pending"
+    "status": "complete"
   },
   "capstone": {
     "format": "open_ended",
@@ -892,6 +892,6 @@
     "pages": "10-15",
     "specification_file": "capstone/specification.md",
     "template_file": "capstone/report_template.tex",
-    "status": "pending"
+    "status": "complete"
   }
 }

@@ -30,7 +30,7 @@
 
 /* Slide backgrounds */
 .reveal .slides section {
-    padding: 20px 50px;
+    padding: 20px 15px;
 }
 
 /* Title slide */
@@ -139,7 +139,7 @@
     background: #f4f4f4;
     border-left: 4px solid var(--ml-purple);
     padding: 1em;
-    font-size: 0.7em;
+    font-size: 0.75em;
     border-radius: 4px;
 }
 
@@ -256,6 +256,16 @@
     .reveal .fragment {
         opacity: 1;
         visibility: visible;
+    }
+
+    .reveal .slides section {
+        page-break-after: always;
+        padding: 10px;
+    }
+
+    body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
     }
 }
 
