@@ -122,9 +122,11 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 \end{frame}
 
 \begin{frame}[t]{Decision Tree: Fraud Detection Example}
+\vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{01_decision_tree/chart.pdf}
+\includegraphics[width=0.50\textwidth]{01_decision_tree/chart.pdf}
 \end{center}
+\vspace{-0.5em}
 \bottomnote{Each path through the tree represents a fraud detection rule}
 \end{frame}
 
@@ -169,9 +171,11 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 \end{frame}
 
 \begin{frame}[t]{Bagging Visualization}
+\vspace{-1em}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{03_bootstrap/chart.pdf}
+\includegraphics[width=0.47\textwidth]{03_bootstrap/chart.pdf}
 \end{center}
+\vspace{-0.8em}
 \bottomnote{Bootstrap Aggregating: train on random samples, aggregate predictions}
 \end{frame}
 
@@ -285,9 +289,11 @@ For $B$ independent predictions with variance $\sigma^2$:
 \end{frame}
 
 \begin{frame}[t]{Ensemble Voting}
+\vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{05_ensemble_voting/chart.pdf}
+\includegraphics[width=0.48\textwidth]{05_ensemble_voting/chart.pdf}
 \end{center}
+\vspace{-0.5em}
 \bottomnote{Classification: majority vote. Regression: average prediction}
 \end{frame}
 
@@ -312,9 +318,16 @@ For $B$ independent predictions with variance $\sigma^2$:
 \bottomnote{Ensembles reduce variance without increasing bias}
 \end{frame}
 
-\begin{frame}[t]{Bias-Variance: Visualization}
+\begin{frame}[t]{Single Trees: High Variance}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{06_bias_variance/chart.pdf}
+\includegraphics[width=0.6\textwidth]{06a_single_tree_variance/chart.pdf}
+\end{center}
+\bottomnote{Individual trees overfit to their bootstrap samples, producing erratic predictions}
+\end{frame}
+
+\begin{frame}[t]{Random Forest: Variance Reduction}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{06b_random_forest_variance/chart.pdf}
 \end{center}
 \bottomnote{Averaging decorrelated trees dramatically reduces prediction variance}
 \end{frame}
@@ -440,9 +453,11 @@ Non-linear & Yes & Yes & No & Yes \\
 \end{frame}
 
 \begin{frame}[t]{Decision Framework}
+\vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=0.50\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
+\vspace{-0.5em}
 \bottomnote{Start with Random Forest; switch if specific constraints require it}
 \end{frame}
 

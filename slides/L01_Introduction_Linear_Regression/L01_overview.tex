@@ -77,6 +77,16 @@
   \bottomnote{Foundation for all supervised learning methods}
 \end{frame}
 
+% XKCD #1725: Linear Regression Humor
+\begin{frame}[t]{The Art of Fitting Lines}
+\vspace{-0.5em}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{images/1725_linear_regression.png}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{XKCD \#1725 by Randall Munroe (CC BY-NC 2.5) -- Always check if your data supports a linear fit!}
+\end{frame}
+
 % Slide 3: The Business Problem
 \begin{frame}[t]{The Business Problem}
   \textbf{Finance Use Case: Predicting House Prices}
@@ -118,6 +128,26 @@
   \end{itemize}
 
   \bottomnote{Goal: Find coefficients that minimize prediction error}
+\end{frame}
+
+% Slide: Simple Regression Visualization
+\begin{frame}[t]{Simple Linear Regression}
+\vspace{-1.0em}
+\begin{center}
+\includegraphics[width=0.50\textwidth]{01_simple_regression/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{The best-fit line minimizes the sum of squared distances from points}
+\end{frame}
+
+% Slide: Multiple Regression Visualization
+\begin{frame}[t]{Multiple Linear Regression}
+\vspace{-1.2em}
+\begin{center}
+\includegraphics[width=0.42\textwidth]{02_multiple_regression_3d/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{With multiple features, we fit a hyperplane to minimize squared errors}
 \end{frame}
 
 % Slide 5: The Optimization Problem
@@ -182,6 +212,16 @@
   \bottomnote{Both methods yield the same solution for OLS}
 \end{frame}
 
+% Slide: Gradient Descent Visualization
+\begin{frame}[t]{Gradient Descent in Action}
+\vspace{-1.0em}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{04_gradient_descent/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{Iteratively update parameters in the direction of steepest descent}
+\end{frame}
+
 % Slide 7: Interpreting Coefficients
 \begin{frame}[t]{Interpreting Coefficients}
   \textbf{Example:} House price model
@@ -224,6 +264,26 @@
   \bottomnote{Always evaluate on held-out test data}
 \end{frame}
 
+% Slide: Residual Diagnostics
+\begin{frame}[t]{Residual Diagnostics}
+\vspace{-1.0em}
+\begin{center}
+\includegraphics[width=0.50\textwidth]{03_residual_plots/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{Good residuals are random; patterns suggest model problems}
+\end{frame}
+
+% Slide: Learning Curves
+\begin{frame}[t]{Learning Curves}
+\vspace{-1.0em}
+\begin{center}
+\includegraphics[width=0.50\textwidth]{05_learning_curves/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{Learning curves help diagnose underfitting vs overfitting}
+\end{frame}
+
 % Slide 9: Decision Framework
 \begin{frame}[t]{When to Use Linear Regression}
   \begin{columns}[T]
@@ -261,6 +321,56 @@
       \bottomrule
     \end{tabular}
   \end{table}
+\end{frame}
+
+% XKCD #2048: Overfitting Warning
+\begin{frame}[t]{The Danger of Overfitting}
+\vspace{-2.0em}
+\begin{center}
+\includegraphics[width=0.32\textwidth]{images/2048_curve_fitting.png}
+\end{center}
+\vspace{-1.5em}
+\bottomnote{XKCD \#2048 -- Simpler models often generalize better (CC BY-NC 2.5)}
+\end{frame}
+
+% Slide: Regularization Comparison
+\begin{frame}[t]{Regularization: Ridge vs Lasso}
+\vspace{-1.0em}
+\begin{center}
+\includegraphics[width=0.50\textwidth]{06_regularization_comparison/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{Ridge shrinks all coefficients; Lasso can set some to exactly zero}
+\end{frame}
+
+% Slide: Bias-Variance Tradeoff
+\begin{frame}[t]{Bias-Variance Tradeoff}
+\vspace{-1.0em}
+\begin{center}
+\includegraphics[width=0.50\textwidth]{07_bias_variance/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{Model complexity controls the tradeoff between bias and variance}
+\end{frame}
+
+% XKCD #605: Extrapolation Warning
+\begin{frame}[t]{A Word of Caution}
+\vspace{-0.5em}
+\begin{center}
+\includegraphics[width=0.50\textwidth]{images/605_extrapolating.png}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{XKCD \#605 by Randall Munroe (CC BY-NC 2.5) -- Extrapolation is dangerous!}
+\end{frame}
+
+% Slide: Decision Flowchart
+\begin{frame}[t]{Decision Framework}
+\vspace{-1.0em}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{08_decision_flowchart/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{Use this flowchart to decide when linear regression is appropriate}
 \end{frame}
 
 % Slide 10: Key Takeaways

@@ -194,11 +194,25 @@ KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
 \bottomnote{t-distribution has heavier tails, allowing better separation in low-D}
 \end{frame}
 
-\begin{frame}[t]{Perplexity Parameter}
+\begin{frame}[t]{Perplexity: Low (Local Focus)}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{04_tsne_perplexity/chart.pdf}
+\includegraphics[width=0.55\textwidth]{04a_tsne_perplexity_5/chart.pdf}
 \end{center}
-\bottomnote{Perplexity $\approx$ effective number of neighbors (try 5-50)}
+\bottomnote{Low perplexity (5): tight clusters, focus on nearest neighbors only}
+\end{frame}
+
+\begin{frame}[t]{Perplexity: Default (Balanced)}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{04b_tsne_perplexity_30/chart.pdf}
+\end{center}
+\bottomnote{Default perplexity (30): balanced local and global structure}
+\end{frame}
+
+\begin{frame}[t]{Perplexity: High (Global Focus)}
+\begin{center}
+\includegraphics[width=0.48\textwidth]{04c_tsne_perplexity_100/chart.pdf}
+\end{center}
+\bottomnote{High perplexity (100): more spread, clusters may merge}
 \end{frame}
 
 \begin{frame}[t]{Perplexity Guidelines}
@@ -240,11 +254,18 @@ KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
 \end{frame}
 
 %% PART 4: COMPARISON
-\begin{frame}[t]{Part 4: PCA vs t-SNE}
+\begin{frame}[t]{Part 4: PCA on Non-linear Manifolds}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{05_pca_vs_tsne/chart.pdf}
+\includegraphics[width=0.48\textwidth]{05a_pca_swiss_roll/chart.pdf}
 \end{center}
-\bottomnote{PCA: global structure, linear. t-SNE: local structure, non-linear}
+\bottomnote{PCA (linear) cannot unroll the Swiss roll - structure overlaps}
+\end{frame}
+
+\begin{frame}[t]{t-SNE on Non-linear Manifolds}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{05b_tsne_swiss_roll/chart.pdf}
+\end{center}
+\bottomnote{t-SNE (non-linear) successfully unrolls the manifold structure}
 \end{frame}
 
 \begin{frame}[t]{Comparison Table}
@@ -267,11 +288,25 @@ Visualization & Okay & Excellent \\
 \bottomnote{Use PCA for preprocessing, t-SNE for visualization only}
 \end{frame}
 
-\begin{frame}[t]{Cluster Preservation}
+\begin{frame}[t]{Cluster Preservation: Original Data}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{06_cluster_preservation/chart.pdf}
+\includegraphics[width=0.55\textwidth]{06a_original_clusters/chart.pdf}
 \end{center}
-\bottomnote{t-SNE often reveals cluster structure better than PCA}
+\bottomnote{High-dimensional data (50 dims): clusters overlap when viewed in 2D}
+\end{frame}
+
+\begin{frame}[t]{Cluster Preservation: PCA Projection}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{06b_pca_cluster_projection/chart.pdf}
+\end{center}
+\bottomnote{PCA finds directions of max variance - some cluster separation}
+\end{frame}
+
+\begin{frame}[t]{Cluster Preservation: t-SNE Projection}
+\begin{center}
+\includegraphics[width=0.42\textwidth]{06c_tsne_cluster_projection/chart.pdf}
+\end{center}
+\bottomnote{t-SNE preserves local structure - clear cluster separation}
 \end{frame}
 
 \begin{frame}[t]{When to Use Which}

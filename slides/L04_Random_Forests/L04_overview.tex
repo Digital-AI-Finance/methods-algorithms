@@ -57,9 +57,11 @@
 \end{frame}
 
 \begin{frame}[t]{Decision Tree Structure}
+\vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{01_decision_tree/chart.pdf}
+\includegraphics[width=0.50\textwidth]{01_decision_tree/chart.pdf}
 \end{center}
+\vspace{-0.5em}
 \bottomnote{Trees split data using simple rules at each node until reaching a prediction}
 \end{frame}
 
@@ -71,10 +73,12 @@
 \end{frame}
 
 \begin{frame}[t]{Bootstrap Aggregating (Bagging)}
+\vspace{-1.1em}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{03_bootstrap/chart.pdf}
+\includegraphics[width=0.47\textwidth]{03_bootstrap/chart.pdf}
 \end{center}
-\bottomnote{Each tree trains on a different random sample, reducing overfitting}
+\vspace{-0.8em}
+\bottomnote{Each tree trains on a random sample, reducing overfitting}
 \end{frame}
 
 \begin{frame}[t]{Out-of-Bag Error}
@@ -85,23 +89,34 @@
 \end{frame}
 
 \begin{frame}[t]{Ensemble Voting}
+\vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{05_ensemble_voting/chart.pdf}
+\includegraphics[width=0.48\textwidth]{05_ensemble_voting/chart.pdf}
 \end{center}
+\vspace{-0.5em}
 \bottomnote{Final prediction combines votes from all trees (majority for classification)}
 \end{frame}
 
-\begin{frame}[t]{Bias-Variance Tradeoff}
+\begin{frame}[t]{Single Trees: High Variance}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{06_bias_variance/chart.pdf}
+\includegraphics[width=0.6\textwidth]{06a_single_tree_variance/chart.pdf}
+\end{center}
+\bottomnote{Each tree trained on different bootstrap sample produces different predictions}
+\end{frame}
+
+\begin{frame}[t]{Random Forest: Reduced Variance}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{06b_random_forest_variance/chart.pdf}
 \end{center}
 \bottomnote{Averaging many high-variance trees produces low-variance ensemble}
 \end{frame}
 
 \begin{frame}[t]{Decision Framework}
+\vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=0.50\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
+\vspace{-0.5em}
 \bottomnote{Random Forests excel when accuracy and feature importance both matter}
 \end{frame}
 
