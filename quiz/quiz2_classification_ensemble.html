@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 2: Classification &amp; Ensembles | Methods &amp; Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #3333B2;
+            --quiz-light: #ADADE0;
+            --correct: #22c55e;
+            --incorrect: #ef4444;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        .nav { background: linear-gradient(135deg, var(--mlpurple), var(--mlblue)); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .nav-title { color: white; font-size: 1.25rem; font-weight: 700; }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+        .nav-links a:hover { color: white; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+        .quiz-header { text-align: center; margin-bottom: 2rem; }
+        .quiz-header h1 { font-size: 1.75rem; margin-bottom: 0.5rem; color: var(--mlpurple); }
+        .quiz-header p { color: var(--text-light); margin-bottom: 1rem; }
+        .stats { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+        .stat-badge { background: var(--quiz-light); color: var(--mlpurple); padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .progress-wrap { background: var(--border); border-radius: 8px; height: 8px; margin-bottom: 2rem; overflow: hidden; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--mlpurple), var(--mlblue)); border-radius: 8px; transition: width 0.4s ease; width: 0%; }
+        .questions-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
+        @media (max-width: 768px) { .questions-row { grid-template-columns: 1fr; } }
+        .question-card { background: var(--card-bg); border-radius: var(--radius); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid var(--border); display: flex; flex-direction: column; }
+        .question-num { font-size: 0.75rem; font-weight: 700; color: var(--quiz-accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .question-text { font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.4; flex-grow: 1; }
+        .options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .option { padding: 0.6rem 0.8rem; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.35; }
+        .option:hover:not(.disabled) { border-color: var(--quiz-accent); background: rgba(51,51,178,0.04); }
+        .option.selected-correct { border-color: var(--correct); background: rgba(34,197,94,0.08); color: #166534; }
+        .option.selected-incorrect { border-color: var(--incorrect); background: rgba(239,68,68,0.08); color: #991b1b; }
+        .option.show-correct { border-color: var(--correct); background: rgba(34,197,94,0.08); }
+        .option.disabled { cursor: default; opacity: 0.7; }
+        .option-letter { font-weight: 700; min-width: 1.2rem; }
+        .explanation { margin-top: 0.75rem; padding: 0.65rem; background: rgba(51,51,178,0.05); border-radius: 8px; font-size: 0.8rem; color: var(--text-light); line-height: 1.4; display: none; }
+        .explanation.show { display: block; }
+        .btn-row { text-align: center; margin-bottom: 2rem; }
+        .btn { background: linear-gradient(135deg, var(--mlpurple), var(--mlblue)); color: white; border: none; padding: 0.75rem 2.5rem; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn:disabled { opacity: 0.4; cursor: default; }
+        .results { background: var(--card-bg); border-radius: var(--radius); padding: 2rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid var(--border); display: none; }
+        .results h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .grade { font-size: 3rem; font-weight: 800; margin: 0.5rem 0; }
+        .grade.a { color: var(--correct); } .grade.b { color: #65a30d; } .grade.c { color: #ca8a04; } .grade.d { color: #ea580c; } .grade.f { color: var(--incorrect); }
+        .score-text { color: var(--text-light); font-size: 1.1rem; margin-bottom: 1rem; }
+        .restart-btn { margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <span class="nav-title">Quiz 2: Classification &amp; Ensembles</span>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="quiz-header">
+            <h1>Classification &amp; Ensembles</h1>
+            <p>L03 KNN &amp; K-Means + L04 Random Forests</p>
+            <div class="stats">
+                <span class="stat-badge">15 Questions</span>
+                <span class="stat-badge">Multiple Choice</span>
+                <span class="stat-badge" id="score-badge">Score: 0 / 0</span>
+            </div>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+        <div id="questions-container"></div>
+        <div class="btn-row"><button class="btn" id="next-btn" disabled>Next</button></div>
+        <div class="results" id="results">
+            <h2>Quiz Complete!</h2>
+            <div class="grade" id="grade"></div>
+            <div class="score-text" id="final-score"></div>
+            <button class="btn restart-btn" onclick="restart()">Try Again</button>
+        </div>
+    </div>
+
+<script>
+const questions = [
+  {q:"How does K-Nearest Neighbors (KNN) make predictions for a new data point?", options:["By majority vote of the K closest training examples","By fitting a linear decision boundary","By computing cluster centroids","By learning weights through gradient descent"], correct:0, explanation:"KNN finds the K nearest neighbors and assigns the most common class among them."},
+  {q:"What happens when you increase the value of K in KNN?", options:["Decision boundary becomes smoother; model becomes less sensitive to noise","Model always achieves higher accuracy","Training time increases significantly","The model memorizes training data more"], correct:0, explanation:"Larger K averages more neighbors, reducing variance but potentially increasing bias."},
+  {q:"Which statement about distance metrics in KNN is correct?", options:["Features should be scaled before computing Euclidean distance","Manhattan distance is always better than Euclidean distance","Distance metrics don't affect KNN performance","Euclidean distance works well for text data"], correct:0, explanation:"Without scaling, features with larger ranges dominate the distance calculation."},
+  {q:"How does the \u201ccurse of dimensionality\u201d affect KNN?", options:["In high dimensions, all points become roughly equidistant, making nearest neighbors less meaningful","KNN becomes faster in high dimensions","It only affects regression, not classification","Using larger K values solves the problem"], correct:0, explanation:"Distance-based methods struggle when distances become uniformly large in high dimensions."},
+  {q:"What does the K-Means algorithm minimize?", options:["Within-cluster sum of squared distances to centroids (inertia)","Between-cluster distances","Number of clusters","Silhouette score"], correct:0, explanation:"K-Means minimizes the total squared distance from each point to its cluster centroid."},
+  {q:"Why is K-Means++ initialization preferred over random initialization?", options:["It spreads initial centroids apart, leading to better convergence","It automatically determines the optimal number of clusters","It guarantees finding the global optimum","It reduces memory usage"], correct:0, explanation:"K-Means++ selects centroids probabilistically to be far from existing ones."},
+  {q:"In the elbow method for choosing K in K-Means, what should you look for?", options:["The point where adding more clusters provides diminishing returns in reducing inertia","The minimum inertia value","The maximum silhouette score","The point where inertia becomes zero"], correct:0, explanation:"The \u201celbow\u201d is where the rate of inertia decrease slows significantly."},
+  {q:"A silhouette score close to +1 indicates:", options:["Points are well-matched to their own cluster and poorly matched to neighboring clusters","Points are likely assigned to the wrong cluster","The number of clusters should be increased","K-Means has converged"], correct:0, explanation:"High silhouette means good cluster cohesion and separation."},
+  {q:"What is \u201cbagging\u201d (bootstrap aggregating) in Random Forests?", options:["Training each tree on a random sample (with replacement) of the data","Combining predictions by taking the median","Selecting the best tree from the forest","Pruning trees to prevent overfitting"], correct:0, explanation:"Each tree sees a different bootstrap sample, reducing variance through averaging."},
+  {q:"Why does Random Forest randomly select a subset of features at each split?", options:["To decorrelate trees and reduce variance of the ensemble","To speed up training by using fewer features","To automatically select the best features","To reduce memory usage during training"], correct:0, explanation:"Feature randomization prevents all trees from making similar splits, improving ensemble diversity."},
+  {q:"What is the Out-of-Bag (OOB) error in Random Forests?", options:["Error estimated using samples not included in each tree's bootstrap sample","Error on the training set","Error on a separate test set","Error from trees that were pruned"], correct:0, explanation:"Each tree is validated on ~37% of data not in its bootstrap sample."},
+  {q:"How does Random Forest typically measure feature importance?", options:["By measuring the decrease in impurity (Gini or entropy) when splitting on each feature","By counting how often each feature appears in the forest","By computing correlation with the target variable","By the order in which features were added to the model"], correct:0, explanation:"Features that reduce impurity more are considered more important."},
+  {q:"What does a Gini impurity of 0 indicate for a node?", options:["All samples in the node belong to the same class (pure node)","Samples are equally distributed across all classes","The node cannot be split further","The feature is not informative"], correct:0, explanation:"Gini = 0 means perfect purity; all samples share the same label."},
+  {q:"Why does Random Forest typically outperform a single decision tree?", options:["Averaging multiple diverse trees reduces overfitting (lower variance)","Each tree in the forest is deeper and more complex","Random Forest uses a different splitting criterion","Random Forest trains faster than a single tree"], correct:0, explanation:"Ensemble averaging reduces variance while maintaining similar bias."},
+  {q:"Which hyperparameter controls the number of features considered at each split in Random Forest?", options:["max_features","n_estimators","max_depth","min_samples_split"], correct:0, explanation:"max_features controls how many features are considered for each split decision."}
+];
+
+questions.forEach(q => {
+    const correctText = q.options[q.correct];
+    for (let i = q.options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
+    }
+    q.correct = q.options.indexOf(correctText);
+});
+
+const BATCH = 3;
+let currentBatch = 0, score = 0, answered = 0, answeredInBatch = 0;
+
+function render() {
+    const container = document.getElementById('questions-container');
+    container.innerHTML = '';
+    const start = currentBatch * BATCH, end = Math.min(start + BATCH, questions.length);
+    const row = document.createElement('div');
+    row.className = 'questions-row';
+    for (let i = start; i < end; i++) {
+        const q = questions[i];
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.innerHTML = `<div class="question-num">Question ${i+1} of ${questions.length}</div><div class="question-text">${q.q}</div><div class="options">${q.options.map((o,j) => `<div class="option" data-q="${i}" data-o="${j}"><span class="option-letter">${'ABCD'[j]}.</span><span>${o}</span></div>`).join('')}</div><div class="explanation" id="exp-${i}">${q.explanation}</div>`;
+        row.appendChild(card);
+    }
+    container.appendChild(row);
+    answeredInBatch = 0;
+    updateBtn();
+    document.querySelectorAll('.option').forEach(el => el.addEventListener('click', handleClick));
+}
+
+function handleClick(e) {
+    const opt = e.currentTarget, qi = +opt.dataset.q, oi = +opt.dataset.o;
+    const siblings = document.querySelectorAll(`.option[data-q="${qi}"]`);
+    if ([...siblings].some(s => s.classList.contains('disabled'))) return;
+    siblings.forEach(s => s.classList.add('disabled'));
+    const correct = questions[qi].correct;
+    if (oi === correct) { opt.classList.add('selected-correct'); score++; }
+    else { opt.classList.add('selected-incorrect'); siblings[correct].classList.add('show-correct'); }
+    document.getElementById(`exp-${qi}`).classList.add('show');
+    answered++; answeredInBatch++;
+    document.getElementById('score-badge').textContent = `Score: ${score} / ${answered}`;
+    document.getElementById('progress').style.width = (answered/questions.length*100)+'%';
+    updateBtn();
+}
+
+function updateBtn() {
+    const btn = document.getElementById('next-btn');
+    const batchSize = Math.min(BATCH, questions.length - currentBatch*BATCH);
+    btn.disabled = answeredInBatch < batchSize;
+    btn.textContent = (currentBatch+1)*BATCH >= questions.length ? 'See Results' : 'Next';
+}
+
+document.getElementById('next-btn').addEventListener('click', () => {
+    if ((currentBatch+1)*BATCH >= questions.length) { showResults(); return; }
+    currentBatch++; render(); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+function showResults() {
+    document.getElementById('questions-container').style.display='none';
+    document.querySelector('.btn-row').style.display='none';
+    const pct = score/questions.length*100;
+    let g,c; if(pct>=90){g='A';c='a';}else if(pct>=80){g='B';c='b';}else if(pct>=70){g='C';c='c';}else if(pct>=60){g='D';c='d';}else{g='F';c='f';}
+    document.getElementById('grade').textContent=g;
+    document.getElementById('grade').className='grade '+c;
+    document.getElementById('final-score').textContent=`${score} out of ${questions.length} correct (${Math.round(pct)}%)`;
+    document.getElementById('results').style.display='block';
+}
+
+function restart() {
+    score=0;answered=0;currentBatch=0;
+    questions.forEach(q=>{const ct=q.options[q.correct];for(let i=q.options.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[q.options[i],q.options[j]]=[q.options[j],q.options[i]];}q.correct=q.options.indexOf(ct);});
+    document.getElementById('questions-container').style.display='';
+    document.querySelector('.btn-row').style.display='';
+    document.getElementById('results').style.display='none';
+    document.getElementById('score-badge').textContent='Score: 0 / 0';
+    document.getElementById('progress').style.width='0%';
+    render();
+}
+
+render();
+</script>
+</body>
+</html>

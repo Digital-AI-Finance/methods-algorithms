@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 1: Regression Methods | Methods &amp; Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #3333B2;
+            --quiz-light: #ADADE0;
+            --correct: #22c55e;
+            --incorrect: #ef4444;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* Nav */
+        .nav { background: linear-gradient(135deg, var(--mlpurple), var(--mlblue)); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .nav-title { color: white; font-size: 1.25rem; font-weight: 700; }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+        .nav-links a:hover { color: white; }
+
+        /* Container */
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+
+        /* Quiz Header */
+        .quiz-header { text-align: center; margin-bottom: 2rem; }
+        .quiz-header h1 { font-size: 1.75rem; margin-bottom: 0.5rem; color: var(--mlpurple); }
+        .quiz-header p { color: var(--text-light); margin-bottom: 1rem; }
+        .stats { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+        .stat-badge { background: var(--quiz-light); color: var(--mlpurple); padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+
+        /* Progress */
+        .progress-wrap { background: var(--border); border-radius: 8px; height: 8px; margin-bottom: 2rem; overflow: hidden; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--mlpurple), var(--mlblue)); border-radius: 8px; transition: width 0.4s ease; width: 0%; }
+
+        /* Questions Grid */
+        .questions-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
+        @media (max-width: 768px) { .questions-row { grid-template-columns: 1fr; } }
+
+        .question-card { background: var(--card-bg); border-radius: var(--radius); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid var(--border); display: flex; flex-direction: column; }
+        .question-num { font-size: 0.75rem; font-weight: 700; color: var(--quiz-accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .question-text { font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.4; flex-grow: 1; }
+        .options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .option { padding: 0.6rem 0.8rem; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.35; }
+        .option:hover:not(.disabled) { border-color: var(--quiz-accent); background: rgba(51,51,178,0.04); }
+        .option.selected-correct { border-color: var(--correct); background: rgba(34,197,94,0.08); color: #166534; }
+        .option.selected-incorrect { border-color: var(--incorrect); background: rgba(239,68,68,0.08); color: #991b1b; }
+        .option.show-correct { border-color: var(--correct); background: rgba(34,197,94,0.08); }
+        .option.disabled { cursor: default; opacity: 0.7; }
+        .option-letter { font-weight: 700; min-width: 1.2rem; }
+        .explanation { margin-top: 0.75rem; padding: 0.65rem; background: rgba(51,51,178,0.05); border-radius: 8px; font-size: 0.8rem; color: var(--text-light); line-height: 1.4; display: none; }
+        .explanation.show { display: block; }
+
+        /* Next / Results */
+        .btn-row { text-align: center; margin-bottom: 2rem; }
+        .btn { background: linear-gradient(135deg, var(--mlpurple), var(--mlblue)); color: white; border: none; padding: 0.75rem 2.5rem; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn:disabled { opacity: 0.4; cursor: default; }
+
+        .results { background: var(--card-bg); border-radius: var(--radius); padding: 2rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid var(--border); display: none; }
+        .results h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .grade { font-size: 3rem; font-weight: 800; margin: 0.5rem 0; }
+        .grade.a { color: var(--correct); } .grade.b { color: #65a30d; } .grade.c { color: #ca8a04; } .grade.d { color: #ea580c; } .grade.f { color: var(--incorrect); }
+        .score-text { color: var(--text-light); font-size: 1.1rem; margin-bottom: 1rem; }
+        .restart-btn { margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <span class="nav-title">Quiz 1: Regression Methods</span>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="quiz-header">
+            <h1>Regression Methods</h1>
+            <p>L01 Linear Regression &amp; L02 Logistic Regression</p>
+            <div class="stats">
+                <span class="stat-badge">15 Questions</span>
+                <span class="stat-badge">Multiple Choice</span>
+                <span class="stat-badge" id="score-badge">Score: 0 / 0</span>
+            </div>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+        <div id="questions-container"></div>
+        <div class="btn-row"><button class="btn" id="next-btn" disabled>Next</button></div>
+        <div class="results" id="results">
+            <h2>Quiz Complete!</h2>
+            <div class="grade" id="grade"></div>
+            <div class="score-text" id="final-score"></div>
+            <button class="btn restart-btn" onclick="restart()">Try Again</button>
+        </div>
+    </div>
+
+<script>
+const questions = [
+  {q:"What does Ordinary Least Squares (OLS) minimize when fitting a linear regression model?", options:["Sum of squared residuals (SSR)","Sum of absolute residuals","Maximum likelihood","Variance of predictions"], correct:0, explanation:"OLS minimizes the sum of squared differences between observed and predicted values."},
+  {q:"A linear regression model has R\u00b2 = 0.85. What is the correct interpretation?", options:["85% of the variance in the dependent variable is explained by the model","The model correctly predicts 85% of observations","85% of independent variables are significant","The correlation between X and Y is 0.85"], correct:0, explanation:"R\u00b2 represents the proportion of variance explained by the independent variables."},
+  {q:"What happens if the learning rate (\u03b1) in gradient descent is set too high?", options:["The algorithm may overshoot the minimum and diverge","The algorithm converges faster with no drawbacks","The algorithm gets stuck in local minima","The model automatically adjusts to optimal \u03b1"], correct:0, explanation:"A high learning rate causes large jumps that can miss the minimum entirely."},
+  {q:"Which statement correctly describes the difference between Ridge and Lasso regression?", options:["Lasso can set coefficients exactly to zero (feature selection), while Ridge shrinks them toward zero","Ridge uses L1 penalty, Lasso uses L2 penalty","Ridge is better for high-dimensional data than Lasso","They produce identical results with the same lambda value"], correct:0, explanation:"Lasso (L1) performs automatic feature selection, Ridge (L2) only shrinks coefficients."},
+  {q:"Which problem does multicollinearity cause in linear regression?", options:["Inflated standard errors making coefficient estimates unstable","Biased coefficient estimates","Lower R-squared values","Heteroscedasticity in residuals"], correct:0, explanation:"Multicollinearity increases variance of coefficient estimates, making them unreliable."},
+  {q:"As model complexity increases in linear regression (e.g., adding polynomial features), what typically happens?", options:["Bias decreases but variance increases","Both bias and variance decrease","Bias increases but variance decreases","Both bias and variance increase"], correct:0, explanation:"More complex models fit training data better (lower bias) but are more sensitive to data variations (higher variance)."},
+  {q:"Compared to Mean Absolute Error (MAE), Root Mean Squared Error (RMSE):", options:["Penalizes large errors more heavily","Is more robust to outliers","Always produces smaller values than MAE","Is measured in squared units of the target variable"], correct:0, explanation:"RMSE squares errors before averaging, giving more weight to large deviations."},
+  {q:"What does logistic regression directly output before applying a threshold?", options:["Probability of belonging to the positive class","Binary class label (0 or 1)","Distance from the decision boundary","Log-odds (logit) value"], correct:0, explanation:"The sigmoid function maps the linear combination to a probability between 0 and 1."},
+  {q:"The sigmoid function \u03c3(z) = 1/(1+e\u207b\u1dbb) has which property?", options:["\u03c3(0) = 0.5 and output is always between 0 and 1","\u03c3(0) = 0 and output can be any real number","The function is linear for small values of z","\u03c3(-z) = \u03c3(z) (symmetric around origin)"], correct:0, explanation:"At z=0, \u03c3(0)=0.5, and the function is bounded between 0 and 1."},
+  {q:"Why is cross-entropy (log loss) used instead of MSE for logistic regression?", options:["Cross-entropy creates a convex optimization problem with the sigmoid function","Cross-entropy is easier to compute than MSE","MSE cannot be used for classification problems","Cross-entropy always produces smaller loss values"], correct:0, explanation:"MSE with sigmoid creates non-convex loss surface; cross-entropy ensures convexity."},
+  {q:"What does the Area Under the ROC Curve (AUC) measure?", options:["Probability that a randomly chosen positive is ranked higher than a randomly chosen negative","The accuracy of the model at the optimal threshold","The proportion of correctly classified observations","The false positive rate at 50% true positive rate"], correct:0, explanation:"AUC represents the model's ability to distinguish between classes."},
+  {q:"In a fraud detection system where missing fraud is very costly, which metric should be prioritized?", options:["Recall (sensitivity)","Precision","Accuracy","Specificity"], correct:0, explanation:"High recall minimizes false negatives, catching more actual fraud cases."},
+  {q:"In a confusion matrix, a Type I error (false positive) occurs when:", options:["The model predicts positive but the actual class is negative","The model predicts negative but the actual class is positive","The model correctly predicts the positive class","The model's probability output is exactly 0.5"], correct:0, explanation:"False positive = predicted positive when actually negative (Type I error)."},
+  {q:"Which technique is commonly used to handle class imbalance in logistic regression?", options:["Adjusting class weights inversely proportional to class frequencies","Always using a threshold of 0.5 for classification","Removing all minority class samples","Using R-squared as the evaluation metric"], correct:0, explanation:"Weighting minority class higher helps the model pay more attention to rare events."},
+  {q:"In logistic regression, if a coefficient \u03b2\u2081 = 0.5, what does this mean?", options:["A 1-unit increase in X\u2081 increases the log-odds by 0.5 (odds multiply by e\u2070\u02\u2075 \u2248 1.65)","A 1-unit increase in X\u2081 increases the probability by 0.5","X\u2081 explains 50% of the variance in Y","The correlation between X\u2081 and Y is 0.5"], correct:0, explanation:"Coefficients represent changes in log-odds; exp(\u03b2) gives the odds ratio."}
+];
+
+// Shuffle options for each question (keeping track of correct)
+questions.forEach(q => {
+    const correctText = q.options[q.correct];
+    for (let i = q.options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
+    }
+    q.correct = q.options.indexOf(correctText);
+});
+
+const BATCH = 3;
+let currentBatch = 0;
+let score = 0;
+let answered = 0;
+let answeredInBatch = 0;
+
+function render() {
+    const container = document.getElementById('questions-container');
+    container.innerHTML = '';
+    const start = currentBatch * BATCH;
+    const end = Math.min(start + BATCH, questions.length);
+    const row = document.createElement('div');
+    row.className = 'questions-row';
+    for (let i = start; i < end; i++) {
+        const q = questions[i];
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.innerHTML = `
+            <div class="question-num">Question ${i+1} of ${questions.length}</div>
+            <div class="question-text">${q.q}</div>
+            <div class="options">${q.options.map((o,j) => `<div class="option" data-q="${i}" data-o="${j}"><span class="option-letter">${'ABCD'[j]}.</span><span>${o}</span></div>`).join('')}</div>
+            <div class="explanation" id="exp-${i}">${q.explanation}</div>`;
+        row.appendChild(card);
+    }
+    container.appendChild(row);
+    answeredInBatch = 0;
+    updateBtn();
+    document.querySelectorAll('.option').forEach(el => el.addEventListener('click', handleClick));
+}
+
+function handleClick(e) {
+    const opt = e.currentTarget;
+    const qi = +opt.dataset.q, oi = +opt.dataset.o;
+    const siblings = document.querySelectorAll(`.option[data-q="${qi}"]`);
+    if ([...siblings].some(s => s.classList.contains('disabled'))) return;
+    siblings.forEach(s => s.classList.add('disabled'));
+    const correct = questions[qi].correct;
+    if (oi === correct) { opt.classList.add('selected-correct'); score++; }
+    else { opt.classList.add('selected-incorrect'); siblings[correct].classList.add('show-correct'); }
+    document.getElementById(`exp-${qi}`).classList.add('show');
+    answered++; answeredInBatch++;
+    document.getElementById('score-badge').textContent = `Score: ${score} / ${answered}`;
+    document.getElementById('progress').style.width = (answered/questions.length*100)+'%';
+    updateBtn();
+}
+
+function updateBtn() {
+    const btn = document.getElementById('next-btn');
+    const batchSize = Math.min(BATCH, questions.length - currentBatch*BATCH);
+    btn.disabled = answeredInBatch < batchSize;
+    btn.textContent = (currentBatch+1)*BATCH >= questions.length ? 'See Results' : 'Next';
+}
+
+document.getElementById('next-btn').addEventListener('click', () => {
+    if ((currentBatch+1)*BATCH >= questions.length) { showResults(); return; }
+    currentBatch++;
+    render();
+    window.scrollTo({top:0,behavior:'smooth'});
+});
+
+function showResults() {
+    document.getElementById('questions-container').style.display='none';
+    document.querySelector('.btn-row').style.display='none';
+    const pct = score/questions.length*100;
+    let g,c; if(pct>=90){g='A';c='a';}else if(pct>=80){g='B';c='b';}else if(pct>=70){g='C';c='c';}else if(pct>=60){g='D';c='d';}else{g='F';c='f';}
+    document.getElementById('grade').textContent=g;
+    document.getElementById('grade').className='grade '+c;
+    document.getElementById('final-score').textContent=`${score} out of ${questions.length} correct (${Math.round(pct)}%)`;
+    document.getElementById('results').style.display='block';
+}
+
+function restart() {
+    score=0;answered=0;currentBatch=0;
+    questions.forEach(q=>{const ct=q.options[q.correct];for(let i=q.options.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[q.options[i],q.options[j]]=[q.options[j],q.options[i]];}q.correct=q.options.indexOf(ct);});
+    document.getElementById('questions-container').style.display='';
+    document.querySelector('.btn-row').style.display='';
+    document.getElementById('results').style.display='none';
+    document.getElementById('score-badge').textContent='Score: 0 / 0';
+    document.getElementById('progress').style.width='0%';
+    render();
+}
+
+render();
+</script>
+</body>
+</html>
