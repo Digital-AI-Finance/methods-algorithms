@@ -1,0 +1,251 @@
+{
+  "topic_id": "L02",
+  "topic_name": "Logistic Regression",
+  "presentation_type": "overview",
+  "file_path": "slides/L02_Logistic_Regression/L02_overview.tex",
+  "compliance": {
+    "document_class": {
+      "value": "\\documentclass[8pt,aspectratio=169]{beamer}",
+      "status": "compliant",
+      "line": 1
+    },
+    "theme": {
+      "value": "Madrid",
+      "status": "compliant",
+      "line": 2
+    },
+    "colors_defined": {
+      "mlpurple": {"hex": "#3333B2", "line": 12, "status": "compliant"},
+      "mlblue": {"hex": "#0066CC", "line": 13, "status": "compliant"},
+      "mlgreen": {"hex": "#2CA02C", "line": 14, "status": "compliant"},
+      "mlred": {"hex": "#D62728", "line": 15, "status": "compliant"},
+      "mlorange": {"hex": "#FF7F0E", "line": 16, "status": "compliant"}
+    },
+    "custom_commands": {
+      "bottomnote": {"defined": true, "line": 19, "status": "compliant"}
+    }
+  },
+  "structure": {
+    "total_frames": 10,
+    "title_slide": {"frame_number": 1, "lines": "29-31"},
+    "content_frames": 9,
+    "sections": []
+  },
+  "frames": [
+    {
+      "frame_number": 1,
+      "title": "Title Page",
+      "type": "title",
+      "lines": "29-31",
+      "chart_count": 0,
+      "bullet_count": 0
+    },
+    {
+      "frame_number": 2,
+      "title": "Learning Objectives",
+      "type": "content",
+      "lines": "34-45",
+      "chart_count": 0,
+      "bullet_count": 4,
+      "max_bullets_per_item": 1,
+      "has_bottom_note": true
+    },
+    {
+      "frame_number": 3,
+      "title": "Why Logistic Regression?",
+      "type": "content",
+      "lines": "48-63",
+      "chart_count": 0,
+      "bullet_count": 6,
+      "max_bullets_per_item": 1,
+      "has_bottom_note": true,
+      "subsections": ["The Business Problem", "Why Not Linear Regression?"]
+    },
+    {
+      "frame_number": 4,
+      "title": "The Sigmoid Function",
+      "type": "content",
+      "lines": "66-76",
+      "chart_count": 1,
+      "chart_path": "01_sigmoid_function/chart.pdf",
+      "chart_width": "0.55\\textwidth",
+      "bullet_count": 2,
+      "max_bullets_per_item": 1,
+      "has_bottom_note": true
+    },
+    {
+      "frame_number": 5,
+      "title": "Decision Boundary",
+      "type": "chart_only",
+      "lines": "79-84",
+      "chart_count": 1,
+      "chart_path": "02_decision_boundary/chart.pdf",
+      "chart_width": "0.65\\textwidth",
+      "bullet_count": 0,
+      "has_bottom_note": true
+    },
+    {
+      "frame_number": 6,
+      "title": "Binary Cross-Entropy Loss",
+      "type": "content",
+      "lines": "87-97",
+      "chart_count": 1,
+      "chart_path": "03_log_loss/chart.pdf",
+      "chart_width": "0.55\\textwidth",
+      "bullet_count": 2,
+      "max_bullets_per_item": 1,
+      "has_bottom_note": true,
+      "subsection": "Why Not MSE?"
+    },
+    {
+      "frame_number": 7,
+      "title": "ROC Curve and AUC",
+      "type": "chart_focused",
+      "lines": "100-107",
+      "chart_count": 1,
+      "chart_path": "04_roc_curve/chart.pdf",
+      "chart_width": "0.48\\textwidth",
+      "bullet_count": 0,
+      "has_bottom_note": true,
+      "has_vspace_adjustment": true
+    },
+    {
+      "frame_number": 8,
+      "title": "Precision-Recall Trade-off",
+      "type": "chart_only",
+      "lines": "110-115",
+      "chart_count": 1,
+      "chart_path": "05_precision_recall/chart.pdf",
+      "chart_width": "0.6\\textwidth",
+      "bullet_count": 0,
+      "has_bottom_note": true
+    },
+    {
+      "frame_number": 9,
+      "title": "Confusion Matrix: Reading the Results",
+      "type": "chart_only",
+      "lines": "118-123",
+      "chart_count": 1,
+      "chart_path": "06_confusion_matrix/chart.pdf",
+      "chart_width": "0.6\\textwidth",
+      "bullet_count": 0,
+      "has_bottom_note": true
+    },
+    {
+      "frame_number": 10,
+      "title": "When to Use Logistic Regression",
+      "type": "chart_only",
+      "lines": "126-131",
+      "chart_count": 1,
+      "chart_path": "07_decision_flowchart/chart.pdf",
+      "chart_width": "0.65\\textwidth",
+      "bullet_count": 0,
+      "has_bottom_note": true
+    }
+  ],
+  "charts": [
+    {
+      "chart_id": "01_sigmoid_function",
+      "chart_path": "slides/L02_Logistic_Regression/01_sigmoid_function/chart.pdf",
+      "script_path": "slides/L02_Logistic_Regression/01_sigmoid_function/chart.py",
+      "frame_number": 4,
+      "status": "complete",
+      "pdf_exists": true,
+      "file_size_bytes": 21981
+    },
+    {
+      "chart_id": "02_decision_boundary",
+      "chart_path": "slides/L02_Logistic_Regression/02_decision_boundary/chart.pdf",
+      "script_path": "slides/L02_Logistic_Regression/02_decision_boundary/chart.py",
+      "frame_number": 5,
+      "status": "complete",
+      "pdf_exists": true,
+      "file_size_bytes": 24153
+    },
+    {
+      "chart_id": "03_log_loss",
+      "chart_path": "slides/L02_Logistic_Regression/03_log_loss/chart.pdf",
+      "script_path": "slides/L02_Logistic_Regression/03_log_loss/chart.py",
+      "frame_number": 6,
+      "status": "complete",
+      "pdf_exists": true,
+      "file_size_bytes": 22415
+    },
+    {
+      "chart_id": "04_roc_curve",
+      "chart_path": "slides/L02_Logistic_Regression/04_roc_curve/chart.pdf",
+      "script_path": "slides/L02_Logistic_Regression/04_roc_curve/chart.py",
+      "frame_number": 7,
+      "status": "complete",
+      "pdf_exists": true,
+      "file_size_bytes": 19187
+    },
+    {
+      "chart_id": "05_precision_recall",
+      "chart_path": "slides/L02_Logistic_Regression/05_precision_recall/chart.pdf",
+      "script_path": "slides/L02_Logistic_Regression/05_precision_recall/chart.py",
+      "frame_number": 8,
+      "status": "complete",
+      "pdf_exists": true,
+      "file_size_bytes": 20356
+    },
+    {
+      "chart_id": "06_confusion_matrix",
+      "chart_path": "slides/L02_Logistic_Regression/06_confusion_matrix/chart.pdf",
+      "script_path": "slides/L02_Logistic_Regression/06_confusion_matrix/chart.py",
+      "frame_number": 9,
+      "status": "complete",
+      "pdf_exists": true,
+      "file_size_bytes": 28331
+    },
+    {
+      "chart_id": "07_decision_flowchart",
+      "chart_path": "slides/L02_Logistic_Regression/07_decision_flowchart/chart.pdf",
+      "script_path": "slides/L02_Logistic_Regression/07_decision_flowchart/chart.py",
+      "frame_number": 10,
+      "status": "complete",
+      "pdf_exists": true,
+      "file_size_bytes": 16376
+    }
+  ],
+  "content_summary": {
+    "subtitle": "Classification with Probability Estimates",
+    "finance_application": "Credit default prediction",
+    "pmsp_coverage": {
+      "problem": "Banks must decide: approve or reject loan applications",
+      "method": "Logistic regression with sigmoid function",
+      "solution": "Binary cross-entropy loss, gradient descent optimization",
+      "practice": "ROC curves, precision-recall, confusion matrices"
+    },
+    "key_concepts": [
+      "Sigmoid function transforms linear to probability",
+      "Decision boundaries for classification",
+      "Binary cross-entropy loss function",
+      "ROC curve and AUC metrics",
+      "Precision-recall trade-offs",
+      "Confusion matrix interpretation",
+      "When to use logistic regression"
+    ]
+  },
+  "quality_metrics": {
+    "avg_bullets_per_frame": 1.56,
+    "max_bullets_on_any_frame": 6,
+    "frames_with_charts": 7,
+    "frames_chart_only": 4,
+    "frames_mixed_content": 3,
+    "bottom_notes_count": 10,
+    "expected_slide_count": "~17",
+    "actual_slide_count": 10,
+    "slide_count_status": "below_target"
+  },
+  "issues": [
+    {
+      "severity": "info",
+      "type": "slide_count",
+      "message": "Overview has 10 frames, target is ~17 slides",
+      "recommendation": "Consider expanding content coverage"
+    }
+  ],
+  "generated_timestamp": "2026-01-28T14:45:00Z",
+  "audit_version": "1.0"
+}

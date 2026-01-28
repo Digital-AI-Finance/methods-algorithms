@@ -1,0 +1,130 @@
+{
+  "topic": "L06_Embeddings_RL",
+  "presentation": "overview",
+  "file": "slides/L06_Embeddings_RL/L06_overview.tex",
+  "analysis_date": "2026-01-28",
+  "template_compliance": {
+    "document_class": "beamer",
+    "theme": "Madrid",
+    "font_size": "8pt",
+    "aspect_ratio": "16:9",
+    "custom_colors": ["mlpurple", "mlblue", "mlgreen", "mlred", "mlorange"],
+    "bottomnote_command": true,
+    "compliant": true
+  },
+  "structure": {
+    "total_frames": 11,
+    "title_slide": true,
+    "learning_objectives": true,
+    "sections": [
+      {
+        "name": "Introduction",
+        "frames": 2,
+        "description": "Learning objectives and business problem"
+      },
+      {
+        "name": "Word Embeddings",
+        "frames": 2,
+        "description": "Embedding space and similarity"
+      },
+      {
+        "name": "Reinforcement Learning",
+        "frames": 5,
+        "description": "RL loop, Q-learning, reward curves, policy"
+      },
+      {
+        "name": "Decision Framework",
+        "frames": 1,
+        "description": "Flowchart for method selection"
+      }
+    ]
+  },
+  "charts": [
+    {
+      "number": "01",
+      "name": "word_embedding_space",
+      "path": "slides/L06_Embeddings_RL/01_word_embedding_space/chart.py",
+      "pdf_exists": true,
+      "included_in_slide": 3,
+      "width": "0.55\\textwidth",
+      "description": "Similar words cluster together in embedding space"
+    },
+    {
+      "number": "02",
+      "name": "similarity_heatmap",
+      "path": "slides/L06_Embeddings_RL/02_similarity_heatmap/chart.py",
+      "pdf_exists": true,
+      "included_in_slide": 4,
+      "width": "0.5\\textwidth",
+      "description": "Cosine similarity captures semantic relationships"
+    },
+    {
+      "number": "03",
+      "name": "rl_loop",
+      "path": "slides/L06_Embeddings_RL/03_rl_loop/chart.py",
+      "pdf_exists": true,
+      "included_in_slide": 5,
+      "width": "0.55\\textwidth",
+      "description": "Agent takes actions, receives rewards, learns optimal policy"
+    },
+    {
+      "number": "04",
+      "name": "q_learning_grid",
+      "path": "slides/L06_Embeddings_RL/04_q_learning_grid/chart.py",
+      "pdf_exists": true,
+      "included_in_slide": 6,
+      "width": "0.45\\textwidth",
+      "description": "Q-values indicate expected future reward from each state-action"
+    },
+    {
+      "number": "05",
+      "name": "reward_curves",
+      "path": "slides/L06_Embeddings_RL/05_reward_curves/chart.py",
+      "pdf_exists": true,
+      "included_in_slide": 7,
+      "width": "0.55\\textwidth",
+      "description": "RL agents improve through exploration and exploitation"
+    },
+    {
+      "number": "06",
+      "name": "policy_viz",
+      "path": "slides/L06_Embeddings_RL/06_policy_viz/chart.py",
+      "pdf_exists": true,
+      "included_in_slide": 8,
+      "width": "0.55\\textwidth",
+      "description": "Policy maps states to actions (when to buy/sell/hold)"
+    },
+    {
+      "number": "07",
+      "name": "decision_flowchart",
+      "path": "slides/L06_Embeddings_RL/07_decision_flowchart/chart.py",
+      "pdf_exists": true,
+      "included_in_slide": 9,
+      "width": "0.5\\textwidth",
+      "description": "Embeddings for text, RL for sequential decisions with delayed rewards"
+    }
+  ],
+  "content_analysis": {
+    "max_bullets_per_slide": 4,
+    "slides_with_overflow_risk": [],
+    "chart_only_slides": 7,
+    "text_with_chart_slides": 0,
+    "text_only_slides": 2
+  },
+  "latex_validation": {
+    "compiles": true,
+    "pdf_generated": true,
+    "overflow_warnings": 0,
+    "issues": []
+  },
+  "finance_applications": [
+    "Sentiment analysis",
+    "Algorithmic trading"
+  ],
+  "learning_objectives": [
+    "Explain word embeddings and their applications",
+    "Apply pre-trained embeddings for text analysis",
+    "Understand the reinforcement learning framework",
+    "Implement basic Q-learning for decision problems"
+  ]
+}

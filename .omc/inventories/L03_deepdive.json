@@ -1,0 +1,221 @@
+{
+  "topic_id": "L03",
+  "topic_name": "K-Nearest Neighbors & K-Means",
+  "file": "slides/L03_KNN_KMeans/L03_deepdive.tex",
+  "type": "deepdive",
+  "metadata": {
+    "title": "L03: KNN & K-Means",
+    "subtitle": "Mathematical Foundations and Implementation",
+    "course": "Methods and Algorithms -- MSc Data Science",
+    "template_compliance": {
+      "document_class": "beamer [8pt,aspectratio=169]",
+      "theme": "Madrid",
+      "color_theme": "default",
+      "custom_colors": ["mlpurple", "mlblue", "mlgreen", "mlred", "mlorange"],
+      "packages": ["amsmath", "amssymb", "graphicx", "booktabs", "tikz", "algorithm", "algorithmic"],
+      "compliant": true
+    }
+  },
+  "structure": {
+    "total_frames": 31,
+    "title_slide": 1,
+    "content_slides": 30,
+    "sections": [
+      {
+        "name": "K-Nearest Neighbors",
+        "frame_range": [2, 12],
+        "slides": 11,
+        "description": "Comprehensive KNN coverage: lazy learning, distance metrics (Minkowski family), decision boundaries, K selection, weighted KNN, feature scaling, curse of dimensionality, computational considerations, scikit-learn implementation"
+      },
+      {
+        "name": "K-Means Clustering",
+        "frame_range": [13, 24],
+        "slides": 12,
+        "description": "Complete K-Means treatment: objective function (WCSS), algorithm steps, visualization, initialization strategies (K-Means++), choosing K (elbow + silhouette), decision regions (Voronoi), assumptions, variants (Mini-Batch, K-Medoids), scikit-learn implementation"
+      },
+      {
+        "name": "Comparison and Applications",
+        "frame_range": [25, 30],
+        "slides": 6,
+        "description": "KNN vs K-Means comparison, finance applications (customer segmentation, fraud detection), when to use what, alternatives, key takeaways, references"
+      },
+      {
+        "name": "Summary",
+        "frame_range": [31, 31],
+        "slides": 1,
+        "description": "Key takeaways and references"
+      }
+    ]
+  },
+  "charts": [
+    {
+      "number": 1,
+      "name": "distance_metrics",
+      "folder": "02_distance_metrics",
+      "file": "slides/L03_KNN_KMeans/02_distance_metrics/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/02_distance_metrics/chart.pdf",
+      "frames": [3],
+      "width": "0.48\\textwidth",
+      "description": "Distance metrics visualization (used in KNN section)",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 2,
+      "name": "knn_boundaries",
+      "folder": "01_knn_boundaries",
+      "file": "slides/L03_KNN_KMeans/01_knn_boundaries/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/01_knn_boundaries/chart.pdf",
+      "frames": [5],
+      "width": "0.55\\textwidth",
+      "description": "KNN decision boundaries showing effect of K parameter on boundary complexity",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 3,
+      "name": "kmeans_iteration",
+      "folder": "03_kmeans_iteration",
+      "file": "slides/L03_KNN_KMeans/03_kmeans_iteration/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/03_kmeans_iteration/chart.pdf",
+      "frames": [15],
+      "width": "0.55\\textwidth",
+      "description": "K-Means iterative process visualization (final convergence state)",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 4,
+      "name": "elbow_method",
+      "folder": "04_elbow_method",
+      "file": "slides/L03_KNN_KMeans/04_elbow_method/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/04_elbow_method/chart.pdf",
+      "frames": [17],
+      "width": "0.55\\textwidth",
+      "description": "Elbow method for K selection showing WCSS vs number of clusters",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 5,
+      "name": "silhouette",
+      "folder": "05_silhouette",
+      "file": "slides/L03_KNN_KMeans/05_silhouette/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/05_silhouette/chart.pdf",
+      "frames": [19],
+      "width": "0.55\\textwidth",
+      "description": "Silhouette plot for cluster quality evaluation",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 6,
+      "name": "voronoi",
+      "folder": "06_voronoi",
+      "file": "slides/L03_KNN_KMeans/06_voronoi/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/06_voronoi/chart.pdf",
+      "frames": [20],
+      "width": "0.55\\textwidth",
+      "description": "K-Means Voronoi tessellation showing decision regions",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 7,
+      "name": "decision_flowchart",
+      "folder": "07_decision_flowchart",
+      "file": "slides/L03_KNN_KMeans/07_decision_flowchart/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/07_decision_flowchart/chart.pdf",
+      "frames": [28],
+      "width": "0.6\\textwidth",
+      "description": "Decision framework for choosing between KNN and K-Means",
+      "status": "complete",
+      "verified": true
+    }
+  ],
+  "content_analysis": {
+    "max_bullets_per_slide": 4,
+    "bullet_compliance": true,
+    "chart_width_compliance": true,
+    "bottom_notes": 28,
+    "mathematical_depth": "high",
+    "equations": [
+      "Minkowski distance formula",
+      "Weighted KNN distance weighting",
+      "Standardization and Min-Max scaling",
+      "K-Means WCSS objective",
+      "Silhouette score formula"
+    ],
+    "algorithms": [
+      "KNN classification algorithm (3 steps)",
+      "K-Means algorithm (pseudocode with REPEAT-UNTIL)"
+    ],
+    "implementation_details": {
+      "knn_sklearn": [
+        "KNeighborsClassifier parameters",
+        "weights: uniform vs distance",
+        "metric options",
+        "algorithm: auto, ball_tree, kd_tree, brute"
+      ],
+      "kmeans_sklearn": [
+        "KMeans parameters",
+        "init: k-means++ vs random",
+        "n_init: multiple runs",
+        "max_iter limit"
+      ]
+    },
+    "finance_applications": [
+      {
+        "name": "Customer Segmentation",
+        "method": "K-Means",
+        "features": ["Transaction frequency", "Average amount", "Account balance", "Product holdings"],
+        "frame": 26
+      },
+      {
+        "name": "Fraud Detection",
+        "methods": ["KNN (supervised)", "K-Means (anomaly detection)"],
+        "features": ["Amount", "Time", "Location", "Merchant category"],
+        "frame": 27
+      }
+    ],
+    "key_concepts": [
+      "Lazy learning (instance-based)",
+      "Distance metrics (Minkowski family)",
+      "Bias-variance tradeoff in K selection",
+      "Feature scaling necessity",
+      "Curse of dimensionality",
+      "Computational complexity (training vs prediction)",
+      "WCSS minimization",
+      "K-Means++ initialization",
+      "Elbow method and silhouette analysis",
+      "K-Means assumptions and failure cases",
+      "Variants: Mini-Batch, K-Medoids, K-Modes"
+    ]
+  },
+  "pedagogical_features": {
+    "comparison_table": {
+      "frame": 25,
+      "aspects": ["Task", "Learning type", "K meaning", "Training", "Prediction", "Output"]
+    },
+    "decision_guidance": {
+      "when_to_use_knn": ["Labeled data", "Local patterns", "Interpretability", "Moderate dataset"],
+      "when_to_use_kmeans": ["No labels", "Natural groupings", "Spherical clusters", "Large data"]
+    },
+    "alternatives_mentioned": {
+      "knn": ["Ball tree", "Approximate NN", "Logistic regression", "Random forest"],
+      "kmeans": ["DBSCAN", "Agglomerative clustering", "Gaussian Mixture Models", "Spectral clustering"]
+    }
+  },
+  "issues": [],
+  "validation": {
+    "template_compliant": true,
+    "all_charts_present": true,
+    "all_charts_executable": true,
+    "bullet_count_ok": true,
+    "chart_widths_ok": true,
+    "mathematical_rigor": "appropriate",
+    "algorithm_pseudocode": true
+  },
+  "generated_at": "2026-01-28T00:00:00Z",
+  "validated_by": "Claude Sonnet 4.5"
+}

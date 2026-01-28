@@ -1,0 +1,251 @@
+{
+  "topic": "L01_Introduction_Linear_Regression",
+  "presentation": "L01_deepdive.tex",
+  "type": "deepdive",
+  "metadata": {
+    "title": "Introduction & Linear Regression",
+    "subtitle": "Deep Dive: Mathematics and Implementation",
+    "author": "Methods and Algorithms",
+    "institute": "MSc Data Science",
+    "date": "Spring 2026"
+  },
+  "template_compliance": {
+    "document_class": "beamer[8pt,aspectratio=169]",
+    "theme": "Madrid",
+    "colors": {
+      "MLPurple": "#3333B2",
+      "MLBlue": "#0066CC",
+      "MLOrange": "#FF7F0E",
+      "MLGreen": "#2CA02C",
+      "MLRed": "#D62728"
+    },
+    "custom_commands": ["\\bottomnote", "\\highlight"],
+    "compliant": true
+  },
+  "structure": {
+    "total_frames": 32,
+    "title_frame": 1,
+    "outline_frame": 1,
+    "content_frames": 30,
+    "sections": [
+      {
+        "name": "Mathematical Foundations",
+        "frames": 7,
+        "topics": [
+          "Matrix Notation",
+          "Design Matrix Structure",
+          "OLS Assumptions (5 classical assumptions)",
+          "The Loss Function",
+          "Deriving the Normal Equation",
+          "Simple Regression Visualization (chart)",
+          "Multiple Regression Surface (chart)"
+        ]
+      },
+      {
+        "name": "Gradient Descent",
+        "frames": 6,
+        "topics": [
+          "Why Gradient Descent?",
+          "The Gradient",
+          "Gradient Descent Algorithm",
+          "Gradient Descent Visualization (chart)",
+          "Learning Rate Selection",
+          "Stochastic Gradient Descent (SGD)"
+        ]
+      },
+      {
+        "name": "Model Evaluation",
+        "frames": 6,
+        "topics": [
+          "R-Squared (R²)",
+          "Adjusted R-Squared",
+          "RMSE and MAE",
+          "Residual Analysis (chart)",
+          "Train-Test Split",
+          "Learning Curves (chart)"
+        ]
+      },
+      {
+        "name": "Regularization",
+        "frames": 6,
+        "topics": [
+          "The Overfitting Problem",
+          "Ridge Regression (L2)",
+          "Lasso Regression (L1)",
+          "Ridge vs Lasso Comparison (chart)",
+          "Elastic Net",
+          "Choosing Lambda"
+        ]
+      },
+      {
+        "name": "Bias-Variance Tradeoff",
+        "frames": 3,
+        "topics": [
+          "Decomposing Prediction Error",
+          "The Tradeoff Illustrated (chart)",
+          "Regularization and Bias-Variance"
+        ]
+      },
+      {
+        "name": "Decision Framework",
+        "frames": 2,
+        "topics": [
+          "Algorithm Selection Guide (chart)",
+          "Linear Regression: When and Why"
+        ]
+      },
+      {
+        "name": "Summary",
+        "frames": 3,
+        "topics": [
+          "Key Equations Summary",
+          "Key Takeaways",
+          "References"
+        ]
+      }
+    ]
+  },
+  "charts": [
+    {
+      "id": "01_simple_regression",
+      "path": "slides/L01_Introduction_Linear_Regression/01_simple_regression/chart.pdf",
+      "title": "Simple Regression Visualization",
+      "section": "Mathematical Foundations",
+      "frame_number": 8,
+      "width": "0.55\\textwidth",
+      "description": "The fitted line minimizes vertical distances squared",
+      "status": "complete"
+    },
+    {
+      "id": "02_multiple_regression_3d",
+      "path": "slides/L01_Introduction_Linear_Regression/02_multiple_regression_3d/chart.pdf",
+      "title": "Multiple Regression Surface",
+      "section": "Mathematical Foundations",
+      "frame_number": 9,
+      "width": "0.42\\textwidth",
+      "description": "With 2 features, we fit a plane; with p features, a hyperplane",
+      "status": "complete"
+    },
+    {
+      "id": "04_gradient_descent",
+      "path": "slides/L01_Introduction_Linear_Regression/04_gradient_descent/chart.pdf",
+      "title": "Gradient Descent Visualization",
+      "section": "Gradient Descent",
+      "frame_number": 14,
+      "width": "0.55\\textwidth",
+      "description": "Contours show loss surface; path shows optimization trajectory",
+      "status": "complete"
+    },
+    {
+      "id": "03_residual_plots",
+      "path": "slides/L01_Introduction_Linear_Regression/03_residual_plots/chart.pdf",
+      "title": "Residual Analysis",
+      "section": "Model Evaluation",
+      "frame_number": 19,
+      "width": "0.55\\textwidth",
+      "description": "Good: random scatter. Bad: patterns indicate model misspecification",
+      "status": "complete"
+    },
+    {
+      "id": "05_learning_curves",
+      "path": "slides/L01_Introduction_Linear_Regression/05_learning_curves/chart.pdf",
+      "title": "Learning Curves",
+      "section": "Model Evaluation",
+      "frame_number": 21,
+      "width": "0.55\\textwidth",
+      "description": "Gap between curves indicates overfitting; convergence shows saturation",
+      "status": "complete"
+    },
+    {
+      "id": "06_regularization_comparison",
+      "path": "slides/L01_Introduction_Linear_Regression/06_regularization_comparison/chart.pdf",
+      "title": "Ridge vs Lasso Comparison",
+      "section": "Regularization",
+      "frame_number": 24,
+      "width": "0.55\\textwidth",
+      "description": "Ridge: smooth shrinkage. Lasso: sparse (feature selection)",
+      "status": "complete"
+    },
+    {
+      "id": "07_bias_variance",
+      "path": "slides/L01_Introduction_Linear_Regression/07_bias_variance/chart.pdf",
+      "title": "The Tradeoff Illustrated",
+      "section": "Bias-Variance Tradeoff",
+      "frame_number": 27,
+      "width": "0.55\\textwidth",
+      "description": "Optimal complexity minimizes total error",
+      "status": "complete"
+    },
+    {
+      "id": "08_decision_flowchart",
+      "path": "slides/L01_Introduction_Linear_Regression/08_decision_flowchart/chart.pdf",
+      "title": "Algorithm Selection Guide",
+      "section": "Decision Framework",
+      "frame_number": 29,
+      "width": "0.50\\textwidth",
+      "description": "Use this framework when choosing regression methods",
+      "status": "complete"
+    }
+  ],
+  "content_quality": {
+    "max_bullets_per_slide": 4,
+    "equations": 28,
+    "tables": 0,
+    "code_blocks": 0,
+    "overflow_warnings": 0,
+    "latex_compliant": true
+  },
+  "key_mathematical_concepts": [
+    "Matrix Notation (y = Xβ + ε)",
+    "Design Matrix Structure",
+    "OLS Assumptions (Linearity, Exogeneity, Homoscedasticity, No Multicollinearity, Normality)",
+    "Normal Equation: β̂ = (X'X)⁻¹X'y",
+    "Gradient: ∇L = -2X'(y - Xβ)",
+    "Gradient Descent Update: β(t+1) = β(t) - α∇L",
+    "R² = 1 - SS_res/SS_tot",
+    "Adjusted R²",
+    "RMSE and MAE",
+    "Ridge: β̂ = (X'X + λI)⁻¹X'y",
+    "Lasso: L1 penalty",
+    "Elastic Net: L1 + L2 penalties",
+    "Bias-Variance Decomposition: E[(y - f̂)²] = Bias² + Var + σ²"
+  ],
+  "algorithms_covered": [
+    "Ordinary Least Squares (OLS)",
+    "Normal Equation",
+    "Batch Gradient Descent",
+    "Stochastic Gradient Descent (SGD)",
+    "Mini-Batch Gradient Descent",
+    "Ridge Regression (L2)",
+    "Lasso Regression (L1)",
+    "Elastic Net",
+    "K-Fold Cross-Validation"
+  ],
+  "practical_guidelines": [
+    "Use Normal Equation for small p (< 10,000 features)",
+    "Use Gradient Descent for large p (> 10,000 features)",
+    "Learning Rate: start with α = 0.01 or 0.001",
+    "Mini-batch size: typically 32-256",
+    "Always evaluate on held-out test data",
+    "Use Cross-Validation for hyperparameter tuning",
+    "Ridge: smooth shrinkage, never zeros",
+    "Lasso: sparse solutions, automatic feature selection",
+    "Elastic Net: best of both worlds for correlated features",
+    "Larger λ = more regularization = simpler model"
+  ],
+  "validation": {
+    "all_charts_exist": true,
+    "all_charts_included": true,
+    "template_compliant": true,
+    "no_overflow_warnings": true,
+    "sections_numbered": true,
+    "outline_included": true
+  },
+  "references": [
+    "James, Witten, Hastie, Tibshirani (2021). Introduction to Statistical Learning. Chapter 3.",
+    "Hastie, Tibshirani, Friedman (2009). Elements of Statistical Learning. Chapter 3.",
+    "Bishop (2006). Pattern Recognition and Machine Learning. Chapter 3.",
+    "scikit-learn documentation: https://scikit-learn.org/stable/modules/linear_model.html",
+    "Stanford CS229: https://cs229.stanford.edu/"
+  ]
+}

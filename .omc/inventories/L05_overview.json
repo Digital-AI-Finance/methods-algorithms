@@ -1,0 +1,259 @@
+{
+  "topic_id": "L05",
+  "topic_name": "PCA & t-SNE",
+  "presentation_type": "overview",
+  "file_path": "slides/L05_PCA_tSNE/L05_overview.tex",
+  "compilation_status": "success",
+  "template_compliance": {
+    "document_class": "beamer [8pt,aspectratio=169]",
+    "theme": "Madrid",
+    "color_theme": "default",
+    "custom_colors": [
+      "mlpurple (#3333B2)",
+      "mlblue (#0066CC)",
+      "mlgreen (#2CA02C)",
+      "mlred (#D62728)",
+      "mlorange (#FF7F0E)"
+    ],
+    "packages": [
+      "amsmath",
+      "amssymb",
+      "graphicx",
+      "booktabs",
+      "tikz"
+    ],
+    "custom_commands": [
+      "\\bottomnote"
+    ]
+  },
+  "content_structure": {
+    "title": "L05: PCA & t-SNE",
+    "subtitle": "Dimensionality Reduction for Visualization and Preprocessing",
+    "total_frames": 8,
+    "sections": [
+      {
+        "name": "Introduction",
+        "frames": [
+          {
+            "number": 1,
+            "title": "Title Page",
+            "type": "title"
+          },
+          {
+            "number": 2,
+            "title": "Learning Objectives",
+            "type": "content",
+            "bullets": 4,
+            "charts": 0,
+            "notes": "Finance Application: Portfolio risk decomposition, asset clustering"
+          },
+          {
+            "number": 3,
+            "title": "The Business Problem",
+            "type": "content",
+            "bullets": 5,
+            "charts": 0,
+            "notes": "Curse of dimensionality and solutions"
+          }
+        ]
+      },
+      {
+        "name": "Method",
+        "frames": [
+          {
+            "number": 4,
+            "title": "Scree Plot: Choosing Components",
+            "type": "chart",
+            "bullets": 0,
+            "charts": 1,
+            "chart_files": [
+              "01_scree_plot/chart.pdf"
+            ],
+            "chart_width": "0.6\\textwidth",
+            "notes": "Choose k components capturing 80-95% of variance, or at the 'elbow'"
+          },
+          {
+            "number": 5,
+            "title": "Principal Components",
+            "type": "chart",
+            "bullets": 0,
+            "charts": 1,
+            "chart_files": [
+              "02_principal_components/chart.pdf"
+            ],
+            "chart_width": "0.5\\textwidth",
+            "notes": "Principal components are orthogonal directions of maximum variance"
+          },
+          {
+            "number": 6,
+            "title": "Reconstruction Error",
+            "type": "chart",
+            "bullets": 0,
+            "charts": 1,
+            "chart_files": [
+              "03_reconstruction/chart.pdf"
+            ],
+            "chart_width": "0.6\\textwidth",
+            "notes": "More components = lower error, but diminishing returns after elbow"
+          },
+          {
+            "number": 7,
+            "title": "t-SNE: Perplexity Effect",
+            "type": "chart",
+            "bullets": 0,
+            "charts": 1,
+            "chart_files": [
+              "04b_tsne_perplexity_30/chart.pdf"
+            ],
+            "chart_width": "0.55\\textwidth",
+            "notes": "Perplexity controls local vs global structure preservation (try 5-50)"
+          }
+        ]
+      },
+      {
+        "name": "Solution",
+        "frames": [
+          {
+            "number": 8,
+            "title": "PCA vs t-SNE: Swiss Roll",
+            "type": "chart",
+            "bullets": 0,
+            "charts": 1,
+            "chart_files": [
+              "05b_tsne_swiss_roll/chart.pdf"
+            ],
+            "chart_width": "0.55\\textwidth",
+            "notes": "t-SNE unrolls non-linear manifolds that PCA cannot handle"
+          },
+          {
+            "number": 9,
+            "title": "Cluster Preservation",
+            "type": "chart",
+            "bullets": 0,
+            "charts": 1,
+            "chart_files": [
+              "06c_tsne_cluster_projection/chart.pdf"
+            ],
+            "chart_width": "0.42\\textwidth",
+            "notes": "t-SNE better preserves cluster structure for visualization"
+          }
+        ]
+      },
+      {
+        "name": "Practice",
+        "frames": [
+          {
+            "number": 10,
+            "title": "Decision Framework",
+            "type": "chart",
+            "bullets": 0,
+            "charts": 1,
+            "chart_files": [
+              "07_decision_flowchart/chart.pdf"
+            ],
+            "chart_width": "0.5\\textwidth",
+            "notes": "PCA for preprocessing/speed, t-SNE for visualization only"
+          }
+        ]
+      }
+    ]
+  },
+  "charts_summary": {
+    "total_charts": 7,
+    "charts_by_purpose": {
+      "visualization": 7,
+      "comparison": 2,
+      "decision_aid": 1
+    },
+    "all_charts": [
+      {
+        "id": "01_scree_plot",
+        "title": "Scree Plot: Choosing Components",
+        "file": "01_scree_plot/chart.py",
+        "output": "01_scree_plot/chart.pdf",
+        "generation_status": "success",
+        "purpose": "Shows variance explained by each principal component"
+      },
+      {
+        "id": "02_principal_components",
+        "title": "Principal Components",
+        "file": "02_principal_components/chart.py",
+        "output": "02_principal_components/chart.pdf",
+        "generation_status": "success",
+        "purpose": "Visualizes principal component directions"
+      },
+      {
+        "id": "03_reconstruction",
+        "title": "Reconstruction Error",
+        "file": "03_reconstruction/chart.py",
+        "output": "03_reconstruction/chart.pdf",
+        "generation_status": "success",
+        "purpose": "Shows reconstruction error vs number of components"
+      },
+      {
+        "id": "04b_tsne_perplexity_30",
+        "title": "t-SNE: Perplexity Effect (Default)",
+        "file": "04b_tsne_perplexity_30/chart.py",
+        "output": "04b_tsne_perplexity_30/chart.pdf",
+        "generation_status": "success",
+        "purpose": "Shows balanced t-SNE embedding"
+      },
+      {
+        "id": "05b_tsne_swiss_roll",
+        "title": "t-SNE on Swiss Roll",
+        "file": "05b_tsne_swiss_roll/chart.py",
+        "output": "05b_tsne_swiss_roll/chart.pdf",
+        "generation_status": "success",
+        "purpose": "Demonstrates non-linear manifold unrolling"
+      },
+      {
+        "id": "06c_tsne_cluster_projection",
+        "title": "t-SNE Cluster Preservation",
+        "file": "06c_tsne_cluster_projection/chart.py",
+        "output": "06c_tsne_cluster_projection/chart.pdf",
+        "generation_status": "success",
+        "purpose": "Shows cluster separation with t-SNE"
+      },
+      {
+        "id": "07_decision_flowchart",
+        "title": "Decision Framework",
+        "file": "07_decision_flowchart/chart.py",
+        "output": "07_decision_flowchart/chart.pdf",
+        "generation_status": "success",
+        "purpose": "Decision tree for choosing PCA vs t-SNE"
+      }
+    ]
+  },
+  "max_bullets_per_slide": 5,
+  "overflow_warnings": 0,
+  "pmsp_framework": {
+    "problem": {
+      "present": true,
+      "frames": [2, 3]
+    },
+    "method": {
+      "present": true,
+      "frames": [4, 5, 6, 7]
+    },
+    "solution": {
+      "present": true,
+      "frames": [8, 9]
+    },
+    "practice": {
+      "present": true,
+      "frames": [10]
+    }
+  },
+  "validation_results": {
+    "template_compliance": "pass",
+    "chart_generation": "pass",
+    "latex_compilation": "pass",
+    "overflow_check": "pass",
+    "pmsp_structure": "pass"
+  },
+  "metadata": {
+    "generated_at": "2026-01-28",
+    "validator_version": "1.0",
+    "notes": "Overview presentation for PCA & t-SNE covering dimensionality reduction fundamentals"
+  }
+}

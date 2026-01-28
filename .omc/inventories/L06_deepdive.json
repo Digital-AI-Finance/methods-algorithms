@@ -1,0 +1,212 @@
+{
+  "topic": "L06_Embeddings_RL",
+  "presentation": "deepdive",
+  "file": "slides/L06_Embeddings_RL/L06_deepdive.tex",
+  "analysis_date": "2026-01-28",
+  "template_compliance": {
+    "document_class": "beamer",
+    "theme": "Madrid",
+    "font_size": "8pt",
+    "aspect_ratio": "16:9",
+    "custom_colors": ["mlpurple", "mlblue", "mlgreen", "mlred", "mlorange"],
+    "bottomnote_command": true,
+    "compliant": true
+  },
+  "structure": {
+    "total_frames": 31,
+    "title_slide": true,
+    "parts": [
+      {
+        "part": 1,
+        "name": "Word Embeddings",
+        "frames": 7,
+        "description": "Introduction, Word2Vec, embedding space, analogies, similarity, pre-trained models, finance applications"
+      },
+      {
+        "part": 2,
+        "name": "Reinforcement Learning",
+        "frames": 9,
+        "description": "Framework, MDP, policy/value functions, Bellman equation, Q-learning, exploration vs exploitation"
+      },
+      {
+        "part": 3,
+        "name": "RL in Finance",
+        "frames": 3,
+        "description": "Trading formulation, policy visualization, DQN, policy gradient methods"
+      },
+      {
+        "part": 4,
+        "name": "Comparison",
+        "frames": 2,
+        "description": "Decision flowchart, comparison table"
+      },
+      {
+        "part": 5,
+        "name": "Implementation",
+        "frames": 4,
+        "description": "Libraries, practical tips, summary, references"
+      }
+    ]
+  },
+  "charts": [
+    {
+      "number": "01",
+      "name": "word_embedding_space",
+      "path": "slides/L06_Embeddings_RL/01_word_embedding_space/chart.py",
+      "pdf_exists": true,
+      "included_in_slides": [3],
+      "width": "0.55\\textwidth",
+      "description": "Finance terms cluster by semantic category in embedding space"
+    },
+    {
+      "number": "02",
+      "name": "similarity_heatmap",
+      "path": "slides/L06_Embeddings_RL/02_similarity_heatmap/chart.py",
+      "pdf_exists": true,
+      "included_in_slides": [5],
+      "width": "0.35\\textwidth",
+      "description": "Cosine similarity ignores magnitude, focuses on direction"
+    },
+    {
+      "number": "03",
+      "name": "rl_loop",
+      "path": "slides/L06_Embeddings_RL/03_rl_loop/chart.py",
+      "pdf_exists": true,
+      "included_in_slides": [8],
+      "width": "0.4\\textwidth",
+      "description": "RL: Learning from interaction, not from labeled examples"
+    },
+    {
+      "number": "04",
+      "name": "q_learning_grid",
+      "path": "slides/L06_Embeddings_RL/04_q_learning_grid/chart.py",
+      "pdf_exists": true,
+      "included_in_slides": [13],
+      "width": "0.45\\textwidth",
+      "description": "Arrows show policy; colors show Q-values (green=high, red=negative)"
+    },
+    {
+      "number": "05",
+      "name": "reward_curves",
+      "path": "slides/L06_Embeddings_RL/05_reward_curves/chart.py",
+      "pdf_exists": true,
+      "included_in_slides": [15],
+      "width": "0.55\\textwidth",
+      "description": "Reward improves as agent learns; DQN often outperforms tabular Q-learning"
+    },
+    {
+      "number": "06",
+      "name": "policy_viz",
+      "path": "slides/L06_Embeddings_RL/06_policy_viz/chart.py",
+      "pdf_exists": true,
+      "included_in_slides": [17],
+      "width": "0.55\\textwidth",
+      "description": "Learned policy: buy when oversold/high momentum, sell when overbought"
+    },
+    {
+      "number": "07",
+      "name": "decision_flowchart",
+      "path": "slides/L06_Embeddings_RL/07_decision_flowchart/chart.py",
+      "pdf_exists": true,
+      "included_in_slides": [20],
+      "width": "0.5\\textwidth",
+      "description": "Embeddings for text/categorical; RL for sequential decisions"
+    }
+  ],
+  "content_analysis": {
+    "max_bullets_per_slide": 4,
+    "slides_with_overflow_risk": [],
+    "mathematical_content": true,
+    "equations": [
+      "Skip-gram probability",
+      "Cosine similarity",
+      "Value function",
+      "Q-function",
+      "Bellman equation",
+      "Q-learning update rule",
+      "Epsilon-greedy formula",
+      "Policy gradient"
+    ],
+    "code_slides": 1,
+    "chart_only_slides": 0,
+    "text_with_chart_slides": 7,
+    "text_only_slides": 23
+  },
+  "latex_validation": {
+    "compiles": true,
+    "pdf_generated": true,
+    "overflow_warnings": 0,
+    "issues": []
+  },
+  "key_concepts": [
+    "Word embeddings",
+    "Word2Vec",
+    "Skip-gram",
+    "CBOW",
+    "Cosine similarity",
+    "Word analogies",
+    "Pre-trained embeddings",
+    "GloVe",
+    "FastText",
+    "BERT",
+    "Markov Decision Process",
+    "Policy",
+    "Value function",
+    "Q-function",
+    "Bellman equation",
+    "Q-learning",
+    "Exploration vs exploitation",
+    "Epsilon-greedy",
+    "Deep Q-Networks (DQN)",
+    "Experience replay",
+    "Policy gradient",
+    "REINFORCE",
+    "Actor-Critic",
+    "PPO"
+  ],
+  "finance_applications": [
+    "Sentiment analysis",
+    "Document similarity",
+    "Named entity recognition",
+    "Event detection",
+    "Algorithmic trading",
+    "Portfolio optimization"
+  ],
+  "implementation_libraries": {
+    "embeddings": [
+      "gensim.models.Word2Vec",
+      "gensim.downloader",
+      "transformers.BertModel"
+    ],
+    "reinforcement_learning": [
+      "gymnasium",
+      "stable-baselines3",
+      "ray[rllib]"
+    ]
+  },
+  "references": [
+    {
+      "topic": "Embeddings",
+      "papers": [
+        "Mikolov et al. (2013). Word2Vec",
+        "Pennington et al. (2014). GloVe",
+        "Devlin et al. (2019). BERT"
+      ]
+    },
+    {
+      "topic": "Reinforcement Learning",
+      "papers": [
+        "Sutton & Barto (2018). RL: An Introduction",
+        "Mnih et al. (2015). DQN (Atari)",
+        "Schulman et al. (2017). PPO"
+      ]
+    },
+    {
+      "topic": "Finance Applications",
+      "papers": [
+        "Liu et al. (2021). FinRL: Deep RL for Trading",
+        "Araci (2019). FinBERT"
+      ]
+    }
+  ]
+}

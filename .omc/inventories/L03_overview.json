@@ -1,0 +1,155 @@
+{
+  "topic_id": "L03",
+  "topic_name": "K-Nearest Neighbors & K-Means",
+  "file": "slides/L03_KNN_KMeans/L03_overview.tex",
+  "type": "overview",
+  "metadata": {
+    "title": "L03: K-Nearest Neighbors & K-Means",
+    "subtitle": "Classification and Clustering with Distance",
+    "course": "Methods and Algorithms -- MSc Data Science",
+    "template_compliance": {
+      "document_class": "beamer [8pt,aspectratio=169]",
+      "theme": "Madrid",
+      "color_theme": "default",
+      "custom_colors": ["mlpurple", "mlblue", "mlgreen", "mlred", "mlorange"],
+      "packages": ["amsmath", "amssymb", "graphicx", "booktabs", "tikz"],
+      "compliant": true
+    }
+  },
+  "structure": {
+    "total_frames": 11,
+    "title_slide": 1,
+    "content_slides": 10,
+    "sections": [
+      {
+        "name": "Learning Objectives",
+        "frame_range": [2, 2],
+        "description": "4 learning objectives focused on KNN classification, K-Means clustering, distance metrics, and supervised/unsupervised distinction"
+      },
+      {
+        "name": "Business Problem",
+        "frame_range": [3, 3],
+        "description": "Distinguishes classification (supervised) vs clustering (unsupervised) problems"
+      },
+      {
+        "name": "Visualizations",
+        "frame_range": [4, 10],
+        "description": "7 chart-based slides covering KNN boundaries, distance metrics, K-Means algorithm, elbow method, silhouette, Voronoi, and decision framework"
+      },
+      {
+        "name": "Decision Framework",
+        "frame_range": [11, 11],
+        "description": "Final decision flowchart for choosing between KNN and K-Means"
+      }
+    ]
+  },
+  "charts": [
+    {
+      "number": 1,
+      "name": "knn_boundaries",
+      "folder": "01_knn_boundaries",
+      "file": "slides/L03_KNN_KMeans/01_knn_boundaries/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/01_knn_boundaries/chart.pdf",
+      "frame": 4,
+      "width": "0.6\\textwidth",
+      "description": "KNN decision boundaries visualization showing non-linear, flexible boundaries based on local data",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 2,
+      "name": "distance_metrics",
+      "folder": "02_distance_metrics",
+      "file": "slides/L03_KNN_KMeans/02_distance_metrics/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/02_distance_metrics/chart.pdf",
+      "frame": 5,
+      "width": "0.50\\textwidth",
+      "description": "Comparison of distance metrics (Euclidean, Manhattan) and their effect on nearest neighbors",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 3,
+      "name": "kmeans_iteration",
+      "folder": "03_kmeans_iteration",
+      "file": "slides/L03_KNN_KMeans/03_kmeans_iteration/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/03_kmeans_iteration/chart.pdf",
+      "frame": 6,
+      "width": "0.6\\textwidth",
+      "description": "K-Means algorithm visualization showing iterative assignment and centroid updates",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 4,
+      "name": "elbow_method",
+      "folder": "04_elbow_method",
+      "file": "slides/L03_KNN_KMeans/04_elbow_method/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/04_elbow_method/chart.pdf",
+      "frame": 7,
+      "width": "0.6\\textwidth",
+      "description": "Elbow method for choosing optimal K in K-Means clustering",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 5,
+      "name": "silhouette",
+      "folder": "05_silhouette",
+      "file": "slides/L03_KNN_KMeans/05_silhouette/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/05_silhouette/chart.pdf",
+      "frame": 8,
+      "width": "0.55\\textwidth",
+      "description": "Silhouette analysis for evaluating cluster quality",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 6,
+      "name": "voronoi",
+      "folder": "06_voronoi",
+      "file": "slides/L03_KNN_KMeans/06_voronoi/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/06_voronoi/chart.pdf",
+      "frame": 9,
+      "width": "0.6\\textwidth",
+      "description": "K-Means decision regions (Voronoi tessellation)",
+      "status": "complete",
+      "verified": true
+    },
+    {
+      "number": 7,
+      "name": "decision_flowchart",
+      "folder": "07_decision_flowchart",
+      "file": "slides/L03_KNN_KMeans/07_decision_flowchart/chart.py",
+      "pdf": "slides/L03_KNN_KMeans/07_decision_flowchart/chart.pdf",
+      "frame": 10,
+      "width": "0.65\\textwidth",
+      "description": "Decision framework for choosing KNN (labeled classification) vs K-Means (unlabeled clustering)",
+      "status": "complete",
+      "verified": true
+    }
+  ],
+  "content_analysis": {
+    "max_bullets_per_slide": 4,
+    "bullet_compliance": true,
+    "chart_width_compliance": true,
+    "bottom_notes": 10,
+    "finance_applications": ["Customer segmentation", "Fraud detection"],
+    "key_concepts": [
+      "KNN classification with K selection",
+      "K-Means clustering and evaluation",
+      "Distance metrics comparison",
+      "Supervised vs unsupervised learning"
+    ]
+  },
+  "issues": [],
+  "validation": {
+    "template_compliant": true,
+    "all_charts_present": true,
+    "all_charts_executable": true,
+    "bullet_count_ok": true,
+    "chart_widths_ok": true
+  },
+  "generated_at": "2026-01-28T00:00:00Z",
+  "validated_by": "Claude Sonnet 4.5"
+}

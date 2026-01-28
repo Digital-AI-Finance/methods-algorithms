@@ -1,0 +1,216 @@
+{
+  "topic": "L01_Introduction_Linear_Regression",
+  "presentation": "L01_overview.tex",
+  "type": "overview",
+  "metadata": {
+    "title": "Introduction & Linear Regression",
+    "subtitle": "Overview",
+    "author": "Methods and Algorithms",
+    "institute": "MSc Data Science",
+    "date": "Spring 2026"
+  },
+  "template_compliance": {
+    "document_class": "beamer[8pt,aspectratio=169]",
+    "theme": "Madrid",
+    "colors": {
+      "MLPurple": "#3333B2",
+      "MLBlue": "#0066CC",
+      "MLOrange": "#FF7F0E",
+      "MLGreen": "#2CA02C",
+      "MLRed": "#D62728"
+    },
+    "custom_commands": ["\\bottomnote", "\\highlight"],
+    "compliant": true
+  },
+  "structure": {
+    "total_frames": 17,
+    "title_frame": 1,
+    "learning_objectives": 1,
+    "content_frames": 15,
+    "sections": [
+      {
+        "name": "Introduction",
+        "frames": 6,
+        "topics": [
+          "Learning Objectives",
+          "XKCD humor (linear regression)",
+          "Business Problem (House Price Prediction)",
+          "What is Linear Regression",
+          "Simple Linear Regression (chart)",
+          "Multiple Linear Regression (chart)"
+        ]
+      },
+      {
+        "name": "Methods",
+        "frames": 5,
+        "topics": [
+          "Optimization Problem",
+          "Two Solution Approaches (Normal Equation vs Gradient Descent)",
+          "Gradient Descent in Action (chart)",
+          "Interpreting Coefficients",
+          "Model Evaluation (R², RMSE)"
+        ]
+      },
+      {
+        "name": "Evaluation",
+        "frames": 4,
+        "topics": [
+          "Residual Diagnostics (chart)",
+          "Learning Curves (chart)",
+          "Decision Framework (when to use)",
+          "XKCD humor (overfitting)"
+        ]
+      },
+      {
+        "name": "Regularization",
+        "frames": 2,
+        "topics": [
+          "Regularization Comparison (chart)",
+          "Bias-Variance Tradeoff (chart)"
+        ]
+      },
+      {
+        "name": "Conclusion",
+        "frames": 3,
+        "topics": [
+          "XKCD humor (extrapolation)",
+          "Decision Flowchart (chart)",
+          "Key Takeaways"
+        ]
+      }
+    ]
+  },
+  "charts": [
+    {
+      "id": "01_simple_regression",
+      "path": "slides/L01_Introduction_Linear_Regression/01_simple_regression/chart.pdf",
+      "title": "Simple Linear Regression",
+      "frame_number": 5,
+      "width": "0.50\\textwidth",
+      "description": "The best-fit line minimizes the sum of squared distances from points",
+      "status": "complete"
+    },
+    {
+      "id": "02_multiple_regression_3d",
+      "path": "slides/L01_Introduction_Linear_Regression/02_multiple_regression_3d/chart.pdf",
+      "title": "Multiple Linear Regression",
+      "frame_number": 6,
+      "width": "0.42\\textwidth",
+      "description": "With multiple features, we fit a hyperplane to minimize squared errors",
+      "status": "complete"
+    },
+    {
+      "id": "03_residual_plots",
+      "path": "slides/L01_Introduction_Linear_Regression/03_residual_plots/chart.pdf",
+      "title": "Residual Diagnostics",
+      "frame_number": 10,
+      "width": "0.50\\textwidth",
+      "description": "Good residuals are random; patterns suggest model problems",
+      "status": "complete"
+    },
+    {
+      "id": "04_gradient_descent",
+      "path": "slides/L01_Introduction_Linear_Regression/04_gradient_descent/chart.pdf",
+      "title": "Gradient Descent in Action",
+      "frame_number": 8,
+      "width": "0.45\\textwidth",
+      "description": "Iteratively update parameters in the direction of steepest descent",
+      "status": "complete"
+    },
+    {
+      "id": "05_learning_curves",
+      "path": "slides/L01_Introduction_Linear_Regression/05_learning_curves/chart.pdf",
+      "title": "Learning Curves",
+      "frame_number": 11,
+      "width": "0.50\\textwidth",
+      "description": "Learning curves help diagnose underfitting vs overfitting",
+      "status": "complete"
+    },
+    {
+      "id": "06_regularization_comparison",
+      "path": "slides/L01_Introduction_Linear_Regression/06_regularization_comparison/chart.pdf",
+      "title": "Regularization: Ridge vs Lasso",
+      "frame_number": 13,
+      "width": "0.50\\textwidth",
+      "description": "Ridge shrinks all coefficients; Lasso can set some to exactly zero",
+      "status": "complete"
+    },
+    {
+      "id": "07_bias_variance",
+      "path": "slides/L01_Introduction_Linear_Regression/07_bias_variance/chart.pdf",
+      "title": "Bias-Variance Tradeoff",
+      "frame_number": 14,
+      "width": "0.50\\textwidth",
+      "description": "Model complexity controls the tradeoff between bias and variance",
+      "status": "complete"
+    },
+    {
+      "id": "08_decision_flowchart",
+      "path": "slides/L01_Introduction_Linear_Regression/08_decision_flowchart/chart.pdf",
+      "title": "Decision Framework",
+      "frame_number": 16,
+      "width": "0.45\\textwidth",
+      "description": "Use this flowchart to decide when linear regression is appropriate",
+      "status": "complete"
+    }
+  ],
+  "xkcd_comics": [
+    {
+      "id": "1725",
+      "title": "Linear Regression",
+      "frame_number": 2,
+      "path": "images/1725_linear_regression.png",
+      "width": "0.55\\textwidth",
+      "message": "Always check if your data supports a linear fit!"
+    },
+    {
+      "id": "2048",
+      "title": "Curve Fitting",
+      "frame_number": 12,
+      "path": "images/2048_curve_fitting.png",
+      "width": "0.32\\textwidth",
+      "message": "Simpler models often generalize better"
+    },
+    {
+      "id": "605",
+      "title": "Extrapolating",
+      "frame_number": 15,
+      "path": "images/605_extrapolating.png",
+      "width": "0.50\\textwidth",
+      "message": "Extrapolation is dangerous!"
+    }
+  ],
+  "content_quality": {
+    "max_bullets_per_slide": 4,
+    "equations": 5,
+    "tables": 1,
+    "code_blocks": 0,
+    "overflow_warnings": 0,
+    "latex_compliant": true
+  },
+  "learning_objectives": [
+    "Understand the ordinary least squares (OLS) framework",
+    "Apply gradient descent for parameter optimization",
+    "Interpret regression coefficients in business contexts"
+  ],
+  "finance_applications": [
+    "House price prediction",
+    "Factor models"
+  ],
+  "key_concepts": [
+    "Ordinary Least Squares (OLS)",
+    "Gradient Descent",
+    "Normal Equation",
+    "Model Evaluation (R², RMSE)",
+    "Residual Diagnostics",
+    "Learning Curves",
+    "Regularization (Ridge, Lasso)",
+    "Bias-Variance Tradeoff"
+  ],
+  "validation": {
+    "all_charts_exist": true,
+    "all_charts_included": true,
+    "template_compliant": true,
+    "no_overflow_warnings": true
+  }
+}

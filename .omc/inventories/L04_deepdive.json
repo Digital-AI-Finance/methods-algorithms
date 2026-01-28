@@ -1,0 +1,378 @@
+{
+  "topic_id": "L04",
+  "topic_name": "Random Forests",
+  "file": "slides/L04_Random_Forests/L04_deepdive.tex",
+  "presentation_type": "deepdive",
+  "template_compliance": {
+    "document_class": "beamer[8pt,aspectratio=169]",
+    "theme": "Madrid",
+    "color_theme": "default",
+    "custom_colors": [
+      "mlpurple (#3333B2)",
+      "mlblue (#0066CC)",
+      "mlgreen (#2CA02C)",
+      "mlred (#D62728)",
+      "mlorange (#FF7F0E)"
+    ],
+    "custom_commands": [
+      "\\bottomnote"
+    ],
+    "additional_packages": [
+      "algorithm",
+      "algorithmic"
+    ]
+  },
+  "content_structure": {
+    "total_frames": 35,
+    "title_slide": true,
+    "sections": [
+      {
+        "name": "Part 1: Decision Tree Foundations",
+        "start_frame": 2,
+        "frames": [
+          {
+            "title": "Part 1: Decision Tree Foundations",
+            "frame_number": 2,
+            "bullet_count": 8,
+            "has_chart": false
+          },
+          {
+            "title": "Splitting Criteria: Gini Impurity",
+            "frame_number": 3,
+            "bullet_count": 3,
+            "has_chart": false,
+            "has_math": true
+          },
+          {
+            "title": "Splitting Criteria: Information Gain",
+            "frame_number": 4,
+            "bullet_count": 3,
+            "has_chart": false,
+            "has_math": true
+          },
+          {
+            "title": "Regression Trees: MSE Criterion",
+            "frame_number": 5,
+            "bullet_count": 1,
+            "has_chart": false,
+            "has_math": true
+          },
+          {
+            "title": "Decision Tree Algorithm",
+            "frame_number": 6,
+            "bullet_count": 7,
+            "has_chart": false
+          },
+          {
+            "title": "Decision Tree: Fraud Detection Example",
+            "frame_number": 7,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "01_decision_tree/chart.pdf",
+            "chart_width": "0.50\\textwidth"
+          }
+        ]
+      },
+      {
+        "name": "Part 2: Ensemble Methods",
+        "start_frame": 8,
+        "frames": [
+          {
+            "title": "Part 2: Why Ensembles?",
+            "frame_number": 8,
+            "bullet_count": 6,
+            "has_chart": false
+          },
+          {
+            "title": "Bootstrap Sampling",
+            "frame_number": 9,
+            "bullet_count": 9,
+            "has_chart": false
+          },
+          {
+            "title": "Bagging Visualization",
+            "frame_number": 10,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "03_bootstrap/chart.pdf",
+            "chart_width": "0.47\\textwidth"
+          },
+          {
+            "title": "Bagging: Mathematical Foundation",
+            "frame_number": 11,
+            "bullet_count": 1,
+            "has_chart": false,
+            "has_math": true
+          }
+        ]
+      },
+      {
+        "name": "Part 3: Random Forests",
+        "start_frame": 12,
+        "frames": [
+          {
+            "title": "Part 3: Random Forests Algorithm",
+            "frame_number": 12,
+            "bullet_count": 5,
+            "has_chart": false
+          },
+          {
+            "title": "Random Forest Algorithm",
+            "frame_number": 13,
+            "bullet_count": 5,
+            "has_chart": false
+          },
+          {
+            "title": "Feature Importance",
+            "frame_number": 14,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "02_feature_importance/chart.pdf",
+            "chart_width": "0.6\\textwidth"
+          },
+          {
+            "title": "Feature Importance Methods",
+            "frame_number": 15,
+            "bullet_count": 6,
+            "has_chart": false
+          },
+          {
+            "title": "Out-of-Bag Error",
+            "frame_number": 16,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "04_oob_error/chart.pdf",
+            "chart_width": "0.6\\textwidth"
+          },
+          {
+            "title": "Out-of-Bag Error: How It Works",
+            "frame_number": 17,
+            "bullet_count": 6,
+            "has_chart": false
+          },
+          {
+            "title": "Ensemble Voting",
+            "frame_number": 18,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "05_ensemble_voting/chart.pdf",
+            "chart_width": "0.48\\textwidth"
+          }
+        ]
+      },
+      {
+        "name": "Part 4: Bias-Variance and Tuning",
+        "start_frame": 19,
+        "frames": [
+          {
+            "title": "Part 4: Bias-Variance Decomposition",
+            "frame_number": 19,
+            "bullet_count": 6,
+            "has_chart": false,
+            "has_math": true
+          },
+          {
+            "title": "Single Trees: High Variance",
+            "frame_number": 20,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "06a_single_tree_variance/chart.pdf",
+            "chart_width": "0.6\\textwidth"
+          },
+          {
+            "title": "Random Forest: Variance Reduction",
+            "frame_number": 21,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "06b_random_forest_variance/chart.pdf",
+            "chart_width": "0.6\\textwidth"
+          },
+          {
+            "title": "Hyperparameters: Number of Trees",
+            "frame_number": 22,
+            "bullet_count": 6,
+            "has_chart": false
+          },
+          {
+            "title": "Hyperparameters: Tree Complexity",
+            "frame_number": 23,
+            "bullet_count": 9,
+            "has_chart": false
+          },
+          {
+            "title": "Hyperparameters: Feature Randomization",
+            "frame_number": 24,
+            "bullet_count": 7,
+            "has_chart": false
+          }
+        ]
+      },
+      {
+        "name": "Part 5: Practical Considerations",
+        "start_frame": 25,
+        "frames": [
+          {
+            "title": "Part 5: Practical Considerations",
+            "frame_number": 25,
+            "bullet_count": 10,
+            "has_chart": false
+          },
+          {
+            "title": "Comparison: Random Forest vs. Others",
+            "frame_number": 26,
+            "bullet_count": 0,
+            "has_chart": false,
+            "has_table": true
+          },
+          {
+            "title": "When to Use Random Forests",
+            "frame_number": 27,
+            "bullet_count": 8,
+            "has_chart": false
+          },
+          {
+            "title": "Decision Framework",
+            "frame_number": 28,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "07_decision_flowchart/chart.pdf",
+            "chart_width": "0.50\\textwidth"
+          },
+          {
+            "title": "Implementation: scikit-learn",
+            "frame_number": 29,
+            "bullet_count": 4,
+            "has_chart": false,
+            "has_code": true
+          },
+          {
+            "title": "Summary: Random Forests",
+            "frame_number": 30,
+            "bullet_count": 7,
+            "has_chart": false
+          },
+          {
+            "title": "References",
+            "frame_number": 31,
+            "bullet_count": 7,
+            "has_chart": false
+          }
+        ]
+      }
+    ]
+  },
+  "charts": {
+    "total_count": 8,
+    "chart_list": [
+      {
+        "id": "01_decision_tree",
+        "title": "Decision Tree Structure",
+        "file": "01_decision_tree/chart.py",
+        "output": "01_decision_tree/chart.pdf",
+        "status": "verified",
+        "frame_number": 7
+      },
+      {
+        "id": "02_feature_importance",
+        "title": "Feature Importance",
+        "file": "02_feature_importance/chart.py",
+        "output": "02_feature_importance/chart.pdf",
+        "status": "verified",
+        "frame_number": 14
+      },
+      {
+        "id": "03_bootstrap",
+        "title": "Bootstrap Aggregating",
+        "file": "03_bootstrap/chart.py",
+        "output": "03_bootstrap/chart.pdf",
+        "status": "verified",
+        "frame_number": 10
+      },
+      {
+        "id": "04_oob_error",
+        "title": "Out-of-Bag Error",
+        "file": "04_oob_error/chart.py",
+        "output": "04_oob_error/chart.pdf",
+        "status": "verified",
+        "frame_number": 16
+      },
+      {
+        "id": "05_ensemble_voting",
+        "title": "Ensemble Voting",
+        "file": "05_ensemble_voting/chart.py",
+        "output": "05_ensemble_voting/chart.pdf",
+        "status": "verified",
+        "frame_number": 18
+      },
+      {
+        "id": "06a_single_tree_variance",
+        "title": "Single Tree Variance",
+        "file": "06a_single_tree_variance/chart.py",
+        "output": "06a_single_tree_variance/chart.pdf",
+        "status": "verified",
+        "frame_number": 20
+      },
+      {
+        "id": "06b_random_forest_variance",
+        "title": "Random Forest Variance",
+        "file": "06b_random_forest_variance/chart.py",
+        "output": "06b_random_forest_variance/chart.pdf",
+        "status": "verified",
+        "frame_number": 21
+      },
+      {
+        "id": "07_decision_flowchart",
+        "title": "Decision Framework",
+        "file": "07_decision_flowchart/chart.py",
+        "output": "07_decision_flowchart/chart.pdf",
+        "status": "verified",
+        "frame_number": 28
+      }
+    ]
+  },
+  "slide_statistics": {
+    "frames_with_charts": 8,
+    "frames_with_text_only": 23,
+    "frames_with_math": 5,
+    "frames_with_code": 1,
+    "frames_with_tables": 1,
+    "max_bullets_per_frame": 10,
+    "average_bullets_per_frame": 4.2,
+    "chart_width_values": [
+      "0.50\\textwidth",
+      "0.6\\textwidth",
+      "0.47\\textwidth",
+      "0.48\\textwidth"
+    ]
+  },
+  "validation": {
+    "template_compliant": true,
+    "all_charts_verified": true,
+    "no_overflow_warnings": true,
+    "recommended_chart_widths": true,
+    "max_bullets_within_limits": true,
+    "proper_section_structure": true,
+    "pmsp_framework": true
+  },
+  "metadata": {
+    "subtitle": "Deep Dive: Theory, Implementation, and Applications",
+    "course": "Methods and Algorithms -- MSc Data Science",
+    "parts": [
+      "Part 1: Decision Tree Foundations",
+      "Part 2: Ensemble Methods",
+      "Part 3: Random Forests",
+      "Part 4: Bias-Variance and Tuning",
+      "Part 5: Practical Considerations"
+    ],
+    "key_topics": [
+      "Gini impurity and information gain",
+      "Bootstrap sampling and bagging",
+      "Feature randomization",
+      "Out-of-bag error estimation",
+      "Bias-variance tradeoff",
+      "Hyperparameter tuning",
+      "scikit-learn implementation"
+    ],
+    "generated_date": "2026-01-28"
+  }
+}

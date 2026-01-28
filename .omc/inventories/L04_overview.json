@@ -1,0 +1,208 @@
+{
+  "topic_id": "L04",
+  "topic_name": "Random Forests",
+  "file": "slides/L04_Random_Forests/L04_overview.tex",
+  "presentation_type": "overview",
+  "template_compliance": {
+    "document_class": "beamer[8pt,aspectratio=169]",
+    "theme": "Madrid",
+    "color_theme": "default",
+    "custom_colors": [
+      "mlpurple (#3333B2)",
+      "mlblue (#0066CC)",
+      "mlgreen (#2CA02C)",
+      "mlred (#D62728)",
+      "mlorange (#FF7F0E)"
+    ],
+    "custom_commands": [
+      "\\bottomnote"
+    ]
+  },
+  "content_structure": {
+    "total_frames": 15,
+    "title_slide": true,
+    "learning_objectives": true,
+    "sections": [
+      {
+        "name": "Introduction",
+        "frames": [
+          {
+            "title": "Learning Objectives",
+            "frame_number": 2,
+            "bullet_count": 4,
+            "has_chart": false
+          },
+          {
+            "title": "The Business Problem",
+            "frame_number": 3,
+            "bullet_count": 7,
+            "has_chart": false
+          }
+        ]
+      },
+      {
+        "name": "Core Concepts",
+        "frames": [
+          {
+            "title": "Decision Tree Structure",
+            "frame_number": 4,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "01_decision_tree/chart.pdf",
+            "chart_width": "0.50\\textwidth"
+          },
+          {
+            "title": "Feature Importance",
+            "frame_number": 5,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "02_feature_importance/chart.pdf",
+            "chart_width": "0.6\\textwidth"
+          },
+          {
+            "title": "Bootstrap Aggregating (Bagging)",
+            "frame_number": 6,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "03_bootstrap/chart.pdf",
+            "chart_width": "0.47\\textwidth"
+          },
+          {
+            "title": "Out-of-Bag Error",
+            "frame_number": 7,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "04_oob_error/chart.pdf",
+            "chart_width": "0.6\\textwidth"
+          },
+          {
+            "title": "Ensemble Voting",
+            "frame_number": 8,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "05_ensemble_voting/chart.pdf",
+            "chart_width": "0.48\\textwidth"
+          },
+          {
+            "title": "Single Trees: High Variance",
+            "frame_number": 9,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "06a_single_tree_variance/chart.pdf",
+            "chart_width": "0.6\\textwidth"
+          },
+          {
+            "title": "Random Forest: Reduced Variance",
+            "frame_number": 10,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "06b_random_forest_variance/chart.pdf",
+            "chart_width": "0.6\\textwidth"
+          },
+          {
+            "title": "Decision Framework",
+            "frame_number": 11,
+            "bullet_count": 0,
+            "has_chart": true,
+            "chart_path": "07_decision_flowchart/chart.pdf",
+            "chart_width": "0.50\\textwidth"
+          }
+        ]
+      }
+    ]
+  },
+  "charts": {
+    "total_count": 8,
+    "chart_list": [
+      {
+        "id": "01_decision_tree",
+        "title": "Decision Tree Structure",
+        "file": "01_decision_tree/chart.py",
+        "output": "01_decision_tree/chart.pdf",
+        "status": "verified",
+        "frame_number": 4
+      },
+      {
+        "id": "02_feature_importance",
+        "title": "Feature Importance",
+        "file": "02_feature_importance/chart.py",
+        "output": "02_feature_importance/chart.pdf",
+        "status": "verified",
+        "frame_number": 5
+      },
+      {
+        "id": "03_bootstrap",
+        "title": "Bootstrap Aggregating",
+        "file": "03_bootstrap/chart.py",
+        "output": "03_bootstrap/chart.pdf",
+        "status": "verified",
+        "frame_number": 6
+      },
+      {
+        "id": "04_oob_error",
+        "title": "Out-of-Bag Error",
+        "file": "04_oob_error/chart.py",
+        "output": "04_oob_error/chart.pdf",
+        "status": "verified",
+        "frame_number": 7
+      },
+      {
+        "id": "05_ensemble_voting",
+        "title": "Ensemble Voting",
+        "file": "05_ensemble_voting/chart.py",
+        "output": "05_ensemble_voting/chart.pdf",
+        "status": "verified",
+        "frame_number": 8
+      },
+      {
+        "id": "06a_single_tree_variance",
+        "title": "Single Tree Variance",
+        "file": "06a_single_tree_variance/chart.py",
+        "output": "06a_single_tree_variance/chart.pdf",
+        "status": "verified",
+        "frame_number": 9
+      },
+      {
+        "id": "06b_random_forest_variance",
+        "title": "Random Forest Variance",
+        "file": "06b_random_forest_variance/chart.py",
+        "output": "06b_random_forest_variance/chart.pdf",
+        "status": "verified",
+        "frame_number": 10
+      },
+      {
+        "id": "07_decision_flowchart",
+        "title": "Decision Framework",
+        "file": "07_decision_flowchart/chart.py",
+        "output": "07_decision_flowchart/chart.pdf",
+        "status": "verified",
+        "frame_number": 11
+      }
+    ]
+  },
+  "slide_statistics": {
+    "frames_with_charts": 8,
+    "frames_with_text_only": 2,
+    "max_bullets_per_frame": 7,
+    "average_bullets_per_frame": 1.5,
+    "chart_width_values": [
+      "0.50\\textwidth",
+      "0.6\\textwidth",
+      "0.47\\textwidth",
+      "0.48\\textwidth"
+    ]
+  },
+  "validation": {
+    "template_compliant": true,
+    "all_charts_verified": true,
+    "no_overflow_warnings": true,
+    "recommended_chart_widths": true,
+    "max_bullets_within_limits": true
+  },
+  "metadata": {
+    "subtitle": "Ensemble Learning for Robust Predictions",
+    "finance_application": "Fraud detection with interpretable feature importance",
+    "course": "Methods and Algorithms -- MSc Data Science",
+    "generated_date": "2026-01-28"
+  }
+}
