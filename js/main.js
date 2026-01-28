@@ -18,7 +18,7 @@ function initScrollSpy() {
 
     const observerOptions = {
         root: null,
-        rootMargin: '-20% 0px -60% 0px',
+        rootMargin: '0px 0px -80% 0px',
         threshold: 0
     };
 
@@ -106,30 +106,4 @@ function initSmoothScroll() {
             }
         });
     });
-}
-
-/**
- * Build TOC dynamically from h3 elements within current section
- */
-function buildDynamicToc(sectionId) {
-    const section = document.getElementById(sectionId);
-    const tocList = document.querySelector('.toc-list');
-
-    if (!section || !tocList) return;
-
-    // Clear existing sub-items
-    tocList.querySelectorAll('.toc-item.sub').forEach(item => item.remove());
-
-    // Find all h3 in section and add to TOC
-    const headings = section.querySelectorAll('h3[id]');
-    const sectionTocItem = tocList.querySelector(`a[href="#${sectionId}"]`)?.parentElement;
-
-    if (sectionTocItem && headings.length > 0) {
-        headings.forEach(h3 => {
-            const li = document.createElement('li');
-            li.className = 'toc-item sub';
-            li.innerHTML = `<a href="#${h3.id}" class="toc-link sub">${h3.textContent}</a>`;
-            sectionTocItem.after(li);
-        });
-    }
 }

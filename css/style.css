@@ -138,9 +138,8 @@ body {
 
 /* Main Content */
 .main-content {
-    grid-column: 2;
     margin-left: var(--sidebar-width);
-    padding: 40px 10px 40px 10px;
+    padding: 40px 40px 40px 40px;
 }
 
 /* Right TOC Sidebar */
