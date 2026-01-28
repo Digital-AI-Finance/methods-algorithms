@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 5: PCA &amp; t-SNE | Methods &amp; Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quiz 5: PCA &amp; t-SNE</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 5: PCA &amp; t-SNE</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "What does PCA maximize when finding principal components?",
+                    "options": {
+                        "A": "Variance along each component",
+                        "B": "Covariance between components",
+                        "C": "Distance between data points",
+                        "D": "Number of features"
+                    },
+                    "correct": "A",
+                    "explanation": "PCA finds orthogonal directions that maximize the variance of the projected data. The first PC captures the most variance, the second captures the most remaining variance orthogonal to the first, and so on."
+                },
+                {
+                    "id": 2,
+                    "question": "Given data matrix $X$ with $n$ samples and $p$ features (centered), how is the covariance matrix $\\Sigma$ computed?",
+                    "options": {
+                        "A": "$\\Sigma = \\frac{1}{n-1}X^TX$",
+                        "B": "$\\Sigma = XX^T$",
+                        "C": "$\\Sigma = X + X^T$",
+                        "D": "$\\Sigma = \\frac{1}{n}X$"
+                    },
+                    "correct": "A",
+                    "explanation": "The sample covariance matrix is $\\Sigma = \\frac{1}{n-1}X^TX$ where $X$ is the centered data matrix. This produces a $p \\times p$ matrix capturing pairwise feature covariances."
+                },
+                {
+                    "id": 3,
+                    "question": "In PCA, what mathematical operation is performed on the covariance matrix to find principal components?",
+                    "options": {
+                        "A": "Eigenvalue decomposition",
+                        "B": "Matrix inversion",
+                        "C": "QR factorization",
+                        "D": "Cholesky decomposition"
+                    },
+                    "correct": "A",
+                    "explanation": "PCA performs eigenvalue decomposition on the covariance matrix: $\\Sigma v = \\lambda v$. The eigenvectors $v$ become principal components, and eigenvalues $\\lambda$ represent variance captured."
+                },
+                {
+                    "id": 4,
+                    "question": "What are the principal components in terms of the covariance matrix $\\Sigma$?",
+                    "options": {
+                        "A": "Eigenvectors of $\\Sigma$",
+                        "B": "Eigenvalues of $\\Sigma$",
+                        "C": "Diagonal elements of $\\Sigma$",
+                        "D": "Rows of $\\Sigma$"
+                    },
+                    "correct": "A",
+                    "explanation": "Principal components are the eigenvectors of the covariance matrix. They define orthogonal directions in feature space along which data varies most."
+                },
+                {
+                    "id": 5,
+                    "question": "What do the eigenvalues represent in PCA?",
+                    "options": {
+                        "A": "Amount of variance captured by each principal component",
+                        "B": "Direction of each principal component",
+                        "C": "Number of data points projected onto each component",
+                        "D": "Correlation between original features"
+                    },
+                    "correct": "A",
+                    "explanation": "Each eigenvalue $\\lambda_i$ represents the variance of the data when projected onto the corresponding eigenvector (principal component). Larger eigenvalues mean more variance captured."
+                },
+                {
+                    "id": 6,
+                    "question": "A scree plot shows eigenvalues in decreasing order. How do you typically choose the number of components to retain?",
+                    "options": {
+                        "A": "Look for the 'elbow' where eigenvalues level off",
+                        "B": "Always keep exactly 2 components",
+                        "C": "Keep components until eigenvalues become negative",
+                        "D": "Retain all components with non-zero eigenvalues"
+                    },
+                    "correct": "A",
+                    "explanation": "The 'elbow method' identifies where additional components contribute diminishing returns. Components before the elbow capture most signal; those after mostly capture noise."
+                },
+                {
+                    "id": 7,
+                    "question": "According to the Kaiser criterion, which principal components should be retained?",
+                    "options": {
+                        "A": "Components with eigenvalues $\\lambda > 1$ (for standardized data)",
+                        "B": "Components with eigenvalues $\\lambda > 0$",
+                        "C": "The first two components only",
+                        "D": "Components that explain exactly 50% variance"
+                    },
+                    "correct": "A",
+                    "explanation": "The Kaiser criterion retains components with $\\lambda > 1$ when using standardized data. Since each original standardized variable has variance 1, components with $\\lambda > 1$ explain more variance than a single original variable."
+                },
+                {
+                    "id": 8,
+                    "question": "If the first 3 principal components have eigenvalues $\\lambda_1=4.2$, $\\lambda_2=2.1$, $\\lambda_3=1.5$ and total variance is 10, what is the explained variance ratio for PC1?",
+                    "options": {
+                        "A": "42%",
+                        "B": "21%",
+                        "C": "78%",
+                        "D": "15%"
+                    },
+                    "correct": "A",
+                    "explanation": "Explained variance ratio for PC1 = $\\frac{\\lambda_1}{\\sum \\lambda_i} = \\frac{4.2}{10} = 0.42$ or 42%. This tells us PC1 alone captures 42% of total variance."
+                },
+                {
+                    "id": 9,
+                    "question": "What is the reconstruction error in PCA?",
+                    "options": {
+                        "A": "The difference between original data and data reconstructed from reduced components",
+                        "B": "The number of components discarded",
+                        "C": "The computational time for eigendecomposition",
+                        "D": "The correlation between principal components"
+                    },
+                    "correct": "A",
+                    "explanation": "Reconstruction error measures $||X - X_{reconstructed}||^2$. When using $k < p$ components, some information is lost. The error equals the sum of eigenvalues for discarded components."
+                },
+                {
+                    "id": 10,
+                    "question": "Why must data be centered (mean subtracted) before applying PCA?",
+                    "options": {
+                        "A": "PCA finds directions of maximum variance, which requires data centered at origin",
+                        "B": "Centering makes eigenvalues positive",
+                        "C": "It reduces the number of required components",
+                        "D": "Centering is optional and only affects speed"
+                    },
+                    "correct": "A",
+                    "explanation": "Centering ensures that principal components pass through the data's center of mass. Without centering, the first PC would point toward the mean rather than the direction of maximum variance."
+                },
+                {
+                    "id": 11,
+                    "question": "What is a fundamental limitation of PCA for dimensionality reduction?",
+                    "options": {
+                        "A": "PCA can only capture linear relationships between features",
+                        "B": "PCA requires labeled data",
+                        "C": "PCA cannot handle more than 10 features",
+                        "D": "PCA always reduces to exactly 2 dimensions"
+                    },
+                    "correct": "A",
+                    "explanation": "PCA finds linear combinations of features. Non-linear structures (like a Swiss roll) cannot be properly unfolded by PCA. For non-linear dimensionality reduction, methods like t-SNE or UMAP are needed."
+                },
+                {
+                    "id": 12,
+                    "question": "What does t-SNE try to preserve when reducing dimensionality?",
+                    "options": {
+                        "A": "Probability distributions of pairwise similarities in high and low dimensions",
+                        "B": "Total variance of the data",
+                        "C": "Linear relationships between features",
+                        "D": "Exact Euclidean distances between all points"
+                    },
+                    "correct": "A",
+                    "explanation": "t-SNE converts pairwise distances to probability distributions (high-dim uses Gaussian, low-dim uses t-distribution) and minimizes the KL divergence between them, preserving local neighborhood structure."
+                },
+                {
+                    "id": 13,
+                    "question": "What does the perplexity parameter in t-SNE control?",
+                    "options": {
+                        "A": "The effective number of neighbors each point considers",
+                        "B": "The number of output dimensions",
+                        "C": "The learning rate for optimization",
+                        "D": "The total number of iterations"
+                    },
+                    "correct": "A",
+                    "explanation": "Perplexity (typically 5-50) balances attention between local and global structure. Low perplexity focuses on very close neighbors; high perplexity considers broader neighborhood relationships."
+                },
+                {
+                    "id": 14,
+                    "question": "How does low perplexity (e.g., 5) vs high perplexity (e.g., 100) affect t-SNE output?",
+                    "options": {
+                        "A": "Low perplexity creates tight local clusters; high perplexity shows more global structure",
+                        "B": "Low perplexity runs faster; high perplexity is more accurate",
+                        "C": "Low perplexity uses t-distribution; high perplexity uses Gaussian",
+                        "D": "Perplexity has no effect on the visualization"
+                    },
+                    "correct": "A",
+                    "explanation": "Low perplexity emphasizes very local structure, potentially fragmenting clusters. High perplexity considers more neighbors, revealing broader patterns but potentially merging distinct clusters."
+                },
+                {
+                    "id": 15,
+                    "question": "Why does t-SNE use a t-distribution in the low-dimensional space instead of a Gaussian?",
+                    "options": {
+                        "A": "To solve the crowding problem - t-distribution has heavier tails allowing moderate distances",
+                        "B": "To make computation faster",
+                        "C": "To ensure all distances are positive",
+                        "D": "To match the high-dimensional distribution exactly"
+                    },
+                    "correct": "A",
+                    "explanation": "The crowding problem occurs because low-dimensional space has less 'room' for moderate distances. The t-distribution's heavier tails allow dissimilar points to be placed farther apart, better preserving local structure."
+                },
+                {
+                    "id": 16,
+                    "question": "What loss function does t-SNE minimize?",
+                    "options": {
+                        "A": "Kullback-Leibler (KL) divergence between high-dim and low-dim probability distributions",
+                        "B": "Mean squared error between original and projected distances",
+                        "C": "Cross-entropy loss",
+                        "D": "Sum of squared eigenvalues"
+                    },
+                    "correct": "A",
+                    "explanation": "t-SNE minimizes $KL(P||Q) = \\sum_{ij} p_{ij} \\log\\frac{p_{ij}}{q_{ij}}$ where $P$ represents high-dimensional similarities and $Q$ represents low-dimensional similarities."
+                },
+                {
+                    "id": 17,
+                    "question": "Which of the following is a limitation of t-SNE?",
+                    "options": {
+                        "A": "It cannot project new data points without rerunning on the entire dataset",
+                        "B": "It only works with 2D output",
+                        "C": "It requires labeled training data",
+                        "D": "It cannot handle more than 100 data points"
+                    },
+                    "correct": "A",
+                    "explanation": "t-SNE has no explicit mapping function from high to low dimensions. New points require rerunning the entire algorithm. Also, t-SNE is non-deterministic (different runs give different results) and computationally expensive."
+                },
+                {
+                    "id": 18,
+                    "question": "Comparing PCA and t-SNE: which statement is correct?",
+                    "options": {
+                        "A": "PCA is fast, reversible, and preserves global variance; t-SNE is slow, non-reversible, and preserves local structure",
+                        "B": "t-SNE is faster than PCA for large datasets",
+                        "C": "PCA preserves local structure better than t-SNE",
+                        "D": "Both methods always produce identical results"
+                    },
+                    "correct": "A",
+                    "explanation": "PCA: $O(p^2n)$ complexity, deterministic, reversible (can reconstruct), preserves global variance. t-SNE: $O(n^2)$ complexity, stochastic, non-reversible, excels at preserving local neighborhoods."
+                },
+                {
+                    "id": 19,
+                    "question": "The Swiss roll is a classic test case for dimensionality reduction. Why does PCA fail on it while t-SNE succeeds?",
+                    "options": {
+                        "A": "The Swiss roll has non-linear structure that PCA's linear projections cannot unfold",
+                        "B": "PCA cannot handle 3D data",
+                        "C": "The Swiss roll has too many data points",
+                        "D": "PCA requires the data to be normally distributed"
+                    },
+                    "correct": "A",
+                    "explanation": "The Swiss roll is a 2D manifold curved in 3D space. PCA projects linearly, overlapping distant parts of the roll. t-SNE respects the intrinsic geometry by preserving local distances along the manifold surface."
+                },
+                {
+                    "id": 20,
+                    "question": "In portfolio risk analysis, PCA is applied to asset return covariance. What does the first principal component typically represent?",
+                    "options": {
+                        "A": "The market factor - the common source of systematic risk affecting all assets",
+                        "B": "The risk-free rate",
+                        "C": "The highest returning asset",
+                        "D": "Individual stock-specific risk"
+                    },
+                    "correct": "A",
+                    "explanation": "In finance, PC1 often captures 'market risk' - the correlated movement of assets with the overall market. Subsequent PCs may capture sector effects, interest rate sensitivity, or other systematic factors."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initQuiz();
+            setTimeout(renderMath, 100);
+        });
+    </script>
+</body>
+</html>
