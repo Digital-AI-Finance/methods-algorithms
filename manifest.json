@@ -877,6 +877,72 @@
       "duration_minutes": 30,
       "file": "quizzes/quiz3_topics_5_6.xml",
       "status": "complete"
+    },
+    {
+      "id": "quiz_L01",
+      "title": "Quiz: L01 Linear Regression",
+      "topics": [
+        "L01"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L01_linear_regression.html",
+      "status": "complete"
+    },
+    {
+      "id": "quiz_L02",
+      "title": "Quiz: L02 Logistic Regression",
+      "topics": [
+        "L02"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L02_logistic_regression.html",
+      "status": "complete"
+    },
+    {
+      "id": "quiz_L03",
+      "title": "Quiz: L03 KNN & K-Means",
+      "topics": [
+        "L03"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L03_knn_kmeans.html",
+      "status": "complete"
+    },
+    {
+      "id": "quiz_L04",
+      "title": "Quiz: L04 Random Forests",
+      "topics": [
+        "L04"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L04_random_forests.html",
+      "status": "complete"
+    },
+    {
+      "id": "quiz_L05",
+      "title": "Quiz: L05 PCA & t-SNE",
+      "topics": [
+        "L05"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L05_pca_tsne.html",
+      "status": "complete"
+    },
+    {
+      "id": "quiz_L06",
+      "title": "Quiz: L06 Embeddings & RL",
+      "topics": [
+        "L06"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L06_embeddings_rl.html",
+      "status": "complete"
     }
   ],
   "presentations": {

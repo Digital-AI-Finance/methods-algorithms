@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 2: Logistic Regression | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quiz 2: Logistic Regression</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 2: Logistic Regression</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "What is the range of the sigmoid function $\\sigma(z)$?",
+                    "options": {
+                        "A": "$(0, 1)$",
+                        "B": "$(-1, 1)$",
+                        "C": "$[0, 1]$",
+                        "D": "$(-\\infty, \\infty)$"
+                    },
+                    "correct": "A",
+                    "explanation": "The sigmoid function $\\sigma(z) = \\frac{1}{1+e^{-z}}$ outputs values strictly between 0 and 1, asymptotically approaching but never reaching exactly 0 or 1."
+                },
+                {
+                    "id": 2,
+                    "question": "What is the value of $\\sigma(0)$ for the sigmoid function?",
+                    "options": {
+                        "A": "$0$",
+                        "B": "$0.5$",
+                        "C": "$1$",
+                        "D": "Undefined"
+                    },
+                    "correct": "B",
+                    "explanation": "At $z=0$: $\\sigma(0) = \\frac{1}{1+e^{0}} = \\frac{1}{1+1} = \\frac{1}{2} = 0.5$. This is the decision boundary threshold when using default settings."
+                },
+                {
+                    "id": 3,
+                    "question": "In logistic regression, what does the log-odds (logit) represent?",
+                    "options": {
+                        "A": "The probability of the positive class",
+                        "B": "The linear combination $\\beta_0 + \\beta_1 x_1 + ... + \\beta_n x_n$",
+                        "C": "The squared error loss",
+                        "D": "The classification threshold"
+                    },
+                    "correct": "B",
+                    "explanation": "The logit (log-odds) is $\\log\\frac{p}{1-p} = \\beta_0 + \\beta_1 x_1 + ... + \\beta_n x_n$. The linear combination of features maps directly to the log-odds, which is why logistic regression is a generalized linear model."
+                },
+                {
+                    "id": 4,
+                    "question": "If a coefficient $\\beta_j = 0.693$ in logistic regression, what is the odds ratio $e^{\\beta_j}$?",
+                    "options": {
+                        "A": "$0.5$",
+                        "B": "$1.0$",
+                        "C": "$2.0$",
+                        "D": "$0.693$"
+                    },
+                    "correct": "C",
+                    "explanation": "The odds ratio is $e^{\\beta_j} = e^{0.693} \\approx 2.0$. This means a one-unit increase in feature $x_j$ doubles the odds of the positive class, holding other features constant."
+                },
+                {
+                    "id": 5,
+                    "question": "Why can't we use Mean Squared Error (MSE) for logistic regression optimization?",
+                    "options": {
+                        "A": "MSE is always zero for classification",
+                        "B": "MSE creates a non-convex loss surface with many local minima",
+                        "C": "MSE cannot handle probabilities",
+                        "D": "MSE requires continuous targets"
+                    },
+                    "correct": "B",
+                    "explanation": "When combined with the sigmoid function, MSE creates a non-convex loss surface with multiple local minima, making optimization difficult. Binary cross-entropy (log-loss) is convex, guaranteeing a global minimum."
+                },
+                {
+                    "id": 6,
+                    "question": "What is the binary cross-entropy loss for a single sample with true label $y=1$ and predicted probability $\\hat{p}=0.8$?",
+                    "options": {
+                        "A": "$-\\log(0.8) \\approx 0.223$",
+                        "B": "$-\\log(0.2) \\approx 1.609$",
+                        "C": "$(1-0.8)^2 = 0.04$",
+                        "D": "$|1-0.8| = 0.2$"
+                    },
+                    "correct": "A",
+                    "explanation": "Binary cross-entropy: $L = -[y\\log(\\hat{p}) + (1-y)\\log(1-\\hat{p})]$. With $y=1$: $L = -\\log(0.8) \\approx 0.223$. The loss penalizes confident wrong predictions more heavily."
+                },
+                {
+                    "id": 7,
+                    "question": "What is the gradient of the log-loss with respect to the linear combination $z = \\mathbf{w}^T\\mathbf{x}$?",
+                    "options": {
+                        "A": "$y - \\sigma(z)$",
+                        "B": "$\\sigma(z) - y$",
+                        "C": "$\\sigma(z)(1-\\sigma(z))$",
+                        "D": "$-\\frac{y}{\\sigma(z)}$"
+                    },
+                    "correct": "B",
+                    "explanation": "The gradient of log-loss is elegantly simple: $\\frac{\\partial L}{\\partial z} = \\sigma(z) - y$, which is the predicted probability minus the true label. This drives weights toward correct predictions."
+                },
+                {
+                    "id": 8,
+                    "question": "What shape is the decision boundary in standard logistic regression?",
+                    "options": {
+                        "A": "Curved (nonlinear)",
+                        "B": "Linear (hyperplane)",
+                        "C": "Circular",
+                        "D": "Depends on the data"
+                    },
+                    "correct": "B",
+                    "explanation": "Standard logistic regression produces a linear decision boundary defined by $\\mathbf{w}^T\\mathbf{x} + b = 0$. For nonlinear boundaries, polynomial features or kernel methods must be added."
+                },
+                {
+                    "id": 9,
+                    "question": "If you lower the classification threshold from 0.5 to 0.3, what happens?",
+                    "options": {
+                        "A": "Precision increases, recall decreases",
+                        "B": "Precision decreases, recall increases",
+                        "C": "Both precision and recall increase",
+                        "D": "Both precision and recall decrease"
+                    },
+                    "correct": "B",
+                    "explanation": "A lower threshold classifies more samples as positive, catching more true positives (higher recall) but also more false positives (lower precision). This tradeoff is fundamental to threshold selection."
+                },
+                {
+                    "id": 10,
+                    "question": "In multiclass logistic regression, what does the softmax function ensure?",
+                    "options": {
+                        "A": "Outputs sum to 1 across all classes",
+                        "B": "Each output is between -1 and 1",
+                        "C": "Gradients don't vanish",
+                        "D": "Classes are linearly separable"
+                    },
+                    "correct": "A",
+                    "explanation": "Softmax converts raw scores (logits) into a valid probability distribution: $P(y=k) = \\frac{e^{z_k}}{\\sum_j e^{z_j}}$. The probabilities across all K classes sum to exactly 1."
+                },
+                {
+                    "id": 11,
+                    "question": "In a confusion matrix, what does the cell at row 'Actual Positive' and column 'Predicted Negative' represent?",
+                    "options": {
+                        "A": "True Positive (TP)",
+                        "B": "True Negative (TN)",
+                        "C": "False Positive (FP)",
+                        "D": "False Negative (FN)"
+                    },
+                    "correct": "D",
+                    "explanation": "False Negatives (FN) are actual positives incorrectly predicted as negative - the model 'missed' them. In fraud detection, these are fraudulent transactions classified as legitimate."
+                },
+                {
+                    "id": 12,
+                    "question": "Calculate precision given: TP=80, FP=20, TN=180, FN=20.",
+                    "options": {
+                        "A": "$0.80$",
+                        "B": "$0.90$",
+                        "C": "$0.75$",
+                        "D": "$0.85$"
+                    },
+                    "correct": "A",
+                    "explanation": "Precision = $\\frac{TP}{TP+FP} = \\frac{80}{80+20} = \\frac{80}{100} = 0.80$. Of all predicted positives, 80% were actually positive."
+                },
+                {
+                    "id": 13,
+                    "question": "Using the same values (TP=80, FP=20, TN=180, FN=20), what is the recall?",
+                    "options": {
+                        "A": "$0.75$",
+                        "B": "$0.80$",
+                        "C": "$0.85$",
+                        "D": "$0.90$"
+                    },
+                    "correct": "B",
+                    "explanation": "Recall = $\\frac{TP}{TP+FN} = \\frac{80}{80+20} = \\frac{80}{100} = 0.80$. Of all actual positives, 80% were correctly identified."
+                },
+                {
+                    "id": 14,
+                    "question": "If precision = 0.6 and recall = 0.9, what is the F1 score?",
+                    "options": {
+                        "A": "$0.72$",
+                        "B": "$0.75$",
+                        "C": "$0.80$",
+                        "D": "$0.85$"
+                    },
+                    "correct": "A",
+                    "explanation": "F1 = $\\frac{2 \\cdot precision \\cdot recall}{precision + recall} = \\frac{2 \\cdot 0.6 \\cdot 0.9}{0.6 + 0.9} = \\frac{1.08}{1.5} = 0.72$. F1 is the harmonic mean, penalizing imbalanced precision/recall."
+                },
+                {
+                    "id": 15,
+                    "question": "On an ROC curve, what does the point (0, 1) represent?",
+                    "options": {
+                        "A": "Random classifier",
+                        "B": "Perfect classifier",
+                        "C": "Always predict negative",
+                        "D": "Always predict positive"
+                    },
+                    "correct": "B",
+                    "explanation": "The point (FPR=0, TPR=1) means zero false positives and all true positives correctly identified - a perfect classifier. The ROC curve measures how close a model gets to this ideal."
+                },
+                {
+                    "id": 16,
+                    "question": "What does an AUC of 0.5 indicate about a classifier?",
+                    "options": {
+                        "A": "Perfect classification",
+                        "B": "Performance equivalent to random guessing",
+                        "C": "The model always predicts the majority class",
+                        "D": "High precision but low recall"
+                    },
+                    "correct": "B",
+                    "explanation": "AUC = 0.5 corresponds to the diagonal line on the ROC curve, equivalent to random coin-flip classification. AUC ranges from 0.5 (random) to 1.0 (perfect), with values below 0.5 indicating worse-than-random (invert predictions)."
+                },
+                {
+                    "id": 17,
+                    "question": "Why is the precision-recall curve preferred over ROC for highly imbalanced datasets?",
+                    "options": {
+                        "A": "PR curves are always above ROC curves",
+                        "B": "ROC's FPR is inflated by the large negative class, masking poor performance",
+                        "C": "PR curves don't require a threshold",
+                        "D": "ROC cannot handle imbalanced data"
+                    },
+                    "correct": "B",
+                    "explanation": "With many negatives, even a high number of false positives yields a small FPR, making ROC look good. PR curves focus on the minority positive class, revealing true model performance on imbalanced data like fraud detection."
+                },
+                {
+                    "id": 18,
+                    "question": "What effect does L1 regularization have on logistic regression coefficients?",
+                    "options": {
+                        "A": "Makes all coefficients equal",
+                        "B": "Encourages sparse solutions (some coefficients become exactly zero)",
+                        "C": "Always increases model accuracy",
+                        "D": "Removes the need for feature scaling"
+                    },
+                    "correct": "B",
+                    "explanation": "L1 (Lasso) regularization adds $\\lambda|\\mathbf{w}|_1$ to the loss, producing sparse solutions where irrelevant feature coefficients become exactly zero. This performs automatic feature selection."
+                },
+                {
+                    "id": 19,
+                    "question": "To handle class imbalance with 95% negatives and 5% positives, which approach is most appropriate?",
+                    "options": {
+                        "A": "Use accuracy as the evaluation metric",
+                        "B": "Set class_weight='balanced' or adjust the decision threshold",
+                        "C": "Remove all negative samples",
+                        "D": "Use linear regression instead"
+                    },
+                    "correct": "B",
+                    "explanation": "class_weight='balanced' automatically adjusts weights inversely proportional to class frequencies, or you can lower the threshold below 0.5. Accuracy is misleading here - predicting all negatives achieves 95% accuracy but 0% recall."
+                },
+                {
+                    "id": 20,
+                    "question": "In a credit scoring model, a coefficient $\\beta = 0.4$ for 'number of late payments' means:",
+                    "options": {
+                        "A": "Each late payment increases default probability by 40%",
+                        "B": "Each late payment multiplies the odds of default by $e^{0.4} \\approx 1.49$",
+                        "C": "Late payments decrease default risk",
+                        "D": "The feature is not statistically significant"
+                    },
+                    "correct": "B",
+                    "explanation": "In logistic regression, coefficients affect log-odds. A coefficient of 0.4 means each additional late payment multiplies the odds of default by $e^{0.4} \\approx 1.49$ (49% increase in odds), not probability directly."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initQuiz();
+            setTimeout(renderMath, 100);
+        });
+    </script>
+</body>
+</html>

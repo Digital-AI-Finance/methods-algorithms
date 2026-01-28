@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 4: Random Forests | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quiz 4: Random Forests</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 4: Random Forests</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "What is the Gini impurity for a node with 60% class A and 40% class B?",
+                    "options": {
+                        "A": "0.48",
+                        "B": "0.50",
+                        "C": "0.36",
+                        "D": "0.24"
+                    },
+                    "correct": "A",
+                    "explanation": "Gini = $1 - (0.6^2 + 0.4^2) = 1 - (0.36 + 0.16) = 1 - 0.52 = 0.48$"
+                },
+                {
+                    "id": 2,
+                    "question": "What is the entropy of a node where 50% of samples belong to class A and 50% to class B?",
+                    "options": {
+                        "A": "0.5",
+                        "B": "1.0",
+                        "C": "0.0",
+                        "D": "2.0"
+                    },
+                    "correct": "B",
+                    "explanation": "Entropy $H = -\\sum p_k \\log_2(p_k) = -(0.5 \\log_2 0.5 + 0.5 \\log_2 0.5) = -(-0.5 - 0.5) = 1.0$ bits"
+                },
+                {
+                    "id": 3,
+                    "question": "A parent node has entropy 0.9. After splitting, the weighted average entropy of children is 0.4. What is the information gain?",
+                    "options": {
+                        "A": "0.4",
+                        "B": "0.5",
+                        "C": "0.9",
+                        "D": "1.3"
+                    },
+                    "correct": "B",
+                    "explanation": "Information Gain = $H(\\text{parent}) - \\sum \\frac{n_j}{n} H(\\text{child}_j) = 0.9 - 0.4 = 0.5$"
+                },
+                {
+                    "id": 4,
+                    "question": "In decision tree construction, what does 'recursive partitioning' mean?",
+                    "options": {
+                        "A": "Splitting data once at the root",
+                        "B": "Repeatedly splitting nodes until stopping criteria are met",
+                        "C": "Randomly selecting features for the model",
+                        "D": "Combining predictions from multiple trees"
+                    },
+                    "correct": "B",
+                    "explanation": "Recursive partitioning repeatedly applies the split procedure to each child node, creating a tree structure until stopping criteria (max depth, min samples) are met."
+                },
+                {
+                    "id": 5,
+                    "question": "Which is NOT a valid stopping criterion for decision tree growth?",
+                    "options": {
+                        "A": "Maximum depth reached",
+                        "B": "Minimum samples per leaf",
+                        "C": "Maximum number of features",
+                        "D": "No improvement in impurity"
+                    },
+                    "correct": "C",
+                    "explanation": "Maximum features is a parameter for Random Forests (features per split), not a stopping criterion. Valid stopping criteria include max depth, min samples per split/leaf, and minimum impurity decrease."
+                },
+                {
+                    "id": 6,
+                    "question": "In bootstrap sampling, each sample is drawn:",
+                    "options": {
+                        "A": "Without replacement from the original data",
+                        "B": "With replacement from the original data",
+                        "C": "From a different dataset each time",
+                        "D": "Using stratified sampling only"
+                    },
+                    "correct": "B",
+                    "explanation": "Bootstrap sampling draws n samples WITH replacement from the original n observations, allowing the same observation to appear multiple times in a bootstrap sample."
+                },
+                {
+                    "id": 7,
+                    "question": "Approximately what percentage of original samples are NOT included in a bootstrap sample (OOB)?",
+                    "options": {
+                        "A": "25%",
+                        "B": "37%",
+                        "C": "50%",
+                        "D": "63%"
+                    },
+                    "correct": "B",
+                    "explanation": "The probability of NOT being selected in n draws is $(1 - 1/n)^n \\approx e^{-1} \\approx 0.368$. So about 37% of samples are out-of-bag for each tree."
+                },
+                {
+                    "id": 8,
+                    "question": "What is the main purpose of bootstrap aggregating (bagging)?",
+                    "options": {
+                        "A": "Increase model bias",
+                        "B": "Reduce model variance",
+                        "C": "Speed up training",
+                        "D": "Simplify the model"
+                    },
+                    "correct": "B",
+                    "explanation": "Bagging reduces variance by training multiple models on bootstrap samples and averaging predictions. For B independent predictions with variance $\\sigma^2$, the variance of the average is $\\sigma^2/B$."
+                },
+                {
+                    "id": 9,
+                    "question": "What are the two sources of randomness in Random Forests?",
+                    "options": {
+                        "A": "Bootstrap sampling and random tree depth",
+                        "B": "Bootstrap sampling and feature randomization at splits",
+                        "C": "Random initialization and learning rate",
+                        "D": "Feature scaling and data shuffling"
+                    },
+                    "correct": "B",
+                    "explanation": "Random Forests introduce randomness through (1) bootstrap sampling - each tree sees a different data subset, and (2) feature randomization - each split considers only a random subset of features."
+                },
+                {
+                    "id": 10,
+                    "question": "For a classification problem with 100 features, how many features are typically considered at each split in a Random Forest?",
+                    "options": {
+                        "A": "100",
+                        "B": "50",
+                        "C": "33",
+                        "D": "10"
+                    },
+                    "correct": "D",
+                    "explanation": "For classification, the default is $\\sqrt{p}$ features per split. With 100 features: $\\sqrt{100} = 10$ features considered at each split."
+                },
+                {
+                    "id": 11,
+                    "question": "In Random Forest classification, how is the final prediction made?",
+                    "options": {
+                        "A": "Using the prediction of the deepest tree",
+                        "B": "Averaging the probability outputs",
+                        "C": "Majority vote across all trees",
+                        "D": "Using only the first tree's prediction"
+                    },
+                    "correct": "C",
+                    "explanation": "For classification, Random Forest uses majority voting - each tree votes for a class, and the class with the most votes wins. For regression, predictions are averaged."
+                },
+                {
+                    "id": 12,
+                    "question": "What does Mean Decrease in Impurity (MDI) measure?",
+                    "options": {
+                        "A": "How much accuracy drops when a feature is removed",
+                        "B": "The sum of impurity reductions from splits on a feature",
+                        "C": "The correlation between features",
+                        "D": "The variance of a feature's values"
+                    },
+                    "correct": "B",
+                    "explanation": "MDI sums up the Gini/entropy reduction contributed by each feature across all trees. Features that frequently reduce impurity significantly have higher importance scores."
+                },
+                {
+                    "id": 13,
+                    "question": "How does permutation importance work?",
+                    "options": {
+                        "A": "Remove the feature and retrain the model",
+                        "B": "Randomly shuffle the feature's values and measure accuracy drop",
+                        "C": "Replace the feature with zeros",
+                        "D": "Swap the feature with another random feature"
+                    },
+                    "correct": "B",
+                    "explanation": "Permutation importance randomly shuffles a feature's values (breaking its relationship with the target) and measures how much model performance drops. Larger drops indicate more important features."
+                },
+                {
+                    "id": 14,
+                    "question": "Why is OOB error considered 'free cross-validation'?",
+                    "options": {
+                        "A": "It requires no additional computation after training",
+                        "B": "It uses samples not seen during training for each tree",
+                        "C": "It doesn't require a separate validation set",
+                        "D": "All of the above"
+                    },
+                    "correct": "D",
+                    "explanation": "OOB error comes 'free' because: (1) it uses existing OOB samples, (2) requires no extra computation beyond training, and (3) provides an unbiased estimate without needing a held-out validation set."
+                },
+                {
+                    "id": 15,
+                    "question": "How does Random Forest address the bias-variance tradeoff?",
+                    "options": {
+                        "A": "Increases bias to reduce variance",
+                        "B": "Keeps low bias while reducing variance through averaging",
+                        "C": "Reduces both bias and variance equally",
+                        "D": "Increases both bias and variance"
+                    },
+                    "correct": "B",
+                    "explanation": "Individual trees have low bias (can fit complex patterns) but high variance. Random Forest keeps the low bias while reducing variance by averaging many decorrelated trees."
+                },
+                {
+                    "id": 16,
+                    "question": "What is the typical recommended range for the number of trees (n_estimators)?",
+                    "options": {
+                        "A": "10-50",
+                        "B": "100-500",
+                        "C": "1000-5000",
+                        "D": "5-10"
+                    },
+                    "correct": "B",
+                    "explanation": "100-500 trees typically provide good performance with diminishing returns beyond that. More trees never hurt accuracy (just increase computation), but gains plateau after a few hundred."
+                },
+                {
+                    "id": 17,
+                    "question": "What happens if you decrease max_features in a Random Forest?",
+                    "options": {
+                        "A": "Trees become more correlated",
+                        "B": "Trees become more decorrelated, but individual trees have higher bias",
+                        "C": "Training becomes slower",
+                        "D": "OOB error always decreases"
+                    },
+                    "correct": "B",
+                    "explanation": "Lower max_features means each split considers fewer features, making trees more different (decorrelated) but potentially less accurate individually. The ensemble often still benefits from the decorrelation."
+                },
+                {
+                    "id": 18,
+                    "question": "Which is an advantage of Random Forests?",
+                    "options": {
+                        "A": "Can extrapolate beyond training data range",
+                        "B": "Fully interpretable like a single decision tree",
+                        "C": "Robust to outliers with built-in feature importance",
+                        "D": "Requires less memory than a single tree"
+                    },
+                    "correct": "C",
+                    "explanation": "Random Forests are robust to outliers, handle mixed feature types well, and provide built-in feature importance. However, they cannot extrapolate, are less interpretable than single trees, and use more memory."
+                },
+                {
+                    "id": 19,
+                    "question": "Which is a limitation of Random Forests?",
+                    "options": {
+                        "A": "Cannot handle non-linear relationships",
+                        "B": "Less interpretable than single decision trees",
+                        "C": "Cannot compute feature importance",
+                        "D": "Requires feature scaling"
+                    },
+                    "correct": "B",
+                    "explanation": "Random Forests sacrifice interpretability for accuracy - understanding why the ensemble made a prediction is harder than tracing a single tree's path. They handle non-linear relationships well and don't require scaling."
+                },
+                {
+                    "id": 20,
+                    "question": "In fraud detection, why might Random Forests be preferred over logistic regression?",
+                    "options": {
+                        "A": "Fraud patterns are always linear",
+                        "B": "Random Forests can capture complex, non-linear fraud patterns",
+                        "C": "Logistic regression cannot handle numerical features",
+                        "D": "Random Forests require less training data"
+                    },
+                    "correct": "B",
+                    "explanation": "Fraud detection often involves complex, non-linear patterns (e.g., unusual combinations of transaction amount, time, and location). Random Forests can capture these interactions without explicit feature engineering."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initQuiz();
+            setTimeout(renderMath, 100);
+        });
+    </script>
+</body>
+</html>
