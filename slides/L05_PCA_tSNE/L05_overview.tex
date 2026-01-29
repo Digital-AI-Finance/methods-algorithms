@@ -1,19 +1,53 @@
 \documentclass[8pt,aspectratio=169]{beamer}
+
+% Theme
 \usetheme{Madrid}
 \usecolortheme{default}
 
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tikz}
+\usepackage{hyperref}
 
-\definecolor{mlpurple}{HTML}{3333B2}
-\definecolor{mlblue}{HTML}{0066CC}
-\definecolor{mlgreen}{HTML}{2CA02C}
-\definecolor{mlred}{HTML}{D62728}
-\definecolor{mlorange}{HTML}{FF7F0E}
+% Custom colors (ML palette)
+\definecolor{MLPurple}{RGB}{51,51,178}
+\definecolor{MLBlue}{RGB}{0,102,204}
+\definecolor{MLOrange}{RGB}{255,127,14}
+\definecolor{MLGreen}{RGB}{44,160,44}
+\definecolor{MLRed}{RGB}{214,39,40}
 
-\newcommand{\bottomnote}[1]{\vfill\footnotesize\textcolor{gray}{#1}}
+% Apply colors
+\setbeamercolor{structure}{fg=MLPurple}
+\setbeamercolor{title}{fg=MLPurple}
+\setbeamercolor{frametitle}{fg=MLPurple}
+
+% Footer customization
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}Methods and Algorithms
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}MSc Data Science
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Custom commands
+\newcommand{\bottomnote}[1]{\vfill\footnotesize\textit{#1}}
+\newcommand{\highlight}[1]{\textcolor{MLOrange}{\textbf{#1}}}
+\newcommand{\mathbold}[1]{\boldsymbol{#1}}
 
 \title[L05: PCA \& t-SNE]{L05: PCA \& t-SNE}
 \subtitle{Dimensionality Reduction for Visualization and Preprocessing}
