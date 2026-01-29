@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
+CHART_METADATA = {
+    "title": "Silhouette Analysis",
+    "description": "Cluster cohesion and separation quality",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L03_KNN_KMeans/05_silhouette"
+}
+
 plt.rcParams.update({
     'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
     'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,

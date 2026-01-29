@@ -1,7 +1,19 @@
-"""Regularization Comparison - Ridge vs Lasso Coefficient Paths"""
+"""Regularization Comparison - Ridge vs Lasso Coefficient Paths
+
+Note: The Lasso coefficient path uses a simplified soft-thresholding formula
+for visualization purposes. The actual Lasso solution involves coordinate
+descent optimization, but the visual behavior is qualitatively similar.
+"""
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+
+# QuantLet branding metadata
+CHART_METADATA = {
+    "title": "Ridge vs Lasso Regularization",
+    "description": "Coefficient shrinkage paths comparing Ridge and Lasso",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L01_Introduction_Linear_Regression/06_regularization_comparison"
+}
 
 # Chart settings for Beamer
 plt.rcParams.update({

@@ -3,6 +3,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
+# QuantLet branding metadata
+CHART_METADATA = {
+    "title": "Bias-Variance Tradeoff",
+    "description": "Error decomposition showing bias, variance, and total error vs complexity",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L01_Introduction_Linear_Regression/07_bias_variance"
+}
+
 # Chart settings for Beamer
 plt.rcParams.update({
     'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,

@@ -1,5 +1,12 @@
 """Bootstrap Sampling - Bagging visualization"""
 import matplotlib.pyplot as plt
+
+# Chart metadata for QR code generation
+CHART_METADATA = {
+    'title': 'Bootstrap Sampling',
+    'description': 'Sampling with replacement visualization',
+    'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L04_Random_Forests/03_bootstrap'
+}
 import numpy as np
 from matplotlib.patches import Rectangle, FancyArrowPatch, FancyBboxPatch
 from pathlib import Path
@@ -40,7 +47,7 @@ n_points = 10
 for i in range(n_points):
     y = original_y - box_height/2 + 0.05 + i * (box_height - 0.1) / (n_points - 1)
     ax.plot(original_x, y, 'o', color='white', markersize=8, markeredgecolor='black')
-    ax.text(original_x + 0.02, y, str(i+1), fontsize=8, va='center', color='white', fontweight='bold')
+    ax.text(original_x + 0.02, y, str(i+1), fontsize=10, va='center', color='white', fontweight='bold')
 
 # Bootstrap samples (right side)
 bootstrap_positions = [(0.4, 0.75), (0.6, 0.75), (0.8, 0.75)]
@@ -68,7 +75,7 @@ for (x, y), color, label, indices in zip(bootstrap_positions, sample_colors, sam
     for i, idx in enumerate(indices):
         py = y - small_height/2 + 0.03 + i * (small_height - 0.06) / (len(indices) - 1)
         ax.plot(x, py, 'o', color='white', markersize=6, markeredgecolor='black')
-        ax.text(x, py, str(idx), fontsize=7, ha='center', va='center', fontweight='bold')
+        ax.text(x, py, str(idx), fontsize=10, ha='center', va='center', fontweight='bold')
 
     # Arrow from original to sample
     ax.annotate('', xy=(x - small_width/2 - 0.02, y),

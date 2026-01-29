@@ -4,10 +4,17 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 from pathlib import Path
 
-# Chart settings for Beamer
+# QuantLet branding metadata
+CHART_METADATA = {
+    "title": "Multiple Regression Surface",
+    "description": "3D visualization of regression plane with two predictors",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L01_Introduction_Linear_Regression/02_multiple_regression_3d"
+}
+
+# Chart settings for Beamer (scaled up for 70% display)
 plt.rcParams.update({
-    'font.size': 12, 'axes.labelsize': 12, 'axes.titlesize': 14,
-    'xtick.labelsize': 11, 'ytick.labelsize': 11, 'legend.fontsize': 11,
+    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
+    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
     'figure.figsize': (10, 6), 'figure.dpi': 150
 })
 

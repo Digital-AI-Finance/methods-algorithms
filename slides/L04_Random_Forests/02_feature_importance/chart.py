@@ -1,5 +1,12 @@
 """Feature Importance - Random Forest for fraud detection"""
 import matplotlib.pyplot as plt
+
+# Chart metadata for QR code generation
+CHART_METADATA = {
+    'title': 'Feature Importance',
+    'description': 'Random Forest feature importance ranking',
+    'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L04_Random_Forests/02_feature_importance'
+}
 import numpy as np
 from pathlib import Path
 

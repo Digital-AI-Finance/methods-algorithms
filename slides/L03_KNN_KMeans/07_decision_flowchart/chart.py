@@ -3,8 +3,16 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from pathlib import Path
 
+CHART_METADATA = {
+    "title": "KNN vs K-Means Decision Guide",
+    "description": "Supervised vs unsupervised selection flowchart",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L03_KNN_KMeans/07_decision_flowchart"
+}
+
 plt.rcParams.update({
-    'font.size': 11, 'figure.figsize': (10, 6), 'figure.dpi': 150
+    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
+    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
+    'figure.figsize': (10, 6), 'figure.dpi': 150
 })
 
 MLBLUE = '#0066CC'
@@ -20,7 +28,7 @@ def draw_box(ax, x, y, text, color, width=1.8, height=0.6):
                                    facecolor=color, edgecolor='black', linewidth=1.5,
                                    alpha=0.8)
     ax.add_patch(box)
-    ax.text(x, y, text, ha='center', va='center', fontsize=10,
+    ax.text(x, y, text, ha='center', va='center', fontsize=13,
             fontweight='bold', wrap=True)
 
 def draw_diamond(ax, x, y, text, color, size=0.8):
@@ -29,7 +37,7 @@ def draw_diamond(ax, x, y, text, color, size=0.8):
                                        facecolor=color, edgecolor='black',
                                        linewidth=1.5, alpha=0.8)
     ax.add_patch(diamond)
-    ax.text(x, y, text, ha='center', va='center', fontsize=9,
+    ax.text(x, y, text, ha='center', va='center', fontsize=11,
             fontweight='bold', wrap=True)
 
 def draw_arrow(ax, x1, y1, x2, y2, label=None, label_pos=0.5):
@@ -39,7 +47,7 @@ def draw_arrow(ax, x1, y1, x2, y2, label=None, label_pos=0.5):
     if label:
         mid_x = x1 + (x2 - x1) * label_pos
         mid_y = y1 + (y2 - y1) * label_pos
-        ax.text(mid_x + 0.15, mid_y, label, fontsize=9, color='gray')
+        ax.text(mid_x + 0.15, mid_y, label, fontsize=11, color='gray')
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
@@ -58,7 +66,7 @@ draw_box(ax, 5, 0, 'DBSCAN or\nHierarchical', MLRED, 1.6, 0.7)
 draw_arrow(ax, 2.5, 4, 4.4, 4, 'Yes')
 draw_arrow(ax, 5.6, 4, 7.2, 4, 'Yes')
 draw_arrow(ax, 5, 3.4, 5, 2.6)
-ax.text(5.15, 3, 'No', fontsize=9, color='gray')
+ax.text(5.15, 3, 'No', fontsize=11, color='gray')
 draw_arrow(ax, 5.6, 2, 7.2, 2)
 
 draw_arrow(ax, 2, 3.4, 2, 2.6, 'No')
@@ -66,12 +74,12 @@ draw_arrow(ax, 2, 1.4, 2, 0.4, 'Yes')
 draw_arrow(ax, 2.5, 2, 4.4, 0.3, 'No')
 
 # Title
-ax.text(5, 5.2, 'KNN vs K-Means Decision Guide', fontsize=14,
+ax.text(5, 5.2, 'KNN vs K-Means Decision Guide', fontsize=16,
         ha='center', fontweight='bold', color=MLPURPLE)
 
 # Clarification
-ax.text(0.5, 4.5, 'Supervised\n(Classification)', fontsize=9, color='gray')
-ax.text(0.5, 1.5, 'Unsupervised\n(Clustering)', fontsize=9, color='gray')
+ax.text(0.5, 4.5, 'Supervised\n(Classification)', fontsize=11, color='gray')
+ax.text(0.5, 1.5, 'Unsupervised\n(Clustering)', fontsize=11, color='gray')
 
 ax.set_xlim(0, 10)
 ax.set_ylim(-0.5, 5.5)

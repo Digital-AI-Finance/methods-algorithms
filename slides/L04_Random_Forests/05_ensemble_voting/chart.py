@@ -1,5 +1,12 @@
 """Ensemble Voting - How trees combine predictions"""
 import matplotlib.pyplot as plt
+
+# Chart metadata for QR code generation
+CHART_METADATA = {
+    'title': 'Ensemble Voting',
+    'description': 'Majority voting aggregation process',
+    'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L04_Random_Forests/05_ensemble_voting'
+}
 import numpy as np
 from matplotlib.patches import FancyBboxPatch, Circle
 from pathlib import Path

@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
+CHART_METADATA = {
+    "title": "Confusion Matrix",
+    "description": "Credit default prediction matrix with metrics",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L02_Logistic_Regression/06_confusion_matrix"
+}
+
 plt.rcParams.update({
     'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
     'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,

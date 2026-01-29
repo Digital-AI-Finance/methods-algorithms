@@ -1,5 +1,12 @@
 """Out-of-Bag Error - OOB vs Test Error comparison"""
 import matplotlib.pyplot as plt
+
+# Chart metadata for QR code generation
+CHART_METADATA = {
+    'title': 'OOB Error Estimation',
+    'description': 'Out-of-bag error convergence with tree count',
+    'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L04_Random_Forests/04_oob_error'
+}
 import numpy as np
 from pathlib import Path
 

@@ -3,6 +3,13 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from pathlib import Path
 
+# QuantLet branding metadata
+CHART_METADATA = {
+    "title": "Linear Regression Decision Guide",
+    "description": "Flowchart for deciding when to use linear regression",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L01_Introduction_Linear_Regression/08_decision_flowchart"
+}
+
 # Chart settings
 plt.rcParams.update({
     'font.size': 11, 'figure.figsize': (10, 6), 'figure.dpi': 150

@@ -1,5 +1,12 @@
 """Decision Tree Structure - Fraud detection example"""
 import matplotlib.pyplot as plt
+
+# Chart metadata for QR code generation
+CHART_METADATA = {
+    'title': 'Decision Tree Structure',
+    'description': 'Fraud detection decision rules visualization',
+    'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L04_Random_Forests/01_decision_tree'
+}
 import numpy as np
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 from pathlib import Path

@@ -1,8 +1,13 @@
-"""Voronoi Diagram - K-Means decision regions"""
+"""K-Means Decision Regions - Nearest centroid assignment boundaries"""
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
-from scipy.spatial import Voronoi
+
+CHART_METADATA = {
+    "title": "K-Means Decision Regions",
+    "description": "Nearest centroid assignment boundaries",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L03_KNN_KMeans/06_voronoi"
+}
 
 plt.rcParams.update({
     'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
@@ -59,7 +64,7 @@ for i, (centroid, color) in enumerate(zip(centroids, colors)):
 
 ax.set_xlabel('Feature 1')
 ax.set_ylabel('Feature 2')
-ax.set_title('K-Means Voronoi Regions (Decision Boundaries)')
+ax.set_title('K-Means Decision Regions')
 ax.set_xlim(x_min, x_max)
 ax.set_ylim(y_min, y_max)
 ax.grid(True, alpha=0.3)

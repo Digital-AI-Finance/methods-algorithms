@@ -1,5 +1,12 @@
 """Decision Flowchart - When to use Random Forests"""
 import matplotlib.pyplot as plt
+
+# Chart metadata for QR code generation
+CHART_METADATA = {
+    'title': 'Random Forest Decision Guide',
+    'description': 'When to use Random Forests flowchart',
+    'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L04_Random_Forests/07_decision_flowchart'
+}
 import matplotlib.patches as mpatches
 from pathlib import Path
 

@@ -3,8 +3,16 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from pathlib import Path
 
+CHART_METADATA = {
+    "title": "Logistic Regression Decision Guide",
+    "description": "When to use flowchart",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L02_Logistic_Regression/07_decision_flowchart"
+}
+
 plt.rcParams.update({
-    'font.size': 11, 'figure.figsize': (10, 6), 'figure.dpi': 150
+    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
+    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
+    'figure.figsize': (10, 6), 'figure.dpi': 150
 })
 
 MLBLUE = '#0066CC'
