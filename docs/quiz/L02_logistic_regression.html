@@ -763,10 +763,9 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initQuiz();
-            setTimeout(renderMath, 100);
-        });
+        // Initialize immediately since script is at end of body
+        initQuiz();
+        setTimeout(renderMath, 100);
     </script>
 </body>
 </html>
