@@ -230,10 +230,9 @@ function renderMath() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    render();
-    setTimeout(renderMath, 100);
-});
+// Initialize immediately since script is at end of body
+render();
+setTimeout(renderMath, 100);
 </script>
 </body>
 </html>
