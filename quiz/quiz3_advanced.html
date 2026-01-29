@@ -204,9 +204,17 @@ function renderMath() {
     }
 }
 
-// Initialize immediately since script is at end of body
-render();
-setTimeout(renderMath, 100);
+// Initialize with error handling
+try {
+    render();
+    setTimeout(renderMath, 100);
+} catch (e) {
+    console.error('Quiz initialization error:', e);
+    document.getElementById('questions-container').innerHTML =
+        '<div style="padding:2rem;text-align:center;color:#991b1b;">' +
+        '<h3>Quiz failed to load</h3><p>Error: ' + e.message + '</p>' +
+        '<p>Please refresh the page or try a different browser.</p></div>';
+}
 </script>
 </body>
 </html>
