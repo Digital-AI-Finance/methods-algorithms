@@ -951,13 +951,5 @@
     "duration_minutes": 15,
     "file": "presentations/topics.md",
     "status": "complete"
-  },
-  "capstone": {
-    "format": "open_ended",
-    "deliverable": "report_only",
-    "pages": "10-15",
-    "specification_file": "capstone/specification.md",
-    "template_file": "capstone/report_template.tex",
-    "status": "complete"
   }
 }
