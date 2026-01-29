@@ -1,0 +1,204 @@
+{
+  "metadata": {
+    "generated": "2026-01-21T19:38:30.861089",
+    "project": "Methods and Algorithms",
+    "version": "1.0.0",
+    "project_root": "D:\\Joerg\\Research\\slides\\Methods_and_Algorithms"
+  },
+  "summary": {
+    "directories": {
+      "found": 37,
+      "expected": 37,
+      "percent": 100
+    },
+    "python_modules": {
+      "found": 33,
+      "expected": 33,
+      "percent": 100
+    },
+    "templates": {
+      "found": 5,
+      "expected": 5,
+      "percent": 100
+    },
+    "config_files": {
+      "found": 4,
+      "expected": 4,
+      "percent": 100
+    },
+    "content": {
+      "found": 18,
+      "expected": 18,
+      "percent": 100
+    },
+    "functional_tests": {
+      "passed": 6,
+      "total": 6,
+      "percent": 100
+    }
+  },
+  "functional_tests": [
+    {
+      "name": "cli_help",
+      "status": "pass",
+      "duration_ms": 2865,
+      "error": ""
+    },
+    {
+      "name": "manifest_valid_json",
+      "status": "pass",
+      "duration_ms": 14,
+      "error": ""
+    },
+    {
+      "name": "config_valid_yaml",
+      "status": "pass",
+      "duration_ms": 297,
+      "error": ""
+    },
+    {
+      "name": "progress_report_import",
+      "status": "pass",
+      "duration_ms": 31,
+      "error": ""
+    },
+    {
+      "name": "validators_importable",
+      "status": "pass",
+      "duration_ms": 163,
+      "error": ""
+    },
+    {
+      "name": "builders_importable",
+      "status": "pass",
+      "duration_ms": 83,
+      "error": ""
+    }
+  ],
+  "missing_items": [],
+  "recommendations": [],
+  "details": {
+    "directories": {
+      "found": [
+        "docs",
+        "docs/css",
+        "docs/js",
+        "docs/assets",
+        "slides",
+        "quizzes",
+        "notebooks",
+        "datasets",
+        "presentations",
+        "capstone",
+        "capstone/examples",
+        "rubrics",
+        "syllabus",
+        "templates",
+        "infrastructure",
+        "infrastructure/validators",
+        "infrastructure/builders",
+        "infrastructure/reporters",
+        "infrastructure/deployers",
+        "infrastructure/generators",
+        "infrastructure/auditors",
+        "infrastructure/downloaders",
+        "infrastructure/trackers",
+        "infrastructure/utils",
+        "infrastructure/reporters/dashboard_assets",
+        "slides/L01_Introduction_Linear_Regression",
+        "slides/L01_Introduction_Linear_Regression/temp",
+        "slides/L02_Logistic_Regression",
+        "slides/L02_Logistic_Regression/temp",
+        "slides/L03_KNN_KMeans",
+        "slides/L03_KNN_KMeans/temp",
+        "slides/L04_Random_Forests",
+        "slides/L04_Random_Forests/temp",
+        "slides/L05_PCA_tSNE",
+        "slides/L05_PCA_tSNE/temp",
+        "slides/L06_Embeddings_RL",
+        "slides/L06_Embeddings_RL/temp"
+      ],
+      "missing": []
+    },
+    "python_modules": {
+      "found": [
+        "infrastructure/course_cli.py",
+        "infrastructure/validators/__init__.py",
+        "infrastructure/validators/latex_validator.py",
+        "infrastructure/validators/link_validator.py",
+        "infrastructure/validators/notebook_validator.py",
+        "infrastructure/validators/chart_validator.py",
+        "infrastructure/builders/__init__.py",
+        "infrastructure/builders/slide_builder.py",
+        "infrastructure/builders/chart_builder.py",
+        "infrastructure/builders/notebook_builder.py",
+        "infrastructure/builders/quiz_builder.py",
+        "infrastructure/reporters/__init__.py",
+        "infrastructure/reporters/build_report.py",
+        "infrastructure/reporters/coverage_report.py",
+        "infrastructure/reporters/progress_report.py",
+        "infrastructure/reporters/quality_report.py",
+        "infrastructure/reporters/html_dashboard.py",
+        "infrastructure/deployers/__init__.py",
+        "infrastructure/deployers/github_deployer.py",
+        "infrastructure/deployers/colab_deployer.py",
+        "infrastructure/generators/__init__.py",
+        "infrastructure/generators/syllabus_generator.py",
+        "infrastructure/generators/rubric_generator.py",
+        "infrastructure/generators/guide_generator.py",
+        "infrastructure/auditors/__init__.py",
+        "infrastructure/auditors/audit_system.py",
+        "infrastructure/downloaders/__init__.py",
+        "infrastructure/downloaders/pdf_downloader.py",
+        "infrastructure/trackers/__init__.py",
+        "infrastructure/trackers/activity_log.py",
+        "infrastructure/utils/__init__.py",
+        "infrastructure/utils/retry_strategy.py",
+        "infrastructure/utils/hash_utils.py"
+      ],
+      "missing": []
+    },
+    "templates": {
+      "found": [
+        "templates/beamer_template.tex",
+        "templates/chart_template.py",
+        "templates/notebook_template.ipynb",
+        "templates/quiz_template.xml",
+        "templates/instructor_guide_template.md"
+      ],
+      "missing": []
+    },
+    "config_files": {
+      "found": [
+        "manifest.json",
+        "config.yaml",
+        "README.md",
+        ".gitignore"
+      ],
+      "missing": []
+    },
+    "content_items": {
+      "found": [
+        "slides/L01_Introduction_Linear_Regression/L01_overview.tex",
+        "slides/L01_Introduction_Linear_Regression/L01_deepdive.tex",
+        "slides/L01_Introduction_Linear_Regression/L01_instructor_guide.md",
+        "slides/L02_Logistic_Regression/L02_overview.tex",
+        "slides/L02_Logistic_Regression/L02_deepdive.tex",
+        "slides/L02_Logistic_Regression/L02_instructor_guide.md",
+        "slides/L03_KNN_KMeans/L03_overview.tex",
+        "slides/L03_KNN_KMeans/L03_deepdive.tex",
+        "slides/L03_KNN_KMeans/L03_instructor_guide.md",
+        "slides/L04_Random_Forests/L04_overview.tex",
+        "slides/L04_Random_Forests/L04_deepdive.tex",
+        "slides/L04_Random_Forests/L04_instructor_guide.md",
+        "slides/L05_PCA_tSNE/L05_overview.tex",
+        "slides/L05_PCA_tSNE/L05_deepdive.tex",
+        "slides/L05_PCA_tSNE/L05_instructor_guide.md",
+        "slides/L06_Embeddings_RL/L06_overview.tex",
+        "slides/L06_Embeddings_RL/L06_deepdive.tex",
+        "slides/L06_Embeddings_RL/L06_instructor_guide.md"
+      ],
+      "missing": []
+    }
+  }
+}

@@ -1,0 +1,183 @@
+# JSON Sections Validation Report
+
+Date: 2026-01-27
+Location: docs/slides/sections/
+Total Files: 18
+Files Checked: 18
+Valid JSON: 18 (100%)
+Invalid JSON: 0 (0%)
+
+EXECUTIVE SUMMARY
+=================
+
+All 18 JSON files in docs/slides/sections/ are syntactically VALID.
+
+CRITICAL FINDING: These JSON files are NOT referenced or loaded by any HTML 
+or JavaScript files in the docs folder. They appear to be ORPHANED ASSETS.
+
+FILE VALIDATION TABLE
+=====================
+
+| File                               | Valid | Sections | Max Slide | Actual | PMSP      |
+|------------------------------------|-------|----------|-----------|--------|-----------|
+| L01_overview.json                  | VALID | 4        | 10        | 10     | Partial   |
+| L01_deepdive.json                  | VALID | 6        | 35        | 35     | Strong    |
+| L01_Introduction_Linear_Regression | VALID | 3        | 8         | ?      | Minimal   |
+| L02_overview.json                  | VALID | 4        | 10        | 10     | Partial   |
+| L02_deepdive.json                  | VALID | 6        | 33        | 34     | MISMATCH  |
+| L02_Logistic_Regression.json       | VALID | 3        | 7         | ?      | Minimal   |
+| L03_overview.json                  | VALID | 4        | 10        | 10     | Partial   |
+| L03_deepdive.json                  | VALID | 6        | 30        | 30     | Strong    |
+| L03_KNN_KMeans.json                | VALID | 3        | 7         | ?      | Minimal   |
+| L04_overview.json                  | VALID | 4        | 10        | 10     | Partial   |
+| L04_deepdive.json                  | VALID | 6        | 30        | 30     | Strong    |
+| L04_Random_Forests.json            | VALID | 3        | 7         | ?      | Minimal   |
+| L05_overview.json                  | VALID | 4        | 10        | 10     | Partial   |
+| L05_deepdive.json                  | VALID | 5        | 24        | 24     | Partial   |
+| L05_PCA_tSNE.json                  | VALID | 3        | 7         | ?      | Minimal   |
+| L06_overview.json                  | VALID | 4        | 10        | 10     | Partial   |
+| L06_deepdive.json                  | VALID | 5        | 26        | 26     | Partial   |
+| L06_Embeddings_RL.json             | VALID | 3        | 7         | ?      | Minimal   |
+
+CRITICAL FINDINGS
+=================
+
+1. JSON FILES NOT REFERENCED IN CODE
+   Status: CRITICAL
+   
+   Search for "sections/*.json" in HTML and JavaScript files returned ZERO matches.
+   
+   The JSON files exist but are:
+   - NOT loaded by HTML files
+   - NOT referenced in JavaScript
+   - NOT used by reveal.js presentations
+   - NOT loaded dynamically
+   
+   These appear to be ORPHANED ASSETS created but never integrated.
+
+2. ONE SLIDE COUNT MISMATCH
+   Status: MINOR
+   
+   File: L02_deepdive.json
+   - Defines max slide: 33
+   - Actual presentation: 34 slides
+   - Slide 34 is not included in any section definition
+   
+   ACTION REQUIRED: Update Summary section to include slide 34
+
+3. DUPLICATE FILE TYPES
+   Status: MODERATE
+   
+   Two file patterns exist:
+   
+   Type A (Detailed):
+   - L0X_overview.json (4 sections, 10 slides each)
+   - L0X_deepdive.json (5-6 sections, 24-35 slides each)
+   - These match actual presentations
+   
+   Type B (Minimal):
+   - L0X_TopicName.json (3 sections, 7-8 slides)
+   - Examples: L01_Introduction_Linear_Regression.json
+   - Purpose unclear - appear to be legacy or placeholder files
+   
+   ACTION REQUIRED: Remove or document purpose of Type B files
+
+4. PMSP FRAMEWORK MISMATCH
+   Status: MODERATE
+   
+   Course documentation describes PMSP framework:
+   - Problem (15 min)
+   - Method (45 min)
+   - Solution (45 min)
+   - Practice (75 min)
+   
+   But JSON files use generic section names:
+   - Overview files: Introduction, Fundamentals, Applications, Summary
+   - Deepdive files: Introduction, Theory, Implementation, Examples, Advanced Topics, Summary
+   
+   PMSP alignment assessment:
+   - Strong (5-6 sections matching PMSP concepts): L01_deepdive, L03_deepdive, L04_deepdive
+   - Partial (4 sections, some PMSP overlap): Most overview files, L05_deepdive, L06_deepdive
+   - Minimal (3 generic sections): All L0X_TopicName.json files
+
+RECOMMENDATIONS
+===============
+
+HIGH PRIORITY (Do First):
+1. Determine Purpose
+   - Are these JSON files meant to be loaded by reveal.js?
+   - Are they for a REST API endpoint?
+   - Are they for static navigation generation?
+   - Search the entire codebase (including backend) for references
+   
+2. Fix L02_deepdive.json
+   - Update Summary section: "slides": [32, 33, 34]
+   
+3. Investigate Type B Files
+   - Remove L01_Introduction_Linear_Regression.json and similar files
+   - OR document their specific purpose
+
+MEDIUM PRIORITY (Do Soon):
+4. Align with PMSP Framework
+   - If JSON is student-facing, rename sections to match PMSP
+   - Update documentation to clarify the naming convention
+   
+5. Consolidate File Types
+   - Decide: Keep only detailed (overview + deepdive) files
+   - Remove 3-section variants unless they serve a specific purpose
+
+LOW PRIORITY (Nice to Have):
+6. Add JSON Schema
+   - Create schemas/sections.json documenting the expected structure
+   - Add validation to CI/CD pipeline
+   
+7. Document Integration
+   - Add comments in JSON files explaining their role
+   - Update CLAUDE.md with JSON file structure and purpose
+
+TECHNICAL DETAILS
+=================
+
+All JSON files follow this structure:
+
+{
+  "sections": [
+    {"name": "Section Name", "slides": [1, 2, 3, ...]},
+    ...
+  ]
+}
+
+No schema or version field present.
+No metadata (title, description, author) present.
+Slide numbers are contiguous arrays.
+All files parse successfully with Python json module.
+
+INTEGRATION STATUS
+==================
+
+Checked Files:
+- docs/index.html: No JSON references (static HTML, no slide data loading)
+- docs/js/main.js: No JSON references (only scroll spy and menu toggle)
+- All reveal.js presentation HTML files (L0X_*.html): No JSON references
+
+NOTE: HTML files contain hardcoded data-section and data-slide attributes
+      but do not load from JSON files.
+
+CONCLUSION
+==========
+
+Status: ORPHANED ASSETS
+
+All JSON files are syntactically valid and contain reasonable slide structure
+definitions. However, they are NOT integrated into the frontend and appear to
+be unused artifacts.
+
+The most likely scenarios:
+1. These were created for future functionality that was never implemented
+2. Initial implementation planned to load JSON dynamically, but shifted to static HTML
+3. These are meant for a backend system not yet discovered
+
+NEXT STEPS:
+1. Search for JSON file references in entire repository (including backend code)
+2. Decide: Keep, Remove, or Implement Integration
+3. Document the purpose of each file type in CLAUDE.md
