@@ -119,6 +119,15 @@ A: Normal equation for small-medium data (n, p < 10000). Gradient descent for la
 **Q: How do I choose between Ridge and Lasso?**
 A: Lasso for feature selection (sparse models). Ridge when all features likely relevant. Use cross-validation to select lambda.
 
+**Q: Why do we need to standardize features for gradient descent?**
+A: Features with different scales cause gradient descent to oscillate. Standardization ensures all features contribute equally to the learning process.
+
+**Q: What does a negative coefficient mean?**
+A: A negative coefficient indicates an inverse relationship - as the feature increases, the target decreases (e.g., age of house reducing price).
+
+**Q: How do I know if my model is overfitting?**
+A: Compare training and validation errors. Large gap = overfitting. Use learning curves and cross-validation to diagnose.
+
 ## Assessment Connection
 
 This topic is assessed in:
@@ -138,4 +147,4 @@ This topic is assessed in:
 
 ---
 
-*Last updated: 2026-01-07*
+*Last updated: 2026-01-20*
