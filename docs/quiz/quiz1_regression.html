@@ -117,13 +117,13 @@ const questions = [
   {q:"As model complexity increases in linear regression (e.g., adding polynomial features), what typically happens?", options:["Bias decreases but variance increases","Both bias and variance decrease","Bias increases but variance decreases","Both bias and variance increase"], correct:0, explanation:"More complex models fit training data better (lower bias) but are more sensitive to data variations (higher variance)."},
   {q:"Compared to Mean Absolute Error (MAE), Root Mean Squared Error (RMSE):", options:["Penalizes large errors more heavily","Is more robust to outliers","Always produces smaller values than MAE","Is measured in squared units of the target variable"], correct:0, explanation:"RMSE squares errors before averaging, giving more weight to large deviations."},
   {q:"What does logistic regression directly output before applying a threshold?", options:["Probability of belonging to the positive class","Binary class label (0 or 1)","Distance from the decision boundary","Log-odds (logit) value"], correct:0, explanation:"The sigmoid function maps the linear combination to a probability between 0 and 1."},
-  {q:"The sigmoid function \u03c3(z) = 1/(1+e\u207b\u1dbb) has which property?", options:["\u03c3(0) = 0.5 and output is always between 0 and 1","\u03c3(0) = 0 and output can be any real number","The function is linear for small values of z","\u03c3(-z) = \u03c3(z) (symmetric around origin)"], correct:0, explanation:"At z=0, \u03c3(0)=0.5, and the function is bounded between 0 and 1."},
+  {q:"The sigmoid function σ(z) = 1/(1+exp(-z)) has which property?", options:["σ(0) = 0.5 and output is always between 0 and 1","σ(0) = 0 and output can be any real number","The function is linear for small values of z","σ(-z) = σ(z) (symmetric around origin)"], correct:0, explanation:"At z=0, σ(0)=0.5, and the function is bounded between 0 and 1."},
   {q:"Why is cross-entropy (log loss) used instead of MSE for logistic regression?", options:["Cross-entropy creates a convex optimization problem with the sigmoid function","Cross-entropy is easier to compute than MSE","MSE cannot be used for classification problems","Cross-entropy always produces smaller loss values"], correct:0, explanation:"MSE with sigmoid creates non-convex loss surface; cross-entropy ensures convexity."},
   {q:"What does the Area Under the ROC Curve (AUC) measure?", options:["Probability that a randomly chosen positive is ranked higher than a randomly chosen negative","The accuracy of the model at the optimal threshold","The proportion of correctly classified observations","The false positive rate at 50% true positive rate"], correct:0, explanation:"AUC represents the model's ability to distinguish between classes."},
   {q:"In a fraud detection system where missing fraud is very costly, which metric should be prioritized?", options:["Recall (sensitivity)","Precision","Accuracy","Specificity"], correct:0, explanation:"High recall minimizes false negatives, catching more actual fraud cases."},
   {q:"In a confusion matrix, a Type I error (false positive) occurs when:", options:["The model predicts positive but the actual class is negative","The model predicts negative but the actual class is positive","The model correctly predicts the positive class","The model's probability output is exactly 0.5"], correct:0, explanation:"False positive = predicted positive when actually negative (Type I error)."},
   {q:"Which technique is commonly used to handle class imbalance in logistic regression?", options:["Adjusting class weights inversely proportional to class frequencies","Always using a threshold of 0.5 for classification","Removing all minority class samples","Using R-squared as the evaluation metric"], correct:0, explanation:"Weighting minority class higher helps the model pay more attention to rare events."},
-  {q:"In logistic regression, if a coefficient \u03b2\u2081 = 0.5, what does this mean?", options:["A 1-unit increase in X\u2081 increases the log-odds by 0.5 (odds multiply by e\u2070\u02\u2075 \u2248 1.65)","A 1-unit increase in X\u2081 increases the probability by 0.5","X\u2081 explains 50% of the variance in Y","The correlation between X\u2081 and Y is 0.5"], correct:0, explanation:"Coefficients represent changes in log-odds; exp(\u03b2) gives the odds ratio."}
+  {q:"In logistic regression, if a coefficient β₁ = 0.5, what does this mean?", options:["A 1-unit increase in X₁ increases the log-odds by 0.5 (odds multiply by exp(0.5) ≈ 1.65)","A 1-unit increase in X₁ increases the probability by 0.5","X₁ explains 50% of the variance in Y","The correlation between X₁ and Y is 0.5"], correct:0, explanation:"Coefficients represent changes in log-odds; exp(β) gives the odds ratio."}
 ];
 
 // Shuffle options for each question (keeping track of correct)
@@ -230,9 +230,17 @@ function renderMath() {
     }
 }
 
-// Initialize immediately since script is at end of body
-render();
-setTimeout(renderMath, 100);
+// Initialize with error handling
+try {
+    render();
+    setTimeout(renderMath, 100);
+} catch (e) {
+    console.error('Quiz initialization error:', e);
+    document.getElementById('questions-container').innerHTML =
+        '<div style="padding:2rem;text-align:center;color:#991b1b;">' +
+        '<h3>Quiz failed to load</h3><p>Error: ' + e.message + '</p>' +
+        '<p>Please refresh the page or try a different browser.</p></div>';
+}
 </script>
 </body>
 </html>
