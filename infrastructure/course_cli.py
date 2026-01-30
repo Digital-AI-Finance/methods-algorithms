@@ -30,6 +30,8 @@ from validators.notebook_validator import validate_notebooks
 from validators.chart_validator import validate_charts
 from builders.slide_builder import build_slides
 from builders.chart_builder import build_charts
+from builders.notebook_builder import build_notebooks
+from builders.quiz_builder import build_quizzes
 from reporters.progress_report import generate_progress_report
 
 
@@ -51,15 +53,17 @@ def cmd_build(args):
         topic = args.topic if args.topic != "all" else None
         build_charts(manifest, topic=topic, verbose=args.verbose)
     elif args.component == "notebooks":
-        print("Building notebooks...")
-        # TODO: Implement notebook builder
+        topic = args.topic if args.topic != "all" else None
+        build_notebooks(manifest, topic=topic, verbose=args.verbose)
     elif args.component == "quizzes":
-        print("Building quizzes...")
-        # TODO: Implement quiz builder
+        quiz_id = args.topic if args.topic != "all" else None
+        build_quizzes(manifest, quiz_id=quiz_id, verbose=args.verbose)
     elif args.component == "all":
         print("Building all components...")
         build_charts(manifest, verbose=args.verbose)
         build_slides(manifest, verbose=args.verbose)
+        build_notebooks(manifest, verbose=args.verbose)
+        build_quizzes(manifest, verbose=args.verbose)
 
 
 def cmd_validate(args):
