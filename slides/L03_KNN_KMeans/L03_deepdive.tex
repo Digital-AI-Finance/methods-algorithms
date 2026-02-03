@@ -53,13 +53,17 @@
 
 \title[L03: KNN \& K-Means Deep Dive]{L03: KNN \& K-Means}
 \subtitle{Mathematical Foundations and Implementation}
-\author{Methods and Algorithms -- MSc Data Science}
-\date{}
+\author{Methods and Algorithms}
+\date{Spring 2026}
 
 \begin{document}
 
 \begin{frame}
 \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
 \end{frame}
 
 %% PART 1: KNN (Slides 2-12)
@@ -85,7 +89,7 @@
 \begin{frame}[t]{Distance Metrics}
 \vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.48\textwidth]{02_distance_metrics/chart.pdf}
+\includegraphics[width=0.55\textwidth]{02_distance_metrics/chart.pdf}
 \end{center}
 \vspace{-0.5em}
 \small
@@ -241,6 +245,19 @@ In high dimensions:
 \item \texttt{algorithm}: 'auto', 'ball\_tree', 'kd\_tree', 'brute'
 \end{itemize}
 \bottomnote{Also available: KNeighborsRegressor for regression tasks}
+\end{frame}
+
+\section{Practice}
+
+\begin{frame}[t]{Hands-on Exercise}
+  \textbf{Open the Colab Notebook}
+  \begin{itemize}
+    \item Exercise 1: Implement KNN classifier from scratch
+    \item Exercise 2: Apply K-Means to customer segmentation data
+    \item Exercise 3: Compare distance metrics and k values
+  \end{itemize}
+  \vspace{1em}
+  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
 \end{frame}
 
 %% PART 2: K-MEANS (Slides 13-24)
@@ -489,7 +506,7 @@ Output & Class label & Cluster ID \\
 
 \begin{frame}[t]{Decision Framework}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
 \bottomnote{Start with KNN for classification, K-Means for clustering}
 \end{frame}

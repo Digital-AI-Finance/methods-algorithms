@@ -51,14 +51,20 @@
 
 \title[L03: KNN \& K-Means]{L03: K-Nearest Neighbors \& K-Means}
 \subtitle{Classification and Clustering with Distance}
-\author{Methods and Algorithms -- MSc Data Science}
-\date{}
+\author{Methods and Algorithms}
+\date{Spring 2026}
 
 \begin{document}
 
 \begin{frame}
 \titlepage
 \end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Problem}
 
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
@@ -90,35 +96,37 @@
 \bottomnote{KNN = classification with labels, K-Means = clustering without labels}
 \end{frame}
 
+\section{Method}
+
 \begin{frame}[t]{KNN: Decision Boundaries}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{01_knn_boundaries/chart.pdf}
+\includegraphics[width=0.65\textwidth]{01_knn_boundaries/chart.pdf}
 \end{center}
 \bottomnote{KNN creates non-linear, flexible decision boundaries based on local data}
 \end{frame}
 
 \begin{frame}[t]{Distance Metrics}
-\vspace{-0.8em}
 \begin{center}
 \includegraphics[width=0.50\textwidth]{02_distance_metrics/chart.pdf}
 \end{center}
-\vspace{-0.5em}
 \bottomnote{Choice of metric affects which points are considered ``nearest''}
 \end{frame}
 
 \begin{frame}[t]{K-Means: The Algorithm}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{03_kmeans_iteration/chart.pdf}
+\includegraphics[width=0.65\textwidth]{03_kmeans_iteration/chart.pdf}
 \end{center}
 \bottomnote{Iteratively assign points and update centroids until convergence}
 \end{frame}
 
 \begin{frame}[t]{Choosing K: Elbow Method}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{04_elbow_method/chart.pdf}
+\includegraphics[width=0.65\textwidth]{04_elbow_method/chart.pdf}
 \end{center}
 \bottomnote{Look for the ``elbow'' where adding clusters gives diminishing returns}
 \end{frame}
+
+\section{Solution}
 
 \begin{frame}[t]{Cluster Quality: Silhouette Analysis}
 \begin{center}
@@ -129,16 +137,44 @@
 
 \begin{frame}[t]{K-Means Decision Regions}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{06_voronoi/chart.pdf}
+\includegraphics[width=0.65\textwidth]{06_voronoi/chart.pdf}
 \end{center}
 \bottomnote{Each region contains all points closest to one centroid}
 \end{frame}
+
+\section{Practice}
+
+\begin{frame}[t]{Hands-on Exercise}
+  \textbf{Open the Colab Notebook}
+  \begin{itemize}
+    \item Exercise 1: Implement KNN classifier from scratch
+    \item Exercise 2: Apply K-Means to customer segmentation data
+    \item Exercise 3: Compare distance metrics and k values
+  \end{itemize}
+  \vspace{1em}
+  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+\end{frame}
+
+\section{Decision Framework}
 
 \begin{frame}[t]{Decision Framework}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
 \bottomnote{KNN for labeled data classification, K-Means for unlabeled clustering}
+\end{frame}
+
+\section{Summary}
+
+\begin{frame}[t]{Key Takeaways}
+  \textbf{Remember}
+  \begin{itemize}
+    \item KNN: supervised classification using nearest neighbors
+    \item K-Means: unsupervised clustering with iterative centroids
+    \item Distance metrics and K selection are critical choices
+    \item Finance use cases: fraud detection, customer segmentation
+  \end{itemize}
+  \bottomnote{Next lecture: L04 Random Forests}
 \end{frame}
 
 \end{document}

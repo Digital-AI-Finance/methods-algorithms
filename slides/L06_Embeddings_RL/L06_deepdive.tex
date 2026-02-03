@@ -51,14 +51,20 @@
 
 \title[L06: Embeddings \& RL Deep Dive]{L06: Embeddings \& RL}
 \subtitle{Deep Dive: Theory, Implementation, and Applications}
-\author{Methods and Algorithms -- MSc Data Science}
-\date{}
+\author{Methods and Algorithms}
+\date{Spring 2026}
 
 \begin{document}
 
 \begin{frame}
 \titlepage
 \end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Problem}
 
 %% PART 1: WORD EMBEDDINGS
 \begin{frame}[t]{Part 1: Word Embeddings Introduction}
@@ -78,6 +84,8 @@
 \bottomnote{``You shall know a word by the company it keeps'' -- Firth, 1957}
 \end{frame}
 
+\section{Method}
+
 \begin{frame}[t]{Word2Vec: Skip-gram}
 \textbf{Objective:} Predict context words given target word
 \[
@@ -95,7 +103,7 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 
 \begin{frame}[t]{Word Embedding Space}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{01_word_embedding_space/chart.pdf}
+\includegraphics[width=0.65\textwidth]{01_word_embedding_space/chart.pdf}
 \end{center}
 \bottomnote{Finance terms cluster by semantic category in embedding space}
 \end{frame}
@@ -125,13 +133,15 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \[
 \text{sim}(u, v) = \frac{u \cdot v}{||u|| \cdot ||v||} = \cos(\theta)
 \]
+\vspace{-0.3em}
 \begin{itemize}
-\item Range: $[-1, 1]$
-\item 1 = identical direction, 0 = orthogonal, -1 = opposite
+\item Range: $[-1, 1]$; 1=identical, 0=orthogonal, -1=opposite
 \end{itemize}
+\vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.35\textwidth]{02_similarity_heatmap/chart.pdf}
+\includegraphics[width=0.45\textwidth]{02_similarity_heatmap/chart.pdf}
 \end{center}
+\vspace{-0.5em}
 \bottomnote{Cosine similarity ignores magnitude, focuses on direction}
 \end{frame}
 
@@ -169,9 +179,12 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \bottomnote{Aggregate word embeddings to represent documents}
 \end{frame}
 
+\section{Solution}
+
 %% PART 2: REINFORCEMENT LEARNING
 \begin{frame}[t]{Part 2: Reinforcement Learning Framework}
 \textbf{Key Components:}
+\vspace{-0.2em}
 \begin{itemize}
 \item \textbf{Agent}: Learner/decision-maker
 \item \textbf{Environment}: What agent interacts with
@@ -179,9 +192,11 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \item \textbf{Action} $a$: What agent can do
 \item \textbf{Reward} $r$: Feedback signal
 \end{itemize}
+\vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.4\textwidth]{03_rl_loop/chart.pdf}
+\includegraphics[width=0.45\textwidth]{03_rl_loop/chart.pdf}
 \end{center}
+\vspace{-0.5em}
 \bottomnote{RL: Learning from interaction, not from labeled examples}
 \end{frame}
 
@@ -261,9 +276,11 @@ Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s,
 \end{frame}
 
 \begin{frame}[t]{Q-Values Visualization}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.45\textwidth]{04_q_learning_grid/chart.pdf}
+\includegraphics[width=0.50\textwidth]{04_q_learning_grid/chart.pdf}
 \end{center}
+\vspace{-0.3em}
 \bottomnote{Arrows show policy; colors show Q-values (green=high, red=negative)}
 \end{frame}
 
@@ -292,7 +309,7 @@ a = \begin{cases}
 
 \begin{frame}[t]{Learning Curves}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{05_reward_curves/chart.pdf}
+\includegraphics[width=0.65\textwidth]{05_reward_curves/chart.pdf}
 \end{center}
 \bottomnote{Reward improves as agent learns; DQN often outperforms tabular Q-learning}
 \end{frame}
@@ -318,7 +335,7 @@ a = \begin{cases}
 
 \begin{frame}[t]{Trading Policy}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{06_policy_viz/chart.pdf}
+\includegraphics[width=0.65\textwidth]{06_policy_viz/chart.pdf}
 \end{center}
 \bottomnote{Learned policy: buy when oversold/high momentum, sell when overbought}
 \end{frame}
@@ -354,11 +371,28 @@ Q(s, a; \theta) \approx Q^*(s, a)
 \bottomnote{Policy gradient: directly optimize policy, can handle continuous actions}
 \end{frame}
 
+\section{Practice}
+
+\begin{frame}[t]{Hands-on Exercise}
+  \textbf{Open the Colab Notebook}
+  \begin{itemize}
+    \item Exercise 1: Explore word embeddings with Word2Vec
+    \item Exercise 2: Implement basic Q-learning
+    \item Exercise 3: Apply RL to a simple trading environment
+  \end{itemize}
+  \vspace{1em}
+  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+\end{frame}
+
+\section{Decision Framework}
+
 %% PART 4: COMPARISON
 \begin{frame}[t]{Part 4: When to Use What}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=0.50\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
+\vspace{-0.3em}
 \bottomnote{Embeddings for text/categorical; RL for sequential decisions}
 \end{frame}
 
@@ -380,6 +414,8 @@ Finance use & Sentiment & Trading \\
 \end{center}
 \bottomnote{Both transform complex inputs into learnable representations}
 \end{frame}
+
+\section{Summary}
 
 %% PART 5: IMPLEMENTATION
 \begin{frame}[t,fragile]{Part 5: Implementation}

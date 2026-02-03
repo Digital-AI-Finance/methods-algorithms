@@ -12,7 +12,9 @@ CHART_METADATA = {
 plt.rcParams.update({
     'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
     'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150
+    'figure.figsize': (10, 6), 'figure.dpi': 150,
+    'axes.spines.top': False,
+    'axes.spines.right': False,
 })
 
 MLPURPLE = '#3333B2'
@@ -73,6 +75,10 @@ ax.grid(True, alpha=0.3)
 ax.text(0.02, 0.98, 'Each point assigned to\nnearest centroid', transform=ax.transAxes,
         fontsize=11, verticalalignment='top',
         bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+
+# Add URL annotation
+plt.figtext(0.99, 0.01, CHART_METADATA['url'],
+            fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 
 plt.tight_layout()
 plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')

@@ -51,8 +51,8 @@
 
 \title[L05: PCA \& t-SNE Deep Dive]{L05: PCA \& t-SNE}
 \subtitle{Deep Dive: Theory, Implementation, and Applications}
-\author{Methods and Algorithms -- MSc Data Science}
-\date{}
+\author{Methods and Algorithms}
+\date{Spring 2026}
 
 \begin{document}
 
@@ -60,7 +60,13 @@
 \titlepage
 \end{frame}
 
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
 %% PART 1: PCA FOUNDATIONS
+\section{Problem}
+
 \begin{frame}[t]{Part 1: PCA Foundations}
 \textbf{Principal Component Analysis (PCA)}
 \begin{itemize}
@@ -117,17 +123,21 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 \bottomnote{Balance dimensionality reduction with information preservation}
 \end{frame}
 
+\section{Method}
+
 \begin{frame}[t]{Scree Plot}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{01_scree_plot/chart.pdf}
+\includegraphics[width=0.65\textwidth]{01_scree_plot/chart.pdf}
 \end{center}
 \bottomnote{Look for the ``elbow'' where variance explained drops off}
 \end{frame}
 
 \begin{frame}[t]{Principal Components Visualization}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{02_principal_components/chart.pdf}
+\includegraphics[width=0.55\textwidth]{02_principal_components/chart.pdf}
 \end{center}
+\vspace{-0.3em}
 \bottomnote{PC1 captures the dominant trend, PC2 the residual variation}
 \end{frame}
 
@@ -146,7 +156,7 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 
 \begin{frame}[t]{Reconstruction Error vs Components}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{03_reconstruction/chart.pdf}
+\includegraphics[width=0.65\textwidth]{03_reconstruction/chart.pdf}
 \end{center}
 \bottomnote{Adding more components always reduces error (but diminishing returns)}
 \end{frame}
@@ -189,6 +199,8 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 \end{itemize}
 \bottomnote{PCA assumes linear structure and Gaussian-like distributions}
 \end{frame}
+
+\section{Solution}
 
 %% PART 3: t-SNE
 \begin{frame}[t]{Part 3: t-SNE Introduction}
@@ -243,9 +255,11 @@ KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
 \end{frame}
 
 \begin{frame}[t]{Perplexity: High (Global Focus)}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.48\textwidth]{04c_tsne_perplexity_100/chart.pdf}
+\includegraphics[width=0.55\textwidth]{04c_tsne_perplexity_100/chart.pdf}
 \end{center}
+\vspace{-0.3em}
 \bottomnote{High perplexity (100): more spread, clusters may merge}
 \end{frame}
 
@@ -289,9 +303,11 @@ KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
 
 %% PART 4: COMPARISON
 \begin{frame}[t]{Part 4: PCA on Non-linear Manifolds}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.48\textwidth]{05a_pca_swiss_roll/chart.pdf}
+\includegraphics[width=0.55\textwidth]{05a_pca_swiss_roll/chart.pdf}
 \end{center}
+\vspace{-0.3em}
 \bottomnote{PCA (linear) cannot unroll the Swiss roll - structure overlaps}
 \end{frame}
 
@@ -337,9 +353,11 @@ Visualization & Okay & Excellent \\
 \end{frame}
 
 \begin{frame}[t]{Cluster Preservation: t-SNE Projection}
+\vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.42\textwidth]{06c_tsne_cluster_projection/chart.pdf}
+\includegraphics[width=0.50\textwidth]{06c_tsne_cluster_projection/chart.pdf}
 \end{center}
+\vspace{-0.5em}
 \bottomnote{t-SNE preserves local structure - clear cluster separation}
 \end{frame}
 
@@ -363,12 +381,31 @@ Visualization & Okay & Excellent \\
 \bottomnote{Often use both: PCA first to 30-50 dims, then t-SNE for visualization}
 \end{frame}
 
+\section{Practice}
+
+\begin{frame}[t]{Hands-on Exercise}
+  \textbf{Open the Colab Notebook}
+  \begin{itemize}
+    \item Exercise 1: Apply PCA to high-dimensional finance data
+    \item Exercise 2: Visualize clusters with t-SNE
+    \item Exercise 3: Compare PCA vs t-SNE for different datasets
+  \end{itemize}
+  \vspace{1em}
+  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+\end{frame}
+
+\section{Decision Framework}
+
 \begin{frame}[t]{Decision Framework}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=0.55\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
+\vspace{-0.3em}
 \bottomnote{Consider purpose: preprocessing (PCA) vs visualization (t-SNE)}
 \end{frame}
+
+\section{Implementation}
 
 %% PART 5: IMPLEMENTATION
 \begin{frame}[t]{Part 5: Implementation}
@@ -411,6 +448,8 @@ Visualization & Okay & Excellent \\
 \end{itemize}
 \bottomnote{UMAP often preferred over t-SNE in modern practice}
 \end{frame}
+
+\section{Summary}
 
 \begin{frame}[t]{Summary}
 \textbf{PCA:}

@@ -51,13 +51,17 @@
 
 \title[L05: PCA \& t-SNE]{L05: PCA \& t-SNE}
 \subtitle{Dimensionality Reduction for Visualization and Preprocessing}
-\author{Methods and Algorithms -- MSc Data Science}
-\date{}
+\author{Methods and Algorithms}
+\date{Spring 2026}
 
 \begin{document}
 
 \begin{frame}
 \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
 \end{frame}
 
 \begin{frame}[t]{Learning Objectives}
@@ -72,6 +76,8 @@
 \textbf{Finance Application:} Portfolio risk decomposition, asset clustering
 \bottomnote{From many features to meaningful low-dimensional representations}
 \end{frame}
+
+\section{Problem}
 
 \begin{frame}[t]{The Business Problem}
 \textbf{Curse of Dimensionality}
@@ -89,26 +95,32 @@
 \bottomnote{Reduce dimensions while preserving important information}
 \end{frame}
 
+\section{Method}
+
 \begin{frame}[t]{Scree Plot: Choosing Components}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{01_scree_plot/chart.pdf}
+\includegraphics[width=0.65\textwidth]{01_scree_plot/chart.pdf}
 \end{center}
 \bottomnote{Choose k components capturing 80-95\% of variance, or at the ``elbow''}
 \end{frame}
 
 \begin{frame}[t]{Principal Components}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{02_principal_components/chart.pdf}
+\includegraphics[width=0.55\textwidth]{02_principal_components/chart.pdf}
 \end{center}
+\vspace{-0.3em}
 \bottomnote{Principal components are orthogonal directions of maximum variance}
 \end{frame}
 
 \begin{frame}[t]{Reconstruction Error}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{03_reconstruction/chart.pdf}
+\includegraphics[width=0.65\textwidth]{03_reconstruction/chart.pdf}
 \end{center}
 \bottomnote{More components = lower error, but diminishing returns after elbow}
 \end{frame}
+
+\section{Solution}
 
 \begin{frame}[t]{t-SNE: Perplexity Effect}
 \begin{center}
@@ -125,17 +137,38 @@
 \end{frame}
 
 \begin{frame}[t]{Cluster Preservation}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.42\textwidth]{06c_tsne_cluster_projection/chart.pdf}
+\includegraphics[width=0.55\textwidth]{06c_tsne_cluster_projection/chart.pdf}
 \end{center}
+\vspace{-0.3em}
 \bottomnote{t-SNE better preserves cluster structure for visualization}
 \end{frame}
 
+\section{Practice}
+
+\begin{frame}[t]{Hands-on Exercise}
+  \textbf{Open the Colab Notebook}
+  \begin{itemize}
+    \item Exercise 1: Apply PCA to high-dimensional finance data
+    \item Exercise 2: Visualize clusters with t-SNE
+    \item Exercise 3: Compare PCA vs t-SNE for different datasets
+  \end{itemize}
+  \vspace{1em}
+  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+\end{frame}
+
+\section{Decision Framework}
+
 \begin{frame}[t]{Decision Framework}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=0.55\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
+\vspace{-0.3em}
 \bottomnote{PCA for preprocessing/speed, t-SNE for visualization only}
 \end{frame}
+
+\section{Summary}
 
 \end{document}

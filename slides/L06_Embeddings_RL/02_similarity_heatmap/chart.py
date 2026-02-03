@@ -6,8 +6,14 @@ from pathlib import Path
 plt.rcParams.update({
     'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
     'xtick.labelsize': 11, 'ytick.labelsize': 11, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150
+    'figure.figsize': (10, 6), 'figure.dpi': 150,
+    'axes.spines.top': False,
+    'axes.spines.right': False
 })
+
+CHART_METADATA = {
+    'url': 'github.com/joerg-osterrieder/Methods_and_Algorithms'
+}
 
 np.random.seed(42)
 
@@ -62,6 +68,10 @@ for i in range(n):
                        color='white' if similarity[i, j] > 0.5 else 'black')
 
 ax.set_title('Word Embedding Similarity Matrix')
+
+# Add URL annotation
+plt.figtext(0.99, 0.01, CHART_METADATA['url'],
+            fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 
 plt.tight_layout()
 plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')

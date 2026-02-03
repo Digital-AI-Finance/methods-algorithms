@@ -51,14 +51,20 @@
 
 \title[L06: Embeddings \& RL]{L06: Embeddings \& RL}
 \subtitle{Text Representations and Sequential Decision Making}
-\author{Methods and Algorithms -- MSc Data Science}
-\date{}
+\author{Methods and Algorithms}
+\date{Spring 2026}
 
 \begin{document}
 
 \begin{frame}
 \titlepage
 \end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Problem}
 
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
@@ -89,16 +95,18 @@
 \bottomnote{Embeddings solve text, RL solves sequential decisions}
 \end{frame}
 
+\section{Method}
+
 \begin{frame}[t]{Word Embedding Space}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{01_word_embedding_space/chart.pdf}
+\includegraphics[width=0.65\textwidth]{01_word_embedding_space/chart.pdf}
 \end{center}
 \bottomnote{Similar words cluster together in embedding space}
 \end{frame}
 
 \begin{frame}[t]{Embedding Similarity}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{02_similarity_heatmap/chart.pdf}
+\includegraphics[width=0.50\textwidth]{02_similarity_heatmap/chart.pdf}
 \end{center}
 \bottomnote{Cosine similarity captures semantic relationships}
 \end{frame}
@@ -114,28 +122,47 @@
 \begin{center}
 \includegraphics[width=0.45\textwidth]{04_q_learning_grid/chart.pdf}
 \end{center}
-\bottomnote{Q-values indicate expected future reward from each state-action}
+\bottomnote{Q-values show expected reward from each state-action}
 \end{frame}
+
+\section{Solution}
 
 \begin{frame}[t]{Learning Progress}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{05_reward_curves/chart.pdf}
+\includegraphics[width=0.65\textwidth]{05_reward_curves/chart.pdf}
 \end{center}
 \bottomnote{RL agents improve through exploration and exploitation}
 \end{frame}
 
 \begin{frame}[t]{Learned Trading Policy}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{06_policy_viz/chart.pdf}
+\includegraphics[width=0.65\textwidth]{06_policy_viz/chart.pdf}
 \end{center}
 \bottomnote{Policy maps states to actions (when to buy/sell/hold)}
 \end{frame}
 
+\section{Practice}
+
+\begin{frame}[t]{Hands-on Exercise}
+  \textbf{Open the Colab Notebook}
+  \begin{itemize}
+    \item Exercise 1: Explore word embeddings with Word2Vec
+    \item Exercise 2: Implement basic Q-learning
+    \item Exercise 3: Apply RL to a simple trading environment
+  \end{itemize}
+  \vspace{1em}
+  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+\end{frame}
+
+\section{Decision Framework}
+
 \begin{frame}[t]{Decision Framework}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=0.55\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
 \bottomnote{Embeddings for text, RL for sequential decisions with delayed rewards}
 \end{frame}
+
+\section{Summary}
 
 \end{document}

@@ -51,16 +51,21 @@
 \newcommand{\highlight}[1]{\textcolor{MLOrange}{\textbf{#1}}}
 \newcommand{\mathbold}[1]{\boldsymbol{#1}}
 
-% Title
+% Title information
 \title[L02: Logistic Regression Deep Dive]{L02: Logistic Regression}
 \subtitle{Mathematical Foundations and Implementation}
-\author{Methods and Algorithms -- MSc Data Science}
-\date{}
+\author{Methods and Algorithms}
+\date{Spring 2026}
 
 \begin{document}
 
 \begin{frame}
 \titlepage
+\end{frame}
+
+% Outline
+\begin{frame}{Outline}
+  \tableofcontents
 \end{frame}
 
 %% PART 1: MATHEMATICAL FOUNDATIONS (Slides 2-8)
@@ -252,9 +257,9 @@ $$P(y=k|\mathbf{x}) = \frac{e^{\mathbf{w}_k^T\mathbf{x}}}{\sum_{j=1}^{K}e^{\math
 \end{frame}
 
 \begin{frame}[t]{ROC Curve}
-\vspace{-1em}
+\vspace{-1.2em}
 \begin{center}
-\includegraphics[width=0.45\textwidth]{04_roc_curve/chart.pdf}
+\includegraphics[width=0.48\textwidth]{04_roc_curve/chart.pdf}
 \end{center}
 \vspace{-0.8em}
 \footnotesize
@@ -557,9 +562,35 @@ $$\mathcal{L}_{\text{weighted}} = -\sum_i w_{y_i}[y_i\log p_i + (1-y_i)\log(1-p_
 
 \begin{frame}[t]{Decision Framework}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
 \bottomnote{Logistic regression: first choice for binary classification with interpretability}
+\end{frame}
+
+%% PART 7: PRACTICE
+\section{Practice}
+
+\begin{frame}[t]{Hands-On Exercise}
+\textbf{Interactive Notebook}
+\begin{itemize}
+\item Open: \texttt{notebooks/L02\_logistic\_regression.ipynb}
+\item Dataset: Credit card fraud detection
+\item Tasks:
+  \begin{itemize}
+  \item Train logistic regression with L2 regularization
+  \item Evaluate with confusion matrix, ROC, PR curves
+  \item Tune classification threshold
+  \item Handle class imbalance with class weights
+  \item Interpret coefficients
+  \end{itemize}
+\end{itemize}
+\vspace{0.5em}
+\textbf{Google Colab}
+\begin{itemize}
+\item Link: \href{https://colab.research.google.com/github/yourrepo/L02}{Colab Notebook}
+\item Includes starter code and solutions
+\end{itemize}
+\bottomnote{Practice exercises reinforce mathematical concepts with real-world implementation}
 \end{frame}
 
 %% SUMMARY (Slides 34-35)

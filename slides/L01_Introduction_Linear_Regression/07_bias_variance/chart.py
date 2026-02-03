@@ -14,7 +14,9 @@ CHART_METADATA = {
 plt.rcParams.update({
     'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
     'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150
+    'figure.figsize': (10, 6), 'figure.dpi': 150,
+    'axes.spines.top': False,
+    'axes.spines.right': False
 })
 
 # Colors
@@ -73,6 +75,10 @@ ax.annotate('Optimal\nComplexity', xy=(optimal_complexity, 0.5), fontsize=11,
 # Axis limits
 ax.set_xlim(0, 10.5)
 ax.set_ylim(0, 3.5)
+
+# Add URL annotation
+plt.figtext(0.99, 0.01, CHART_METADATA['url'],
+            fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 
 plt.tight_layout()
 plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')

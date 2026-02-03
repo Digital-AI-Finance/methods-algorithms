@@ -51,14 +51,20 @@
 
 \title[L04: Random Forests]{L04: Random Forests}
 \subtitle{Ensemble Learning for Robust Predictions}
-\author{Methods and Algorithms -- MSc Data Science}
-\date{}
+\author{Methods and Algorithms}
+\date{Spring 2026}
 
 \begin{document}
 
 \begin{frame}
 \titlepage
 \end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Problem}
 
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
@@ -90,10 +96,12 @@
 \bottomnote{Ensemble methods: ``wisdom of crowds'' for machine learning}
 \end{frame}
 
+\section{Method}
+
 \begin{frame}[t]{Decision Tree Structure}
 \vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.50\textwidth]{01_decision_tree/chart.pdf}
+\includegraphics[width=0.65\textwidth]{01_decision_tree/chart.pdf}
 \end{center}
 \vspace{-0.5em}
 \bottomnote{Trees split data using simple rules at each node until reaching a prediction}
@@ -101,57 +109,78 @@
 
 \begin{frame}[t]{Feature Importance}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{02_feature_importance/chart.pdf}
+\includegraphics[width=0.65\textwidth]{02_feature_importance/chart.pdf}
 \end{center}
 \bottomnote{Random Forests automatically rank which features matter most for prediction}
 \end{frame}
 
 \begin{frame}[t]{Bootstrap Aggregating (Bagging)}
-\vspace{-1.1em}
+\vspace{-1.3em}
 \begin{center}
-\includegraphics[width=0.47\textwidth]{03_bootstrap/chart.pdf}
+\includegraphics[width=0.60\textwidth]{03_bootstrap/chart.pdf}
 \end{center}
-\vspace{-0.8em}
+\vspace{-1.0em}
 \bottomnote{Each tree trains on a random sample, reducing overfitting}
 \end{frame}
 
 \begin{frame}[t]{Out-of-Bag Error}
+\vspace{-1.2em}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{04_oob_error/chart.pdf}
+\includegraphics[width=0.50\textwidth]{04_oob_error/chart.pdf}
 \end{center}
+\vspace{-0.9em}
 \bottomnote{OOB error provides free cross-validation without held-out test set}
 \end{frame}
 
 \begin{frame}[t]{Ensemble Voting}
 \vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.48\textwidth]{05_ensemble_voting/chart.pdf}
+\includegraphics[width=0.65\textwidth]{05_ensemble_voting/chart.pdf}
 \end{center}
 \vspace{-0.5em}
 \bottomnote{Final prediction combines votes from all trees (majority for classification)}
 \end{frame}
 
+\section{Solution}
+
 \begin{frame}[t]{Single Trees: High Variance}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{06a_single_tree_variance/chart.pdf}
+\includegraphics[width=0.65\textwidth]{06a_single_tree_variance/chart.pdf}
 \end{center}
 \bottomnote{Each tree trained on different bootstrap sample produces different predictions}
 \end{frame}
 
 \begin{frame}[t]{Random Forest: Reduced Variance}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{06b_random_forest_variance/chart.pdf}
+\includegraphics[width=0.65\textwidth]{06b_random_forest_variance/chart.pdf}
 \end{center}
 \bottomnote{Averaging many high-variance trees produces low-variance ensemble}
 \end{frame}
 
+\section{Practice}
+
+\begin{frame}[t]{Hands-on Exercise}
+  \textbf{Open the Colab Notebook}
+  \begin{itemize}
+    \item Exercise 1: Train a decision tree on credit data
+    \item Exercise 2: Build a random forest and analyze feature importance
+    \item Exercise 3: Tune hyperparameters with cross-validation
+  \end{itemize}
+  \vspace{1em}
+  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+\end{frame}
+
+\section{Decision Framework}
+
 \begin{frame}[t]{Decision Framework}
 \vspace{-0.8em}
 \begin{center}
-\includegraphics[width=0.50\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
 \vspace{-0.5em}
 \bottomnote{Random Forests excel when accuracy and feature importance both matter}
 \end{frame}
+
+\section{Summary}
 
 \end{document}

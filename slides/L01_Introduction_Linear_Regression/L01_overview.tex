@@ -10,8 +10,8 @@
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{hyperref}
 \usepackage{tikz}
+\usepackage{hyperref}
 
 % Custom colors (ML palette)
 \definecolor{MLPurple}{RGB}{51,51,178}
@@ -52,15 +52,19 @@
 % Title information
 \title[Linear Regression]{Introduction \& Linear Regression}
 \subtitle{Overview}
-\author{Methods and Algorithms -- MSc Data Science}
+\author{Methods and Algorithms}
 \institute{MSc Data Science}
-\date{}
+\date{Spring 2026}
 
 \begin{document}
 
 % Slide 1: Title
 \begin{frame}
   \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
 \end{frame}
 
 % Slide 2: Learning Objectives
@@ -89,6 +93,11 @@
 \bottomnote{XKCD \#1725 by Randall Munroe (CC BY-NC 2.5) -- Always check if your data supports a linear fit!}
 \end{frame}
 
+% ============================================
+% SECTION: PROBLEM
+% ============================================
+\section{Problem}
+
 % Slide 3: The Business Problem
 \begin{frame}[t]{The Business Problem}
   \textbf{Finance Use Case: Predicting House Prices}
@@ -112,6 +121,11 @@
 
   \bottomnote{Linear regression: the ``hello world'' of machine learning}
 \end{frame}
+
+% ============================================
+% SECTION: METHOD
+% ============================================
+\section{Method}
 
 % Slide 4: What is Linear Regression?
 \begin{frame}[t]{What is Linear Regression?}
@@ -224,6 +238,11 @@
 \bottomnote{Iteratively update parameters in the direction of steepest descent}
 \end{frame}
 
+% ============================================
+% SECTION: SOLUTION
+% ============================================
+\section{Solution}
+
 % Slide 7: Interpreting Coefficients
 \begin{frame}[t]{Interpreting Coefficients}
   \textbf{Example:} House price model
@@ -285,6 +304,11 @@
 \vspace{-0.5em}
 \bottomnote{Learning curves help diagnose underfitting vs overfitting}
 \end{frame}
+
+% ============================================
+% SECTION: DECISION FRAMEWORK
+% ============================================
+\section{Decision Framework}
 
 % Slide 9: Decision Framework
 \begin{frame}[t]{When to Use Linear Regression}
@@ -355,6 +379,22 @@
 \bottomnote{Model complexity controls the tradeoff between bias and variance}
 \end{frame}
 
+% ============================================
+% SECTION: PRACTICE
+% ============================================
+\section{Practice}
+
+\begin{frame}[t]{Hands-on Exercise}
+  \textbf{Open the Colab Notebook}
+  \begin{itemize}
+    \item Exercise 1: Implement OLS from scratch
+    \item Exercise 2: Use scikit-learn LinearRegression
+    \item Exercise 3: Compare with gradient descent
+  \end{itemize}
+  \vspace{1em}
+  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+\end{frame}
+
 % XKCD #605: Extrapolation Warning
 \begin{frame}[t]{A Word of Caution}
 \vspace{-0.5em}
@@ -374,6 +414,11 @@
 \vspace{-0.5em}
 \bottomnote{Use this flowchart to decide when linear regression is appropriate}
 \end{frame}
+
+% ============================================
+% SECTION: SUMMARY
+% ============================================
+\section{Summary}
 
 % Slide 10: Key Takeaways
 \begin{frame}[t]{Key Takeaways}
