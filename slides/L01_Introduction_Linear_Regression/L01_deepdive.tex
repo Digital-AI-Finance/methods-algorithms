@@ -13,7 +13,7 @@
 \usepackage{tikz}
 \usepackage{hyperref}
 
-% Custom colors
+% Custom colors (ML palette)
 \definecolor{MLPurple}{RGB}{51,51,178}
 \definecolor{MLBlue}{RGB}{0,102,204}
 \definecolor{MLOrange}{RGB}{255,127,14}
@@ -25,7 +25,7 @@
 \setbeamercolor{title}{fg=MLPurple}
 \setbeamercolor{frametitle}{fg=MLPurple}
 
-% Footer
+% Footer customization
 \setbeamertemplate{footline}{
   \leavevmode%
   \hbox{%
@@ -41,14 +41,15 @@
   \vskip0pt%
 }
 
+% Remove navigation symbols
 \setbeamertemplate{navigation symbols}{}
 
-% Commands
+% Custom commands
 \newcommand{\bottomnote}[1]{\vfill\footnotesize\textit{#1}}
 \newcommand{\highlight}[1]{\textcolor{MLOrange}{\textbf{#1}}}
 \newcommand{\mathbold}[1]{\boldsymbol{#1}}
 
-% Title
+% Title information
 \title[Linear Regression]{Introduction \& Linear Regression}
 \subtitle{Deep Dive: Mathematics and Implementation}
 \author{Methods and Algorithms}
@@ -69,9 +70,28 @@
 \end{frame}
 
 % ============================================
-% SECTION 1: MATHEMATICAL FOUNDATIONS
+% SECTION 1: PROBLEM
 % ============================================
-\section{Mathematical Foundations}
+\section{Problem}
+
+\begin{frame}[t]{The Business Challenge}
+  \textbf{Finance Use Case: House Price Prediction}
+  \begin{itemize}
+    \item Banks need accurate property valuations for mortgage decisions
+    \item Insurers must estimate replacement costs
+    \item Investors evaluate real estate portfolios
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Why Linear Regression?}
+  \begin{itemize}
+    \item Interpretable coefficients (how much does each feature matter?)
+    \item Regulatory requirement for explainable models
+    \item Fast, well-understood baseline
+  \end{itemize}
+
+  \bottomnote{Linear regression: the workhorse of quantitative finance since the 1800s}
+\end{frame}
 
 \begin{frame}[t]{Matrix Notation}
   \textbf{The Model in Matrix Form}
@@ -160,7 +180,6 @@
 \end{frame}
 
 \begin{frame}[t]{Simple Regression Visualization}
-  \vspace{-0.5em}
   \begin{center}
     \includegraphics[width=0.55\textwidth]{01_simple_regression/chart.pdf}
   \end{center}
@@ -169,18 +188,16 @@
 \end{frame}
 
 \begin{frame}[t]{Multiple Regression Surface}
-  \vspace{-1.2em}
   \begin{center}
-    \includegraphics[width=0.42\textwidth]{02_multiple_regression_3d/chart.pdf}
+    \includegraphics[width=0.55\textwidth]{02_multiple_regression_3d/chart.pdf}
   \end{center}
-  \vspace{-0.8em}
   \bottomnote{With 2 features, we fit a plane; with $p$ features, a hyperplane}
 \end{frame}
 
 % ============================================
-% SECTION 2: GRADIENT DESCENT
+% SECTION 2: METHOD
 % ============================================
-\section{Gradient Descent}
+\section{Method}
 
 \begin{frame}[t]{Why Gradient Descent?}
   \textbf{Normal Equation Limitations}
@@ -242,7 +259,6 @@
 \end{frame}
 
 \begin{frame}[t]{Gradient Descent Visualization}
-  \vspace{-0.5em}
   \begin{center}
     \includegraphics[width=0.55\textwidth]{04_gradient_descent/chart.pdf}
   \end{center}
@@ -293,9 +309,9 @@
 \end{frame}
 
 % ============================================
-% SECTION 3: MODEL EVALUATION
+% SECTION 3: SOLUTION
 % ============================================
-\section{Model Evaluation}
+\section{Solution}
 
 \begin{frame}[t]{R-Squared ($R^2$)}
   \textbf{Coefficient of Determination}
@@ -351,7 +367,6 @@
 \end{frame}
 
 \begin{frame}[t]{Residual Analysis}
-  \vspace{-0.5em}
   \begin{center}
     \includegraphics[width=0.55\textwidth]{03_residual_plots/chart.pdf}
   \end{center}
@@ -380,18 +395,12 @@
 \end{frame}
 
 \begin{frame}[t]{Learning Curves}
-  \vspace{-0.5em}
   \begin{center}
     \includegraphics[width=0.55\textwidth]{05_learning_curves/chart.pdf}
   \end{center}
 
   \bottomnote{Gap between curves indicates overfitting; convergence shows saturation}
 \end{frame}
-
-% ============================================
-% SECTION 4: REGULARIZATION
-% ============================================
-\section{Regularization}
 
 \begin{frame}[t]{The Overfitting Problem}
   \textbf{When Models Memorize Instead of Learn}
@@ -450,7 +459,6 @@
 \end{frame}
 
 \begin{frame}[t]{Ridge vs Lasso Comparison}
-  \vspace{-0.5em}
   \begin{center}
     \includegraphics[width=0.55\textwidth]{06_regularization_comparison/chart.pdf}
   \end{center}
@@ -495,11 +503,6 @@
   \bottomnote{Larger $\lambda$ = more regularization = simpler model}
 \end{frame}
 
-% ============================================
-% SECTION 5: BIAS-VARIANCE TRADEOFF
-% ============================================
-\section{Bias-Variance Tradeoff}
-
 \begin{frame}[t]{Decomposing Prediction Error}
   \textbf{Expected Prediction Error}
 
@@ -517,7 +520,6 @@
 \end{frame}
 
 \begin{frame}[t]{The Tradeoff Illustrated}
-  \vspace{-0.5em}
   \begin{center}
     \includegraphics[width=0.55\textwidth]{07_bias_variance/chart.pdf}
   \end{center}
@@ -566,9 +568,8 @@
 \section{Decision Framework}
 
 \begin{frame}[t]{Algorithm Selection Guide}
-  \vspace{-0.5em}
   \begin{center}
-    \includegraphics[width=0.50\textwidth]{08_decision_flowchart/chart.pdf}
+    \includegraphics[width=0.55\textwidth]{08_decision_flowchart/chart.pdf}
   \end{center}
 
   \bottomnote{Use this framework when choosing regression methods}
