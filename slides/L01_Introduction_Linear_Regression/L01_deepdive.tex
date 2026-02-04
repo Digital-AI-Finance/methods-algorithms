@@ -133,6 +133,27 @@
   \bottomnote{Linear regression: the workhorse of quantitative finance since the 1800s}
 \end{frame}
 
+\begin{frame}[t]{Finance Application: The CAPM}
+  \textbf{Capital Asset Pricing Model -- Linear Regression in Finance}
+
+  \begin{equation}
+    R_i - R_f = \alpha_i + \beta_i (R_m - R_f) + \varepsilon_i
+  \end{equation}
+
+  \begin{itemize}
+    \item $R_i$: Return of asset $i$
+    \item $R_f$: Risk-free rate (e.g., T-bill)
+    \item $R_m$: Market return (e.g., S\&P 500)
+    \item $\beta_i$: Systematic risk (market sensitivity)
+    \item $\alpha_i$: Abnormal return (should be zero if CAPM holds)
+  \end{itemize}
+
+  \vspace{0.3em}
+  \textbf{Interpretation:} $\beta = 1.2$ means 10\% market rise $\Rightarrow$ 12\% expected asset rise
+
+  \bottomnote{CAPM: The original factor model -- basis for portfolio management}
+\end{frame}
+
 \begin{frame}[t]{Matrix Notation}
   \textbf{The Model in Matrix Form}
 
@@ -188,6 +209,29 @@
   \bottomnote{Assumptions 1-4 needed for unbiased estimates; 5 for t-tests and CIs}
 \end{frame}
 
+\begin{frame}[t]{The Gauss-Markov Theorem}
+  \textbf{Why OLS is Special}
+
+  \vspace{0.5em}
+  Under assumptions 1-4 (linearity, exogeneity, homoscedasticity, no perfect multicollinearity):
+
+  \begin{center}
+    \textbf{OLS is BLUE} -- Best Linear Unbiased Estimator
+  \end{center}
+
+  \textbf{What BLUE Means:}
+  \begin{itemize}
+    \item \textbf{Best}: Lowest variance among all linear unbiased estimators
+    \item \textbf{Linear}: Estimator is linear function of $y$
+    \item \textbf{Unbiased}: $E[\hat{\beta}] = \beta$
+  \end{itemize}
+
+  \vspace{0.3em}
+  \textbf{Implication:} You cannot find a better linear unbiased estimator than OLS
+
+  \bottomnote{Gauss-Markov justifies why OLS is the default choice for linear regression}
+\end{frame}
+
 \begin{frame}[t]{The Loss Function}
   \textbf{Sum of Squared Residuals (SSR)}
 
@@ -238,6 +282,26 @@
 % SECTION 2: METHOD
 % ============================================
 \section{Method}
+
+\begin{frame}[t]{Feature Scaling}
+  \textbf{Standardization: Zero Mean, Unit Variance}
+
+  \begin{equation}
+    x_j^{\text{scaled}} = \frac{x_j - \bar{x}_j}{s_j}
+  \end{equation}
+
+  \textbf{Why Scale Features?}
+  \begin{enumerate}
+    \item \textbf{Coefficient comparison:} After scaling, $|\beta_j|$ reflects relative importance
+    \item \textbf{Gradient descent:} Converges faster with similar feature scales
+    \item \textbf{Regularization:} Fair penalty across all features
+  \end{enumerate}
+
+  \vspace{0.3em}
+  \textbf{Caution:} Standardized coefficients lose original units (trade-off)
+
+  \bottomnote{Always standardize for regularization; optional for OLS if only predicting}
+\end{frame}
 
 \begin{frame}[t]{Why Gradient Descent?}
   \textbf{Normal Equation Limitations}
@@ -404,6 +468,63 @@
   \end{itemize}
 
   \bottomnote{Report both for comprehensive evaluation}
+\end{frame}
+
+\begin{frame}[t]{Standard Errors of Coefficients}
+  \textbf{Quantifying Uncertainty in Estimates}
+
+  \begin{equation}
+    \text{Var}(\hat{\boldsymbol{\beta}}) = \sigma^2 (\mathbf{X}^\top\mathbf{X})^{-1}
+  \end{equation}
+
+  \textbf{Standard Error of $\hat{\beta}_j$:}
+  \begin{equation}
+    \text{SE}(\hat{\beta}_j) = \hat{\sigma} \sqrt{[(\mathbf{X}^\top\mathbf{X})^{-1}]_{jj}}
+  \end{equation}
+
+  where $\hat{\sigma}^2 = \frac{1}{n-p-1}\sum(y_i - \hat{y}_i)^2$ (unbiased variance estimate)
+
+  \bottomnote{SE tells us how much $\hat{\beta}_j$ would vary across different samples}
+\end{frame}
+
+\begin{frame}[t]{Hypothesis Testing for Coefficients}
+  \textbf{Is Feature $j$ Significant?}
+
+  \begin{itemize}
+    \item $H_0: \beta_j = 0$ (feature has no effect)
+    \item $H_1: \beta_j \neq 0$ (feature matters)
+  \end{itemize}
+
+  \textbf{t-Statistic:}
+  \begin{equation}
+    t_j = \frac{\hat{\beta}_j - 0}{\text{SE}(\hat{\beta}_j)} \sim t_{n-p-1}
+  \end{equation}
+
+  \textbf{Decision Rule:}
+  \begin{itemize}
+    \item p-value $< 0.05$: Reject $H_0$, coefficient is significant
+    \item p-value $\geq 0.05$: Cannot reject $H_0$
+  \end{itemize}
+
+  \bottomnote{Always check p-values before interpreting coefficients}
+\end{frame}
+
+\begin{frame}[t]{Confidence Intervals}
+  \textbf{95\% CI for Coefficient $\beta_j$:}
+  \begin{equation}
+    \hat{\beta}_j \pm t_{n-p-1, 0.975} \times \text{SE}(\hat{\beta}_j)
+  \end{equation}
+
+  \textbf{Interpretation:} If we repeated the study many times, 95\% of intervals would contain the true $\beta_j$
+
+  \vspace{0.5em}
+  \textbf{Prediction Intervals:}
+  \begin{itemize}
+    \item \textbf{Confidence interval for mean:} $\hat{y} \pm t \cdot \text{SE}(\hat{y})$
+    \item \textbf{Prediction interval for new observation:} Wider (includes $\sigma^2$)
+  \end{itemize}
+
+  \bottomnote{CI for mean is narrower; prediction interval accounts for individual variability}
 \end{frame}
 
 \begin{frame}[t]{Residual Analysis}
@@ -599,7 +720,7 @@
     \item Exercise 3: Compare with gradient descent
   \end{itemize}
   \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+  \textbf{Link:} See course materials on GitHub
 \end{frame}
 
 % ============================================
@@ -640,6 +761,33 @@
   \end{columns}
 
   \bottomnote{When in doubt, linear regression is a strong baseline}
+\end{frame}
+
+\begin{frame}[t]{Diagnosing Multicollinearity}
+  \textbf{Variance Inflation Factor (VIF)}
+
+  \begin{equation}
+    \text{VIF}_j = \frac{1}{1 - R^2_j}
+  \end{equation}
+
+  where $R^2_j$ is from regressing $x_j$ on all other features.
+
+  \textbf{Interpretation:}
+  \begin{itemize}
+    \item VIF $= 1$: No correlation with other features
+    \item VIF $> 5$: Moderate concern
+    \item VIF $> 10$: Serious multicollinearity
+  \end{itemize}
+
+  \vspace{0.3em}
+  \textbf{Remedies:}
+  \begin{itemize}
+    \item Remove highly correlated features
+    \item Use Ridge regression ($\lambda > 0$ stabilizes)
+    \item Apply PCA before regression
+  \end{itemize}
+
+  \bottomnote{Always check VIF before trusting coefficient estimates}
 \end{frame}
 
 % ============================================
