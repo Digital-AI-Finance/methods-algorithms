@@ -18,7 +18,9 @@ MLRED = '#D62728'
 MLORANGE = '#FF7F0E'
 
 CHART_METADATA = {
-    'url': 'github.com/joerg-osterrieder/Methods_and_Algorithms'
+    "title": "Policy Visualization",
+    "description": "Optimal policy arrows for grid world navigation",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L06_Embeddings_RL/06_policy_viz"
 }
 
 np.random.seed(42)

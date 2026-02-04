@@ -12,7 +12,9 @@ plt.rcParams.update({
 })
 
 CHART_METADATA = {
-    'url': 'github.com/joerg-osterrieder/Methods_and_Algorithms'
+    "title": "Similarity Heatmap",
+    "description": "Cosine similarity matrix between word embeddings",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L06_Embeddings_RL/02_similarity_heatmap"
 }
 
 np.random.seed(42)

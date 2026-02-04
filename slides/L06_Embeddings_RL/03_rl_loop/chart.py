@@ -17,7 +17,9 @@ MLGREEN = '#2CA02C'
 MLORANGE = '#FF7F0E'
 
 CHART_METADATA = {
-    'url': 'github.com/joerg-osterrieder/Methods_and_Algorithms'
+    "title": "RL Loop",
+    "description": "Agent-environment interaction cycle in reinforcement learning",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L06_Embeddings_RL/03_rl_loop"
 }
 
 fig, ax = plt.subplots(figsize=(10, 6))

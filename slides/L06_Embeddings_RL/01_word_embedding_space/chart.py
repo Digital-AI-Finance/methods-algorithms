@@ -18,7 +18,9 @@ MLRED = '#D62728'
 MLORANGE = '#FF7F0E'
 
 CHART_METADATA = {
-    'url': 'github.com/joerg-osterrieder/Methods_and_Algorithms'
+    "title": "Word Embedding Space",
+    "description": "2D visualization of word embeddings showing semantic relationships",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L06_Embeddings_RL/01_word_embedding_space"
 }
 
 np.random.seed(42)

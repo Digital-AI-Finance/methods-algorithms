@@ -18,7 +18,9 @@ MLRED = '#D62728'
 MLORANGE = '#FF7F0E'
 
 CHART_METADATA = {
-    'url': 'github.com/joerg-osterrieder/Methods_and_Algorithms'
+    "title": "Embeddings & RL Decision Guide",
+    "description": "When to use flowchart for embeddings and reinforcement learning",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L06_Embeddings_RL/07_decision_flowchart"
 }
 
 fig, ax = plt.subplots(figsize=(10, 6))

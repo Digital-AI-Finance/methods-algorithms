@@ -18,7 +18,9 @@ MLRED = '#D62728'
 MLORANGE = '#FF7F0E'
 
 CHART_METADATA = {
-    'url': 'github.com/joerg-osterrieder/Methods_and_Algorithms'
+    "title": "Q-Learning Grid",
+    "description": "Q-value grid visualization for tabular reinforcement learning",
+    "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L06_Embeddings_RL/04_q_learning_grid"
 }
 
 np.random.seed(42)
