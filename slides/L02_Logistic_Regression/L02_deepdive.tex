@@ -201,6 +201,93 @@ $$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \frac{\eta}{n}\mathbf{X}^T(\sigma(\mat
 \bottomnote{No closed-form solution like normal equation -- must use iterative optimization}
 \end{frame}
 
+\begin{frame}[t]{Standard Errors of Coefficients}
+  \textbf{How Certain Are We About Each Coefficient?}
+
+  Standard error measures uncertainty in our estimate $\hat{\beta}_j$:
+  \begin{equation}
+    \text{SE}(\hat{\beta}_j) = \sqrt{[\mathbf{H}^{-1}]_{jj}}
+  \end{equation}
+  where $\mathbf{H}$ is the Hessian matrix (measures how steep the loss landscape is around the optimum).
+
+  \vspace{0.3em}
+  \textbf{Intuition:}
+  \begin{itemize}
+    \item Small SE: coefficient is precisely estimated
+    \item Large SE: coefficient is uncertain (wide range of plausible values)
+    \item More data $\Rightarrow$ smaller SE $\Rightarrow$ more certainty
+  \end{itemize}
+
+  \bottomnote{SE tells us: ``if we repeated this study, how much would $\hat{\beta}$ vary?''}
+\end{frame}
+
+\begin{frame}[t]{Is This Feature Significant? (Wald Test)}
+  \textbf{The Question:} Does feature $j$ actually matter, or is its effect just noise?
+
+  \begin{itemize}
+    \item $H_0$: $\beta_j = 0$ (feature has NO effect)
+    \item $H_1$: $\beta_j \neq 0$ (feature matters)
+  \end{itemize}
+
+  \textbf{Wald Statistic (z-score):}
+  \begin{equation}
+    z = \frac{\hat{\beta}_j}{\text{SE}(\hat{\beta}_j)}
+  \end{equation}
+
+  \textbf{Decision Rule:}
+  \begin{itemize}
+    \item $|z| > 1.96$ (or p-value $< 0.05$): coefficient is \textbf{significant}
+    \item $|z| \leq 1.96$ (or p-value $\geq 0.05$): cannot conclude it matters
+  \end{itemize}
+
+  \bottomnote{Always check p-values before interpreting coefficients in business reports}
+\end{frame}
+
+\begin{frame}[t]{Confidence Intervals for Odds Ratios}
+  \textbf{95\% CI for Coefficient:}
+  \begin{equation}
+    \hat{\beta}_j \pm 1.96 \times \text{SE}(\hat{\beta}_j)
+  \end{equation}
+
+  \textbf{95\% CI for Odds Ratio:}
+  \begin{equation}
+    \exp\left(\hat{\beta}_j \pm 1.96 \times \text{SE}(\hat{\beta}_j)\right)
+  \end{equation}
+
+  \vspace{0.3em}
+  \textbf{Example:} Income coefficient $\hat{\beta} = 0.5$, SE $= 0.1$
+  \begin{itemize}
+    \item CI for $\beta$: $[0.304, 0.696]$
+    \item CI for OR: $[1.36, 2.01]$ -- income increases odds by 36\% to 101\%
+  \end{itemize}
+
+  \bottomnote{If CI for OR contains 1.0, the effect is not statistically significant}
+\end{frame}
+
+\begin{frame}[t]{Model Fit: Deviance}
+  \textbf{How Well Does the Model Fit the Data?}
+
+  \begin{equation}
+    \text{Deviance} = -2 \times \text{Log-Likelihood}
+  \end{equation}
+
+  \textbf{Two Key Measures:} (Think: how bad is each model?)
+  \begin{itemize}
+    \item \textbf{Null deviance}: Model with only intercept (baseline)
+    \item \textbf{Residual deviance}: Model with all features
+  \end{itemize}
+
+  \vspace{0.3em}
+  \textbf{Pseudo $R^2$ (McFadden):}
+  \begin{equation}
+    R^2_{\text{McFadden}} = 1 - \frac{\text{Residual Deviance}}{\text{Null Deviance}}
+  \end{equation}
+
+  \textbf{Interpretation:} Values of 0.2--0.4 are considered good for logistic regression
+
+  \bottomnote{Deviance drop = model improvement; compare models with Likelihood Ratio test}
+\end{frame}
+
 %% PART 2: DECISION BOUNDARIES (Slides 9-12)
 \section{Decision Boundaries}
 
@@ -319,6 +406,12 @@ $$P(y=k|\mathbf{x}) = \frac{e^{\mathbf{w}_k^T\mathbf{x}}}{\sum_{j=1}^{K}e^{\math
 \item 0.7--0.8: Fair
 \item 0.6--0.7: Poor
 \item 0.5--0.6: Fail
+\end{itemize}
+\vspace{0.3em}
+\textbf{Finance Equivalent:} Gini coefficient = $2 \times \text{AUC} - 1$
+\begin{itemize}
+\item AUC = 0.80 means Gini = 0.60
+\item Banks often report Gini instead of AUC
 \end{itemize}
 \bottomnote{AUC is threshold-independent -- summarizes performance across all thresholds}
 \end{frame}
@@ -596,6 +689,49 @@ $$\mathcal{L}_{\text{weighted}} = -\sum_i w_{y_i}[y_i\log p_i + (1-y_i)\log(1-p_
 \item Interpretability not required: Neural Networks
 \end{itemize}
 \bottomnote{Start with logistic regression as baseline, then try more complex models}
+\end{frame}
+
+\begin{frame}[t]{Credit Scoring in Practice}
+  \textbf{How Banks Actually Use Logistic Regression}
+
+  \begin{itemize}
+    \item \textbf{PD (Probability of Default)}: The probability a borrower won't repay
+    \item Banks are REQUIRED to estimate PD under Basel regulations
+    \item Logistic regression is the industry standard (interpretable, auditable)
+  \end{itemize}
+
+  \vspace{0.3em}
+  \textbf{Why Interpretability Matters:}
+  \begin{itemize}
+    \item Regulators require explanation of every coefficient
+    \item Must justify why income/debt ratio affects approval
+    \item Black-box models (neural networks) often rejected by regulators
+  \end{itemize}
+
+  \bottomnote{Basel II/III: International banking regulations requiring PD models}
+\end{frame}
+
+\begin{frame}[t]{From Coefficients to Scorecards}
+  \textbf{Credit Scorecards: Making Models Usable}
+
+  \textbf{Key Industry Metrics:}
+  \begin{itemize}
+    \item \textbf{Gini Coefficient}: $\text{Gini} = 2 \times \text{AUC} - 1$
+      \begin{itemize}
+        \item AUC = 0.75 $\Rightarrow$ Gini = 0.50 (acceptable)
+        \item AUC = 0.85 $\Rightarrow$ Gini = 0.70 (good)
+      \end{itemize}
+    \item \textbf{KS Statistic}: Maximum separation between defaults and non-defaults
+  \end{itemize}
+
+  \vspace{0.3em}
+  \textbf{Scorecard Points:}
+  \begin{itemize}
+    \item Convert log-odds to points: higher score = lower risk
+    \item Example: ``Each 20 points doubles the odds of being good''
+  \end{itemize}
+
+  \bottomnote{Industry practice: Gini > 0.40 is acceptable; Gini > 0.60 is good}
 \end{frame}
 
 \begin{frame}[t]{Decision Framework}
