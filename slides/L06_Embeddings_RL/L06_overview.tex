@@ -111,14 +111,12 @@
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
 \begin{enumerate}
-\item Explain word embeddings and their applications
-\item Apply pre-trained embeddings for text analysis
-\item Understand the reinforcement learning framework
-\item Implement basic Q-learning for decision problems
+\item \textbf{Derive} the Skip-Gram objective and analyze the negative sampling approximation
+\item \textbf{Evaluate} static vs.\ contextual embeddings for domain-specific NLP tasks (e.g., FinBERT)
+\item \textbf{Analyze} the convergence properties of Q-learning and the role of the exploration--exploitation tradeoff
+\item \textbf{Critique} RL-based trading strategies and their limitations (transaction costs, non-stationarity, overfitting)
 \end{enumerate}
-\vspace{1em}
-\textbf{Finance Applications:} Sentiment analysis, algorithmic trading
-\bottomnote{From text to numbers, from decisions to optimal policies}
+\bottomnote{Bloom's taxonomy levels 4--5: Analyze, Evaluate, Derive, Critique}
 \end{frame}
 
 \begin{frame}[t]{The Business Problem}
@@ -137,7 +135,43 @@
 \bottomnote{Embeddings solve text, RL solves sequential decisions}
 \end{frame}
 
+\begin{frame}[t]{Why Is This Hard?}
+\begin{center}
+\textit{``There are only two hard problems in NLP: understanding language, and getting your regex to work.''} --- adapted from Phil Karlton
+\end{center}
+\vspace{1em}
+\textbf{This Lecture:}
+\begin{itemize}
+\item Part 1: Turn text into numbers that capture meaning (Embeddings)
+\item Part 2: Learn to make good decisions over time (RL)
+\end{itemize}
+\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5): ``Machine Learning'' --- relevant to both topics}
+\end{frame}
+
 \section{Method}
+
+\begin{frame}[t]{Key Equations}
+\textbf{Embeddings --- Skip-Gram Objective:}
+\[
+\max \sum_{t=1}^{T} \sum_{\substack{-c \leq j \leq c \\ j \neq 0}} \log p(w_{t+j} \mid w_t)
+\]
+
+\textbf{Cosine Similarity:}
+\[
+\text{sim}(u, v) = \frac{u \cdot v}{\|u\| \, \|v\|}
+\]
+
+\textbf{Reinforcement Learning --- Bellman Equation:}
+\[
+Q^*(s,a) = \mathbb{E}\bigl[r + \gamma \max_{a'} Q^*(s', a') \mid s, a\bigr]
+\]
+
+\textbf{TD Update (Q-Learning):}
+\[
+Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\bigr]
+\]
+\bottomnote{These four equations are the mathematical backbone of this lecture}
+\end{frame}
 
 \begin{frame}[t]{Word Embedding Space}
 \begin{center}
@@ -193,7 +227,7 @@
     \item Exercise 3: Apply RL to a simple trading environment
   \end{itemize}
   \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+  \textbf{Link:} \url{https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L06_embeddings_rl.ipynb}
 \end{frame}
 
 \section{Decision Framework}
@@ -212,7 +246,7 @@
   \begin{itemize}
     \item Mikolov et al. (2013). \textit{Efficient Estimation of Word Representations in Vector Space}. arXiv.
     \item Sutton, R. \& Barto, A. (2018). \textit{Reinforcement Learning: An Introduction}. MIT Press.
-    \item James et al. (2021). \textit{Introduction to Statistical Learning}. \url{https://www.statlearning.com/}
+    \item Jurafsky \& Martin (2024). \textit{Speech and Language Processing}. \url{https://web.stanford.edu/~jurafsky/slp3/}
   \end{itemize}
 \end{frame}
 

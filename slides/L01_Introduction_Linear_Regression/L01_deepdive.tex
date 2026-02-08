@@ -109,6 +109,22 @@
   \tableofcontents
 \end{frame}
 
+\begin{frame}[t]{Learning Objectives}
+  By the end of this session, you will be able to:
+
+  \begin{enumerate}
+    \item \textbf{Derive} the OLS estimator and prove its optimality under Gauss-Markov assumptions
+    \item \textbf{Analyze} gradient descent convergence and evaluate learning rate selection
+    \item \textbf{Evaluate} regression diagnostics to identify assumption violations
+    \item \textbf{Compare} regularization strategies (Ridge, Lasso, Elastic Net) for different problem structures
+  \end{enumerate}
+
+  \vspace{0.5em}
+  \textbf{Finance Applications:} Property valuation, asset pricing (CAPM)
+
+  \bottomnote{Foundation for all supervised learning methods}
+\end{frame}
+
 % ============================================
 % SECTION 1: PROBLEM
 % ============================================
@@ -230,6 +246,26 @@
   \textbf{Implication:} You cannot find a better linear unbiased estimator than OLS
 
   \bottomnote{Gauss-Markov justifies why OLS is the default choice for linear regression}
+\end{frame}
+
+\begin{frame}{Gauss-Markov: Proof Sketch}
+\textbf{Goal}: Show OLS $\hat{\boldsymbol{\beta}}$ has minimum variance among all linear unbiased estimators.
+
+\textbf{Proof}: Let $\tilde{\boldsymbol{\beta}} = \mathbf{Cy}$ be any other linear unbiased estimator. Write $\mathbf{C} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}' + \mathbf{D}$ for some matrix $\mathbf{D}$.
+
+\begin{itemize}
+\item Unbiasedness requires $E[\tilde{\boldsymbol{\beta}}] = \boldsymbol{\beta}$, which forces $\mathbf{DX} = \mathbf{0}$
+\item Then: $\text{Var}(\tilde{\boldsymbol{\beta}}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1} + \sigma^2\mathbf{DD}'$
+\item Since $\mathbf{DD}' \succeq \mathbf{0}$ (positive semi-definite), we have:
+\end{itemize}
+
+\begin{equation}
+\text{Var}(\tilde{\boldsymbol{\beta}}) - \text{Var}(\hat{\boldsymbol{\beta}}) = \sigma^2 \mathbf{DD}' \succeq \mathbf{0}
+\end{equation}
+
+Therefore OLS has the smallest variance among all linear unbiased estimators. $\square$
+
+\bottomnote{The key insight: any deviation $\mathbf{D}$ from OLS adds noise ($\mathbf{DD}'$) without reducing bias.}
 \end{frame}
 
 \begin{frame}[t]{The Loss Function}
@@ -380,14 +416,17 @@
   \end{itemize}
 
   \vspace{0.5em}
-  \textbf{Practical Approaches:}
+  \textbf{Convergence Theory:}
   \begin{itemize}
-    \item Start with $\alpha = 0.01$ or $0.001$
-    \item Learning rate schedules (decay over time)
-    \item Adaptive methods: Adam, AdaGrad, RMSprop
+    \item Convex: $O(1/t)$ convergence rate
+    \item Strongly convex: $O(\rho^t)$ where $\rho < 1$ (linear rate)
+    \item Learning rate condition: $\eta < 2/L$ where $L$ is Lipschitz constant of $\nabla L$
   \end{itemize}
 
-  \bottomnote{For OLS, optimal $\alpha = 1/\lambda_{\max}(X^\top X)$}
+  \vspace{0.3em}
+  \textbf{Practical:} Start with $\eta = 0.01$, use adaptive methods (Adam, AdaGrad)
+
+  \bottomnote{For OLS, optimal $\eta = 1/\lambda_{\max}(X^\top X)$}
 \end{frame}
 
 \begin{frame}[t]{Stochastic Gradient Descent (SGD)}
@@ -527,12 +566,99 @@
   \bottomnote{CI for mean is narrower; prediction interval accounts for individual variability}
 \end{frame}
 
+\begin{frame}{F-Test for Overall Model Significance}
+\textbf{Null hypothesis}: $H_0: \beta_1 = \beta_2 = \cdots = \beta_p = 0$ (model has no explanatory power)
+
+\begin{equation}
+F = \frac{R^2 / p}{(1 - R^2) / (n - p - 1)} \sim F_{p, n-p-1}
+\end{equation}
+
+\begin{itemize}
+\item Tests whether the model \textbf{as a whole} explains significant variance
+\item Reject $H_0$ if $F > F_{\alpha, p, n-p-1}$ (or equivalently, if p-value $< \alpha$)
+\item Complements individual t-tests: possible to have no significant t-tests but a significant F-test (multicollinearity)
+\end{itemize}
+
+\textbf{Equivalently} (using sums of squares):
+\begin{equation}
+F = \frac{(\text{TSS} - \text{RSS})/p}{\text{RSS}/(n - p - 1)} = \frac{\text{MSR}}{\text{MSE}}
+\end{equation}
+
+\bottomnote{Every regression output table reports the F-statistic. Always check it before interpreting individual coefficients.}
+\end{frame}
+
+\begin{frame}{OLS and Maximum Likelihood Estimation}
+Under the normality assumption $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$, the likelihood is:
+
+\begin{equation}
+L(\boldsymbol{\beta}, \sigma^2) = \prod_{i=1}^{n} \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(y_i - \mathbf{x}_i'\boldsymbol{\beta})^2}{2\sigma^2}\right)
+\end{equation}
+
+Maximizing the log-likelihood $\ell = -\frac{n}{2}\ln(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum(y_i - \mathbf{x}_i'\boldsymbol{\beta})^2$:
+
+\begin{itemize}
+\item $\frac{\partial \ell}{\partial \boldsymbol{\beta}} = 0$ gives the \textbf{same normal equations as OLS}
+\item $\hat{\sigma}^2_{MLE} = \frac{\text{RSS}}{n}$ (biased; OLS uses $n - p - 1$)
+\item This connection enables likelihood ratio tests, AIC/BIC model comparison
+\end{itemize}
+
+\textbf{Key insight}: OLS $\equiv$ MLE under normality $\Rightarrow$ all MLE properties (efficiency, asymptotic normality) transfer to OLS.
+
+\bottomnote{This bridges to L02 (Logistic Regression), where MLE is the \emph{only} estimation method.}
+\end{frame}
+
 \begin{frame}[t]{Residual Analysis}
   \begin{center}
     \includegraphics[width=0.55\textwidth]{03_residual_plots/chart.pdf}
   \end{center}
 
   \bottomnote{Good: random scatter. Bad: patterns indicate model misspecification}
+\end{frame}
+
+\begin{frame}{Formal Assumption Diagnostic Tests}
+\begin{tabular}{lll}
+\toprule
+\textbf{Assumption} & \textbf{Test} & \textbf{$H_0$} \\
+\midrule
+Homoscedasticity & Breusch-Pagan & Constant variance \\
+ & White test & Constant variance (robust) \\
+No autocorrelation & Durbin-Watson & No serial correlation \\
+Normality & Shapiro-Wilk & Residuals are normal \\
+ & Jarque-Bera & Skewness=0, kurtosis=3 \\
+Functional form & Ramsey RESET & No omitted nonlinearities \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+\textbf{When assumptions fail}:
+\begin{itemize}
+\item Heteroscedasticity $\Rightarrow$ White/HC robust standard errors
+\item Autocorrelation $\Rightarrow$ Newey-West standard errors, GLS
+\item Non-normality $\Rightarrow$ Bootstrap inference (large $n$: CLT helps)
+\end{itemize}
+
+\bottomnote{In finance/banking, regulators require formal test results -- ``the residuals looked fine'' is insufficient.}
+\end{frame}
+
+\begin{frame}{Influence Diagnostics: Hat Matrix and Cook's Distance}
+The \textbf{hat matrix} maps observed to fitted values: $\hat{\mathbf{y}} = \mathbf{Hy}$ where
+\begin{equation}
+\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'
+\end{equation}
+
+\textbf{Leverage}: $h_{ii} \in [1/n, 1]$ measures how far $\mathbf{x}_i$ is from the center of the design space. High leverage ($h_{ii} > 2p/n$): observation \emph{could} be influential.
+
+\textbf{Cook's Distance} combines leverage and residual:
+\begin{equation}
+D_i = \frac{e_i^2}{p \cdot \text{MSE}} \cdot \frac{h_{ii}}{(1 - h_{ii})^2}
+\end{equation}
+
+\begin{itemize}
+\item $D_i > 1$: observation substantially changes $\hat{\boldsymbol{\beta}}$ when removed
+\item Critical in finance: a single crisis observation can distort the entire model
+\end{itemize}
+
+\bottomnote{Rule of thumb: investigate points with $D_i > 4/n$ or leverage $h_{ii} > 2(p+1)/n$.}
 \end{frame}
 
 \begin{frame}[t]{Train-Test Split}
@@ -628,17 +754,19 @@
 \end{frame}
 
 \begin{frame}[t]{Elastic Net}
-  \textbf{Combining L1 and L2 Penalties}
+  \textbf{Combining L1 and L2 Penalties (Zou \& Hastie, 2005)}
 
   \begin{equation}
-    L_{\text{elastic}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda_1 \|\boldsymbol{\beta}\|_1 + \lambda_2 \|\boldsymbol{\beta}\|_2^2
+    \min_{\beta} \frac{1}{2N}\|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|_2^2 + \lambda\left(\alpha\|\boldsymbol{\beta}\|_1 + \frac{1-\alpha}{2}\|\boldsymbol{\beta}\|_2^2\right)
   \end{equation}
+
+  where $\alpha \in [0, 1]$ is the mixing parameter.
 
   \textbf{Benefits:}
   \begin{itemize}
-    \item Sparsity from L1
+    \item Sparsity from L1 when $\alpha > 0$
     \item Stability from L2 (handles correlated features)
-    \item Two hyperparameters to tune
+    \item $\alpha=1$: pure Lasso; $\alpha=0$: pure Ridge
   \end{itemize}
 
   \bottomnote{Often best of both worlds for correlated features}

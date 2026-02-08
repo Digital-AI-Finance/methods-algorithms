@@ -1,11 +1,15 @@
-"""Original Clusters - High-dimensional data shown in 2D projection"""
+"""Original Clusters - MNIST digits shown in first 2 raw dimensions.
+Demonstrates that high-dimensional data looks overlapped in raw feature space."""
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+from sklearn.datasets import load_digits
 
 CHART_METADATA = {
     'title': 'Original Clusters',
-    'description': 'High-dimensional cluster structure (showing 2 of 50 dimensions)',
+    'description': 'High-dimensional digit data (showing 2 of 64 dimensions)',
     'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L05_PCA_tSNE/06a_original_clusters'
 }
 
@@ -17,40 +21,33 @@ plt.rcParams.update({
     'axes.spines.right': False,
 })
 
-MLBLUE = '#0066CC'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
+# Color palette for 10 digit classes
+colors = ['#3333B2', '#0066CC', '#FF7F0E', '#2CA02C', '#D62728',
+          '#ADADE0', '#8B4513', '#FF69B4', '#808080', '#000000']
 
-np.random.seed(42)
+# Load ACTUAL high-dimensional data
+digits = load_digits()
+X, y = digits.data, digits.target
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Generate high-dimensional data with clusters
-n_per_cluster = 100
-n_dims = 50
+# Show first 2 raw pixel features -- clusters heavily overlap
+for digit in range(10):
+    mask = y == digit
+    ax.scatter(X[mask, 0], X[mask, 1], c=colors[digit], label=str(digit),
+               s=15, alpha=0.5, edgecolors='none')
 
-# Cluster centers in high-dim space
-centers_hd = [np.random.randn(n_dims) * 3 for _ in range(3)]
-labels = np.repeat([0, 1, 2], n_per_cluster)
-colors_map = {0: MLBLUE, 1: MLGREEN, 2: MLRED}
-color_labels = ['Cluster 1', 'Cluster 2', 'Cluster 3']
-
-# Original data (first 2 dims for visualization)
-X_2d = np.vstack([centers_hd[i][:2] + np.random.randn(n_per_cluster, 2) * 0.5
-                  for i in range(3)])
-
-for i, (color, label) in enumerate(zip([MLBLUE, MLGREEN, MLRED], color_labels)):
-    mask = labels == i
-    ax.scatter(X_2d[mask, 0], X_2d[mask, 1], c=color, alpha=0.7, s=40, label=label)
-
-ax.set_title('Original High-Dimensional Data\n(Showing 2 of 50 Dimensions - Clusters Overlap)', fontsize=16, fontweight='bold')
-ax.set_xlabel('Dimension 1', fontweight='bold')
-ax.set_ylabel('Dimension 2', fontweight='bold')
-ax.legend(loc='upper right')
-ax.set_aspect('equal')
+ax.set_title('Raw Pixel Features of MNIST Digits\n(2 of 64 Dimensions -- Classes Overlap)',
+             fontsize=16, fontweight='bold')
+ax.set_xlabel('Pixel Feature 1', fontweight='bold')
+ax.set_ylabel('Pixel Feature 2', fontweight='bold')
+ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', fontsize=11,
+          title='Digit', title_fontsize=12, markerscale=2)
 ax.grid(True, alpha=0.3)
 
-# Add URL annotation
+for spine in ax.spines.values():
+    spine.set_linewidth(1.5)
+
 plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 

@@ -108,14 +108,14 @@
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
 \begin{enumerate}
-\item Apply PCA for dimensionality reduction and feature extraction
-\item Interpret variance explained and choose number of components
-\item Use t-SNE for visualization of high-dimensional data
-\item Compare linear (PCA) vs non-linear (t-SNE) methods
+\item \textbf{Derive} PCA from the variance maximization principle and prove the SVD--PCA equivalence
+\item \textbf{Evaluate} dimensionality reduction methods (PCA vs.\ t-SNE vs.\ UMAP) for a given dataset
+\item \textbf{Analyze} the effect of hyperparameters (perplexity, learning rate) on t-SNE embeddings
+\item \textbf{Critique} PCA assumptions and limitations for nonlinear financial data (e.g., yield curves)
 \end{enumerate}
-\vspace{1em}
-\textbf{Finance Application:} Portfolio risk decomposition, asset clustering
-\bottomnote{From many features to meaningful low-dimensional representations}
+\vspace{0.5em}
+\textbf{Finance Application:} Portfolio risk decomposition, yield curve analysis, asset clustering
+\bottomnote{Bloom's Level 4--5: Analyze, Evaluate, Create}
 \end{frame}
 
 \section{Problem}
@@ -134,6 +134,27 @@
 \item \textbf{t-SNE}: Non-linear embedding preserving local structure
 \end{itemize}
 \bottomnote{Reduce dimensions while preserving important information}
+\end{frame}
+
+\begin{frame}[t]{Key Equations}
+\textbf{Covariance Matrix} (from mean-centered data $X_c$):
+\[
+C = \frac{1}{n-1} X_c^\top X_c
+\]
+
+\textbf{Eigendecomposition}: $C\, v_k = \lambda_k\, v_k$ \quad (principal directions \& variances)
+
+\textbf{Explained Variance Ratio}:
+\[
+\text{EVR}_k = \frac{\lambda_k}{\sum_{j=1}^{p} \lambda_j}
+\]
+
+\textbf{t-SNE High-Dimensional Similarity}:
+\[
+p_{j|i} = \frac{\exp\!\bigl(-\|x_i - x_j\|^2 / 2\sigma_i^2\bigr)}{\sum_{k \neq i}\exp\!\bigl(-\|x_i - x_k\|^2 / 2\sigma_i^2\bigr)}
+\]
+
+\bottomnote{PCA: linear eigen-problem; t-SNE: probabilistic neighbor embedding}
 \end{frame}
 
 \section{Method}
@@ -183,7 +204,7 @@
 \includegraphics[width=0.55\textwidth]{06c_tsne_cluster_projection/chart.pdf}
 \end{center}
 \vspace{-0.3em}
-\bottomnote{t-SNE better preserves cluster structure for visualization}
+\bottomnote{t-SNE on MNIST digits: clear digit clusters vs.\ overlapping PCA projection}
 \end{frame}
 
 \section{Practice}
@@ -196,7 +217,7 @@
     \item Exercise 3: Compare PCA vs t-SNE for different datasets
   \end{itemize}
   \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+  \textbf{Link:} \url{https://colab.research.google.com/} See course materials
 \end{frame}
 
 \section{Decision Framework}

@@ -143,6 +143,63 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \bottomnote{Skip-gram works well for rare words; CBOW better for frequent words}
 \end{frame}
 
+\begin{frame}[t]{Skip-gram: Computational Challenge}
+\textbf{Problem:} The softmax denominator sums over \highlight{entire vocabulary}:
+\[
+\sum_{w \in V} \exp(v_w^T v_{target}) \quad \text{--- } O(|V|) \text{ per update!}
+\]
+For $|V| = 100{,}000$ words, this is computationally intractable.
+
+\vspace{0.5em}
+\textbf{Solution: Negative Sampling} (Mikolov et al., 2013b)
+
+Replace full softmax with binary classification:
+\[
+\log \sigma(v'_{w_O}{}^T v_{w_I}) + \sum_{i=1}^{k} \mathbb{E}_{w_i \sim P_n}\left[\log \sigma(-v'_{w_i}{}^T v_{w_I})\right]
+\]
+\begin{itemize}
+\item Positive pair: (target, true context) $\rightarrow$ predict 1
+\item $k$ negative pairs: (target, random word) $\rightarrow$ predict 0
+\item Reduces $O(|V|)$ to $O(k)$ where $k = 5$--$20$
+\end{itemize}
+\bottomnote{Negative sampling: the key innovation that made Word2Vec practical}
+\end{frame}
+
+\begin{frame}[t]{Negative Sampling Illustrated}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{10_negative_sampling/chart.pdf}
+\end{center}
+\bottomnote{Binary classification: distinguish true context words from random ``noise'' words}
+\end{frame}
+
+\begin{frame}[t]{Skip-gram Architecture}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{08_skipgram_architecture/chart.pdf}
+\end{center}
+\bottomnote{Two embedding matrices: input $W$ (word vectors) and output $W'$ (context vectors)}
+\end{frame}
+
+\begin{frame}[t]{Skip-Gram with Negative Sampling: Algorithm}
+\begin{algorithmic}[1]
+\REQUIRE corpus, embedding dim $d$, negatives $k$, window size, epochs
+\STATE Initialize $W, W' \in \mathbb{R}^{|V| \times d}$ randomly
+\FOR{each epoch}
+  \FOR{each word $w_t$ in corpus}
+    \FOR{each context word $w_c$ within window}
+      \STATE \textbf{Positive}: update $(w_t, w_c)$ to increase $\sigma(v_{w_t}^\top v'_{w_c})$
+      \FOR{$i = 1, \ldots, k$} \COMMENT{$k$ negative samples}
+        \STATE Sample $w_n \sim P_n(w) \propto f(w)^{3/4}$
+        \STATE \textbf{Negative}: update $(w_t, w_n)$ to decrease $\sigma(v_{w_t}^\top v'_{w_n})$
+      \ENDFOR
+    \ENDFOR
+  \ENDFOR
+\ENDFOR
+\RETURN $W$ (word embeddings)
+\end{algorithmic}
+
+\bottomnote{Mikolov et al.\ (2013). Distributed representations of words and phrases. \textit{NeurIPS}, 3111--3119.}
+\end{frame}
+
 \begin{frame}[t]{Word Embedding Space}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{01_word_embedding_space/chart.pdf}
@@ -170,6 +227,23 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \bottomnote{Embeddings capture relational structure, not just similarity}
 \end{frame}
 
+\begin{frame}[t]{Word Analogy Limitations}
+\textbf{Known Issues:}
+\begin{itemize}
+\item Success rates typically 40--70\%, not near 100\% (Levy \& Goldberg, 2014)
+\item Evaluation methodology inflates accuracy (nearest-neighbor dominance)
+\item Finance-domain analogies ($\vec{stock} - \vec{equity} + \vec{debt} \approx \vec{bond}$) not empirically validated
+\end{itemize}
+\vspace{0.5em}
+\textbf{Bias in Embeddings:}
+\begin{itemize}
+\item Embeddings encode societal biases from training data (Bolukbasi et al., 2016)
+\item Example: man:programmer :: woman:homemaker
+\item \highlight{Finance concern}: Biased embeddings in credit scoring or hiring tools
+\end{itemize}
+\bottomnote{Critical thinking: embeddings capture statistical patterns, including harmful ones}
+\end{frame}
+
 \begin{frame}[t]{Similarity Measures}
 \textbf{Cosine Similarity:}
 \[
@@ -177,7 +251,7 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \]
 \vspace{-0.3em}
 \begin{itemize}
-\item Range: $[-1, 1]$; 1=identical, 0=orthogonal, -1=opposite
+\item Range: $[-1, 1]$; 1=same direction, 0=orthogonal, $-1$=opposite
 \end{itemize}
 \vspace{-0.8em}
 \begin{center}
@@ -197,10 +271,29 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \vspace{0.5em}
 \textbf{Domain-Specific:}
 \begin{itemize}
-\item FinBERT: Pre-trained on financial text
+\item \textbf{FinBERT}: BERT further pre-trained on financial corpora (Araci, 2019)
 \item BioBERT: Biomedical domain
 \end{itemize}
 \bottomnote{Fine-tuning pre-trained embeddings usually outperforms training from scratch}
+\end{frame}
+
+\begin{frame}[t]{Static vs Contextual Embeddings}
+\textbf{Static Embeddings} (Word2Vec, GloVe, FastText):
+\begin{itemize}
+\item ONE fixed vector per word, regardless of context
+\item ``bank'' in ``river bank'' = ``bank'' in ``bank account''
+\item Fast, simple, good baseline
+\end{itemize}
+\vspace{0.5em}
+\textbf{Contextual Embeddings} (BERT, GPT, FinBERT):
+\begin{itemize}
+\item DIFFERENT vector per occurrence based on surrounding context
+\item ``bank'' gets different representations in different sentences
+\item State-of-the-art for most NLP tasks
+\end{itemize}
+\vspace{0.5em}
+\textbf{Key Insight:} Contextual models solve polysemy (multiple word senses)
+\bottomnote{Static: one meaning per word. Contextual: meaning depends on context.}
 \end{frame}
 
 \begin{frame}[t]{Embeddings in Finance}
@@ -214,11 +307,33 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \vspace{0.5em}
 \textbf{Sentence Embeddings:}
 \begin{itemize}
-\item Average word vectors (simple baseline)
+\item Average word vectors (simple but loses word order: ``bank robber'' = ``robber bank'')
 \item Doc2Vec (paragraph vectors)
 \item Sentence-BERT (state-of-the-art)
 \end{itemize}
 \bottomnote{Aggregate word embeddings to represent documents}
+\end{frame}
+
+\begin{frame}[t]{Finance Example: Embedding-Based Sentiment}
+\textbf{Task:} Classify ``Fed signals rate hike'' as positive or negative
+\vspace{0.3em}
+
+\textbf{Step 1:} Average word embeddings (simplified 3-dim vectors):
+\[
+\vec{v}_{\text{sentence}} = \frac{1}{4}(\vec{v}_{\text{Fed}} + \vec{v}_{\text{signals}} + \vec{v}_{\text{rate}} + \vec{v}_{\text{hike}}) = [0.12, -0.31, 0.45]
+\]
+
+\textbf{Step 2:} Compare to sentiment anchors via cosine similarity:
+\begin{itemize}
+\item $\text{sim}(\vec{v}_{\text{sentence}}, \vec{v}_{\text{positive}}) = 0.23$
+\item $\text{sim}(\vec{v}_{\text{sentence}}, \vec{v}_{\text{negative}}) = 0.61$
+\end{itemize}
+
+\textbf{Step 3:} Classify: \highlight{Negative sentiment} (rate hikes $\rightarrow$ tighter policy)
+\vspace{0.3em}
+
+\textbf{Real-world:} Use FinBERT for production sentiment (up to 87\% accuracy on financial text; Araci, 2019)
+\bottomnote{Simplified example --- real embeddings are 300-768 dimensions with learned sentiment structure}
 \end{frame}
 
 \section{Solution}
@@ -249,7 +364,7 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \item $A$: Set of actions
 \item $P(s'|s, a)$: Transition probability
 \item $R(s, a, s')$: Reward function
-\item $\gamma \in [0,1]$: Discount factor
+\item $\gamma \in [0,1)$: Discount factor (or $\gamma \in [0,1]$ for episodic tasks)
 \end{itemize}
 \vspace{0.5em}
 \textbf{Markov Property:}
@@ -297,6 +412,22 @@ Q^*(s, a) = \mathbb{E} \left[ R + \gamma \max_{a'} Q^*(s', a') \right]
 \bottomnote{Bellman equation: foundation of all value-based RL methods}
 \end{frame}
 
+\begin{frame}[t]{Temporal Difference Learning}
+\textbf{TD(0) Update Rule} --- learn from each transition:
+\[
+V(s) \leftarrow V(s) + \alpha \left[ r + \gamma V(s') - V(s) \right]
+\]
+\vspace{-0.3em}
+\textbf{TD Error:} $\delta_t = r + \gamma V(s') - V(s)$ (surprise signal)
+\vspace{0.3em}
+\begin{itemize}
+\item \textbf{vs Monte Carlo}: MC waits for episode end; TD updates every step
+\item \textbf{vs Dynamic Programming}: DP requires model $P(s'|s,a)$; TD is model-free
+\item \textbf{Q-learning}: TD applied to Q-function with $\max$ over actions
+\end{itemize}
+\bottomnote{TD learning: the theoretical foundation connecting DP, MC, and Q-learning (Sutton, 1988)}
+\end{frame}
+
 \begin{frame}[t]{Q-Learning Algorithm}
 \textbf{Update Rule:}
 \[
@@ -314,7 +445,53 @@ Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s,
 \item Update $Q(s, a)$
 \end{itemize}
 \end{enumerate}
-\bottomnote{Q-learning is off-policy: learns optimal Q regardless of policy followed}
+\bottomnote{Q-learning is off-policy: converges to $Q^*$ given sufficient exploration and decaying $\alpha$ (Watkins \& Dayan, 1992)}
+\end{frame}
+
+\begin{frame}[t]{Q-Learning: Worked Example}
+\textbf{Trading scenario:} State $s_1$ = [RSI=25, position=none]
+
+\vspace{0.3em}
+\textbf{Current Q-values:} $Q(s_1, \text{buy}) = 3.2$, $Q(s_1, \text{hold}) = 1.0$
+\vspace{0.3em}
+
+Agent takes action \textbf{buy}, observes:
+\begin{itemize}
+\item Reward $r = -0.5$ (transaction cost)
+\item New state $s_2$ = [RSI=35, position=long]
+\item Best future: $\max_{a'} Q(s_2, a') = 4.0$
+\end{itemize}
+\vspace{0.3em}
+\textbf{Update} ($\alpha = 0.1$, $\gamma = 0.9$):
+\[
+\underbrace{r + \gamma \max_{a'} Q(s_2, a')}_{\text{TD target}} - \underbrace{Q(s_1, \text{buy})}_{\text{current}} = -0.5 + 0.9 \times 4.0 - 3.2 = -0.1
+\]
+\[
+Q(s_1, \text{buy}) \leftarrow 3.2 + 0.1 \times (-0.1) = \mathbf{3.19}
+\]
+\bottomnote{Each update moves Q toward the ``better'' estimate: immediate reward + discounted future}
+\end{frame}
+
+\begin{frame}[t]{Q-Learning Algorithm: Pseudocode}
+\begin{algorithmic}[1]
+\REQUIRE environment, $\alpha$, $\gamma$, $\epsilon$, episodes
+\STATE Initialize $Q(s, a) \leftarrow 0$ for all $s \in \mathcal{S}$, $a \in \mathcal{A}$
+\FOR{episode $= 1, \ldots,$ episodes}
+  \STATE $s \leftarrow$ initial state
+  \WHILE{$s$ is not terminal}
+    \STATE $a \leftarrow \begin{cases} \text{random } a \in \mathcal{A} & \text{with prob.\ } \epsilon \\ \arg\max_{a'} Q(s, a') & \text{otherwise}\end{cases}$ \COMMENT{$\epsilon$-greedy}
+    \STATE Take action $a$, observe reward $r$ and next state $s'$
+    \STATE $Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\bigr]$
+    \STATE $s \leftarrow s'$
+  \ENDWHILE
+\ENDFOR
+\RETURN $Q$
+\end{algorithmic}
+
+\medskip
+\textbf{Key}: The $\max_{a'}$ makes Q-learning \textbf{off-policy} --- it learns the optimal policy regardless of the exploration strategy used.
+
+\bottomnote{Watkins \& Dayan (1992). Q-learning. \textit{Machine Learning}, 8(3-4), 279--292.}
 \end{frame}
 
 \begin{frame}[t]{Q-Values Visualization}
@@ -375,42 +552,108 @@ a = \begin{cases}
 \bottomnote{RL for trading is active research area; not solved problem}
 \end{frame}
 
+\begin{frame}[t]{Trading Reward Function Design}
+\textbf{Reward with transaction costs:}
+\[
+r_t = R_t^{\text{portfolio}} - c \cdot |\Delta w_t|
+\]
+where $R_t^{\text{portfolio}}$ = portfolio return, $c$ = transaction cost rate, $\Delta w_t$ = position change
+
+\vspace{0.3em}
+\textbf{Common State Features:}
+\begin{itemize}
+\item Price returns (1-day, 5-day, 20-day)
+\item Technical indicators: RSI, MACD, Bollinger width
+\item Current position and unrealized P\&L
+\end{itemize}
+\vspace{0.3em}
+\textbf{Alternative Rewards:}
+\begin{itemize}
+\item Sharpe ratio: $r_t = \frac{\bar{R}_t}{\sigma_{R_t}}$ (risk-adjusted, but non-stationary)
+\item Log return: $r_t = \log(1 + R_t)$ (additive over time)
+\end{itemize}
+\bottomnote{Reward design is THE most critical decision in RL for trading}
+\end{frame}
+
+\begin{frame}[t]{Backtesting RL Trading Strategies}
+\textbf{Critical Challenge:} RL agents overfit to historical data
+
+\vspace{0.3em}
+\textbf{Walk-Forward Validation:}
+\begin{enumerate}
+\item Train on period $[t_0, t_1]$, test on $[t_1, t_2]$
+\item Roll forward: train on $[t_1, t_2]$, test on $[t_2, t_3]$
+\item Report average out-of-sample performance
+\end{enumerate}
+\vspace{0.3em}
+\textbf{Honest Evaluation:}
+\begin{itemize}
+\item Compare to buy-and-hold benchmark (most RL strategies fail to beat after costs)
+\item Include realistic transaction costs (0.1--0.5\% per trade)
+\item Test across multiple market regimes (bull, bear, sideways)
+\end{itemize}
+\bottomnote{If your RL agent beats buy-and-hold after costs, you likely have a bug --- verify carefully}
+\end{frame}
+
 \begin{frame}[t]{Trading Policy}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{06_policy_viz/chart.pdf}
 \end{center}
-\bottomnote{Learned policy: buy when oversold/high momentum, sell when overbought}
+\bottomnote{Q-learning trained policy: agent discovers buy/sell/hold regions from reward signal}
 \end{frame}
 
 \begin{frame}[t]{Deep Q-Networks (DQN)}
-\textbf{Idea}: Use neural network to approximate Q-function
+\textbf{Idea}: Neural network approximates Q-function: $Q(s, a; \theta) \approx Q^*(s, a)$
+
+\textbf{Loss Function:}
 \[
-Q(s, a; \theta) \approx Q^*(s, a)
+L(\theta) = \mathbb{E}\left[\left(r + \gamma \max_{a'} Q(s', a'; \theta^-) - Q(s, a; \theta)\right)^2\right]
 \]
-\vspace{0.5em}
+\vspace{-0.3em}
 \textbf{Key Innovations:}
 \begin{itemize}
-\item \textbf{Experience Replay}: Store transitions, sample randomly
-\item \textbf{Target Network}: Separate network for stability
-\item \textbf{Function Approximation}: Handle large state spaces
+\item \textbf{Experience Replay}: Store $(s,a,r,s')$, sample random mini-batches (breaks temporal correlation)
+\item \textbf{Target Network} $\theta^-$: Separate, slowly-updated copy for stability
 \end{itemize}
-\bottomnote{DQN: breakthrough for RL on Atari games (Mnih et al., 2015)}
+\vspace{-0.5em}
+\begin{center}
+\includegraphics[width=0.50\textwidth]{09_dqn_architecture/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{DQN: Atari-level play from raw pixels (Mnih et al., 2015); loss is mean squared TD error}
 \end{frame}
 
 \begin{frame}[t]{Policy Gradient Methods}
-\textbf{Direct Policy Optimization:}
+\textbf{Policy Gradient Theorem} (Sutton et al., 2000):
 \[
-\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log \pi_\theta(a|s) \cdot Q^{\pi_\theta}(s, a) \right]
+\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log \pi_\theta(a|s) \cdot A^{\pi_\theta}(s, a) \right]
 \]
-\vspace{0.5em}
-\textbf{Algorithms:}
+where $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$ is the \textbf{advantage function}
+\vspace{0.3em}
 \begin{itemize}
-\item REINFORCE (vanilla policy gradient)
-\item Actor-Critic (combine value and policy)
-\item PPO (Proximal Policy Optimization)
-\item A3C (Asynchronous Advantage Actor-Critic)
+\item \textbf{REINFORCE}: Uses episode returns $G_t$ as $A$; high variance
+\item \textbf{Actor-Critic}: Actor (policy $\pi_\theta$) + Critic (learns $V^\phi$); lower variance
+\item \textbf{PPO}: Clips policy ratio to prevent large updates; widely used
 \end{itemize}
-\bottomnote{Policy gradient: directly optimize policy, can handle continuous actions}
+\bottomnote{Policy gradient handles continuous actions; advantage reduces variance vs raw returns}
+\end{frame}
+
+\begin{frame}[t]{Statistical Inference for Embeddings \& RL}
+\textbf{Embedding Uncertainty:}
+\begin{itemize}
+\item Bootstrap cosine similarity: resample corpus, retrain, compute CI
+\item Permutation test: shuffle word-context pairs, check if similarity is significant
+\end{itemize}
+\vspace{0.5em}
+\textbf{RL Uncertainty:}
+\begin{itemize}
+\item Q-value confidence: run $N$ independent training runs, report mean $\pm$ std
+\item Off-policy evaluation: importance sampling to estimate policy value from logged data
+\[
+\hat{V}(\pi) = \frac{1}{n}\sum_{i=1}^{n} \prod_{t=0}^{T} \frac{\pi(a_t|s_t)}{\beta(a_t|s_t)} \cdot G_i
+\]
+\end{itemize}
+\bottomnote{Always report uncertainty --- a single training run is not evidence of a good policy}
 \end{frame}
 
 \section{Practice}
@@ -423,7 +666,7 @@ Q(s, a; \theta) \approx Q^*(s, a)
     \item Exercise 3: Apply RL to a simple trading environment
   \end{itemize}
   \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+  \textbf{Link:} \url{https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L06_embeddings_rl.ipynb}
 \end{frame}
 
 \section{Decision Framework}
@@ -524,6 +767,8 @@ Finance use & Sentiment & Trading \\
 \item Mikolov et al. (2013). Word2Vec
 \item Pennington et al. (2014). GloVe
 \item Devlin et al. (2019). BERT
+\item Levy \& Goldberg (2014). Linguistic Regularities in Word Embeddings
+\item Bolukbasi et al. (2016). Man is to Computer Programmer as Woman is to Homemaker?
 \end{itemize}
 
 \textbf{Reinforcement Learning:}
@@ -531,6 +776,7 @@ Finance use & Sentiment & Trading \\
 \item Sutton \& Barto (2018). RL: An Introduction (free online)
 \item Mnih et al. (2015). DQN (Atari)
 \item Schulman et al. (2017). PPO
+\item Watkins \& Dayan (1992). Q-Learning Convergence
 \end{itemize}
 
 \textbf{Finance Applications:}

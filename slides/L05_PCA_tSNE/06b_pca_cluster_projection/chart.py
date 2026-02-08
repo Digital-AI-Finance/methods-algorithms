@@ -1,11 +1,16 @@
-"""PCA Cluster Projection - Linear projection preserves global structure"""
+"""PCA Cluster Projection - Runs ACTUAL sklearn PCA on MNIST digits.
+Shows that PCA provides some but limited cluster separation."""
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+from sklearn.decomposition import PCA
+from sklearn.datasets import load_digits
 
 CHART_METADATA = {
     'title': 'PCA Cluster Projection',
-    'description': 'PCA 2D projection shows some cluster separation',
+    'description': 'PCA 2D projection shows some cluster separation on digits data',
     'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L05_PCA_tSNE/06b_pca_cluster_projection'
 }
 
@@ -17,43 +22,38 @@ plt.rcParams.update({
     'axes.spines.right': False,
 })
 
-MLBLUE = '#0066CC'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
+# Color palette for 10 digit classes
+colors = ['#3333B2', '#0066CC', '#FF7F0E', '#2CA02C', '#D62728',
+          '#ADADE0', '#8B4513', '#FF69B4', '#808080', '#000000']
 
-np.random.seed(42)
+# Load ACTUAL high-dimensional data
+digits = load_digits()
+X, y = digits.data, digits.target
+
+# Run ACTUAL PCA
+pca = PCA(n_components=2, random_state=42)
+X_pca = pca.fit_transform(X)
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Generate high-dimensional data with clusters
-n_per_cluster = 100
-n_dims = 50
+for digit in range(10):
+    mask = y == digit
+    ax.scatter(X_pca[mask, 0], X_pca[mask, 1], c=colors[digit], label=str(digit),
+               s=15, alpha=0.6, edgecolors='none')
 
-# Cluster centers in high-dim space
-centers_hd = [np.random.randn(n_dims) * 3 for _ in range(3)]
-labels = np.repeat([0, 1, 2], n_per_cluster)
-color_labels = ['Cluster 1', 'Cluster 2', 'Cluster 3']
-
-# Original data (first 2 dims)
-X_2d = np.vstack([centers_hd[i][:2] + np.random.randn(n_per_cluster, 2) * 0.5
-                  for i in range(3)])
-
-# Simulate PCA projection - finds directions of max variance
-pca_x = X_2d[:, 0] * 0.8 + X_2d[:, 1] * 0.2 + np.random.randn(300) * 0.3
-pca_y = X_2d[:, 0] * 0.2 - X_2d[:, 1] * 0.8 + np.random.randn(300) * 0.3
-
-for i, (color, label) in enumerate(zip([MLBLUE, MLGREEN, MLRED], color_labels)):
-    mask = labels == i
-    ax.scatter(pca_x[mask], pca_y[mask], c=color, alpha=0.7, s=40, label=label)
-
-ax.set_title('PCA Projection\n(Some Cluster Separation - Global Structure)', fontsize=16, fontweight='bold')
-ax.set_xlabel('Principal Component 1', fontweight='bold')
-ax.set_ylabel('Principal Component 2', fontweight='bold')
-ax.legend(loc='upper right')
-ax.set_aspect('equal')
+var1 = pca.explained_variance_ratio_[0] * 100
+var2 = pca.explained_variance_ratio_[1] * 100
+ax.set_title(f'PCA Projection of MNIST Digits\n(Some Separation -- {var1+var2:.1f}% Variance Explained)',
+             fontsize=16, fontweight='bold')
+ax.set_xlabel(f'PC1 ({var1:.1f}% var.)', fontweight='bold')
+ax.set_ylabel(f'PC2 ({var2:.1f}% var.)', fontweight='bold')
+ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', fontsize=11,
+          title='Digit', title_fontsize=12, markerscale=2)
 ax.grid(True, alpha=0.3)
 
-# Add URL annotation
+for spine in ax.spines.values():
+    spine.set_linewidth(1.5)
+
 plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 

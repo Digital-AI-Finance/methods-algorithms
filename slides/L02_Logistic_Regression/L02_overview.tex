@@ -110,14 +110,14 @@
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
 \begin{enumerate}
-\item Explain how logistic regression models binary outcomes
-\item Derive the maximum likelihood estimation for logistic regression
-\item Interpret classification metrics (precision, recall, AUC)
-\item Apply logistic regression for credit scoring decisions
+\item Derive the MLE for logistic regression via gradient of the log-likelihood
+\item Analyze model fit using deviance, LRT, AIC/BIC, and Hosmer-Lemeshow
+\item Evaluate classification performance using ROC, calibration, and cost-sensitive metrics
+\item Apply logistic regression to credit scoring with regulatory interpretation (Basel PD)
 \end{enumerate}
 \vspace{1em}
 \textbf{Finance Application:} Credit scoring and probability of default (PD)
-\bottomnote{These objectives span Bloom's levels: Understand, Apply, Analyze}
+\bottomnote{Bloom's Levels 4--5: Analyze, Evaluate, Create}
 \end{frame}
 
 % Slide 3: Motivation
@@ -145,35 +145,44 @@
 
 \begin{frame}[t]{The Sigmoid Function}
 \textbf{From Linear to Probability}
-\begin{itemize}
-\item Maps any real number to (0, 1) range
-\item Smooth, differentiable, interpretable
-\end{itemize}
+
+\textbf{Logistic function (probability of class 1):}
+\begin{equation}
+p(y=1|\mathbf{x}) = \frac{1}{1 + e^{-(\beta_0 + \boldsymbol{\beta}^\top \mathbf{x})}}
+\end{equation}
+
 \begin{center}
-\includegraphics[width=0.55\textwidth]{01_sigmoid_function/chart.pdf}
+\includegraphics[width=0.50\textwidth]{01_sigmoid_function/chart.pdf}
 \end{center}
-\bottomnote{$\sigma(z) = 1/(1+e^{-z})$ transforms linear combination to probability}
+\bottomnote{Maps any real number to $(0,1)$; smooth, differentiable, invertible}
 \end{frame}
 
 % Slide 5: Decision Boundary
 \begin{frame}[t]{Decision Boundary}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{02_decision_boundary/chart.pdf}
+\includegraphics[width=0.55\textwidth]{02_decision_boundary/chart.pdf}
 \end{center}
-\bottomnote{The decision boundary is where $P(y=1|x) = 0.5$, i.e., $w'x + b = 0$}
+\textbf{Log-odds (logit):}
+\begin{equation}
+\log\frac{p}{1-p} = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
+\end{equation}
+
+\textbf{Decision boundary:} $P(y=1|\mathbf{x}) = 0.5 \iff \mathbf{w}'\mathbf{x} + b = 0$
+\bottomnote{The boundary is a hyperplane; points on one side predict class 1, the other class 0}
 \end{frame}
 
 % Slide 6: Loss Function
 \begin{frame}[t]{Binary Cross-Entropy Loss}
-\textbf{Why Not MSE?}
-\begin{itemize}
-\item MSE with sigmoid creates non-convex loss landscape
-\item Cross-entropy is convex, guarantees global optimum
-\end{itemize}
+\textbf{Maximum Likelihood Estimation:}
+\begin{equation}
+\ell(\boldsymbol{\beta}) = \sum_{i=1}^{N} \bigl[y_i \log p_i + (1-y_i)\log(1-p_i)\bigr]
+\end{equation}
+where $p_i = p(y_i=1|\mathbf{x}_i)$.
+
 \begin{center}
-\includegraphics[width=0.55\textwidth]{03_log_loss/chart.pdf}
+\includegraphics[width=0.48\textwidth]{03_log_loss/chart.pdf}
 \end{center}
-\bottomnote{Heavily penalizes confident wrong predictions}
+\bottomnote{Maximize log-likelihood = minimize cross-entropy loss (convex, guaranteed global optimum)}
 \end{frame}
 
 % Slide 7: Model Evaluation

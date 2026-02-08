@@ -1,7 +1,12 @@
-"""t-SNE on Swiss Roll - Non-linear projection unrolls manifold"""
+"""t-SNE on Swiss Roll - Runs ACTUAL sklearn t-SNE on Swiss roll data.
+Demonstrates that t-SNE can unroll nonlinear manifold structure."""
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+from sklearn.manifold import TSNE
+from sklearn.datasets import make_swiss_roll
 
 CHART_METADATA = {
     'title': 't-SNE on Swiss Roll',
@@ -17,34 +22,29 @@ plt.rcParams.update({
     'axes.spines.right': False,
 })
 
-np.random.seed(42)
+# Generate Swiss roll data using sklearn (same params as 05a)
+X, color = make_swiss_roll(n_samples=1500, noise=0.5, random_state=42)
+
+# Run ACTUAL t-SNE to reduce from 3D to 2D
+tsne = TSNE(n_components=2, perplexity=30, random_state=42, n_iter=1000)
+X_tsne = tsne.fit_transform(X)
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Generate Swiss roll-like data (non-linear manifold)
-n = 300
-t = 1.5 * np.pi * (1 + 2 * np.random.rand(n))
-y_original = 21 * np.random.rand(n)
-
-# Color by position on manifold
-colors = t
-
-# t-SNE projection (non-linear - unrolls manifold)
-tsne_x = t + np.random.randn(n) * 0.3
-tsne_y = y_original / 5 + np.random.randn(n) * 0.3
-
-scatter = ax.scatter(tsne_x, tsne_y, c=colors, cmap='viridis', alpha=0.7, s=40)
-ax.set_title('t-SNE Projection (Non-linear)\nManifold Successfully Unrolled', fontsize=16, fontweight='bold')
+scatter = ax.scatter(X_tsne[:, 0], X_tsne[:, 1], c=color, cmap='viridis',
+                     alpha=0.7, s=15, edgecolors='none')
+ax.set_title('t-SNE Projection of Swiss Roll (Non-linear)\nManifold Structure Preserved',
+             fontsize=16, fontweight='bold')
 ax.set_xlabel('t-SNE Dimension 1', fontweight='bold')
 ax.set_ylabel('t-SNE Dimension 2', fontweight='bold')
-ax.set_aspect('equal')
 ax.grid(True, alpha=0.3)
 
-# Add colorbar
 cbar = fig.colorbar(scatter, ax=ax, shrink=0.8)
 cbar.set_label('Position on Manifold', fontweight='bold')
 
-# Add URL annotation
+for spine in ax.spines.values():
+    spine.set_linewidth(1.5)
+
 plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 

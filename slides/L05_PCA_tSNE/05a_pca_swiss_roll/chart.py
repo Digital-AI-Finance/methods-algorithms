@@ -1,7 +1,12 @@
-"""PCA on Swiss Roll - Linear projection fails to unroll manifold"""
+"""PCA on Swiss Roll - Runs ACTUAL sklearn PCA on Swiss roll data.
+Demonstrates that linear PCA cannot unroll a nonlinear manifold."""
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+from sklearn.decomposition import PCA
+from sklearn.datasets import make_swiss_roll
 
 CHART_METADATA = {
     'title': 'PCA on Swiss Roll',
@@ -17,37 +22,30 @@ plt.rcParams.update({
     'axes.spines.right': False,
 })
 
-np.random.seed(42)
+# Generate Swiss roll data using sklearn
+X, color = make_swiss_roll(n_samples=1500, noise=0.5, random_state=42)
+# X has shape (1500, 3), color is the manifold parameter t
+
+# Run ACTUAL PCA to reduce from 3D to 2D
+pca = PCA(n_components=2, random_state=42)
+X_pca = pca.fit_transform(X)
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Generate Swiss roll-like data (non-linear manifold)
-n = 300
-t = 1.5 * np.pi * (1 + 2 * np.random.rand(n))
-x_original = t * np.cos(t)
-y_original = 21 * np.random.rand(n)
-z_original = t * np.sin(t)
-
-# Color by position on manifold
-colors = t
-
-# PCA projection (linear - projects to first two PCs)
-# For Swiss roll, this creates overlap
-pca_x = x_original + 0.1 * np.random.randn(n)
-pca_y = z_original + 0.1 * np.random.randn(n)
-
-scatter = ax.scatter(pca_x, pca_y, c=colors, cmap='viridis', alpha=0.7, s=40)
-ax.set_title('PCA Projection (Linear)\nStructure Overlaps - Cannot Unroll Manifold', fontsize=16, fontweight='bold')
-ax.set_xlabel('Principal Component 1', fontweight='bold')
-ax.set_ylabel('Principal Component 2', fontweight='bold')
-ax.set_aspect('equal')
+scatter = ax.scatter(X_pca[:, 0], X_pca[:, 1], c=color, cmap='viridis',
+                     alpha=0.7, s=15, edgecolors='none')
+ax.set_title('PCA Projection of Swiss Roll (Linear)\nStructure Overlaps -- Cannot Unroll Manifold',
+             fontsize=16, fontweight='bold')
+ax.set_xlabel(f'PC1 ({pca.explained_variance_ratio_[0]*100:.1f}% var.)', fontweight='bold')
+ax.set_ylabel(f'PC2 ({pca.explained_variance_ratio_[1]*100:.1f}% var.)', fontweight='bold')
 ax.grid(True, alpha=0.3)
 
-# Add colorbar
 cbar = fig.colorbar(scatter, ax=ax, shrink=0.8)
 cbar.set_label('Position on Manifold', fontweight='bold')
 
-# Add URL annotation
+for spine in ax.spines.values():
+    spine.set_linewidth(1.5)
+
 plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 

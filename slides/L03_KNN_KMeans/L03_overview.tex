@@ -110,14 +110,14 @@
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
 \begin{enumerate}
-\item Apply KNN for classification with appropriate K selection
-\item Implement K-Means clustering and evaluate cluster quality
-\item Compare distance metrics and their effects on results
-\item Distinguish between supervised (KNN) and unsupervised (K-Means)
+\item Analyze the bias-variance tradeoff in KNN as a function of $K$ and derive the consistency bound
+\item Prove K-Means convergence and evaluate initialization strategies (K-Means++)
+\item Evaluate cluster validity using silhouette analysis, Hopkins statistic, and Gap statistic
+\item Compare distance metrics and analyze their impact on algorithm performance in high dimensions
 \end{enumerate}
-\vspace{1em}
+\vspace{0.5em}
 \textbf{Finance Applications:} Customer segmentation, fraud detection
-\bottomnote{From parametric models (regression) to instance-based methods}
+\bottomnote{Bloom's Level 4--5: Analyze, Evaluate, Prove, Compare}
 \end{frame}
 
 \begin{frame}[t]{The Business Problem}
@@ -151,6 +151,27 @@
 \includegraphics[width=0.50\textwidth]{02_distance_metrics/chart.pdf}
 \end{center}
 \bottomnote{Choice of metric affects which points are considered ``nearest''}
+\end{frame}
+
+\begin{frame}[t]{Key Equations}
+\textbf{Euclidean distance}:
+\begin{equation}
+d(\mathbf{x}, \mathbf{x}') = \sqrt{\sum_{j=1}^p (x_j - x'_j)^2}
+\end{equation}
+
+\textbf{KNN classification} (majority vote among $k$ nearest neighbors):
+\begin{equation}
+\hat{y} = \text{majority vote among } k \text{ nearest neighbors}
+\end{equation}
+
+\textbf{K-Means objective}:
+\begin{equation}
+\min_{\mu_1,\ldots,\mu_K} \sum_{k=1}^K \sum_{\mathbf{x}_i \in C_k} \|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2
+\end{equation}
+
+\textbf{Silhouette}: $s(i) = \frac{b(i) - a(i)}{\max\{a(i), b(i)\}} \in [-1, 1]$
+
+\bottomnote{$a(i)$ = mean intra-cluster distance; $b(i)$ = mean nearest-cluster distance}
 \end{frame}
 
 \begin{frame}[t]{K-Means: The Algorithm}
@@ -193,7 +214,7 @@
     \item Exercise 3: Compare distance metrics and k values
   \end{itemize}
   \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+  \textbf{Link:} See course materials for Colab notebook
 \end{frame}
 
 \section{Decision Framework}

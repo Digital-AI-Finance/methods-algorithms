@@ -106,6 +106,20 @@
   \tableofcontents
 \end{frame}
 
+% Learning Objectives
+\begin{frame}[t]{Learning Objectives}
+\textbf{By the end of this lecture, you will be able to:}
+\begin{enumerate}
+\item Derive the maximum likelihood estimator for logistic regression via the chain rule
+\item Evaluate model fit using deviance, LRT, AIC/BIC, and Hosmer-Lemeshow test
+\item Analyze the decision boundary geometry and its dependence on feature interactions
+\item Compare logistic regression to alternative classifiers for credit scoring applications
+\end{enumerate}
+\vspace{1em}
+\textbf{Finance Application:} Credit scoring and probability of default (PD)
+\bottomnote{Bloom's Levels 4--5: Analyze, Evaluate, Create}
+\end{frame}
+
 %% PART 1: MATHEMATICAL FOUNDATIONS (Slides 2-8)
 \section{Mathematical Foundations}
 
@@ -208,7 +222,7 @@ $$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \frac{\eta}{n}\mathbf{X}^T(\sigma(\mat
   \begin{equation}
     \text{SE}(\hat{\beta}_j) = \sqrt{[\mathbf{H}^{-1}]_{jj}}
   \end{equation}
-  where $\mathbf{H}$ is the Hessian matrix (measures how steep the loss landscape is around the optimum).
+  where $\mathbf{H}$ is the Hessian matrix of the log-likelihood: $\mathbf{H} = -\mathbf{X}^T\text{diag}(\hat{p}_i(1-\hat{p}_i))\mathbf{X}$ (measures curvature at the optimum).
 
   \vspace{0.3em}
   \textbf{Intuition:}
@@ -286,6 +300,48 @@ $$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \frac{\eta}{n}\mathbf{X}^T(\sigma(\mat
   \textbf{Interpretation:} Values of 0.2--0.4 are considered good for logistic regression
 
   \bottomnote{Deviance drop = model improvement; compare models with Likelihood Ratio test}
+\end{frame}
+
+\begin{frame}{Likelihood Ratio Test (LRT)}
+Compares nested models: reduced ($L_0$) vs.\ full ($L_1$):
+
+\begin{equation}
+\Lambda = -2\left[\ln L(\text{reduced}) - \ln L(\text{full})\right] \sim \chi^2_{df}
+\end{equation}
+
+where $df$ = difference in number of parameters.
+
+\begin{itemize}
+\item More powerful than Wald test for testing multiple coefficients simultaneously
+\item Reject $H_0$ (reduced model adequate) if $\Lambda > \chi^2_{\alpha, df}$
+\item Equivalent to comparing deviances: $\Lambda = D_{\text{reduced}} - D_{\text{full}}$
+\end{itemize}
+
+\textbf{Example}: Test whether adding 3 credit-bureau features improves the PD model:
+$\Lambda = D_{\text{base}} - D_{\text{full}} = 15.7$, $df = 3$, $p = 0.0013$ $\Rightarrow$ significant improvement.
+
+\bottomnote{LRT is the standard for nested model comparison. Use AIC/BIC for non-nested models.}
+\end{frame}
+
+\begin{frame}{Model Selection: AIC and BIC}
+For comparing logistic regression models (including non-nested):
+
+\begin{equation}
+\text{AIC} = -2\ln L + 2k, \qquad \text{BIC} = -2\ln L + k\ln n
+\end{equation}
+
+where $k$ = number of parameters, $n$ = sample size.
+
+\begin{itemize}
+\item \textbf{Lower is better} for both criteria
+\item AIC: asymptotically equivalent to leave-one-out cross-validation
+\item BIC: penalizes complexity more; consistent (selects true model as $n \to \infty$)
+\item Use AIC for prediction-focused models; BIC for parsimonious inference
+\end{itemize}
+
+\textbf{Credit scoring context}: BIC preferred for regulatory models (simpler = more interpretable), AIC for internal risk models where prediction accuracy matters.
+
+\bottomnote{Combine with LRT for nested models and AIC/BIC for non-nested comparisons.}
 \end{frame}
 
 %% PART 2: DECISION BOUNDARIES (Slides 9-12)
@@ -461,6 +517,27 @@ $$P(y=k|\mathbf{x}) = \frac{e^{\mathbf{w}_k^T\mathbf{x}}}{\sum_{j=1}^{K}e^{\math
 \bottomnote{Calibration is crucial when probabilities are used for decision-making}
 \end{frame}
 
+\begin{frame}{Hosmer-Lemeshow Goodness-of-Fit Test}
+Tests whether predicted probabilities match observed frequencies:
+
+\begin{enumerate}
+\item Sort observations by $\hat{p}_i$, divide into $G$ groups (typically $G = 10$)
+\item For each group $g$: compare observed events $O_g$ vs.\ expected $E_g = \sum_{i \in g} \hat{p}_i$
+\end{enumerate}
+
+\begin{equation}
+\hat{C} = \sum_{g=1}^{G} \frac{(O_g - E_g)^2}{E_g(1 - E_g/n_g)} \sim \chi^2_{G-2}
+\end{equation}
+
+\begin{itemize}
+\item Large $\hat{C}$ (small p-value) $\Rightarrow$ reject: model is poorly calibrated
+\item Sensitive to choice of $G$; combine with visual calibration plots
+\item Widely used in credit risk: Basel requires calibration testing for PD models
+\end{itemize}
+
+\bottomnote{Limitation: loses power with very large samples. Consider the le Cessie-van Houwelingen test as alternative.}
+\end{frame}
+
 %% PART 4: REGULARIZATION (Slides 21-24)
 \section{Regularization}
 
@@ -549,7 +626,55 @@ $$\mathcal{L}_{\text{ElasticNet}} = \mathcal{L} + \lambda_1 \sum |w_j| + \lambda
 \ENDFOR
 \STATE \textbf{return} $\mathbf{w}$
 \end{algorithmic}
-\bottomnote{In practice, use quasi-Newton methods (L-BFGS) for faster convergence}
+\bottomnote{In practice, use quasi-Newton methods (L-BFGS) for faster convergence. Implementation note: augment $\mathbf{X}$ with a column of ones to include the bias term $b$ in $\mathbf{w}$.}
+\end{frame}
+
+\begin{frame}{Newton-Raphson / IRLS Optimization}
+Logistic regression is typically solved via \textbf{Iteratively Reweighted Least Squares} (IRLS):
+
+\textbf{Hessian} (second derivative of log-likelihood):
+\begin{equation}
+\mathbf{H} = -\mathbf{X}'\mathbf{W}\mathbf{X}, \quad \mathbf{W} = \text{diag}(p_i(1 - p_i))
+\end{equation}
+
+\textbf{Newton-Raphson update}:
+\begin{equation}
+\boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \mathbf{H}^{-1}\nabla\ell = \boldsymbol{\beta}^{(t)} + (\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'(\mathbf{y} - \mathbf{p})
+\end{equation}
+
+\begin{itemize}
+\item Converges quadratically (much faster than gradient descent)
+\item Each iteration solves a \textbf{weighted least squares} problem (hence ``IRLS'')
+\item Standard errors come directly from $\mathbf{H}^{-1}$: $\text{SE}(\hat{\beta}_j) = \sqrt{[(\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}]_{jj}}$
+\end{itemize}
+
+\bottomnote{This is what statsmodels and R's \texttt{glm()} actually compute. sklearn uses L-BFGS for speed.}
+\end{frame}
+
+\begin{frame}{Complete and Quasi-Complete Separation}
+\textbf{The Problem}: MLE fails when a hyperplane perfectly separates classes
+
+\textbf{Complete separation}: A linear combination of features perfectly predicts all outcomes
+\begin{itemize}
+\item MLE does not exist: $\hat{\beta}_j \to \pm\infty$
+\item Algorithm fails to converge or coefficients explode
+\item Common in small datasets with high-dimensional features
+\end{itemize}
+
+\textbf{Quasi-complete separation}: Perfect separation on all but a few points
+\begin{itemize}
+\item MLE exists but is unstable: inflated coefficients, huge SEs
+\item Predictions unreliable outside training range
+\end{itemize}
+
+\textbf{Solutions}:
+\begin{itemize}
+\item \textbf{Firth's penalized likelihood}: Adds bias reduction penalty
+\item \textbf{Bayesian logistic regression}: Prior regularizes coefficients
+\item \textbf{Detection}: Check for unusually large coefficients or non-convergence warnings
+\end{itemize}
+
+\bottomnote{Critical for small finance datasets (e.g., rare default events with many predictors)}
 \end{frame}
 
 \begin{frame}[t]{scikit-learn Implementation}

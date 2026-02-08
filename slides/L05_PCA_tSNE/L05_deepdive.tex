@@ -120,7 +120,7 @@
 \begin{itemize}
 \item Linear transformation
 \item Components are uncorrelated
-\item Reversible (can reconstruct original data)
+\item Partially reversible (lossy reconstruction when $k < p$)
 \end{itemize}
 \bottomnote{PCA: one of the most fundamental tools in data science}
 \end{frame}
@@ -128,7 +128,7 @@
 \begin{frame}[t]{Mathematical Foundation}
 \textbf{Covariance Matrix:}
 \[
-\Sigma = \frac{1}{n-1} X^T X \quad \text{(centered data)}
+\Sigma = \frac{1}{n-1} X_c^T X_c \quad \text{where } X_c = X - \bar{X} \text{ (mean-centered)}
 \]
 
 \textbf{Eigendecomposition:}
@@ -139,9 +139,55 @@ where $v$ = eigenvector (principal direction), $\lambda$ = eigenvalue (variance)
 
 \textbf{Projection:}
 \[
-Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
+Z = X_c W_k \quad \text{where } X_c \text{ is centered, } W_k = [v_1, \ldots, v_k]
 \]
 \bottomnote{Eigenvalues tell us how much variance each component captures}
+\end{frame}
+
+\begin{frame}[t]{Why Eigenvectors? Optimality Proof}
+\textbf{Find direction $w$ maximizing variance:}
+\[
+\max_{w} w^T \Sigma w \quad \text{subject to } \|w\| = 1
+\]
+
+\textbf{Lagrangian:}
+\[
+L = w^T \Sigma w - \lambda(w^T w - 1)
+\]
+
+\textbf{First-order condition:}
+\[
+\nabla_w L = 2\Sigma w - 2\lambda w = 0
+\]
+
+\textbf{Result:}
+\[
+\Sigma w = \lambda w \quad \text{(eigenvalue equation)}
+\]
+
+\textbf{Maximum variance = largest eigenvalue $\lambda_1$}
+\bottomnote{The constrained optimization proof shows eigenvectors are optimal}
+\end{frame}
+
+\begin{frame}{SVD--PCA Equivalence: The Computational Connection}
+\textbf{Theorem}: The principal components of $X_c$ are the right singular vectors of $X_c$.
+
+\textbf{Proof sketch}:
+\begin{enumerate}
+\item The covariance matrix: $C = \frac{1}{n-1}X_c^\top X_c$
+\item SVD of $X_c$: $X_c = U\Sigma V^\top$
+\item Then: $X_c^\top X_c = V\Sigma^\top U^\top U\Sigma V^\top = V\Sigma^2 V^\top$
+\item Therefore: $C = \frac{1}{n-1}V\Sigma^2 V^\top$
+\item Since $C V = V \cdot \frac{\Sigma^2}{n-1}$, columns of $V$ are eigenvectors of $C$
+\end{enumerate}
+
+\medskip
+\textbf{Eigenvalues}: $\lambda_k = \sigma_k^2/(n-1)$ where $\sigma_k$ are singular values
+
+\medskip
+\textbf{Computational advantage}: SVD is numerically more stable than eigendecomposition of $X_c^\top X_c$ (avoids squaring condition number)
+
+\bottomnote{Practical implementations (scikit-learn, R) use SVD internally, not eigendecomposition.}
 \end{frame}
 
 \begin{frame}[t]{Variance Explained}
@@ -159,7 +205,7 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 \begin{itemize}
 \item Keep 80-95\% of total variance
 \item Use scree plot ``elbow'' method
-\item Kaiser criterion: keep components with $\lambda > 1$
+\item Kaiser criterion: $\lambda > 1$ (valid for correlation matrix / standardized data only)
 \end{itemize}
 \bottomnote{Balance dimensionality reduction with information preservation}
 \end{frame}
@@ -185,7 +231,7 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 \begin{frame}[t]{Reconstruction}
 \textbf{From k components back to original space:}
 \[
-\hat{X} = Z W_k^T = X W_k W_k^T
+\hat{X} = Z W_k^T + \bar{X} \quad \text{(add mean back for original scale)}
 \]
 
 \textbf{Reconstruction Error:}
@@ -202,6 +248,31 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 \bottomnote{Adding more components always reduces error (but diminishing returns)}
 \end{frame}
 
+\begin{frame}[t]{Statistical Inference for PCA}
+\textbf{Bootstrap Confidence Intervals:}
+\begin{itemize}
+\item Resample data, recompute PCA, track loading stability
+\end{itemize}
+
+\textbf{Parallel Analysis:}
+\begin{itemize}
+\item Compare eigenvalues to random data
+\item Keep components where $\lambda_{data} > \lambda_{random}$
+\end{itemize}
+
+\textbf{Cross-Validation for k:}
+\begin{itemize}
+\item Split data, train PCA, test reconstruction on holdout
+\end{itemize}
+
+\textbf{For t-SNE:}
+\begin{itemize}
+\item Run multiple times with different seeds
+\item Unstable clusters may be artifacts
+\end{itemize}
+\bottomnote{MSc-level: always quantify uncertainty in dimensionality reduction}
+\end{frame}
+
 %% PART 2: PCA APPLICATIONS
 \begin{frame}[t]{Part 2: PCA in Finance}
 \textbf{Portfolio Risk Decomposition:}
@@ -209,6 +280,14 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 \item PC1 often represents ``market factor''
 \item PC2-3 may capture sector/size factors
 \item Higher PCs: idiosyncratic risk
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Example: 10-Stock Portfolio}
+\begin{itemize}
+\item PC1 loadings $\approx [0.31, 0.32, 0.30, \ldots]$ --- uniform (market factor)
+\item PC2: tech stocks positive, banks negative (sector rotation)
+\item First 3 PCs explain $\sim$75\% of portfolio variance
 \end{itemize}
 
 \vspace{0.5em}
@@ -220,6 +299,40 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 \item Feature extraction for ML models
 \end{itemize}
 \bottomnote{PCA reveals latent structure in financial data}
+\end{frame}
+
+\begin{frame}[t]{Finance Application: Yield Curve PCA}
+\textbf{The Canonical Finance Example}
+\begin{itemize}
+\item Yield curves decompose into $\sim$3 principal components
+\item PC1 = \textbf{Level} (parallel shift): explains $\sim$85\% variance
+\item PC2 = \textbf{Slope} (steepening/flattening): explains $\sim$10\% variance
+\item PC3 = \textbf{Curvature} (butterfly): explains $\sim$3\% variance
+\end{itemize}
+\vspace{0.3em}
+\textbf{Together explain 98\%+ of yield curve movements}
+\begin{itemize}
+\item Used daily in every bank's risk management system
+\item Foundation for interest rate hedging strategies
+\end{itemize}
+\bottomnote{Level/slope/curvature: industry-standard yield curve decomposition}
+\end{frame}
+
+\begin{frame}[t]{Yield Curve Factor Interpretation}
+\textbf{Typical Loadings Pattern:}
+\begin{itemize}
+\item \textbf{PC1 (Level):} Flat loadings across maturities---all rates move together
+\item \textbf{PC2 (Slope):} Negative short end, positive long end---curve steepens/flattens
+\item \textbf{PC3 (Curvature):} Negative at ends, positive in middle---butterfly trades
+\end{itemize}
+\vspace{0.3em}
+\textbf{Trading Applications:}
+\begin{itemize}
+\item Duration-neutral hedging (hedge PC1 exposure)
+\item Curve trades (exploit PC2 movements)
+\item Butterfly spreads (exploit PC3 movements)
+\end{itemize}
+\bottomnote{PCA on interest rates is foundational fixed-income knowledge}
 \end{frame}
 
 \begin{frame}[t]{PCA Limitations}
@@ -234,11 +347,11 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 \vspace{0.5em}
 \textbf{Solutions:}
 \begin{itemize}
-\item Kernel PCA (non-linear)
+\item Kernel PCA (implicit non-linear mapping via kernel trick)
 \item Robust PCA (outlier-resistant)
 \item t-SNE/UMAP (for visualization)
 \end{itemize}
-\bottomnote{PCA assumes linear structure and Gaussian-like distributions}
+\bottomnote{PCA assumes linear structure; Gaussian NOT required but PCA is optimal for Gaussian data}
 \end{frame}
 
 \section{Solution}
@@ -269,6 +382,8 @@ Z = X W_k \quad \text{where } W_k = [v_1, v_2, \ldots, v_k]
 p_{j|i} = \frac{\exp(-||x_i - x_j||^2 / 2\sigma_i^2)}{\sum_{k \neq i} \exp(-||x_i - x_k||^2 / 2\sigma_i^2)}
 \]
 
+\textbf{Symmetrize:} $p_{ij} = \frac{p_{j|i} + p_{i|j}}{2n}$ (joint probability)
+
 \textbf{Low-dimensional similarity (t-distribution):}
 \[
 q_{ij} = \frac{(1 + ||y_i - y_j||^2)^{-1}}{\sum_{k \neq l} (1 + ||y_k - y_l||^2)^{-1}}
@@ -278,7 +393,10 @@ q_{ij} = \frac{(1 + ||y_i - y_j||^2)^{-1}}{\sum_{k \neq l} (1 + ||y_k - y_l||^2)
 \[
 KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
 \]
-\bottomnote{t-distribution has heavier tails, allowing better separation in low-D}
+
+Note: KL is asymmetric---penalizes large $p_{ij}$ with small $q_{ij}$ more than reverse. This preserves local structure (nearby points stay nearby).
+
+\bottomnote{t-distribution solves the \textbf{crowding problem}: in high-D, moderate distances become small in low-D, causing points to collapse. Heavy tails allow dissimilar points to spread apart.}
 \end{frame}
 
 \begin{frame}[t]{Perplexity: Low (Local Focus)}
@@ -306,6 +424,9 @@ KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
 
 \begin{frame}[t]{Perplexity Guidelines}
 \textbf{Perplexity} controls the balance between local and global structure:
+
+Perplexity $= 2^H$ where $H$ is entropy; roughly the effective number of neighbors considered.
+
 \begin{itemize}
 \item Low perplexity (5-10): Focus on very local structure
 \item Medium perplexity (30-50): Balanced (default)
@@ -328,7 +449,7 @@ KL(P||Q) = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
 \item Non-deterministic (run multiple times)
 \item Cluster sizes are not meaningful
 \item Distances between clusters are not meaningful
-\item Slow for large datasets (O($n^2$))
+\item Slow for large datasets (O($n^2$); Barnes-Hut approximation gives O($n \log n$))
 \end{itemize}
 
 \vspace{0.5em}
@@ -370,7 +491,7 @@ Type & Linear & Non-linear \\
 Speed & Fast $O(np^2)$ & Slow $O(n^2)$ \\
 Deterministic & Yes & No \\
 Preserves & Global variance & Local neighbors \\
-Reversible & Yes & No \\
+Reversible & Lossy if $k<p$ & No \\
 Use for ML & Yes (preprocessing) & No \\
 Visualization & Okay & Excellent \\
 \bottomrule
@@ -383,14 +504,14 @@ Visualization & Okay & Excellent \\
 \begin{center}
 \includegraphics[width=0.55\textwidth]{06a_original_clusters/chart.pdf}
 \end{center}
-\bottomnote{High-dimensional data (50 dims): clusters overlap when viewed in 2D}
+\bottomnote{MNIST digits (64 dims): classes overlap when viewed in raw pixel space}
 \end{frame}
 
 \begin{frame}[t]{Cluster Preservation: PCA Projection}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{06b_pca_cluster_projection/chart.pdf}
 \end{center}
-\bottomnote{PCA finds directions of max variance - some cluster separation}
+\bottomnote{PCA finds max-variance directions -- partial digit separation}
 \end{frame}
 
 \begin{frame}[t]{Cluster Preservation: t-SNE Projection}
@@ -399,7 +520,7 @@ Visualization & Okay & Excellent \\
 \includegraphics[width=0.50\textwidth]{06c_tsne_cluster_projection/chart.pdf}
 \end{center}
 \vspace{-0.5em}
-\bottomnote{t-SNE preserves local structure - clear cluster separation}
+\bottomnote{t-SNE preserves local neighborhoods -- clear digit cluster separation}
 \end{frame}
 
 \begin{frame}[t]{When to Use Which}
@@ -432,7 +553,7 @@ Visualization & Okay & Excellent \\
     \item Exercise 3: Compare PCA vs t-SNE for different datasets
   \end{itemize}
   \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+  \textbf{Link:} \url{https://colab.research.google.com/} See course materials
 \end{frame}
 
 \section{Decision Framework}
@@ -457,6 +578,7 @@ Visualization & Okay & Excellent \\
 \item \texttt{PCA(n\_components=0.95)}: Keep 95\% variance
 \item \texttt{pca.explained\_variance\_ratio\_}: Variance per component
 \item \texttt{pca.inverse\_transform()}: Reconstruct original
+\item Note: sklearn uses truncated SVD internally (more stable than eigendecomposition)
 \end{itemize}
 \normalsize
 
@@ -487,7 +609,7 @@ Visualization & Okay & Excellent \\
 \item Need to embed new data points
 \item Want more preserved global structure
 \end{itemize}
-\bottomnote{UMAP often preferred over t-SNE in modern practice}
+\bottomnote{UMAP increasingly popular; see McInnes et al. (2018) for comparison}
 \end{frame}
 
 \section{Summary}

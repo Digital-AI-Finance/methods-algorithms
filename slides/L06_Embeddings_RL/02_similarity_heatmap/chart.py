@@ -19,7 +19,7 @@ CHART_METADATA = {
 
 np.random.seed(42)
 
-fig, ax = plt.subplots(figsize=(10, 8))
+fig, ax = plt.subplots(figsize=(10, 6))
 
 # Words for comparison
 words = ['stock', 'equity', 'bond', 'risk', 'volatility', 'buy', 'sell', 'bullish', 'bearish']

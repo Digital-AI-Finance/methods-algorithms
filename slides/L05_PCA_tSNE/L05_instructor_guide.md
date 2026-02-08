@@ -82,7 +82,7 @@ By the end of this session, students will be able to:
 - Show side-by-side PCA vs t-SNE
 - Run t-SNE multiple times with different seeds
 
-### Practice Phase (75 min)
+### Practice Phase (60 min)
 
 **Hands-on Notebook**:
 - Students work through L05_pca_tsne.ipynb
@@ -118,7 +118,7 @@ $$\text{Explained Variance}_i = \frac{\lambda_i}{\sum_j \lambda_j}$$
 | Method | 45 min | PCA math, t-SNE intuition |
 | Solution | 45 min | Live coding both methods |
 | **Break** | 15 min | |
-| Practice | 60 min | Portfolio analysis |
+| Practice | 45 min | Portfolio analysis |
 | Q&A | 15 min | Preview embeddings/RL |
 
 ## Common Student Questions

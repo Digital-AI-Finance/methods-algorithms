@@ -105,6 +105,19 @@
   \tableofcontents
 \end{frame}
 
+\begin{frame}[t]{Learning Objectives}
+\textbf{By the end of this lecture, you will be able to:}
+\begin{enumerate}
+\item Analyze the bias-variance tradeoff in KNN and derive its asymptotic error bounds
+\item Evaluate clustering validity using statistical tests (Hopkins, Gap statistic, silhouette)
+\item Prove K-Means convergence and analyze computational complexity
+\item Compare distance metrics and assess their suitability for high-dimensional finance data
+\end{enumerate}
+\vspace{0.5em}
+\textbf{Finance Applications:} Customer segmentation, fraud detection
+\bottomnote{Bloom's Level 4--5: Analyze, Evaluate, Prove, Compare}
+\end{frame}
+
 %% PART 1: KNN (Slides 2-12)
 \section{K-Nearest Neighbors}
 
@@ -143,6 +156,7 @@ $$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i - y_i|^p\right)^{1/p}$$
 \item $p=1$: Manhattan (L1)
 \item $p=2$: Euclidean (L2)
 \item $p=\infty$: Chebyshev (max absolute difference)
+\item Note: $p < 1$ violates triangle inequality (not a true metric)
 \end{itemize}
 \vspace{0.5em}
 \textbf{Choosing p}
@@ -152,6 +166,25 @@ $$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i - y_i|^p\right)^{1/p}$$
 \item Higher $p$: Sensitive to large single differences
 \end{itemize}
 \bottomnote{In high dimensions, all distances become similar (curse of dimensionality)}
+\end{frame}
+
+\begin{frame}[t]{Beyond Minkowski: Cosine \& Mahalanobis}
+\textbf{Cosine Similarity} (critical for text/embeddings)
+$$\cos(\mathbf{x}, \mathbf{y}) = \frac{\mathbf{x} \cdot \mathbf{y}}{\|\mathbf{x}\| \|\mathbf{y}\|}$$
+\begin{itemize}
+\item Measures angle, not magnitude
+\item Range: $[-1, 1]$ where 1 = identical direction
+\item Use for: document similarity, word embeddings, high-dimensional sparse data
+\end{itemize}
+\vspace{0.5em}
+\textbf{Mahalanobis Distance} (accounts for correlation)
+$$d_M(\mathbf{x}, \mathbf{y}) = \sqrt{(\mathbf{x}-\mathbf{y})^T \Sigma^{-1} (\mathbf{x}-\mathbf{y})}$$
+\begin{itemize}
+\item Considers feature covariance $\Sigma$
+\item Unit-less, scale-invariant
+\item Detects outliers accounting for correlation structure
+\end{itemize}
+\bottomnote{Choose metric based on data type: Euclidean for dense, Cosine for sparse/text}
 \end{frame}
 
 \begin{frame}[t]{KNN Decision Boundaries}
@@ -184,6 +217,24 @@ $$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i - y_i|^p\right)^{1/p}$$
 \bottomnote{Small K for complex patterns, larger K for noisy data}
 \end{frame}
 
+\begin{frame}[t]{K Selection via Cross-Validation}
+\textbf{GridSearchCV for Optimal K}
+\begin{itemize}
+\item \texttt{from sklearn.model\_selection import GridSearchCV}
+\item \texttt{param\_grid = \{'n\_neighbors': range(1, 21, 2)\}}
+\item \texttt{grid = GridSearchCV(KNeighborsClassifier(), param\_grid, cv=5)}
+\item \texttt{grid.fit(X\_train, y\_train)}
+\item \texttt{best\_k = grid.best\_params\_['n\_neighbors']}
+\end{itemize}
+\vspace{0.3em}
+\textbf{Validation Curve}
+\begin{itemize}
+\item Plot accuracy vs K for training and validation sets
+\item Choose K where validation accuracy peaks (before overfitting)
+\end{itemize}
+\bottomnote{Cross-validation provides objective K selection}
+\end{frame}
+
 \begin{frame}[t]{Weighted KNN}
 \textbf{Problem with Equal Voting}
 \begin{itemize}
@@ -191,11 +242,12 @@ $$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{n}|x_i - y_i|^p\right)^{1/p}$$
 \item A distant neighbor counts as much as closest neighbor
 \end{itemize}
 \vspace{0.5em}
-\textbf{Solution: Distance Weighting}
-$$w_i = \frac{1}{d(\mathbf{x}, \mathbf{x}_i)^2}$$
+\textbf{Solution: Inverse-Distance Weighting}
+$$\hat{y} = \frac{\sum_{i \in N_k(\mathbf{x})} w_i y_i}{\sum_{i \in N_k(\mathbf{x})} w_i} \quad \text{where } w_i = \frac{1}{d(\mathbf{x}, \mathbf{x}_i)}$$
 \begin{itemize}
 \item Closer neighbors get higher weight
 \item Reduces sensitivity to K choice
+\item For $d=0$ (exact match): return that point's class directly
 \end{itemize}
 \vspace{0.3em}
 \textbf{In scikit-learn}
@@ -221,6 +273,12 @@ Without scaling:
 \item \textbf{Standardization}: $z = \frac{x - \mu}{\sigma}$ (mean=0, std=1)
 \item \textbf{Min-Max}: $x' = \frac{x - x_{min}}{x_{max} - x_{min}}$ (range [0,1])
 \end{itemize}
+\vspace{0.2em}
+\textbf{Edge Cases}
+\begin{itemize}
+\item If $\sigma = 0$ (constant feature): drop feature or set $z=0$
+\item If $x_{max} = x_{min}$ (constant): drop feature or set $x'=0$
+\end{itemize}
 \vspace{0.3em}
 \textbf{Rule}: Always scale features for distance-based methods!
 \bottomnote{StandardScaler for Gaussian-like features, MinMaxScaler for bounded}
@@ -231,7 +289,7 @@ Without scaling:
 
 In high dimensions:
 \begin{itemize}
-\item All points become approximately equidistant
+\item All points become approximately equidistant (Beyer et al., 1999)
 \item ``Nearest neighbor'' becomes meaningless
 \item Exponentially more data needed
 \end{itemize}
@@ -242,7 +300,7 @@ In high dimensions:
 \item \textbf{Feature selection}: keep only relevant features
 \item \textbf{Use domain knowledge}: select meaningful features
 \end{itemize}
-\bottomnote{KNN works best with moderate number of features (<20)}
+\bottomnote{KNN works best with moderate number of features (typically $d < 15-20$, problem-dependent)}
 \end{frame}
 
 \begin{frame}[t]{KNN: Computational Considerations}
@@ -254,7 +312,7 @@ In high dimensions:
 \vspace{0.5em}
 \textbf{Acceleration Techniques}
 \begin{itemize}
-\item \textbf{KD-Tree}: $O(d \log n)$ average for low $d$
+\item \textbf{KD-Tree}: $O(d \log n)$ average for $d < 15$ (degrades to $O(n)$ in high dimensions)
 \item \textbf{Ball Tree}: Works better in higher dimensions
 \item \textbf{Approximate NN}: Trade accuracy for speed
 \end{itemize}
@@ -286,17 +344,76 @@ In high dimensions:
 \bottomnote{Also available: KNeighborsRegressor for regression tasks}
 \end{frame}
 
+\begin{frame}[t]{KNN: Theoretical Foundations}
+\textbf{Cover \& Hart (1967) Consistency Theorem}
+\begin{itemize}
+\item As $n \to \infty$: 1-NN error rate $\leq 2 \times$ Bayes error
+\item KNN is \textbf{universally consistent}: converges to optimal
+\item Requires: $K \to \infty$ but $K/n \to 0$
+\end{itemize}
+\vspace{0.5em}
+\textbf{VC Dimension}
+\begin{itemize}
+\item 1-NN has infinite VC dimension in general
+\item Shattering depends on geometry, not sample size
+\item Implications: prone to overfitting without regularization (large K)
+\end{itemize}
+\vspace{0.3em}
+\textbf{Practical Implication}: KNN's asymptotic optimality requires LARGE datasets
+\bottomnote{The 2× Bayes error bound makes KNN a strong baseline}
+\end{frame}
+
+\begin{frame}{Cover \& Hart (1967): Proof Sketch}
+\textbf{Theorem}: As $n \to \infty$, $K \to \infty$, $K/n \to 0$, the KNN error rate $R^*_{\text{KNN}} \to R^*$ (Bayes rate).
+
+\textbf{Proof idea} (1-NN case, binary classification):
+
+\begin{enumerate}
+\item As $n \to \infty$, the nearest neighbor $\mathbf{x}_{(1)} \to \mathbf{x}$ (converges to query point)
+\item The 1-NN error at $\mathbf{x}$ is:
+\end{enumerate}
+\begin{equation}
+R_{1\text{-NN}}(\mathbf{x}) = \eta(\mathbf{x})(1 - \eta(\mathbf{x})) + (1 - \eta(\mathbf{x}))\eta(\mathbf{x}) = 2\eta(\mathbf{x})(1 - \eta(\mathbf{x}))
+\end{equation}
+where $\eta(\mathbf{x}) = P(Y=1|\mathbf{x})$.
+
+Since $R^*(\mathbf{x}) = \min(\eta, 1-\eta)$ and $2\eta(1-\eta) \leq 2R^*(1-R^*) \leq 2R^*$:
+\begin{equation}
+R^* \leq R_{1\text{-NN}} \leq 2R^*(1 - R^*)
+\end{equation}
+
+\bottomnote{The 1-NN error is at most twice the Bayes rate. For $K$-NN with $K/n \to 0$: $R_{K\text{-NN}} \to R^*$ exactly.}
+\end{frame}
+
+\begin{frame}[t]{Bias-Variance Decomposition for KNN}
+For KNN regression, the expected prediction error at $\mathbf{x}$ decomposes as:
+
+\begin{equation}
+E[(\hat{f}_K(\mathbf{x}) - Y)^2] = \underbrace{\text{Bias}^2(\hat{f}_K(\mathbf{x}))}_{\text{increases with } K} + \underbrace{\text{Var}(\hat{f}_K(\mathbf{x}))}_{\text{decreases with } K} + \sigma^2
+\end{equation}
+
+For the KNN estimator $\hat{f}_K(\mathbf{x}) = \frac{1}{K}\sum_{i \in N_K(\mathbf{x})} y_i$:
+
+\begin{itemize}
+\item \textbf{Variance}: $\text{Var}(\hat{f}_K) = \frac{\sigma^2}{K}$ (averaging $K$ neighbors reduces variance)
+\item \textbf{Bias}: $\text{Bias}(\hat{f}_K) \approx f(\mathbf{x}) - \frac{1}{K}\sum_{i \in N_K} f(\mathbf{x}_i)$ (larger $K$ $\Rightarrow$ neighbors farther away $\Rightarrow$ more bias)
+\item \textbf{Optimal $K$}: balances this tradeoff; found via cross-validation
+\end{itemize}
+
+\bottomnote{At $K=1$: zero bias, variance $= \sigma^2$. At $K=n$: high bias (predicts global mean), variance $= \sigma^2/n$.}
+\end{frame}
+
 \section{Practice}
 
 \begin{frame}[t]{Hands-on Exercise}
   \textbf{Open the Colab Notebook}
   \begin{itemize}
-    \item Exercise 1: Implement KNN classifier from scratch
-    \item Exercise 2: Apply K-Means to customer segmentation data
-    \item Exercise 3: Compare distance metrics and k values
+    \item Exercise 1: Implement weighted KNN with distance weighting
+    \item Exercise 2: Compare Gap statistic vs Elbow for K selection
+    \item Exercise 3: Apply SMOTE for imbalanced fraud detection
   \end{itemize}
   \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} [TBD]
+  \textbf{Link:} See course materials for Colab notebook
 \end{frame}
 
 %% PART 2: K-MEANS (Slides 13-24)
@@ -327,7 +444,8 @@ where $\mu_k$ is the centroid of cluster $C_k$
 \REPEAT
 \STATE \textbf{Assignment}: assign each point to nearest centroid
 \STATE \textbf{Update}: recompute centroids as cluster means
-\UNTIL{centroids don't change (or max iterations)}
+\STATE \textbf{Handle empty}: if cluster empty, reinitialize from farthest point
+\UNTIL{centroid change $< \epsilon$ (e.g., $10^{-4}$) or max iterations}
 \STATE \textbf{return} cluster assignments, centroids
 \end{algorithmic}
 \vspace{0.5em}
@@ -337,6 +455,41 @@ where $\mu_k$ is the centroid of cluster $C_k$
 \item May converge to local optimum
 \end{itemize}
 \bottomnote{Each iteration: $O(nKd)$ where $n$ = samples, $K$ = clusters, $d$ = features}
+\end{frame}
+
+\begin{frame}[t]{K-Means Convergence Proof}
+\textbf{Theorem}: Lloyd's algorithm converges in a finite number of iterations.
+
+\textbf{Proof}: The WCSS objective $J = \sum_{k=1}^{K}\sum_{\mathbf{x}_i \in C_k} \|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2$ is:
+
+\begin{enumerate}
+\item \textbf{Assignment step} (fix $\boldsymbol{\mu}$, optimize $C$): Assigning each point to its nearest centroid minimizes $J$ $\Rightarrow$ $J$ decreases or stays equal
+\item \textbf{Update step} (fix $C$, optimize $\boldsymbol{\mu}$): The mean $\boldsymbol{\mu}_k = \frac{1}{|C_k|}\sum_{\mathbf{x}_i \in C_k} \mathbf{x}_i$ minimizes within-cluster sum of squares $\Rightarrow$ $J$ decreases or stays equal
+\end{enumerate}
+
+Since $J \geq 0$ and strictly decreasing at each step, and there are finitely many partitions of $n$ points into $K$ clusters: \textbf{convergence is guaranteed}. $\square$
+
+\textbf{NP-hardness}: Finding the globally optimal K-Means solution is NP-hard (Aloise et al., 2009). Lloyd's algorithm finds a local optimum; K-Means++ initialization provides an $O(\log k)$-competitive approximation guarantee.
+
+\bottomnote{This is a coordinate descent argument: alternating optimization of two blocks ($C$ and $\boldsymbol{\mu}$) on a bounded objective.}
+\end{frame}
+
+\begin{frame}[t]{K-Means as EM Special Case}
+\textbf{Connection to Expectation-Maximization}
+\begin{itemize}
+\item K-Means = ``Hard EM'' for Gaussian Mixture Models
+\item Assumes: spherical Gaussians with equal variance
+\item E-step: assign points to nearest centroid (hard assignment)
+\item M-step: update centroids as cluster means
+\end{itemize}
+\vspace{0.5em}
+\textbf{Why This Matters}
+\begin{itemize}
+\item Explains WHY convergence is guaranteed (EM always converges)
+\item Explains WHY K-Means assumes spherical clusters
+\item Opens door to soft clustering via GMM (next course)
+\end{itemize}
+\bottomnote{Understanding EM connection deepens theoretical understanding}
 \end{frame}
 
 \begin{frame}[t]{K-Means: Visualization}
@@ -362,7 +515,7 @@ where $\mu_k$ is the centroid of cluster $C_k$
 \end{itemize}
 \vspace{0.3em}
 \textbf{Result}: Much better starting point, fewer iterations
-\bottomnote{K-Means++ gives provably better initialization with theoretical guarantees}
+\bottomnote{K-Means++ achieves $O(\log k)$-competitive: expected cost $\leq 8(\ln k + 2) \times$ optimal (Arthur \& Vassilvitskii, 2007)}
 \end{frame}
 
 \begin{frame}[t]{Choosing K: Elbow Method}
@@ -386,6 +539,7 @@ $$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}$$
 \item $s \approx 1$: point is well-matched to cluster
 \item $s \approx 0$: point is on boundary
 \item $s < 0$: point may be in wrong cluster
+\item Singleton cluster: $s(i) = 0$ by convention
 \end{itemize}
 \bottomnote{Average silhouette score summarizes overall clustering quality}
 \end{frame}
@@ -397,11 +551,43 @@ $$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}$$
 \bottomnote{All clusters should have similar width and scores above average line}
 \end{frame}
 
+\begin{frame}[t]{Should We Cluster? Hopkins Statistic}
+\textbf{Before Clustering: Test for Cluster Tendency}
+$$H = \frac{\sum u_i}{\sum u_i + \sum w_i}$$
+\begin{itemize}
+\item $u_i$ = distances from random points to nearest data point
+\item $w_i$ = distances from data points to nearest neighbor
+\item $H \approx 0.5$: uniform distribution (no clusters)
+\item $H > 0.75$: significant clustering tendency
+\end{itemize}
+\vspace{0.3em}
+\textbf{Use Case}: Before running K-Means, verify data HAS cluster structure
+\bottomnote{Don't cluster uniform data - Hopkins test catches this}
+\end{frame}
+
+\begin{frame}[t]{Gap Statistic for K Selection}
+\textbf{The Problem with Elbow Method}
+\begin{itemize}
+\item Elbow is subjective - where exactly IS the elbow?
+\item No formal statistical test
+\end{itemize}
+\vspace{0.5em}
+\textbf{Gap Statistic (Tibshirani et al., 2001)}
+$$\text{Gap}_n(k) = E_n^*[\log W_k] - \log W_k$$
+where $W_k = \sum_{r=1}^k \frac{1}{2|C_r|}\sum_{i,j \in C_r} \|x_i - x_j\|^2$ and $E_n^*$ is computed over reference distributions.
+
+\begin{itemize}
+\item Choose smallest K where: $\text{Gap}(k) \geq \text{Gap}(k+1) - s_{k+1}$
+\item $s_{k+1}$ = standard error from bootstrap reference samples
+\end{itemize}
+\bottomnote{Gap statistic provides statistical justification for K selection}
+\end{frame}
+
 \begin{frame}[t]{K-Means: Decision Regions}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{06_voronoi/chart.pdf}
 \end{center}
-\bottomnote{K-Means creates Voronoi tessellation around centroids}
+\bottomnote{K-Means creates Voronoi tessellation: regions where all points are closest to one centroid}
 \end{frame}
 
 \begin{frame}[t]{K-Means Assumptions}
@@ -486,42 +672,45 @@ Output & Class label & Cluster ID \\
 \end{frame}
 
 \begin{frame}[t]{Finance Application: Customer Segmentation}
-\textbf{Problem}: Group customers for targeted marketing
-
-\textbf{Features}
+\textbf{RFM Analysis} (Industry Standard)
 \begin{itemize}
-\item Transaction frequency
-\item Average transaction amount
-\item Account balance
-\item Product holdings
+\item \textbf{R}ecency: Days since last transaction
+\item \textbf{F}requency: Number of transactions in period
+\item \textbf{M}onetary: Total/average transaction value
 \end{itemize}
 \vspace{0.5em}
-\textbf{K-Means Solution}
+\textbf{K-Means on RFM Features}
 \begin{itemize}
-\item Cluster into segments (e.g., K=4)
-\item Profile each segment
-\item Tailor offerings to segment needs
+\item Standardize each RFM dimension (different scales!)
+\item Cluster into segments (typically K=4-6)
+\item Profile: ``Champions'' (high R,F,M) vs ``At Risk'' (low R)
 \end{itemize}
-\bottomnote{Example segments: High-value frequent, Dormant, New/Growing, Price-sensitive}
+\vspace{0.3em}
+\textbf{Business Value}
+\begin{itemize}
+\item Customer Lifetime Value (CLV) prediction per segment
+\item Targeted retention campaigns by segment risk
+\end{itemize}
+\bottomnote{RFM segmentation is foundational for CRM and marketing analytics}
 \end{frame}
 
 \begin{frame}[t]{Finance Application: Fraud Detection}
-\textbf{Problem}: Flag suspicious transactions
-
-\textbf{KNN Approach}
+\textbf{CRITICAL: Class Imbalance Problem}
 \begin{itemize}
-\item Features: amount, time, location, merchant category
-\item Find K similar past transactions
-\item If most neighbors are fraud, flag as suspicious
+\item Fraud is typically $<$1\% of transactions (100:1 ratio)
+\item Naive KNN majority vote: ALWAYS predicts non-fraud
+\item 99\% accuracy but detects ZERO fraud!
 \end{itemize}
 \vspace{0.5em}
-\textbf{K-Means Approach}
+\textbf{Solutions for Imbalanced Data}
 \begin{itemize}
-\item Cluster ``normal'' transactions
-\item New transaction far from all centroids = anomaly
-\item Combined with distance threshold
+\item \textbf{SMOTE}: Synthetic Minority Oversampling TEchnique
+\item \textbf{Weighted KNN}: Higher weight for minority class neighbors
+\item \textbf{Cost-sensitive}: False Negative costs $>>$ False Positive
+\item \textbf{Anomaly score}: Use distance to K-th neighbor, not vote
+\item Use \textbf{Precision-Recall AUC}, NOT accuracy!
 \end{itemize}
-\bottomnote{KNN needs labeled fraud examples, K-Means detects deviation from normal}
+\bottomnote{Always check class distribution before applying majority vote!}
 \end{frame}
 
 \begin{frame}[t]{When to Use What}
@@ -550,6 +739,25 @@ Output & Class label & Cluster ID \\
 \bottomnote{Start with KNN for classification, K-Means for clustering}
 \end{frame}
 
+\begin{frame}[t]{Alternative Clustering: DBSCAN and Hierarchical}
+\textbf{DBSCAN} (Density-Based Spatial Clustering):
+\begin{itemize}
+\item \textbf{Core point}: has $\geq$ minPts neighbors within radius $\varepsilon$
+\item \textbf{Border point}: within $\varepsilon$ of a core point but not itself core
+\item \textbf{Noise}: neither core nor border $\Rightarrow$ automatically detected as outliers
+\item Advantage: discovers non-spherical clusters; does not require $K$
+\end{itemize}
+
+\textbf{Hierarchical (Agglomerative)} Clustering:
+\begin{itemize}
+\item Bottom-up: each point starts as its own cluster, iteratively merge closest pairs
+\item Linkage criteria: single (min), complete (max), Ward (minimize variance)
+\item Produces a \textbf{dendrogram}: cut at desired height to get $K$ clusters
+\end{itemize}
+
+\bottomnote{Use DBSCAN when clusters have irregular shapes. Use hierarchical when you want to explore multiple $K$ values via the dendrogram.}
+\end{frame}
+
 \begin{frame}[t]{Alternatives to Consider}
 \textbf{Instead of KNN}
 \begin{itemize}
@@ -560,12 +768,11 @@ Output & Class label & Cluster ID \\
 \vspace{0.5em}
 \textbf{Instead of K-Means}
 \begin{itemize}
-\item Unknown K: DBSCAN (density-based)
-\item Hierarchical structure: agglomerative clustering
 \item Soft assignments: Gaussian Mixture Models
 \item Non-spherical: spectral clustering
+\item Streaming data: Mini-Batch K-Means
 \end{itemize}
-\bottomnote{DBSCAN automatically determines number of clusters}
+\bottomnote{Choose algorithm based on data characteristics and problem requirements}
 \end{frame}
 
 %% SUMMARY

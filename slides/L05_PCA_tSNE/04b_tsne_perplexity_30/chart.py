@@ -1,7 +1,11 @@
-"""t-SNE with Default Perplexity (30) - Balanced view"""
+"""t-SNE with Default Perplexity (30) - Runs ACTUAL sklearn t-SNE on blob data."""
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+from sklearn.manifold import TSNE
+from sklearn.datasets import make_blobs
 
 CHART_METADATA = {
     'title': 't-SNE Default Perplexity',
@@ -17,41 +21,42 @@ plt.rcParams.update({
     'axes.spines.right': False,
 })
 
+MLPURPLE = '#3333B2'
 MLBLUE = '#0066CC'
+MLORANGE = '#FF7F0E'
 MLGREEN = '#2CA02C'
 MLRED = '#D62728'
+MLLAVENDER = '#ADADE0'
 
-np.random.seed(42)
+# Generate actual high-dimensional clustered data (same as 04a for consistency)
+X, y = make_blobs(n_samples=300, centers=4, n_features=10,
+                  random_state=42, cluster_std=2.0)
 
-# Generate clustered data
-n_per_cluster = 50
-centers = [(-3, 0), (0, 3), (3, 0)]
-colors = [MLBLUE, MLGREEN, MLRED]
+# Run ACTUAL t-SNE with perplexity=30
+tsne = TSNE(n_components=2, perplexity=30, random_state=42, n_iter=1000)
+X_embedded = tsne.fit_transform(X)
+
+# Plot with course colors
+cluster_colors = [MLBLUE, MLORANGE, MLGREEN, MLRED]
+cluster_names = ['Cluster 1', 'Cluster 2', 'Cluster 3', 'Cluster 4']
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
-perplexity = 30
-# Medium perplexity: balanced view
-spread_factor = 0.3 + (perplexity / 100) * 0.7
-separation = 3 - (perplexity / 100) * 1.5
+for i in range(4):
+    mask = y == i
+    ax.scatter(X_embedded[mask, 0], X_embedded[mask, 1],
+               c=cluster_colors[i], alpha=0.7, s=50, label=cluster_names[i],
+               edgecolors='white', linewidths=0.3)
 
-for i, (cx, cy) in enumerate(centers):
-    n = n_per_cluster
-    x = np.random.randn(n) * spread_factor + cx * separation / 3
-    y = np.random.randn(n) * spread_factor + cy * separation / 3
-    ax.scatter(x, y, c=colors[i], alpha=0.7, s=50, label=f'Cluster {i+1}')
-
-ax.set_title('t-SNE: Perplexity = 30\n(Balanced Local/Global)', fontsize=16, fontweight='bold')
+ax.set_title('t-SNE: Perplexity = 30\n(Balanced Local/Global Structure)', fontsize=16, fontweight='bold')
 ax.set_xlabel('t-SNE Dimension 1', fontweight='bold')
 ax.set_ylabel('t-SNE Dimension 2', fontweight='bold')
-ax.legend(loc='upper right')
-ax.set_aspect('equal')
+ax.legend(loc='best', framealpha=0.9)
 ax.grid(True, alpha=0.3)
 
 for spine in ax.spines.values():
     spine.set_linewidth(1.5)
 
-# Add URL annotation
 plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 
