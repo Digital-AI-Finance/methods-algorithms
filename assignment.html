@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Group Assignment - Methods & Algorithms</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;background:#f6f8fa;color:#24292e;font-size:12px;line-height:1.5}
+a{color:#0066CC;text-decoration:none}
+a:hover{text-decoration:underline}
+.nav{background:#1a1a4e;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.nav-title{color:#fff;font-weight:600;font-size:14px}
+.nav-links{display:flex;gap:16px}
+.nav-links a{color:#fff;font-size:11px;opacity:0.8;text-decoration:none}
+.nav-links a:hover{opacity:1}
+.content{max-width:900px;margin:0 auto;padding:16px 12px}
+.card{background:#fff;border:1px solid #e1e4e8;border-radius:6px;padding:12px;margin-bottom:16px}
+.section-title{font-size:15px;font-weight:700;color:#0066CC;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #e1e4e8}
+.section-num{display:inline-block;background:#0066CC;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-right:6px;vertical-align:middle}
+h3{font-size:12px;font-weight:700;color:#24292e;margin:10px 0 6px}
+p,li{font-size:11px;color:#24292e;line-height:1.5}
+ul,ol{margin:4px 0 8px 18px}
+li{margin-bottom:3px}
+table{width:100%;font-size:10px;border-collapse:collapse;margin:8px 0}
+th,td{padding:4px 8px;text-align:left;border-bottom:1px solid #e1e4e8}
+th{background:#f6f8fa;font-weight:600}
+td.center,th.center{text-align:center}
+code{background:#f6f8fa;border:1px solid #e1e4e8;border-radius:4px;font-family:SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;font-size:10px;padding:1px 4px}
+pre{background:#f6f8fa;border:1px solid #e1e4e8;border-radius:4px;font-family:SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;font-size:10px;padding:10px 12px;overflow-x:auto;margin:8px 0;line-height:1.5}
+.badge{display:inline-block;padding:1px 6px;border-radius:3px;font-weight:600;font-size:10px}
+.bg-green{background:#d4edda;color:#2CA02C}
+.bg-orange{background:#ffecd2;color:#FF7F0E}
+.bg-red{background:#f8d7da;color:#D62728}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.stat-box{background:#f0f7ff;padding:6px 8px;border-radius:4px;text-align:center;font-size:10px}
+.stat-box b{color:#0066CC;font-size:14px;display:block}
+.note{background:#fffbdd;border:1px solid #e8d44d;border-radius:4px;padding:8px 10px;font-size:10px;margin:8px 0}
+.foot{text-align:center;padding:16px;font-size:10px;color:#586069;margin-top:12px}
+@media(max-width:600px){.stat-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a href="index.html" class="nav-title" style="text-decoration:none">Methods &amp; Algorithms</a>
+<div class="nav-links"><a href="index.html">Home</a><a href="index.html#lessons">Lectures</a><a href="index.html#quizzes">Quizzes</a></div>
+</nav>
+
+<div class="content">
+
+<!-- Section 1: Overview -->
+<div class="card">
+<div class="section-title"><span class="section-num">1</span>ML Pipeline Challenge</div>
+<table>
+<tr><td style="width:140px;font-weight:600">Course</td><td>Methods and Algorithms &mdash; MSc Data Science</td></tr>
+<tr><td style="font-weight:600">Weight</td><td>60% of final grade</td></tr>
+<tr><td style="font-weight:600">Group Size</td><td>2&ndash;3 students</td></tr>
+</table>
+<p style="margin-top:8px">Each group selects a real-world finance or business problem, sources an appropriate dataset, and builds a complete ML pipeline applying 5 of 6 course topics. Choice of topics determines a difficulty multiplier applied to the technical analysis score. This simulates end-to-end data science workflow: problem formulation, data acquisition, exploratory analysis, model development, evaluation, presentation.</p>
+
+<h3>Topic Difficulty Points</h3>
+<table>
+<tr><th>Topic</th><th class="center">Difficulty Points</th></tr>
+<tr><td>L01: Linear Regression</td><td class="center"><span class="badge bg-green">1</span></td></tr>
+<tr><td>L02: Logistic Regression</td><td class="center"><span class="badge bg-green">1</span></td></tr>
+<tr><td>L03: KNN &amp; K-Means</td><td class="center"><span class="badge bg-orange">2</span></td></tr>
+<tr><td>L04: Random Forests &amp; Boosting</td><td class="center"><span class="badge bg-orange">2</span></td></tr>
+<tr><td>L05: PCA &amp; t-SNE</td><td class="center"><span class="badge bg-red">3</span></td></tr>
+<tr><td>L06: Embeddings &amp; Reinforcement Learning</td><td class="center"><span class="badge bg-red">4</span></td></tr>
+<tr style="background:#f6f8fa;font-weight:600"><td>Total Possible</td><td class="center">13 points</td></tr>
+</table>
+
+<h3>Difficulty Multiplier</h3>
+<table>
+<tr><th>Omitted Topic</th><th class="center">Remaining Points</th><th class="center">Multiplier</th><th class="center">Max Technical Score</th></tr>
+<tr><td>L01 or L02 (1 pt)</td><td class="center">12</td><td class="center">1.00</td><td class="center">50 / 50</td></tr>
+<tr><td>L03 or L04 (2 pts)</td><td class="center">11</td><td class="center">0.96</td><td class="center">48 / 50</td></tr>
+<tr><td>L05 (3 pts)</td><td class="center">10</td><td class="center">0.92</td><td class="center">46 / 50</td></tr>
+<tr><td>L06 (4 pts)</td><td class="center">9</td><td class="center">0.88</td><td class="center">44 / 50</td></tr>
+</table>
+<div class="note">Every combination can still earn an A-range grade.</div>
+</div>
+
+<!-- Section 2: Group Formation -->
+<div class="card">
+<div class="section-title"><span class="section-num">2</span>Group Formation</div>
+<ul>
+<li><b>Size:</b> 2&ndash;3 students</li>
+<li><b>Selection:</b> Self-selected with instructor approval by Session 2</li>
+<li><b>Diversity Encouraged:</b> Mix of backgrounds (finance, CS, statistics) is beneficial</li>
+<li><b>Two-Person Bonus:</b> Groups of 2 receive 3 bonus points on final score</li>
+<li><b>Individual Accountability:</b> During Q&amp;A, any member can be asked about any part</li>
+<li>If unable to form a group by Session 2, notify instructor</li>
+</ul>
+</div>
+
+<!-- Section 3: Deliverables -->
+<div class="card">
+<div class="section-title"><span class="section-num">3</span>Deliverables</div>
+
+<h3>3a. GitHub Repository</h3>
+<p>Required structure:</p>
+<pre>group-project/
+├── README.md
+├── requirements.txt
+├── data/
+│   └── README.md       (data dictionary, source, license)
+├── notebooks/
+│   ├── 01_eda.ipynb
+│   ├── 02_preprocessing.ipynb
+│   ├── 03_modeling.ipynb
+│   └── 04_evaluation.ipynb
+├── presentation/
+│   └── slides.pptx
+└── report/
+    └── report.pdf</pre>
+<p>Requirements:</p>
+<ul>
+<li>Minimum 10 meaningful commits distributed across all members</li>
+<li>All members must have at least 2 commits</li>
+<li>Reproducible: set random seeds, include <code>requirements.txt</code></li>
+<li><code>README.md</code>: project title, group members, problem statement, reproduce instructions</li>
+</ul>
+
+<h3>3b. Written Report (10&ndash;15 pages)</h3>
+<table>
+<tr><th>Section</th><th class="center">Length</th><th>Content</th></tr>
+<tr><td>Executive Summary</td><td class="center">0.5 pg</td><td>Problem, approach, key findings</td></tr>
+<tr><td>Problem Definition &amp; Data</td><td class="center">1.5 pg</td><td>Business context, research question, dataset, EDA</td></tr>
+<tr><td>Methodology</td><td class="center">4&ndash;5 pg</td><td>One subsection per method: theory, implementation, hyperparameters</td></tr>
+<tr><td>Results &amp; Comparison</td><td class="center">3&ndash;4 pg</td><td>Quantitative results, model comparison, interpretation</td></tr>
+<tr><td>Business Insights</td><td class="center">1 pg</td><td>Actionable recommendations for stakeholders</td></tr>
+<tr><td>Limitations &amp; Reflection</td><td class="center">1 pg</td><td>What didn't work, assumptions, lessons learned</td></tr>
+</table>
+<p>Formatting: 11pt font, 1.15 line spacing, captioned figures/tables, APA or IEEE references.</p>
+
+<h3>3c. Presentation (15 min + 5 min Q&amp;A)</h3>
+<ul>
+<li>15 slides maximum (excluding title and references)</li>
+<li>All members present roughly equal amounts</li>
+<li>Suggested structure: Title &rarr; Problem &amp; data &rarr; ML pipeline diagram &rarr; Results per method &rarr; Comparison &rarr; Business insights &rarr; Limitations</li>
+</ul>
+
+<h3>3d. Peer Review</h3>
+<ul>
+<li>Each group reviews ONE other group's repository (assigned by instructor)</li>
+<li>Rate criteria on 1&ndash;5 scale with written justification</li>
+<li>Constructive, specific, actionable feedback</li>
+<li>Due 7 days after presentation day</li>
+<li><a href="https://github.com/Digital-AI-Finance/methods-algorithms/blob/master/rubrics/peer_review_form.md" target="_blank">Peer review form</a></li>
+</ul>
+</div>
+
+<!-- Section 4: Dataset Requirements -->
+<div class="card">
+<div class="section-title"><span class="section-num">4</span>Dataset Requirements</div>
+<ul>
+<li>Real-world data (not synthetic or toy datasets)</li>
+<li>Minimum size: 1,000 observations and 10 features</li>
+<li>Appropriate target variable(s) for the problem</li>
+<li>Documented: source and license in <code>data/README.md</code></li>
+</ul>
+
+<h3>Suggested Sources</h3>
+<p>Kaggle, UCI ML Repository, Yahoo Finance, FRED, ECB Statistical Data Warehouse, World Bank Open Data, SimFin, Financial PhraseBank</p>
+
+<h3>Approval Process</h3>
+<p>Submit 1-paragraph description + link by Session 2. Instructor approves or suggests alternatives.</p>
+</div>
+
+<!-- Section 5: Combined Topic Requirements -->
+<div class="card">
+<div class="section-title"><span class="section-num">5</span>Combined Topic Requirements</div>
+<table>
+<tr><th>Topic</th><th>For Full Credit (5/5)</th><th>Acceptable Partial (3&ndash;4/5)</th></tr>
+<tr><td>L03: KNN + K-Means</td><td>Both applied (KNN for classification/regression, K-Means for clustering)</td><td>One with strong analysis</td></tr>
+<tr><td>L04: RF + Boosting</td><td>At least one ensemble (RF/Bagging) + one boosting method (XGBoost/LightGBM) compared</td><td>Only RF or only boosting</td></tr>
+<tr><td>L05: PCA + t-SNE</td><td>PCA for dimensionality reduction + t-SNE for visualization</td><td>Only PCA applied</td></tr>
+</table>
+<div class="note"><b>Exception:</b> If your dataset genuinely doesn't support one technique, explain why in your report. This demonstrates analytical thinking and will not be penalized.</div>
+</div>
+
+<div class="foot">Methods &amp; Algorithms &mdash; MSc Data Science</div>
+</div>
+</body>
+</html>
