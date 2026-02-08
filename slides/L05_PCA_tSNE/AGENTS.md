@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-01-25 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
 # L05_PCA_tSNE/
 
@@ -48,6 +48,25 @@ All charts follow the naming convention `XX_descriptive_name/` and output `chart
 | 06b | `06b_pca_cluster_projection/` | PCA cluster projection | Linear projection may overlap clusters |
 | 06c | `06c_tsne_cluster_projection/` | t-SNE cluster projection | Non-linear projection separates clusters |
 | 07 | `07_decision_flowchart/` | When to use PCA/t-SNE | Flowchart for algorithm selection |
+
+Note: Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
+
+## CRITICAL: Chart Rewrite (Feb 2026)
+
+**7 chart.py files were COMPLETELY REWRITTEN** in February 2026 to fix fabricated charts.
+
+**Problem:** Original charts generated synthetic Gaussian blobs instead of running actual sklearn algorithms. They created visual mockups, not genuine algorithmic output.
+
+**Solution:** All charts now:
+- Use real sklearn TSNE/PCA on real datasets (load_digits, make_swiss_roll, make_blobs)
+- Call `.fit_transform()` on actual data
+- Use proper matplotlib settings (figsize=(10,6), dpi=150)
+- Show genuine algorithm behavior, not synthetic mockups
+
+**Affected Charts:**
+- 04a_tsne_perplexity_5, 04b_tsne_perplexity_30, 04c_tsne_perplexity_100
+- 05a_pca_swiss_roll, 05b_tsne_swiss_roll
+- 06b_pca_cluster_projection, 06c_tsne_cluster_projection
 
 ## Chart Technical Details
 
@@ -111,12 +130,50 @@ The instructor guide breaks down the 3-hour session:
 
 ## Key Concepts
 
-- **PCA Algorithm**: Center data → compute covariance → eigendecomposition → project
+- **PCA Algorithm**: Center data (X→X_c) → compute covariance → eigendecomposition → project
 - **Variance Maximization**: PCA finds directions of maximum variance
 - **Scree Plot**: Elbow method to select number of components
 - **t-SNE**: Non-linear method using Student's t-distribution
 - **Perplexity**: t-SNE parameter balancing local vs global structure (typical: 5-50)
 - **Curse of Dimensionality**: Distance metrics become less meaningful in high dimensions
+
+## Major Additions (Feb 2026 Hostile Review Remediation)
+
+This topic received **MAJOR MSc-level enhancements** in February 2026:
+
+### New Content Blocks
+1. **SVD-PCA Equivalence Proof**:
+   - 5-step mathematical proof showing X = UΣV^T leads to same PCs
+   - Shows covariance matrix C = VΣ²V^T/n
+   - Explains computational efficiency of SVD approach
+
+2. **PCA Optimality Proof**:
+   - Lagrangian derivation of variance maximization
+   - Shows PCs are eigenvectors of covariance matrix
+   - Formal constraint: ||w|| = 1
+
+3. **Yield Curve PCA** (2 frames):
+   - Finance application: decomposing interest rate curves
+   - PC1 = level (parallel shift), PC2 = slope, PC3 = curvature
+   - Interpretation for risk management
+
+4. **Statistical Inference**:
+   - Bootstrap confidence intervals for explained variance
+   - Permutation tests for component significance
+   - Cross-validation for component selection
+
+5. **Centering Correction**:
+   - All formulas now show explicit centering: X → X_c
+   - Mean-centering as prerequisite step before covariance computation
+   - Impact on reconstruction quality
+
+### Corrections
+- **Centering**: Added explicit X→X_c notation throughout
+- **EVR Formula**: Added explicit definition of explained variance ratio
+- **Learning Objectives**: Rewritten to Bloom's Level 4-5 (Derive, Evaluate, Analyze, Critique)
+
+### New Slides
+- **Key Equations Frame** (Overview): Covariance matrix, eigendecomposition, EVR, t-SNE similarity formulas
 
 ## Mathematical Details
 

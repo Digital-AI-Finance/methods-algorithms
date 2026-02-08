@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-01-25 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
 # L06_Embeddings_RL/
 
@@ -45,6 +45,11 @@ All charts follow the naming convention `XX_descriptive_name/` and output `chart
 | 05 | `05_reward_curves/` | Learning progress | Cumulative reward vs episode number |
 | 06 | `06_policy_viz/` | Optimal policy | Arrows showing best action per state |
 | 07 | `07_decision_flowchart/` | When to use embeddings/RL | Flowchart for algorithm selection |
+| 08 | `08_skipgram_architecture/` | Skip-gram model architecture | Neural network diagram for Word2Vec |
+| 09 | `09_dqn_architecture/` | Deep Q-Network architecture | Neural network for Q-learning |
+| 10 | `10_negative_sampling/` | Negative sampling visualization | How SGNS samples negatives |
+
+Note: L06 has **10 charts** (most of any topic). Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
 
 ## Chart Technical Details
 
@@ -110,8 +115,10 @@ The instructor guide breaks down the 3-hour session:
 
 - **Word Embeddings**: Dense vector representations capturing semantic relationships
 - **Word2Vec**: Two architectures: CBOW (predict word from context) and Skip-gram (predict context from word)
+- **Negative Sampling (SGNS)**: Efficient training by sampling k negative words per positive (Mikolov 2013)
 - **Cosine Similarity**: cos(θ) = (A·B) / (||A|| ||B||) measures semantic similarity
 - **Analogies**: king - man + woman ≈ queen (vector arithmetic captures relationships)
+- **Static vs Contextual**: Word2Vec/GloVe (one vector per word) vs BERT/GPT (context-dependent)
 - **Applications**: Sentiment analysis, document similarity, feature engineering
 
 ## Key Concepts - Reinforcement Learning
@@ -119,8 +126,70 @@ The instructor guide breaks down the 3-hour session:
 - **MDP**: Markov Decision Process (S, A, R, P, γ) framework
 - **Q-Learning**: Off-policy TD algorithm learning Q(s,a) = expected future reward
 - **Bellman Equation**: Q(s,a) = R + γ max_a' Q(s',a')
+- **TD Learning**: Temporal Difference learning - bootstrapping from next state estimate
 - **ε-greedy**: Exploration vs exploitation trade-off
 - **Reward Design**: Critical for RL success (e.g., Sharpe ratio for trading)
+- **Convergence**: Requires all state-action pairs visited infinitely often + decaying learning rate
+
+## Major Additions (Feb 2026 Hostile Review Remediation)
+
+This topic received **MAJOR MSc-level enhancements** in February 2026:
+
+### New Content Blocks (Embeddings)
+1. **Word2Vec/SGNS Pseudocode**:
+   - Full algorithmic environment (requires algorithm/algorithmic packages)
+   - Skip-gram with negative sampling implementation (Mikolov 2013)
+   - Training loop with sigmoid loss function
+
+2. **Negative Sampling** (3 frames):
+   - Problem: Softmax over full vocabulary intractable (millions of words)
+   - Solution: Sample k negatives per positive (k=5-20 typical)
+   - Unigram distribution P(w)^(3/4) for sampling
+
+3. **Word Analogy Limitations**:
+   - Bias in embeddings (gender, race) - Bolukbasi et al. citation
+   - Fails for rare words (insufficient training data)
+   - Context-independent (same vector for "bank" in "river bank" vs "bank account")
+
+4. **Static vs Contextual Embeddings**:
+   - Static: Word2Vec, GloVe, FastText (one vector per word)
+   - Contextual: BERT, GPT, ELMo (different vector per context)
+   - When to use each in finance NLP
+
+5. **Finance Sentiment Worked Example**:
+   - Embedding space for financial terms
+   - Nearest neighbors: "profit" → ["revenue", "earnings", "gain"]
+   - Sentiment classification using cosine similarity
+
+### New Content Blocks (RL)
+1. **Q-Learning Pseudocode**:
+   - Full algorithmic environment (Watkins & Dayan 1992)
+   - TD update rule with proper notation
+   - ε-greedy exploration strategy
+
+2. **TD Learning Slide**:
+   - Difference from Monte Carlo (bootstrapping vs full rollout)
+   - Bias-variance tradeoff
+   - n-step TD methods
+
+3. **Q-Learning Worked Example**:
+   - 4×4 grid world with verified arithmetic
+   - Step-by-step Q-value updates
+   - Convergence to optimal policy
+
+4. **Convergence Conditions**:
+   - All state-action pairs visited infinitely often
+   - Learning rate decay: Σα=∞, Σα²<∞ (Robbins-Monro)
+   - Why these conditions matter in practice
+
+### Corrections
+- **FinBERT Accuracy**: Corrected from 85% to 87% (Araci 2019)
+- **Policy Visualization Chart**: Rewritten to run genuine Q-learning (was fabricated arrows)
+- **Learning Objectives**: Rewritten to Bloom's Level 4-5 (Derive, Evaluate, Analyze, Critique)
+- **Instructor Guide**: Comprehensively rewritten with per-slide timings (15 min increments)
+
+### New Slides
+- **Key Equations Frame** (Overview): Skip-gram objective, cosine similarity, Bellman equation, TD update
 
 ## Q-Learning Algorithm
 

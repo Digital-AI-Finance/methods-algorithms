@@ -1,8 +1,9 @@
 # notebooks/
 
 <!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
-**Generated**: 2026-01-25
+**Generated**: 2026-01-25 | **Updated**: 2026-02-07
 **Purpose**: Hands-on Jupyter notebooks for each course topic (L01-L06) with implementations, exercises, and solutions
 
 ---

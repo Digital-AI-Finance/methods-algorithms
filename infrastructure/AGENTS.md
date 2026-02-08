@@ -1,7 +1,7 @@
 # Infrastructure Module - Course Management System
 
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 -->
+<!-- Updated: 2026-02-07 -->
 
 ## Purpose
 
@@ -14,6 +14,12 @@ Python-based CLI infrastructure for managing the Methods and Algorithms course. 
 | File | Purpose | Lines | Key Functions |
 |------|---------|-------|---------------|
 | `course_cli.py` | Main CLI entry point | 220 | `cmd_build()`, `cmd_validate()`, `cmd_status()`, `cmd_inventory()`, `cmd_report()` |
+| `beamer_parser.py` | Parse Beamer LaTeX files | ~150 | Parse slide structure, extract content |
+| `beamer_parser_v2.py` | Enhanced Beamer parser | ~200 | Improved parsing with section detection |
+| `pdf_to_revealjs.py` | Convert PDF to Reveal.js | ~180 | PDF extraction and HTML generation |
+| `revealjs_postprocess.py` | Post-process Reveal.js output | ~100 | Fix formatting, add interactive elements |
+| `revealjs_template.html` | Reveal.js HTML template | ~50 | Template for slide HTML structure |
+| `tex_to_revealjs.py` | Convert LaTeX to Reveal.js | ~250 | Direct LaTeX to HTML conversion |
 
 ## Subdirectories
 
@@ -25,6 +31,8 @@ Python-based CLI infrastructure for managing the Methods and Algorithms course. 
 | `auditors/` | Full course audit system | 3 | audit_system, report_generator |
 | `generators/` | Generate syllabus, rubrics, guides | 3 | syllabus_generator, rubric_generator, guide_generator |
 | `deployers/` | Deploy to GitHub/Colab | 2 | github_deployer, colab_deployer |
+| `trackers/` | Content tracking | - | (planned) |
+| `downloaders/` | External resource downloaders | - | (planned) |
 | `utils/` | Utility modules | 3 | retry_strategy, hash_utils |
 
 ## For AI Agents

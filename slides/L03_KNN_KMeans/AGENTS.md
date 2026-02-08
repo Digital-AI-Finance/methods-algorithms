@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-01-25 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
 # L03_KNN_KMeans/
 
@@ -27,7 +27,9 @@ Lesson 3 introduces instance-based learning (KNN) and clustering (K-Means) with 
 | File | Purpose | Slides |
 |------|---------|--------|
 | `L03_overview.tex` | Overview slides with 7 charts | ~17 |
+| `L03_overview.pdf` | Compiled overview slides | - |
 | `L03_deepdive.tex` | Deep dive with distance metrics | ~30 |
+| `L03_deepdive.pdf` | Compiled deep dive slides | - |
 | `L03_instructor_guide.md` | Teaching guide with PMSP breakdown | - |
 
 ## Charts
@@ -106,12 +108,14 @@ The instructor guide breaks down the 3-hour session:
 
 ## Key Concepts
 
-- **Distance Metrics**: Euclidean (L2), Manhattan (L1), Minkowski (Lp norm)
-- **KNN Algorithm**: No training phase, lazy learning, majority vote for classification
-- **K-Means Algorithm**: Lloyd's algorithm, minimizes within-cluster variance
+- **Distance Metrics**: Euclidean (L2), Manhattan (L1), Minkowski (Lp norm), Cosine similarity, Mahalanobis distance
+- **KNN Algorithm**: No training phase, lazy learning, majority vote for classification, weighted KNN (inverse-distance weighting)
+- **K-Means Algorithm**: Lloyd's algorithm, minimizes within-cluster variance, NP-hard (Aloise et al., 2009)
 - **Elbow Method**: Plot WCSS vs K, look for "elbow" where improvement slows
 - **Silhouette Score**: Measures how similar points are to own cluster vs neighbors (-1 to +1)
 - **Curse of Dimensionality**: Distance metrics become less meaningful in high dimensions
+- **Statistical Theory**: Cover & Hart (1967) consistency proof sketch, KNN bias-variance decomposition (Var = sigma^2/K)
+- **K Selection**: Cross-validation for optimal K in KNN, elbow/silhouette for K-Means
 
 ## Decision Framework
 
@@ -162,6 +166,23 @@ Students should know:
 - L01 (gradient descent for comparison)
 - Distance metrics (Euclidean vs Manhattan)
 - Basic NumPy (array operations, broadcasting)
+
+## For AI Agents (Feb 2026 Hostile Review Remediation)
+
+**Major additions completed in Feb 2026**:
+- **Learning Objectives**: Rewritten to Bloom's Level 4-5 (Analyze, Prove, Evaluate, Compare)
+- **Statistical Theory**: Cover & Hart (1967) consistency proof sketch (1-NN error converges to Bayes error with rate bound)
+- **Bias-Variance**: KNN bias-variance decomposition (Variance = sigma^2/K, bias increases with K)
+- **Computational Complexity**: NP-hardness of K-Means clustering (Aloise et al., 2009 reference)
+- **Distance Metrics Expansion**: Cosine similarity (for text/sparse data), Mahalanobis distance (covariance-aware)
+- **K Selection Methods**: Cross-validation for KNN, combined elbow/silhouette for K-Means
+- **Weighted KNN**: Inverse-distance weighting formula added (standard form: w_i = 1/d_i)
+- **Overview Enhancement**: Key Equations frame added (Euclidean distance, KNN prediction, K-Means objective, silhouette formula)
+- **Pseudocode**: K-Means algorithm in algorithmic environment
+
+**Key files updated**: L03_overview.tex, L03_deepdive.tex, L03_instructor_guide.md, L03_overview.pdf, L03_deepdive.pdf
+
+**Chart subdirectories**: 01_knn_boundaries/, 02_distance_metrics/, 03_kmeans_iteration/, 04_elbow_method/, 05_silhouette/, 06_voronoi/, 07_decision_flowchart/, images/
 
 ## Next Lesson
 

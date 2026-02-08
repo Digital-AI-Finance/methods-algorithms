@@ -821,6 +821,21 @@
             "id": "07_decision_flowchart",
             "file": "slides/L06_Embeddings_RL/07_decision_flowchart/chart.py",
             "status": "complete"
+          },
+          {
+            "id": "08_skipgram_architecture",
+            "file": "slides/L06_Embeddings_RL/08_skipgram_architecture/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "09_dqn_architecture",
+            "file": "slides/L06_Embeddings_RL/09_dqn_architecture/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "10_negative_sampling",
+            "file": "slides/L06_Embeddings_RL/10_negative_sampling/chart.py",
+            "status": "complete"
           }
         ],
         "notebook": {

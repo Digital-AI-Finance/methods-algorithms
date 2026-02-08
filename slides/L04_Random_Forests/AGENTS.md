@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-01-25 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
 # L04_Random_Forests/
 
@@ -44,6 +44,8 @@ All charts follow the naming convention `XX_descriptive_name/` and output `chart
 | 06a | `06a_single_tree_variance/` | Single tree predictions | High variance across different data samples |
 | 06b | `06b_random_forest_variance/` | Random forest predictions | Reduced variance through ensemble |
 | 07 | `07_decision_flowchart/` | When to use random forests | Flowchart for algorithm selection |
+
+Note: Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
 
 ## Chart Technical Details
 
@@ -111,8 +113,53 @@ The instructor guide breaks down the 3-hour session:
 - **Gini Impurity**: 1 - Σ(p_i²) measures node purity
 - **Bagging**: Bootstrap aggregating reduces variance by averaging predictions
 - **Feature Randomization**: Selecting random subset of features at each split decorrelates trees
-- **Feature Importance**: Mean decrease in impurity across all trees
-- **Out-of-Bag Error**: Each tree's error on samples not in its bootstrap (free validation)
+- **Feature Importance**: Mean decrease in impurity (MDI) across all trees
+- **Out-of-Bag Error**: 0.632 bootstrap estimator (NOT LOOCV) - each tree's error on samples not in its bootstrap
+
+## Major Additions (Feb 2026 Hostile Review Remediation)
+
+This topic received **MAJOR MSc-level enhancements** in February 2026:
+
+### New Content Blocks
+1. **Boosting Section** (4 frames):
+   - AdaBoost algorithm (Freund & Schapire 1997)
+   - Gradient Boosting framework (Friedman 2001)
+   - Modern variants: XGBoost (Chen & Guestrin 2016), LightGBM, CatBoost
+   - Boosting in finance applications (credit scoring, fraud detection)
+
+2. **CART Pseudocode**:
+   - Full algorithmic environment using algorithm/algorithmic packages
+   - Based on Breiman et al. 1984 specification
+   - Recursive partitioning with stopping criteria
+
+3. **SHAP Values** (Lundberg & Lee 2017):
+   - Shapley value formula for feature attribution
+   - TreeSHAP fast computation method
+   - Interpretation for business insights
+
+4. **Class Imbalance Treatment** (2 frames):
+   - Class weights (cost-sensitive learning)
+   - Sampling techniques (SMOTE, ADASYN)
+   - Finance context: fraud detection (1:1000 ratio typical)
+
+5. **Statistical Inference**:
+   - Permutation-based feature importance tests
+   - Bootstrap confidence intervals for predictions
+   - Hypothesis testing for feature relevance
+
+6. **Variance Derivation**:
+   - Formal proof showing bagging reduces variance
+   - Includes correlation term: Var(avg) = σ²/B + ρσ²(B-1)/B
+   - Explains why feature randomization helps (reduces ρ)
+
+### Corrections
+- **OOB Error**: Changed from incorrect "LOOCV" description to correct "0.632 bootstrap estimator"
+- **MDI Formula**: Added formal mathematical definition
+- **Learning Objectives**: Rewritten to Bloom's Level 4-5 (Derive, Evaluate, Analyze, Critique)
+
+### New Slides
+- **Key Equations Frame** (Overview): Gini impurity, variance reduction, decorrelation effect
+- **LaTeX Packages**: Now requires `algorithm` and `algorithmic` for pseudocode rendering
 
 ## Decision Framework
 

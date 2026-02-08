@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-01-25 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
 # L01_Introduction_Linear_Regression/
 
@@ -27,7 +27,9 @@ Lesson 1 introduces linear regression with house price prediction as the motivat
 | File | Purpose | Slides |
 |------|---------|--------|
 | `L01_overview.tex` | Overview slides with 7 charts | ~17 |
-| `L01_deepdive.tex` | Deep dive with mathematical derivations | ~30 |
+| `L01_overview.pdf` | Compiled overview slides | - |
+| `L01_deepdive.tex` | Deep dive with mathematical derivations | ~45 frames |
+| `L01_deepdive.pdf` | Compiled deep dive slides | - |
 | `L01_instructor_guide.md` | Teaching guide with PMSP breakdown | - |
 
 ## Charts
@@ -108,9 +110,11 @@ The instructor guide breaks down the 3-hour session:
 ## Key Concepts
 
 - **OLS Assumptions**: Linearity, exogeneity, homoscedasticity, no multicollinearity
-- **Gradient Descent**: Learning rate selection, convergence criteria
-- **Regularization**: Ridge (L2) shrinks all coefficients, Lasso (L1) performs feature selection
+- **Gradient Descent**: Learning rate selection, convergence criteria, convergence rates (linear, superlinear, quadratic)
+- **Regularization**: Ridge (L2) shrinks all coefficients, Lasso (L1) performs feature selection, Elastic Net combines both
 - **Bias-Variance Tradeoff**: Underfitting (high bias) vs overfitting (high variance)
+- **Statistical Inference**: Gauss-Markov theorem, OLS-MLE connection, F-test, confidence intervals
+- **Diagnostics**: Breusch-Pagan (heteroscedasticity), Durbin-Watson (autocorrelation), Shapiro-Wilk (normality), Jarque-Bera, Cook's distance, hat matrix
 
 ## Common Pitfalls
 
@@ -142,6 +146,20 @@ Students should know:
 - Statistics (mean, variance, correlation)
 - Linear algebra (matrix multiplication, inversion)
 - Calculus (partial derivatives for gradient descent)
+
+## For AI Agents (Feb 2026 Hostile Review Remediation)
+
+**Major additions completed in Feb 2026**:
+- **Learning Objectives**: Rewritten to Bloom's Level 4-5 (Derive, Analyze, Evaluate, Compare)
+- **Statistical Inference**: Added Gauss-Markov proof sketch, F-test for model significance, OLS-MLE connection under normality
+- **Formal Diagnostics**: Breusch-Pagan test (heteroscedasticity), Durbin-Watson (autocorrelation), Shapiro-Wilk (normality), Jarque-Bera test, hat matrix, Cook's distance
+- **Elastic Net**: Now uses standard Zou & Hastie (2005) form with alpha/lambda notation
+- **Convergence Rates**: GD convergence rates added (linear for constant step size, superlinear/quadratic for Newton-Raphson)
+- **Mathematical Rigor**: Overview has 7 equation environments + 14 inline math expressions. Deepdive: ~45 frames covering OLS derivation, inference theory, regularization paths, and diagnostic tests.
+
+**Key files updated**: L01_overview.tex, L01_deepdive.tex, L01_instructor_guide.md, L01_overview.pdf, L01_deepdive.pdf
+
+**Chart subdirectories**: 01_simple_regression/, 02_multiple_regression_3d/, 03_residual_plots/, 04_gradient_descent/, 05_learning_curves/, 06_regularization_comparison/, 07_bias_variance/, 08_decision_flowchart/, images/
 
 ## Next Lesson
 

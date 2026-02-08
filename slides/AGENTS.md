@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-01-25 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
 # slides/
 
@@ -8,6 +8,8 @@
 ## Purpose
 
 This directory contains all LaTeX Beamer slides for the 6-session MSc Data Science course on Methods and Algorithms. Each lesson follows the PMSP framework (Problem-Method-Solution-Practice) and includes finance/banking case studies.
+
+**Recent remediation (Feb 2026)**: All lectures underwent systematic content review. Learning objectives rewritten to Bloom's Level 4-5, formulas added to overview slides, proofs/derivations added to deep dives. All 12 PDFs compile clean (zero overflow warnings).
 
 ## Structure
 
@@ -22,10 +24,11 @@ slides/
 ```
 
 Each lesson directory contains:
-- **LXX_overview.tex** - Overview slides (~17 slides with 7-8 charts)
-- **LXX_deepdive.tex** - Deep dive slides (~30 slides with 7-8 charts)
+- **LXX_overview.tex** - Overview slides (~17 slides with 7-8 charts, includes formulas/equations)
+- **LXX_deepdive.tex** - Deep dive slides (~30 slides with 7-8 charts, includes proofs/derivations)
 - **LXX_instructor_guide.md** - Teaching guide with PMSP breakdown
 - **XX_chart_name/** - Chart directories (each with chart.py → chart.pdf)
+- **images/** - XKCD cartoons and supporting visuals
 
 ## Lessons Overview
 

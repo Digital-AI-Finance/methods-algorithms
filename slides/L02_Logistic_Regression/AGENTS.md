@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-01-25 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
 # L02_Logistic_Regression/
 
@@ -27,7 +27,9 @@ Lesson 2 introduces logistic regression for binary classification with credit sc
 | File | Purpose | Slides |
 |------|---------|--------|
 | `L02_overview.tex` | Overview slides with 7 charts | ~17 |
+| `L02_overview.pdf` | Compiled overview slides | - |
 | `L02_deepdive.tex` | Deep dive with MLE derivation | ~30 |
+| `L02_deepdive.pdf` | Compiled deep dive slides | - |
 | `L02_instructor_guide.md` | Teaching guide with PMSP breakdown | - |
 
 ## Charts
@@ -111,6 +113,9 @@ The instructor guide breaks down the 3-hour session:
 - **Odds Ratios**: exp(β) interpretation (e.g., β=0.15 → 16% increase in odds per unit)
 - **ROC Curve**: Shows trade-off between TPR and FPR across thresholds
 - **Precision-Recall**: Better for imbalanced classes (e.g., 5% default rate)
+- **Statistical Inference**: Likelihood ratio test (LRT), Newton-Raphson/IRLS optimization
+- **Model Selection**: AIC/BIC criteria, Hosmer-Lemeshow goodness-of-fit test
+- **Separation Issues**: Complete/quasi-complete separation, Firth's penalized likelihood solution
 
 ## Decision Framework
 
@@ -154,6 +159,20 @@ Students should know:
 - L01 (linear regression, gradient descent)
 - Probability basics (conditional probability, Bayes' theorem)
 - Calculus (chain rule for backpropagation)
+
+## For AI Agents (Feb 2026 Hostile Review Remediation)
+
+**Major additions completed in Feb 2026**:
+- **Learning Objectives**: Rewritten to Bloom's Level 4-5 (Derive, Analyze, Evaluate, Compare)
+- **Statistical Inference**: Added likelihood ratio test (LRT) derivation, Newton-Raphson/IRLS optimization details
+- **Model Selection**: AIC/BIC criteria with formulas, Hosmer-Lemeshow goodness-of-fit test
+- **Separation Issues**: Complete/quasi-complete separation coverage with Firth's penalized likelihood solution
+- **Overview Enhancement**: Now includes Key Equations frame (logistic function, logit, MLE objective)
+- **Finance Integration**: Basel/scorecard methods substantively integrated (not superficial)
+
+**Key files updated**: L02_overview.tex, L02_deepdive.tex, L02_instructor_guide.md, L02_overview.pdf, L02_deepdive.pdf
+
+**Chart subdirectories**: 01_sigmoid_function/, 02_decision_boundary/, 03_log_loss/, 04_roc_curve/, 05_precision_recall/, 06_confusion_matrix/, 07_decision_flowchart/, images/
 
 ## Next Lesson
 

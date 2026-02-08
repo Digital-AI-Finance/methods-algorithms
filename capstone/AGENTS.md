@@ -1,8 +1,9 @@
 # capstone/
 
 <!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
-**Generated**: 2026-01-25
+**Generated**: 2026-01-25 | **Updated**: 2026-02-07
 **Purpose**: Capstone project materials - specification, templates, and guidelines for final course project
 
 ---
