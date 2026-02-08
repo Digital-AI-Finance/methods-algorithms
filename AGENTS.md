@@ -1,10 +1,10 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-01-25 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
 # GitHub Pages Deployment Directory
 
 **Parent:** [../AGENTS.md](../AGENTS.md)
-**Generated:** 2026-01-25
+**Generated:** 2026-01-25 | **Updated:** 2026-02-07
 **Type:** Output/Deployment Directory
 
 ## Purpose
@@ -28,6 +28,8 @@ docs/
 │   └── style.css          # Wiki-style CSS (3-column layout)
 ├── js/
 │   └── main.js            # Navigation and interactivity
+├── assets/                # Static assets (logos, icons)
+├── quiz/                  # Interactive JavaScript quizzes
 └── slides/
     ├── L01_overview.html  # Reveal.js presentation (L01 overview)
     ├── L01_deepdive.html  # Reveal.js presentation (L01 deep dive)

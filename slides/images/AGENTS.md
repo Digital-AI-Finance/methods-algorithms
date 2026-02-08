@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-01-25 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
 
 # PNG Slide Images
 
