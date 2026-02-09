@@ -220,12 +220,17 @@ function restart() {
 
 function renderMath() {
     if (typeof renderMathInElement !== 'undefined') {
-        renderMathInElement(document.body, {
+        const opts = {
             delimiters: [
                 {left: '$$', right: '$$', display: true},
                 {left: '$', right: '$', display: false}
             ],
             throwOnError: false
+        };
+        // Render only quiz content elements — avoids cross-element
+        // delimiter pairing when renderMathInElement scans document.body
+        document.querySelectorAll('.question-text, .option, .explanation').forEach(el => {
+            renderMathInElement(el, opts);
         });
     }
 }

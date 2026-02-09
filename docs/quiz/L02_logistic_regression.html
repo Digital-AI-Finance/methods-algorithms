@@ -404,7 +404,7 @@
                         "A": "$-\\log(0.8) \\approx 0.223$",
                         "B": "$-\\log(0.2) \\approx 1.609$",
                         "C": "$(1-0.8)^2 = 0.04$",
-                        "D": "$|1-0.8| = 0.2$"
+                        "D": "$\\lvert 1-0.8 \\rvert = 0.2$"
                     },
                     "correct": "A",
                     "explanation": "Binary cross-entropy: $L = -[y\\log(\\hat{p}) + (1-y)\\log(1-\\hat{p})]$. With $y=1$: $L = -\\log(0.8) \\approx 0.223$. The loss penalizes confident wrong predictions more heavily."
@@ -551,7 +551,7 @@
                         "D": "Removes the need for feature scaling"
                     },
                     "correct": "B",
-                    "explanation": "L1 (Lasso) regularization adds $\\lambda|\\mathbf{w}|_1$ to the loss, producing sparse solutions where irrelevant feature coefficients become exactly zero. This performs automatic feature selection."
+                    "explanation": "L1 (Lasso) regularization adds $\\lambda\\lVert\\mathbf{w}\\rVert_1$ to the loss, producing sparse solutions where irrelevant feature coefficients become exactly zero. This performs automatic feature selection."
                 },
                 {
                     "id": 19,
@@ -753,12 +753,17 @@
 
         function renderMath() {
             if (typeof renderMathInElement !== 'undefined') {
-                renderMathInElement(document.body, {
+                const opts = {
                     delimiters: [
                         {left: '$$', right: '$$', display: true},
                         {left: '$', right: '$', display: false}
                     ],
                     throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
                 });
             }
         }
