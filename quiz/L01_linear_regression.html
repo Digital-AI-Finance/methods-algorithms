@@ -497,10 +497,10 @@
                     "id": 14,
                     "question": "What type of penalty does Ridge regression (L2) add to the loss function?",
                     "options": {
-                        "A": "$\\lambda \\sum |\\beta_j|$",
+                        "A": "$\\lambda \\sum \\lvert\\beta_j\\rvert$",
                         "B": "$\\lambda \\sum \\beta_j^2$",
                         "C": "$\\lambda \\sum \\beta_j$",
-                        "D": "$\\lambda \\max(|\\beta_j|)$"
+                        "D": "$\\lambda \\max(\\lvert\\beta_j\\rvert)$"
                     },
                     "correct": "B",
                     "explanation": "Ridge regression adds an L2 penalty $\\lambda \\sum_{j=1}^{p} \\beta_j^2$ to the loss, which shrinks coefficients toward zero but does not set them exactly to zero."
@@ -515,7 +515,7 @@
                         "D": "Gradient descent"
                     },
                     "correct": "B",
-                    "explanation": "Lasso (L1 penalty: $\\lambda \\sum |\\beta_j|$) can shrink coefficients exactly to zero due to its geometry, effectively performing feature selection."
+                    "explanation": "Lasso (L1 penalty: $\\lambda \\sum \\lvert\\beta_j\\rvert$) can shrink coefficients exactly to zero due to its geometry, effectively performing feature selection."
                 },
                 {
                     "id": 16,
@@ -527,7 +527,7 @@
                         "D": "A method for handling missing data"
                     },
                     "correct": "A",
-                    "explanation": "Elastic Net combines L1 (Lasso) and L2 (Ridge) penalties: $\\lambda_1 \\sum |\\beta_j| + \\lambda_2 \\sum \\beta_j^2$, getting benefits of both sparsity and coefficient shrinkage."
+                    "explanation": "Elastic Net combines L1 (Lasso) and L2 (Ridge) penalties: $\\lambda_1 \\sum \\lvert\\beta_j\\rvert + \\lambda_2 \\sum \\beta_j^2$, getting benefits of both sparsity and coefficient shrinkage."
                 },
                 {
                     "id": 17,
@@ -753,12 +753,17 @@
 
         function renderMath() {
             if (typeof renderMathInElement !== 'undefined') {
-                renderMathInElement(document.body, {
+                const opts = {
                     delimiters: [
                         {left: '$$', right: '$$', display: true},
                         {left: '$', right: '$', display: false}
                     ],
                     throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
                 });
             }
         }

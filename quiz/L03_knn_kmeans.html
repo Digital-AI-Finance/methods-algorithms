@@ -371,7 +371,7 @@
                         "D": "12"
                     },
                     "correct": "A",
-                    "explanation": "Manhattan distance $= |4-1| + |6-2| = 3 + 4 = 7$. It sums the absolute differences along each dimension."
+                    "explanation": "Manhattan distance $= \\lvert 4-1 \\rvert + \\lvert 6-2 \\rvert = 3 + 4 = 7$. It sums the absolute differences along each dimension."
                 },
                 {
                     "id": 4,
@@ -383,7 +383,7 @@
                         "D": "Cosine distance"
                     },
                     "correct": "A",
-                    "explanation": "The Minkowski distance formula $d = (\\sum|x_i - y_i|^p)^{1/p}$ becomes Manhattan distance when $p=1$ and Euclidean distance when $p=2$."
+                    "explanation": "The Minkowski distance formula $d = (\\sum\\lvert x_i - y_i \\rvert^p)^{1/p}$ becomes Manhattan distance when $p=1$ and Euclidean distance when $p=2$."
                 },
                 {
                     "id": 5,
@@ -753,12 +753,17 @@
 
         function renderMath() {
             if (typeof renderMathInElement !== 'undefined') {
-                renderMathInElement(document.body, {
+                const opts = {
                     delimiters: [
                         {left: '$$', right: '$$', display: true},
                         {left: '$', right: '$', display: false}
                     ],
                     throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
                 });
             }
         }
