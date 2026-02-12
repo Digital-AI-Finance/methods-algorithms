@@ -98,40 +98,220 @@
 
 \begin{document}
 
-% Slide 1: Title
+% ============================================
+% SLIDE 1: Title Page
+% ============================================
 \begin{frame}
   \titlepage
 \end{frame}
 
+% ============================================
+% SLIDE 2: Outline
+% ============================================
 \begin{frame}{Outline}
   \tableofcontents
 \end{frame}
 
-% Slide 2: Learning Objectives
-\begin{frame}[t]{Learning Objectives}
-  By the end of this session, you will be able to:
+% ============================================
+% SECTION: INTRODUCTION
+% ============================================
+\section{Introduction}
 
-  \begin{enumerate}
-    \item \textbf{Derive} the OLS estimator and prove its optimality under Gauss-Markov assumptions
-    \item \textbf{Analyze} gradient descent convergence and evaluate learning rate selection
-    \item \textbf{Evaluate} regression diagnostics to identify assumption violations
-    \item \textbf{Compare} regularization strategies (Ridge, Lasso, Elastic Net) for different problem structures
-  \end{enumerate}
+% ============================================
+% SLIDE 3: What is Machine Learning? (Layout 8 -- Mixed Media)
+% ============================================
+\begin{frame}[t]{What is Machine Learning?}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{The Big Idea}
 
-  \vspace{0.5em}
-  \textbf{Finance Applications:} Property valuation, asset pricing (CAPM)
+\begin{itemize}
+  \item Teaching computers to learn from data, without being explicitly programmed
+  \item Everyday examples: email spam filters, Netflix recommendations, voice assistants
+  \item Key idea: the computer finds patterns in data, then uses those patterns to make predictions on new data
+\end{itemize}
 
-  \bottomnote{Foundation for all supervised learning methods}
+\column{0.48\textwidth}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{images/1725_linear_regression.png}
+\end{center}
+\end{columns}
+
+\bottomnote{XKCD \#1725 by Randall Munroe (CC BY-NC 2.5) -- ML is already part of your daily life}
 \end{frame}
 
-% XKCD #1725: Linear Regression Humor
-\begin{frame}[t]{The Art of Fitting Lines}
-\vspace{-0.5em}
+% ============================================
+% SLIDE 4: Supervised vs Unsupervised (Layout 10 -- Comparison)
+% ============================================
+\begin{frame}[t]{Supervised vs Unsupervised Learning}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Supervised Learning}
+
+\begin{itemize}
+  \item We have the answers (labels) for training data
+  \item Goal: predict the answer for new data
+  \item Examples: predicting house prices, classifying emails
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Unsupervised Learning}
+
+\begin{itemize}
+  \item No answers -- just data
+  \item Goal: find hidden structure or groups
+  \item Examples: customer segments, anomaly detection
+\end{itemize}
+\end{columns}
+
+\bottomnote{This course covers both: L01--L04 supervised, L05 unsupervised}
+\end{frame}
+
+% ============================================
+% SLIDE 5: What is Regression? (Layout 7 -- Full width text)
+% ============================================
+\begin{frame}[t]{What is Regression?}
+\textbf{Predicting a Number (Not a Category)}
+
+\begin{itemize}
+  \item Predicting a number (not a category) -- for example, a house price
+  \item Example: predicting house price from its size in square meters
+  \item We draw the best line through the data points
+  \item The line captures the relationship between input and output
+\end{itemize}
+
+\bottomnote{Regression = predicting a continuous value. Classification = predicting a category.}
+\end{frame}
+
+% ============================================
+% SLIDE 6: The Simplest Model (Layout 4 -- Two columns math)
+% ============================================
+\begin{frame}[t]{The Simplest Model}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{The Idea}
+
+Price goes up as size increases. We write this as:
+$$y = a + b \times x$$
+
+\begin{itemize}
+  \item $y$ = price (what we predict)
+  \item $x$ = size (what we know)
+  \item $a$ = starting price, $b$ = price per sqm
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Example}
+
+$$\text{Price} = 50{,}000 + 200 \times \text{Size}$$
+
+\begin{itemize}
+  \item A 100 sqm apartment: $50{,}000 + 200 \times 100 = 70{,}000$
+  \item A 150 sqm apartment: $50{,}000 + 200 \times 150 = 80{,}000$
+  \item Each extra square meter adds 200 to the price
+\end{itemize}
+\end{columns}
+
+\bottomnote{This is the entire idea of linear regression -- the rest is details}
+\end{frame}
+
+% ============================================
+% SLIDE 7: What Makes a Good Prediction? (Layout 22 -- Chart + explanations)
+% ============================================
+\begin{frame}[t]{What Makes a Good Prediction?}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{images/1725_linear_regression.png}
+\includegraphics[width=0.55\textwidth]{03_residual_plots/chart.pdf}
 \end{center}
-\vspace{-0.5em}
-\bottomnote{XKCD \#1725 by Randall Munroe (CC BY-NC 2.5) -- Always check if your data supports a linear fit!}
+
+\begin{itemize}
+  \item The red lines show prediction errors (residuals)
+  \item A good model has small, random errors
+  \item Patterns in errors = something the model missed
+\end{itemize}
+
+\bottomnote{We want errors to be small and random -- not systematic}
+\end{frame}
+
+% ============================================
+% SLIDE 8: How Does the Computer Learn? (Layout 11 -- Step-by-step)
+% ============================================
+\begin{frame}[t]{How Does the Computer Learn?}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{The Learning Process}
+
+\vspace{0.5em}
+\textbf{Step 1:} Start with a random line
+
+\vspace{0.5em}
+\textbf{Step 2:} Measure how wrong it is (errors)
+
+\vspace{0.5em}
+\textbf{Step 3:} Adjust the line to reduce errors
+
+\column{0.48\textwidth}
+\textbf{Step 4:} Repeat until errors are small
+
+\vspace{0.5em}
+\textbf{Step 5:} Use the final line to predict
+
+\vspace{0.5em}
+This process is called \textbf{optimization} -- the computer tries thousands of lines and keeps the best one
+\end{columns}
+
+\bottomnote{The computer tries thousands of lines and keeps the best one}
+\end{frame}
+
+% ============================================
+% SLIDE 9: Key Vocabulary (Layout 6 -- Three-way split)
+% ============================================
+\begin{frame}[t]{Key Vocabulary}
+\begin{columns}[T]
+\column{0.31\textwidth}
+\textbf{Data}
+
+\begin{itemize}
+  \item Features (inputs): size, bedrooms, age
+  \item Target (output): price
+  \item Observation: one data point (one house)
+\end{itemize}
+
+\column{0.31\textwidth}
+\textbf{Learning}
+
+\begin{itemize}
+  \item Training: fitting the model to data
+  \item Coefficients: the numbers the model learns
+  \item Loss: how wrong the model is
+\end{itemize}
+
+\column{0.31\textwidth}
+\textbf{Evaluation}
+
+\begin{itemize}
+  \item Prediction: model output for new data
+  \item Error: difference between prediction and truth
+  \item Overfitting: memorizing instead of learning
+\end{itemize}
+\end{columns}
+
+\bottomnote{Master these terms -- they appear in every ML method we study}
+\end{frame}
+
+% ============================================
+% SLIDE 10: Road Map for Today (Layout 7 -- Full width text)
+% ============================================
+\begin{frame}[t]{Road Map for Today}
+Now that you know the basics, we go deeper:
+
+\begin{enumerate}
+  \item A real business problem (house prices for banks)
+  \item The math behind finding the best line
+  \item How to tell if our model is good
+  \item How to prevent our model from being too complex
+\end{enumerate}
+
+\bottomnote{Everything ahead builds on the intuition from this intro}
 \end{frame}
 
 % ============================================
@@ -139,28 +319,31 @@
 % ============================================
 \section{Problem}
 
-% Slide 3: The Business Problem
+% ============================================
+% SLIDE 11: The Business Problem (Layout 3 -- Two columns text)
+% ============================================
 \begin{frame}[t]{The Business Problem}
-  \textbf{Finance Use Case: Predicting House Prices}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Finance Use Case}
 
-  \begin{itemize}
-    \item Banks need accurate property valuations for mortgages
-    \item Insurance companies assess property risk
-    \item Investors evaluate real estate portfolios
-  \end{itemize}
+\begin{itemize}
+  \item Banks need accurate property valuations for mortgages
+  \item Insurance companies assess property risk
+  \item Investors evaluate real estate portfolios
+\end{itemize}
 
-  \vspace{0.5em}
-  \textbf{The Question:} Given features (size, location, age), what price?
+\column{0.48\textwidth}
+\textbf{Why Linear Regression?}
 
-  \vspace{0.5em}
-  \textbf{Why Linear Regression?}
-  \begin{itemize}
-    \item Interpretable coefficients (price per square meter)
-    \item Fast, well-understood method
-    \item Strong baseline for comparison
-  \end{itemize}
+\begin{itemize}
+  \item Interpretable coefficients (price per square meter)
+  \item Fast, well-understood method
+  \item Strong baseline for comparison
+\end{itemize}
+\end{columns}
 
-  \bottomnote{Linear regression: the ``hello world'' of machine learning}
+\bottomnote{Linear regression: the ``hello world'' of machine learning}
 \end{frame}
 
 % ============================================
@@ -168,114 +351,104 @@
 % ============================================
 \section{Method}
 
-% Slide 4: What is Linear Regression?
-\begin{frame}[t]{What is Linear Regression?}
-  \textbf{Core Idea:} Model the relationship between inputs and a continuous output
+% ============================================
+% SLIDE 12: Linear Regression Formula (Layout 9 -- Definition-Example)
+% ============================================
+\begin{frame}[t]{Linear Regression Formula}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{The Model}
 
-  \vspace{0.5em}
-  \begin{equation}
-    y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
-  \end{equation}
+\begin{equation}
+  y = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p + \varepsilon
+\end{equation}
 
-  \begin{itemize}
-    \item $y$: Target variable (house price)
-    \item $x_1, \ldots, x_p$: Features (size, bedrooms, age)
-    \item $\beta_0, \ldots, \beta_p$: Coefficients to learn
-    \item $\varepsilon$: Random error term
-  \end{itemize}
+\begin{itemize}
+  \item $y$: target variable (house price)
+  \item $x_1, \ldots, x_p$: features (size, bedrooms, age)
+  \item $\beta_0, \ldots, \beta_p$: coefficients to learn
+  \item $\varepsilon$: random error term
+\end{itemize}
 
-  \bottomnote{Goal: Find coefficients that minimize prediction error}
+\column{0.48\textwidth}
+\textbf{Worked Example}
+
+$$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} - 1{,}000 \times \text{Age}$$
+
+\begin{itemize}
+  \item Base price: \$50,000
+  \item Each sqm adds \$200
+  \item Each bedroom adds \$15,000
+  \item Each year of age subtracts \$1,000
+\end{itemize}
+\end{columns}
+
+\bottomnote{Goal: Find coefficients that minimize prediction error}
 \end{frame}
 
-% Slide: Simple Regression Visualization
-\begin{frame}[t]{Simple Linear Regression}
-\vspace{-1.0em}
-\begin{center}
-\includegraphics[width=0.50\textwidth]{01_simple_regression/chart.pdf}
-\end{center}
-\vspace{-0.5em}
-\bottomnote{The best-fit line minimizes the sum of squared distances from points}
-\end{frame}
-
-% Slide: Multiple Regression Visualization
-\begin{frame}[t]{Multiple Linear Regression}
-\vspace{-1.2em}
-\begin{center}
-\includegraphics[width=0.42\textwidth]{02_multiple_regression_3d/chart.pdf}
-\end{center}
-\vspace{-0.5em}
-\bottomnote{With multiple features, we fit a hyperplane to minimize squared errors}
-\end{frame}
-
-% Slide 5: The Optimization Problem
+% ============================================
+% SLIDE 13: The Optimization Problem
+% ============================================
 \begin{frame}[t]{The Optimization Problem}
-  \textbf{Objective:} Minimize the sum of squared errors (SSE)
+\textbf{Objective:} Minimize the sum of squared errors (SSE)
 
-  \begin{equation}
-    \min_{\boldsymbol{\beta}} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \min_{\boldsymbol{\beta}} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2
-  \end{equation}
+\begin{equation}
+  \min_{\boldsymbol{\beta}} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+\end{equation}
 
-  \textbf{Why Squared Errors?}
-  \begin{itemize}
-    \item Penalizes large errors more than small errors
-    \item Differentiable (enables gradient-based optimization)
-    \item Leads to closed-form solution
-  \end{itemize}
+\textbf{Why Squared Errors?}
+\begin{itemize}
+  \item Penalizes large errors more than small errors
+  \item Differentiable (enables gradient-based optimization)
+  \item Leads to closed-form solution
+\end{itemize}
 
-  \bottomnote{This objective function defines ``ordinary least squares'' (OLS)}
+\bottomnote{This defines ``ordinary least squares'' (OLS)}
 \end{frame}
 
-% Slide 6: Two Solution Approaches
-\begin{frame}[t]{Two Solution Approaches}
-  \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \textbf{1. Closed-Form (Normal Equation)}
-      \begin{equation}
-        \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
-      \end{equation}
+% ============================================
+% SLIDE 14: Normal Equation vs Gradient Descent (Layout 10 -- Comparison)
+% ============================================
+\begin{frame}[t]{Normal Equation vs Gradient Descent}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Normal Equation}
 
-      \textcolor{MLGreen}{Pros:}
-      \begin{itemize}
-        \item Exact solution
-        \item One computation
-      \end{itemize}
+\begin{equation}
+  \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
+\end{equation}
 
-      \textcolor{MLRed}{Cons:}
-      \begin{itemize}
-        \item Slow for large $p$
-        \item Memory intensive
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{2. Gradient Descent}
-      \begin{equation}
-        \boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \alpha \nabla L(\boldsymbol{\beta}_t)
-      \end{equation}
+\begin{itemize}
+  \item Exact, closed-form solution
+  \item One computation -- no iterations
+  \item Slow for very large datasets
+\end{itemize}
 
-      \textcolor{MLGreen}{Pros:}
-      \begin{itemize}
-        \item Scales to big data
-        \item Memory efficient
-      \end{itemize}
+\column{0.48\textwidth}
+\textbf{Gradient Descent}
 
-      \textcolor{MLRed}{Cons:}
-      \begin{itemize}
-        \item Requires tuning $\alpha$
-        \item Iterative process
-      \end{itemize}
-    \end{column}
-  \end{columns}
+\begin{equation}
+  \boldsymbol{\beta}_{t+1} = \boldsymbol{\beta}_t - \alpha \nabla L(\boldsymbol{\beta}_t)
+\end{equation}
 
-  \bottomnote{Both methods yield the same solution for OLS}
+\begin{itemize}
+  \item Scales to big data
+  \item Memory efficient
+  \item Requires tuning learning rate $\alpha$
+\end{itemize}
+\end{columns}
+
+\bottomnote{Both methods yield the same solution for OLS}
 \end{frame}
 
-% Slide: Gradient Descent Visualization
+% ============================================
+% SLIDE 15: Gradient Descent in Action (Layout 21 -- Full-size chart)
+% ============================================
 \begin{frame}[t]{Gradient Descent in Action}
-\vspace{-1.0em}
 \begin{center}
-\includegraphics[width=0.45\textwidth]{04_gradient_descent/chart.pdf}
+\includegraphics[width=0.65\textwidth]{04_gradient_descent/chart.pdf}
 \end{center}
-\vspace{-0.5em}
+
 \bottomnote{Iteratively update parameters in the direction of steepest descent}
 \end{frame}
 
@@ -284,66 +457,66 @@
 % ============================================
 \section{Solution}
 
-% Slide 7: Interpreting Coefficients
+% ============================================
+% SLIDE 16: Interpreting Coefficients
+% ============================================
 \begin{frame}[t]{Interpreting Coefficients}
-  \textbf{Example:} House price model
+\textbf{Example:} House price model
 
-  \vspace{0.3em}
+\vspace{0.3em}
+\begin{equation}
+  \text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bedrooms} - 1{,}000 \times \text{Age}
+\end{equation}
+
+\textbf{Interpretation:}
+\begin{itemize}
+  \item $\beta_0 = 50{,}000$: Base price (all features = 0)
+  \item $\beta_1 = 200$: Each extra sqm adds \$200
+  \item $\beta_2 = 15{,}000$: Each bedroom adds \$15,000
+  \item $\beta_3 = -1{,}000$: Each year of age subtracts \$1,000
+\end{itemize}
+
+\bottomnote{Coefficients show marginal effect, holding others constant}
+\end{frame}
+
+% ============================================
+% SLIDE 17: Model Evaluation
+% ============================================
+\begin{frame}[t]{Model Evaluation}
+\textbf{Key Metrics:}
+
+\begin{itemize}
+  \item \textbf{$R^2$ (Coefficient of Determination):} Variance explained
   \begin{equation}
-    \text{Price} = 50,000 + 200 \times \text{Size} + 15,000 \times \text{Bedrooms} - 1,000 \times \text{Age}
+    R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
   \end{equation}
 
-  \textbf{Interpretation:}
-  \begin{itemize}
-    \item $\beta_0 = 50,000$: Base price (all features = 0)
-    \item $\beta_1 = 200$: Each extra sqm adds \$200
-    \item $\beta_2 = 15,000$: Each bedroom adds \$15,000
-    \item $\beta_3 = -1,000$: Each year of age subtracts \$1,000
-  \end{itemize}
+  \item \textbf{RMSE (Root Mean Squared Error):} Prediction accuracy
+  \begin{equation}
+    \text{RMSE} = \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}
+  \end{equation}
+\end{itemize}
 
-  \bottomnote{Coefficients show marginal effect, holding others constant}
+\vspace{0.3em}
+\textbf{In Practice:} $R^2 = 0.75$ means model explains 75\% of price variance
+
+\bottomnote{Always evaluate on held-out test data}
 \end{frame}
 
-% Slide 8: Model Evaluation
-\begin{frame}[t]{Model Evaluation}
-  \textbf{Key Metrics:}
-
-  \begin{itemize}
-    \item \textbf{$R^2$ (Coefficient of Determination):} Variance explained
-    \begin{equation}
-      R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
-    \end{equation}
-
-    \item \textbf{RMSE (Root Mean Squared Error):} Prediction accuracy
-    \begin{equation}
-      \text{RMSE} = \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}
-    \end{equation}
-  \end{itemize}
-
-  \vspace{0.3em}
-  \textbf{In Practice:} $R^2 = 0.75$ means model explains 75\% of price variance
-
-  \bottomnote{Always evaluate on held-out test data}
-\end{frame}
-
-% Slide: Residual Diagnostics
-\begin{frame}[t]{Residual Diagnostics}
-\vspace{-1.0em}
-\begin{center}
-\includegraphics[width=0.50\textwidth]{03_residual_plots/chart.pdf}
-\end{center}
-\vspace{-0.5em}
-\bottomnote{Good residuals are random; patterns suggest model problems}
-\end{frame}
-
-% Slide: Learning Curves
+% ============================================
+% SLIDE 18: Learning Curves (Layout 22 -- Chart + explanations)
+% ============================================
 \begin{frame}[t]{Learning Curves}
-\vspace{-1.0em}
 \begin{center}
-\includegraphics[width=0.50\textwidth]{05_learning_curves/chart.pdf}
+\includegraphics[width=0.55\textwidth]{05_learning_curves/chart.pdf}
 \end{center}
-\vspace{-0.5em}
-\bottomnote{Learning curves help diagnose underfitting vs overfitting}
+
+\begin{itemize}
+  \item Gap between train and test error = overfitting
+  \item Curves converging = more data won't help
+\end{itemize}
+
+\bottomnote{Learning curves diagnose underfitting vs overfitting}
 \end{frame}
 
 % ============================================
@@ -351,46 +524,36 @@
 % ============================================
 \section{Decision Framework}
 
-% Slide 9: Decision Framework
+% ============================================
+% SLIDE 19: When to Use Linear Regression (Layout 18 -- Pros/Cons)
+% ============================================
 \begin{frame}[t]{When to Use Linear Regression}
-  \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \textbf{\textcolor{MLGreen}{Use When:}}
-      \begin{itemize}
-        \item Target is continuous
-        \item Linear relationships expected
-        \item Interpretability matters
-        \item Fast inference needed
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{\textcolor{MLRed}{Avoid When:}}
-      \begin{itemize}
-        \item Target is categorical
-        \item Strong non-linearities
-        \item High multicollinearity
-        \item Many outliers present
-      \end{itemize}
-    \end{column}
-  \end{columns}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Advantages}
+\begin{itemize}
+  \item[\textcolor{mlgreen}{+}] Interpretable coefficients
+  \item[\textcolor{mlgreen}{+}] Fast training and prediction
+  \item[\textcolor{mlgreen}{+}] Well-understood theory
+  \item[\textcolor{mlgreen}{+}] Works as strong baseline
+\end{itemize}
 
-  \vspace{0.5em}
-  \begin{table}
-    \centering
-    \small
-    \begin{tabular}{ll}
-      \toprule
-      \textbf{Pros} & \textbf{Cons} \\
-      \midrule
-      Interpretable & Assumes linearity \\
-      Fast training & Sensitive to outliers \\
-      Well-understood & Limited flexibility \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
+\column{0.48\textwidth}
+\textbf{Disadvantages}
+\begin{itemize}
+  \item[\textcolor{mlorange}{--}] Assumes linear relationships
+  \item[\textcolor{mlorange}{--}] Sensitive to outliers
+  \item[\textcolor{mlorange}{--}] Limited flexibility
+  \item[\textcolor{mlorange}{--}] Needs feature engineering for non-linear patterns
+\end{itemize}
+\end{columns}
+
+\bottomnote{When in doubt, start with linear regression as your baseline}
 \end{frame}
 
-% XKCD #2048: Overfitting Warning
+% ============================================
+% SLIDE 20: The Danger of Overfitting (Layout 21 -- XKCD)
+% ============================================
 \begin{frame}[t]{The Danger of Overfitting}
 \vspace{-2.0em}
 \begin{center}
@@ -400,23 +563,50 @@
 \bottomnote{XKCD \#2048 -- Simpler models often generalize better (CC BY-NC 2.5)}
 \end{frame}
 
-% Slide: Regularization Comparison
-\begin{frame}[t]{Regularization: Ridge vs Lasso}
-\vspace{-1.0em}
+% ============================================
+% SLIDE 21: Regularization Overview (Layout 10 + chart below)
+% ============================================
+\begin{frame}[t]{Regularization Overview}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Ridge (L2)}
+\begin{itemize}
+  \item Adds penalty on squared coefficients
+  \item Shrinks all coefficients toward zero
+  \item Never removes features entirely
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Lasso (L1)}
+\begin{itemize}
+  \item Adds penalty on absolute coefficients
+  \item Can set coefficients exactly to zero
+  \item Automatic feature selection
+\end{itemize}
+\end{columns}
+
+\vspace{0.3em}
 \begin{center}
 \includegraphics[width=0.50\textwidth]{06_regularization_comparison/chart.pdf}
 \end{center}
-\vspace{-0.5em}
-\bottomnote{Ridge shrinks all coefficients; Lasso can set some to exactly zero}
+
+\bottomnote{Regularization prevents overfitting by penalizing large coefficients}
 \end{frame}
 
-% Slide: Bias-Variance Tradeoff
+% ============================================
+% SLIDE 22: Bias-Variance Tradeoff (Layout 22 -- Chart + explanations)
+% ============================================
 \begin{frame}[t]{Bias-Variance Tradeoff}
-\vspace{-1.0em}
 \begin{center}
-\includegraphics[width=0.50\textwidth]{07_bias_variance/chart.pdf}
+\includegraphics[width=0.55\textwidth]{07_bias_variance/chart.pdf}
 \end{center}
-\vspace{-0.5em}
+
+\begin{itemize}
+  \item Bias: error from wrong assumptions (too simple)
+  \item Variance: error from sensitivity to training data (too complex)
+  \item Sweet spot: minimize total error
+\end{itemize}
+
 \bottomnote{Model complexity controls the tradeoff between bias and variance}
 \end{frame}
 
@@ -425,34 +615,43 @@
 % ============================================
 \section{Practice}
 
+% ============================================
+% SLIDE 23: Hands-on Exercise
+% ============================================
 \begin{frame}[t]{Hands-on Exercise}
-  \textbf{Open the Colab Notebook}
-  \begin{itemize}
-    \item Exercise 1: Implement OLS from scratch
-    \item Exercise 2: Use scikit-learn LinearRegression
-    \item Exercise 3: Compare with gradient descent
-  \end{itemize}
-  \vspace{1em}
-  \textbf{Link:} See course materials on GitHub
+\textbf{Open the Colab Notebook}
+
+\begin{itemize}
+  \item Exercise 1: Implement OLS from scratch
+  \item Exercise 2: Use scikit-learn LinearRegression
+  \item Exercise 3: Compare with gradient descent
+\end{itemize}
+
+\vspace{1em}
+\textbf{Link:} See course materials on GitHub
+
+\bottomnote{Start with Exercise 2 if short on time}
 \end{frame}
 
-% XKCD #605: Extrapolation Warning
+% ============================================
+% SLIDE 24: A Word of Caution (Layout 21 -- XKCD)
+% ============================================
 \begin{frame}[t]{A Word of Caution}
-\vspace{-0.5em}
 \begin{center}
 \includegraphics[width=0.50\textwidth]{images/605_extrapolating.png}
 \end{center}
-\vspace{-0.5em}
+
 \bottomnote{XKCD \#605 by Randall Munroe (CC BY-NC 2.5) -- Extrapolation is dangerous!}
 \end{frame}
 
-% Slide: Decision Flowchart
+% ============================================
+% SLIDE 25: Decision Framework (Layout 21 -- Full-size chart)
+% ============================================
 \begin{frame}[t]{Decision Framework}
-\vspace{-1.0em}
 \begin{center}
-\includegraphics[width=0.45\textwidth]{08_decision_flowchart/chart.pdf}
+\includegraphics[width=0.55\textwidth]{08_decision_flowchart/chart.pdf}
 \end{center}
-\vspace{-0.5em}
+
 \bottomnote{Use this flowchart to decide when linear regression is appropriate}
 \end{frame}
 
@@ -461,26 +660,40 @@
 % ============================================
 \section{Summary}
 
-% Slide 10: Key Takeaways
+% ============================================
+% SLIDE 26: Key Takeaways (Layout 13 -- Summary two columns)
+% ============================================
 \begin{frame}[t]{Key Takeaways}
-  \begin{enumerate}
-    \item Linear regression models continuous outcomes as weighted sum of features
-    \item OLS minimizes sum of squared errors
-    \item Solve via normal equation (small data) or gradient descent (big data)
-    \item Coefficients are directly interpretable as marginal effects
-    \item Evaluate using $R^2$ (variance explained) and RMSE (prediction error)
-  \end{enumerate}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Key Concepts}
+\begin{itemize}
+  \item Linear regression predicts continuous outcomes
+  \item OLS minimizes sum of squared errors
+  \item Solve via normal equation or gradient descent
+\end{itemize}
 
-  \vspace{1em}
-  \textbf{Next:} Deep dive into mathematics and implementation
+\column{0.48\textwidth}
+\textbf{Practical Guidance}
+\begin{itemize}
+  \item Coefficients are directly interpretable
+  \item Evaluate with $R^2$ and RMSE on test data
+  \item Use regularization to prevent overfitting
+\end{itemize}
+\end{columns}
 
-  \vspace{0.5em}
-  \textbf{References:}
-  \begin{itemize}
-    \footnotesize
-    \item ISLR Chapter 3: Linear Regression
-    \item ESL Chapter 3: Linear Methods for Regression
-  \end{itemize}
+\vspace{0.8em}
+\textbf{Next:} Deep dive into mathematics and implementation
+
+\vspace{0.5em}
+\textbf{References:}
+\begin{itemize}
+  \footnotesize
+  \item ISLR Chapter 3: Linear Regression
+  \item ESL Chapter 3: Linear Methods for Regression
+\end{itemize}
+
+\bottomnote{Foundation for all supervised learning methods}
 \end{frame}
 
 \end{document}

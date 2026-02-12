@@ -99,16 +99,22 @@
 \begin{document}
 
 % ============================================
-% TITLE AND OUTLINE
+% SLIDE 1: TITLE PAGE
 % ============================================
 \begin{frame}
   \titlepage
 \end{frame}
 
+% ============================================
+% SLIDE 2: OUTLINE
+% ============================================
 \begin{frame}{Outline}
   \tableofcontents
 \end{frame}
 
+% ============================================
+% SLIDE 3: LEARNING OBJECTIVES
+% ============================================
 \begin{frame}[t]{Learning Objectives}
   By the end of this session, you will be able to:
 
@@ -126,148 +132,72 @@
 \end{frame}
 
 % ============================================
-% SECTION 1: PROBLEM
+% SECTION: MATHEMATICAL FOUNDATIONS (6 slides)
 % ============================================
-\section{Problem}
+\section{Mathematical Foundations}
 
-\begin{frame}[t]{The Business Challenge}
-  \textbf{Finance Use Case: House Price Prediction}
-  \begin{itemize}
-    \item Banks need accurate property valuations for mortgage decisions
-    \item Insurers must estimate replacement costs
-    \item Investors evaluate real estate portfolios
-  \end{itemize}
-
-  \vspace{0.5em}
-  \textbf{Why Linear Regression?}
-  \begin{itemize}
-    \item Interpretable coefficients (how much does each feature matter?)
-    \item Regulatory requirement for explainable models
-    \item Fast, well-understood baseline
-  \end{itemize}
-
-  \bottomnote{Linear regression: the workhorse of quantitative finance since the 1800s}
-\end{frame}
-
-\begin{frame}[t]{Finance Application: The CAPM}
-  \textbf{Capital Asset Pricing Model -- Linear Regression in Finance}
-
-  \begin{equation}
-    R_i - R_f = \alpha_i + \beta_i (R_m - R_f) + \varepsilon_i
-  \end{equation}
-
-  \begin{itemize}
-    \item $R_i$: Return of asset $i$
-    \item $R_f$: Risk-free rate (e.g., T-bill)
-    \item $R_m$: Market return (e.g., S\&P 500)
-    \item $\beta_i$: Systematic risk (market sensitivity)
-    \item $\alpha_i$: Abnormal return (should be zero if CAPM holds)
-  \end{itemize}
-
-  \vspace{0.3em}
-  \textbf{Interpretation:} $\beta = 1.2$ means 10\% market rise $\Rightarrow$ 12\% expected asset rise
-
-  \bottomnote{CAPM: The original factor model -- basis for portfolio management}
-\end{frame}
-
+% ============================================
+% SLIDE 4: Matrix Notation (Layout 9 -- Definition-Example)
+% ============================================
 \begin{frame}[t]{Matrix Notation}
-  \textbf{The Model in Matrix Form}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Definition}
 
-  \begin{equation}
-    \mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}
-  \end{equation}
+The linear model in matrix form:
+\begin{equation}
+  \mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}
+\end{equation}
 
-  \begin{itemize}
-    \item $\mathbf{y} \in \mathbb{R}^n$: Response vector
-    \item $\mathbf{X} \in \mathbb{R}^{n \times (p+1)}$: Design matrix (with intercept column)
-    \item $\boldsymbol{\beta} \in \mathbb{R}^{p+1}$: Coefficient vector
-    \item $\boldsymbol{\varepsilon} \in \mathbb{R}^n$: Error vector
-  \end{itemize}
+\begin{itemize}
+  \item $\mathbf{y} \in \mathbb{R}^n$: Response vector
+  \item $\mathbf{X} \in \mathbb{R}^{n \times (p+1)}$: Design matrix
+  \item $\boldsymbol{\beta} \in \mathbb{R}^{p+1}$: Coefficient vector
+  \item $\boldsymbol{\varepsilon} \in \mathbb{R}^n$: Error vector
+\end{itemize}
 
-  \bottomnote{Matrix notation enables elegant derivations and efficient computation}
+\column{0.48\textwidth}
+\textbf{Design Matrix}
+
+\begin{equation}
+  \mathbf{X} = \begin{bmatrix}
+    1 & x_{11} & \cdots & x_{1p} \\
+    1 & x_{21} & \cdots & x_{2p} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    1 & x_{n1} & \cdots & x_{np}
+  \end{bmatrix}
+\end{equation}
+
+\begin{itemize}
+  \item First column of 1s for intercept $\beta_0$
+  \item Each row: one observation
+  \item Each column (after first): one feature
+\end{itemize}
+\end{columns}
+
+\bottomnote{Matrix notation enables elegant derivations and efficient computation}
 \end{frame}
 
-\begin{frame}[t]{Design Matrix Structure}
-  \textbf{The Design Matrix $\mathbf{X}$}
-
-  \begin{equation}
-    \mathbf{X} = \begin{bmatrix}
-      1 & x_{11} & x_{12} & \cdots & x_{1p} \\
-      1 & x_{21} & x_{22} & \cdots & x_{2p} \\
-      \vdots & \vdots & \vdots & \ddots & \vdots \\
-      1 & x_{n1} & x_{n2} & \cdots & x_{np}
-    \end{bmatrix}
-  \end{equation}
-
-  \begin{itemize}
-    \item First column of 1s for intercept $\beta_0$
-    \item Each row is one observation
-    \item Each column (after first) is one feature
-  \end{itemize}
-
-  \bottomnote{$n$ observations, $p$ features, $p+1$ parameters}
-\end{frame}
-
+% ============================================
+% SLIDE 5: OLS Assumptions
+% ============================================
 \begin{frame}[t]{OLS Assumptions}
   \textbf{Classical Assumptions for Valid Inference}
 
   \begin{enumerate}
     \item \textbf{Linearity}: $E[y|X] = X\beta$ (correct functional form)
-    \item \textbf{Exogeneity}: $E[\varepsilon|X] = 0$ (no omitted variables)
+    \item \textbf{Exogeneity}: $E[\varepsilon|X] = 0$ (no omitted variable bias)
     \item \textbf{Homoscedasticity}: $\text{Var}(\varepsilon|X) = \sigma^2 I$ (constant variance)
-    \item \textbf{No multicollinearity}: $\text{rank}(X) = p+1$ (full rank)
+    \item \textbf{Full rank}: $\text{rank}(X) = p+1$ (no perfect multicollinearity)
     \item \textbf{Normality} (for inference): $\varepsilon \sim N(0, \sigma^2 I)$
   \end{enumerate}
 
-  \vspace{0.5em}
-  \textbf{Violations?} Robust standard errors, transformations, regularization
-
-  \bottomnote{Assumptions 1-4 needed for unbiased estimates; 5 for t-tests and CIs}
+  \bottomnote{Assumptions 1--4 for unbiased estimates; 5 for t-tests and CIs}
 \end{frame}
 
-\begin{frame}[t]{The Gauss-Markov Theorem}
-  \textbf{Why OLS is Special}
-
-  \vspace{0.5em}
-  Under assumptions 1-4 (linearity, exogeneity, homoscedasticity, no perfect multicollinearity):
-
-  \begin{center}
-    \textbf{OLS is BLUE} -- Best Linear Unbiased Estimator
-  \end{center}
-
-  \textbf{What BLUE Means:}
-  \begin{itemize}
-    \item \textbf{Best}: Lowest variance among all linear unbiased estimators
-    \item \textbf{Linear}: Estimator is linear function of $y$
-    \item \textbf{Unbiased}: $E[\hat{\beta}] = \beta$
-  \end{itemize}
-
-  \vspace{0.3em}
-  \textbf{Implication:} You cannot find a better linear unbiased estimator than OLS
-
-  \bottomnote{Gauss-Markov justifies why OLS is the default choice for linear regression}
-\end{frame}
-
-\begin{frame}{Gauss-Markov: Proof Sketch}
-\textbf{Goal}: Show OLS $\hat{\boldsymbol{\beta}}$ has minimum variance among all linear unbiased estimators.
-
-\textbf{Proof}: Let $\tilde{\boldsymbol{\beta}} = \mathbf{Cy}$ be any other linear unbiased estimator. Write $\mathbf{C} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}' + \mathbf{D}$ for some matrix $\mathbf{D}$.
-
-\begin{itemize}
-\item Unbiasedness requires $E[\tilde{\boldsymbol{\beta}}] = \boldsymbol{\beta}$, which forces $\mathbf{DX} = \mathbf{0}$
-\item Then: $\text{Var}(\tilde{\boldsymbol{\beta}}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1} + \sigma^2\mathbf{DD}'$
-\item Since $\mathbf{DD}' \succeq \mathbf{0}$ (positive semi-definite), we have:
-\end{itemize}
-
-\begin{equation}
-\text{Var}(\tilde{\boldsymbol{\beta}}) - \text{Var}(\hat{\boldsymbol{\beta}}) = \sigma^2 \mathbf{DD}' \succeq \mathbf{0}
-\end{equation}
-
-Therefore OLS has the smallest variance among all linear unbiased estimators. $\square$
-
-\bottomnote{The key insight: any deviation $\mathbf{D}$ from OLS adds noise ($\mathbf{DD}'$) without reducing bias.}
-\end{frame}
-
+% ============================================
+% SLIDE 6: The Loss Function
+% ============================================
 \begin{frame}[t]{The Loss Function}
   \textbf{Sum of Squared Residuals (SSR)}
 
@@ -280,9 +210,12 @@ Therefore OLS has the smallest variance among all linear unbiased estimators. $\
     L(\boldsymbol{\beta}) = \mathbf{y}^\top\mathbf{y} - 2\boldsymbol{\beta}^\top\mathbf{X}^\top\mathbf{y} + \boldsymbol{\beta}^\top\mathbf{X}^\top\mathbf{X}\boldsymbol{\beta}
   \end{equation}
 
-  \bottomnote{Quadratic function in $\boldsymbol{\beta}$ -- has unique minimum (if $X$ full rank)}
+  \bottomnote{Quadratic in $\boldsymbol{\beta}$ -- has unique minimum if $\mathbf{X}$ is full rank}
 \end{frame}
 
+% ============================================
+% SLIDE 7: Deriving the Normal Equation
+% ============================================
 \begin{frame}[t]{Deriving the Normal Equation}
   \textbf{Taking the Derivative}
 
@@ -296,201 +229,189 @@ Therefore OLS has the smallest variance among all linear unbiased estimators. $\
     \hat{\boldsymbol{\beta}} &= (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}
   \end{align}
 
-  \bottomnote{This is the closed-form OLS solution -- the ``normal equation''}
+  \bottomnote{This is the closed-form OLS solution}
 \end{frame}
 
+% ============================================
+% SLIDE 8: Simple Regression Visualization (Layout 21)
+% ============================================
 \begin{frame}[t]{Simple Regression Visualization}
   \begin{center}
-    \includegraphics[width=0.55\textwidth]{01_simple_regression/chart.pdf}
+    \includegraphics[width=0.65\textwidth]{01_simple_regression/chart.pdf}
   \end{center}
 
   \bottomnote{The fitted line minimizes vertical distances squared}
 \end{frame}
 
+% ============================================
+% SLIDE 9: Multiple Regression Surface (Layout 21)
+% ============================================
 \begin{frame}[t]{Multiple Regression Surface}
+  \vspace{-2mm}
   \begin{center}
-    \includegraphics[width=0.55\textwidth]{02_multiple_regression_3d/chart.pdf}
+    \includegraphics[width=0.60\textwidth]{02_multiple_regression_3d/chart.pdf}
   \end{center}
+
   \bottomnote{With 2 features, we fit a plane; with $p$ features, a hyperplane}
 \end{frame}
 
 % ============================================
-% SECTION 2: METHOD
+% SECTION: OPTIMIZATION (4 slides)
 % ============================================
-\section{Method}
+\section{Optimization}
 
+% ============================================
+% SLIDE 10: Why Gradient Descent? (Layout 10 -- Comparison)
+% ============================================
+\begin{frame}[t]{Why Gradient Descent?}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{\textcolor{MLRed}{Normal Equation}}
+\begin{itemize}
+  \item Computing $(\mathbf{X}^\top\mathbf{X})^{-1}$ is $O(p^3)$
+  \item Must store $p \times p$ matrix
+  \item Exact solution but slow for large $p$
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{\textcolor{MLGreen}{Gradient Descent}}
+\begin{itemize}
+  \item Memory efficient: process one sample at a time
+  \item Scales to big data (SGD)
+  \item Generalizes to non-linear models
+\end{itemize}
+\end{columns}
+
+\bottomnote{For $p > 10{,}000$, gradient descent usually faster}
+\end{frame}
+
+% ============================================
+% SLIDE 11: The Gradient + Update Rule (Layout 4 -- Two columns math)
+% ============================================
+\begin{frame}[t]{The Gradient and Update Rule}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Gradient of the Loss}
+
+\begin{equation}
+  \nabla L(\boldsymbol{\beta}) = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})
+\end{equation}
+
+\begin{itemize}
+  \item Gradient points in direction of steepest ascent
+  \item We move \emph{opposite} to gradient
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Update Rule}
+
+\begin{equation}
+  \boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L
+\end{equation}
+
+\textbf{Algorithm:}
+\begin{enumerate}
+  \item Initialize $\boldsymbol{\beta}^{(0)}$ (zeros or random)
+  \item Compute gradient $\nabla L$
+  \item Update $\boldsymbol{\beta}$
+  \item Repeat until convergence
+\end{enumerate}
+\end{columns}
+
+\bottomnote{Convergence: $\|\boldsymbol{\beta}_{t+1} - \boldsymbol{\beta}_t\| < \varepsilon$ or max iterations}
+\end{frame}
+
+% ============================================
+% SLIDE 12: Learning Rate and SGD (Layout 3 -- Two columns text)
+% ============================================
+\begin{frame}[t]{Learning Rate and SGD}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Learning Rate $\alpha$}
+
+\begin{itemize}
+  \item \textbf{Too small}: Slow convergence, many iterations
+  \item \textbf{Too large}: Divergence, oscillation
+  \item \textbf{Practical}: Start with $\alpha = 0.01$, use adaptive methods (Adam)
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Mini-Batch SGD}
+
+\begin{itemize}
+  \item $m = 1$: Stochastic GD (noisy but fast)
+  \item $m = n$: Batch GD (stable but slow)
+  \item $m \in [32, 256]$: Mini-batch (good tradeoff)
+\end{itemize}
+\end{columns}
+
+\bottomnote{SGD is how we train all modern ML models, not just linear regression}
+\end{frame}
+
+% ============================================
+% SLIDE 13: Feature Scaling
+% ============================================
 \begin{frame}[t]{Feature Scaling}
   \textbf{Standardization: Zero Mean, Unit Variance}
 
   \begin{equation}
-    x_j^{\text{scaled}} = \frac{x_j - \bar{x}_j}{s_j}
+    z_j = \frac{x_j - \mu_j}{\sigma_j}
   \end{equation}
 
   \textbf{Why Scale Features?}
   \begin{enumerate}
-    \item \textbf{Coefficient comparison:} After scaling, $|\beta_j|$ reflects relative importance
-    \item \textbf{Gradient descent:} Converges faster with similar feature scales
-    \item \textbf{Regularization:} Fair penalty across all features
+    \item \textbf{Coefficient comparison}: After scaling, $|\beta_j|$ reflects relative importance
+    \item \textbf{Gradient descent}: Converges faster with similar feature scales
+    \item \textbf{Regularization}: Fair penalty across all features
   \end{enumerate}
-
-  \vspace{0.3em}
-  \textbf{Caution:} Standardized coefficients lose original units (trade-off)
 
   \bottomnote{Always standardize for regularization; optional for OLS if only predicting}
 \end{frame}
 
-\begin{frame}[t]{Why Gradient Descent?}
-  \textbf{Normal Equation Limitations}
+% ============================================
+% SECTION: EVALUATION AND INFERENCE (4 slides)
+% ============================================
+\section{Evaluation and Inference}
 
-  \begin{itemize}
-    \item Computing $(\mathbf{X}^\top\mathbf{X})^{-1}$ is $O(p^3)$
-    \item Memory: Need to store $p \times p$ matrix
-    \item For large $p$ (millions of features): infeasible
-  \end{itemize}
+% ============================================
+% SLIDE 14: R-squared and Adjusted R-squared (Layout 4 -- Two columns math)
+% ============================================
+\begin{frame}[t]{R-Squared and Adjusted R-Squared}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{$R^2$: Coefficient of Determination}
 
-  \vspace{0.5em}
-  \textbf{Gradient Descent Advantages}
+\begin{equation}
+  R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
+\end{equation}
 
-  \begin{itemize}
-    \item Memory efficient: process one sample at a time
-    \item Scales to big data (SGD)
-    \item Generalizes to non-linear models
-  \end{itemize}
+\begin{itemize}
+  \item Proportion of variance explained
+  \item $R^2 = 0$: no better than mean
+  \item $R^2 = 1$: perfect fit
+  \item Always increases with more features
+\end{itemize}
 
-  \bottomnote{For $p > 10{,}000$, gradient descent usually faster}
-\end{frame}
+\column{0.48\textwidth}
+\textbf{Adjusted $R^2$}
 
-\begin{frame}[t]{The Gradient}
-  \textbf{Gradient of the Loss Function}
+\begin{equation}
+  R^2_{\text{adj}} = 1 - \frac{(1-R^2)(n-1)}{n-p-1}
+\end{equation}
 
-  \begin{equation}
-    \nabla L(\boldsymbol{\beta}) = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) = -2\mathbf{X}^\top\mathbf{r}
-  \end{equation}
+\begin{itemize}
+  \item Penalizes for number of predictors $p$
+  \item Can decrease with irrelevant features
+  \item Better for model comparison
+\end{itemize}
+\end{columns}
 
-  where $\mathbf{r} = \mathbf{y} - \mathbf{X}\boldsymbol{\beta}$ is the residual vector.
-
-  \vspace{0.5em}
-  \textbf{Intuition:}
-  \begin{itemize}
-    \item Gradient points in direction of steepest ascent
-    \item We move opposite to gradient (steepest descent)
-    \item Scale by learning rate $\alpha$
-  \end{itemize}
-
-  \bottomnote{Gradient is a $p+1$ dimensional vector}
-\end{frame}
-
-\begin{frame}[t]{Gradient Descent Algorithm}
-  \textbf{Update Rule}
-
-  \begin{equation}
-    \boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L(\boldsymbol{\beta}^{(t)})
-  \end{equation}
-
-  \textbf{Algorithm:}
-  \begin{enumerate}
-    \item Initialize $\boldsymbol{\beta}^{(0)}$ (often zeros or random)
-    \item Compute gradient $\nabla L(\boldsymbol{\beta}^{(t)})$
-    \item Update: $\boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L$
-    \item Repeat until convergence
-  \end{enumerate}
-
-  \bottomnote{Convergence: $\|\boldsymbol{\beta}^{(t+1)} - \boldsymbol{\beta}^{(t)}\| < \epsilon$ or max iterations}
-\end{frame}
-
-\begin{frame}[t]{Gradient Descent Visualization}
-  \begin{center}
-    \includegraphics[width=0.55\textwidth]{04_gradient_descent/chart.pdf}
-  \end{center}
-
-  \bottomnote{Contours show loss surface; path shows optimization trajectory}
-\end{frame}
-
-\begin{frame}[t]{Learning Rate Selection}
-  \textbf{The Critical Hyperparameter}
-
-  \begin{itemize}
-    \item \textbf{Too small}: Slow convergence, many iterations
-    \item \textbf{Too large}: Divergence, oscillation
-    \item \textbf{Just right}: Fast, stable convergence
-  \end{itemize}
-
-  \vspace{0.5em}
-  \textbf{Convergence Theory:}
-  \begin{itemize}
-    \item Convex: $O(1/t)$ convergence rate
-    \item Strongly convex: $O(\rho^t)$ where $\rho < 1$ (linear rate)
-    \item Learning rate condition: $\eta < 2/L$ where $L$ is Lipschitz constant of $\nabla L$
-  \end{itemize}
-
-  \vspace{0.3em}
-  \textbf{Practical:} Start with $\eta = 0.01$, use adaptive methods (Adam, AdaGrad)
-
-  \bottomnote{For OLS, optimal $\eta = 1/\lambda_{\max}(X^\top X)$}
-\end{frame}
-
-\begin{frame}[t]{Stochastic Gradient Descent (SGD)}
-  \textbf{Mini-Batch Gradient Descent}
-
-  Instead of full gradient:
-  \begin{equation}
-    \nabla L(\boldsymbol{\beta}) = -\frac{2}{n}\mathbf{X}^\top\mathbf{r}
-  \end{equation}
-
-  Use mini-batch of size $m$:
-  \begin{equation}
-    \nabla L_B(\boldsymbol{\beta}) = -\frac{2}{m}\mathbf{X}_B^\top\mathbf{r}_B
-  \end{equation}
-
-  \begin{itemize}
-    \item $m = 1$: Stochastic GD (noisy but fast)
-    \item $m = n$: Batch GD (stable but slow)
-    \item $m \in [32, 256]$: Mini-batch (good tradeoff)
-  \end{itemize}
-
-  \bottomnote{SGD: Process data once per epoch, update many times}
+\bottomnote{Use adjusted $R^2$ when comparing models with different numbers of features}
 \end{frame}
 
 % ============================================
-% SECTION 3: SOLUTION
+% SLIDE 15: RMSE and MAE
 % ============================================
-\section{Solution}
-
-\begin{frame}[t]{R-Squared ($R^2$)}
-  \textbf{Coefficient of Determination}
-
-  \begin{equation}
-    R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}} = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
-  \end{equation}
-
-  \textbf{Interpretation:}
-  \begin{itemize}
-    \item Proportion of variance explained by model
-    \item $R^2 = 0$: Model no better than mean
-    \item $R^2 = 1$: Perfect fit
-    \item $R^2 = 0.7$: 70\% of variance explained
-  \end{itemize}
-
-  \bottomnote{$R^2$ always increases with more features -- use Adjusted $R^2$}
-\end{frame}
-
-\begin{frame}[t]{Adjusted R-Squared}
-  \textbf{Penalizing Model Complexity}
-
-  \begin{equation}
-    R^2_{\text{adj}} = 1 - \frac{(1-R^2)(n-1)}{n-p-1}
-  \end{equation}
-
-  \textbf{Properties:}
-  \begin{itemize}
-    \item Adjusts for number of predictors $p$
-    \item Can decrease when adding irrelevant features
-    \item Better for model comparison
-  \end{itemize}
-
-  \bottomnote{Use $R^2_{\text{adj}}$ when comparing models with different $p$}
-\end{frame}
-
 \begin{frame}[t]{RMSE and MAE}
   \textbf{Error Metrics in Original Units}
 
@@ -509,186 +430,70 @@ Therefore OLS has the smallest variance among all linear unbiased estimators. $\
   \bottomnote{Report both for comprehensive evaluation}
 \end{frame}
 
-\begin{frame}[t]{Standard Errors of Coefficients}
-  \textbf{Quantifying Uncertainty in Estimates}
+% ============================================
+% SLIDE 16: Hypothesis Testing and CIs (Layout 4 -- Two columns math)
+% ============================================
+\begin{frame}[t]{Hypothesis Testing and Confidence Intervals}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{t-Test for Coefficient $\beta_j$}
 
-  \begin{equation}
-    \text{Var}(\hat{\boldsymbol{\beta}}) = \sigma^2 (\mathbf{X}^\top\mathbf{X})^{-1}
-  \end{equation}
+Standard error:
+\begin{equation}
+  \text{SE}(\hat{\beta}_j) = \hat{\sigma}\sqrt{[(\mathbf{X}^\top\mathbf{X})^{-1}]_{jj}}
+\end{equation}
 
-  \textbf{Standard Error of $\hat{\beta}_j$:}
-  \begin{equation}
-    \text{SE}(\hat{\beta}_j) = \hat{\sigma} \sqrt{[(\mathbf{X}^\top\mathbf{X})^{-1}]_{jj}}
-  \end{equation}
+Test statistic:
+\begin{equation}
+  t_j = \frac{\hat{\beta}_j}{\text{SE}(\hat{\beta}_j)} \sim t_{n-p-1}
+\end{equation}
 
-  where $\hat{\sigma}^2 = \frac{1}{n-p-1}\sum(y_i - \hat{y}_i)^2$ (unbiased variance estimate)
+Reject $H_0\!: \beta_j = 0$ if p-value $< 0.05$
 
-  \bottomnote{SE tells us how much $\hat{\beta}_j$ would vary across different samples}
-\end{frame}
-
-\begin{frame}[t]{Hypothesis Testing for Coefficients}
-  \textbf{Is Feature $j$ Significant?}
-
-  \begin{itemize}
-    \item $H_0: \beta_j = 0$ (feature has no effect)
-    \item $H_1: \beta_j \neq 0$ (feature matters)
-  \end{itemize}
-
-  \textbf{t-Statistic:}
-  \begin{equation}
-    t_j = \frac{\hat{\beta}_j - 0}{\text{SE}(\hat{\beta}_j)} \sim t_{n-p-1}
-  \end{equation}
-
-  \textbf{Decision Rule:}
-  \begin{itemize}
-    \item p-value $< 0.05$: Reject $H_0$, coefficient is significant
-    \item p-value $\geq 0.05$: Cannot reject $H_0$
-  \end{itemize}
-
-  \bottomnote{Always check p-values before interpreting coefficients}
-\end{frame}
-
-\begin{frame}[t]{Confidence Intervals}
-  \textbf{95\% CI for Coefficient $\beta_j$:}
-  \begin{equation}
-    \hat{\beta}_j \pm t_{n-p-1, 0.975} \times \text{SE}(\hat{\beta}_j)
-  \end{equation}
-
-  \textbf{Interpretation:} If we repeated the study many times, 95\% of intervals would contain the true $\beta_j$
-
-  \vspace{0.5em}
-  \textbf{Prediction Intervals:}
-  \begin{itemize}
-    \item \textbf{Confidence interval for mean:} $\hat{y} \pm t \cdot \text{SE}(\hat{y})$
-    \item \textbf{Prediction interval for new observation:} Wider (includes $\sigma^2$)
-  \end{itemize}
-
-  \bottomnote{CI for mean is narrower; prediction interval accounts for individual variability}
-\end{frame}
-
-\begin{frame}{F-Test for Overall Model Significance}
-\textbf{Null hypothesis}: $H_0: \beta_1 = \beta_2 = \cdots = \beta_p = 0$ (model has no explanatory power)
+\column{0.48\textwidth}
+\textbf{95\% Confidence Interval}
 
 \begin{equation}
-F = \frac{R^2 / p}{(1 - R^2) / (n - p - 1)} \sim F_{p, n-p-1}
+  \hat{\beta}_j \pm t_{n-p-1,\, 0.975} \times \text{SE}(\hat{\beta}_j)
 \end{equation}
 
 \begin{itemize}
-\item Tests whether the model \textbf{as a whole} explains significant variance
-\item Reject $H_0$ if $F > F_{\alpha, p, n-p-1}$ (or equivalently, if p-value $< \alpha$)
-\item Complements individual t-tests: possible to have no significant t-tests but a significant F-test (multicollinearity)
+  \item 95\% of intervals contain true $\beta_j$
+  \item CI excludes 0 $\Leftrightarrow$ significant at 5\%
+  \item Prediction intervals are wider (include $\sigma^2$)
 \end{itemize}
+\end{columns}
 
-\textbf{Equivalently} (using sums of squares):
-\begin{equation}
-F = \frac{(\text{TSS} - \text{RSS})/p}{\text{RSS}/(n - p - 1)} = \frac{\text{MSR}}{\text{MSE}}
-\end{equation}
-
-\bottomnote{Every regression output table reports the F-statistic. Always check it before interpreting individual coefficients.}
+\bottomnote{Always check significance before interpreting coefficients}
 \end{frame}
 
-\begin{frame}{OLS and Maximum Likelihood Estimation}
-Under the normality assumption $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$, the likelihood is:
+% ============================================
+% SLIDE 17: F-Test for Overall Significance
+% ============================================
+\begin{frame}[t]{F-Test for Overall Significance}
+  \textbf{Null hypothesis}: $H_0: \beta_1 = \beta_2 = \cdots = \beta_p = 0$
 
-\begin{equation}
-L(\boldsymbol{\beta}, \sigma^2) = \prod_{i=1}^{n} \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(y_i - \mathbf{x}_i'\boldsymbol{\beta})^2}{2\sigma^2}\right)
-\end{equation}
-
-Maximizing the log-likelihood $\ell = -\frac{n}{2}\ln(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum(y_i - \mathbf{x}_i'\boldsymbol{\beta})^2$:
-
-\begin{itemize}
-\item $\frac{\partial \ell}{\partial \boldsymbol{\beta}} = 0$ gives the \textbf{same normal equations as OLS}
-\item $\hat{\sigma}^2_{MLE} = \frac{\text{RSS}}{n}$ (biased; OLS uses $n - p - 1$)
-\item This connection enables likelihood ratio tests, AIC/BIC model comparison
-\end{itemize}
-
-\textbf{Key insight}: OLS $\equiv$ MLE under normality $\Rightarrow$ all MLE properties (efficiency, asymptotic normality) transfer to OLS.
-
-\bottomnote{This bridges to L02 (Logistic Regression), where MLE is the \emph{only} estimation method.}
-\end{frame}
-
-\begin{frame}[t]{Residual Analysis}
-  \begin{center}
-    \includegraphics[width=0.55\textwidth]{03_residual_plots/chart.pdf}
-  \end{center}
-
-  \bottomnote{Good: random scatter. Bad: patterns indicate model misspecification}
-\end{frame}
-
-\begin{frame}{Formal Assumption Diagnostic Tests}
-\begin{tabular}{lll}
-\toprule
-\textbf{Assumption} & \textbf{Test} & \textbf{$H_0$} \\
-\midrule
-Homoscedasticity & Breusch-Pagan & Constant variance \\
- & White test & Constant variance (robust) \\
-No autocorrelation & Durbin-Watson & No serial correlation \\
-Normality & Shapiro-Wilk & Residuals are normal \\
- & Jarque-Bera & Skewness=0, kurtosis=3 \\
-Functional form & Ramsey RESET & No omitted nonlinearities \\
-\bottomrule
-\end{tabular}
-
-\vspace{0.3cm}
-\textbf{When assumptions fail}:
-\begin{itemize}
-\item Heteroscedasticity $\Rightarrow$ White/HC robust standard errors
-\item Autocorrelation $\Rightarrow$ Newey-West standard errors, GLS
-\item Non-normality $\Rightarrow$ Bootstrap inference (large $n$: CLT helps)
-\end{itemize}
-
-\bottomnote{In finance/banking, regulators require formal test results -- ``the residuals looked fine'' is insufficient.}
-\end{frame}
-
-\begin{frame}{Influence Diagnostics: Hat Matrix and Cook's Distance}
-The \textbf{hat matrix} maps observed to fitted values: $\hat{\mathbf{y}} = \mathbf{Hy}$ where
-\begin{equation}
-\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'
-\end{equation}
-
-\textbf{Leverage}: $h_{ii} \in [1/n, 1]$ measures how far $\mathbf{x}_i$ is from the center of the design space. High leverage ($h_{ii} > 2p/n$): observation \emph{could} be influential.
-
-\textbf{Cook's Distance} combines leverage and residual:
-\begin{equation}
-D_i = \frac{e_i^2}{p \cdot \text{MSE}} \cdot \frac{h_{ii}}{(1 - h_{ii})^2}
-\end{equation}
-
-\begin{itemize}
-\item $D_i > 1$: observation substantially changes $\hat{\boldsymbol{\beta}}$ when removed
-\item Critical in finance: a single crisis observation can distort the entire model
-\end{itemize}
-
-\bottomnote{Rule of thumb: investigate points with $D_i > 4/n$ or leverage $h_{ii} > 2(p+1)/n$.}
-\end{frame}
-
-\begin{frame}[t]{Train-Test Split}
-  \textbf{Evaluating Generalization}
+  \begin{equation}
+    F = \frac{R^2 / p}{(1 - R^2) / (n - p - 1)} \sim F_{p,\, n-p-1}
+  \end{equation}
 
   \begin{itemize}
-    \item Never evaluate on training data alone
-    \item Split: 70-80\% train, 20-30\% test
-    \item Report test set metrics
+    \item Tests whether the model \textbf{as a whole} explains significant variance
+    \item Reject $H_0$ if p-value $< \alpha$
+    \item Complements t-tests: possible to have no significant t-tests but a significant F-test (multicollinearity)
   \end{itemize}
 
-  \vspace{0.5em}
-  \textbf{Cross-Validation (K-Fold):}
-  \begin{itemize}
-    \item Split into $K$ folds (typically $K=5$ or $10$)
-    \item Train on $K-1$ folds, validate on 1
-    \item Repeat $K$ times, average results
-  \end{itemize}
-
-  \bottomnote{CV gives more reliable estimate with limited data}
+  \bottomnote{Check the F-statistic before interpreting individual coefficients}
 \end{frame}
 
-\begin{frame}[t]{Learning Curves}
-  \begin{center}
-    \includegraphics[width=0.55\textwidth]{05_learning_curves/chart.pdf}
-  \end{center}
+% ============================================
+% SECTION: REGULARIZATION AND MODEL SELECTION (5 slides)
+% ============================================
+\section{Regularization and Model Selection}
 
-  \bottomnote{Gap between curves indicates overfitting; convergence shows saturation}
-\end{frame}
-
+% ============================================
+% SLIDE 18: The Overfitting Problem
+% ============================================
 \begin{frame}[t]{The Overfitting Problem}
   \textbf{When Models Memorize Instead of Learn}
 
@@ -707,79 +512,59 @@ D_i = \frac{e_i^2}{p \cdot \text{MSE}} \cdot \frac{h_{ii}}{(1 - h_{ii})^2}
   \bottomnote{$\lambda$ controls strength of regularization}
 \end{frame}
 
-\begin{frame}[t]{Ridge Regression (L2)}
-  \textbf{L2 Penalty: Sum of Squared Coefficients}
+% ============================================
+% SLIDE 19: Ridge, Lasso, and Elastic Net (Layout 6 -- Three-way split)
+% ============================================
+\begin{frame}[t]{Ridge, Lasso, and Elastic Net}
+\begin{columns}[T]
+\column{0.30\textwidth}
+\textbf{Ridge (L2)}
 
-  \begin{equation}
-    L_{\text{ridge}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \|\boldsymbol{\beta}\|_2^2
-  \end{equation}
+$$L + \lambda\|\boldsymbol{\beta}\|_2^2$$
 
-  \textbf{Closed-Form Solution:}
-  \begin{equation}
-    \hat{\boldsymbol{\beta}}_{\text{ridge}} = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}
-  \end{equation}
+\begin{itemize}
+  \item Closed-form solution
+  \item Shrinks all toward zero
+  \item Never exactly zero
+\end{itemize}
 
-  \begin{itemize}
-    \item Shrinks all coefficients toward zero
-    \item Never sets coefficients exactly to zero
-    \item Always invertible (even when $p > n$)
-  \end{itemize}
+\column{0.30\textwidth}
+\textbf{Lasso (L1)}
 
-  \bottomnote{Ridge adds $\lambda$ to diagonal -- stabilizes inversion}
+$$L + \lambda\|\boldsymbol{\beta}\|_1$$
+
+\begin{itemize}
+  \item No closed-form
+  \item Sparse solutions
+  \item Automatic feature selection
+\end{itemize}
+
+\column{0.30\textwidth}
+\textbf{Elastic Net}
+
+$$L + \lambda\bigl(\alpha\|\boldsymbol{\beta}\|_1 + \tfrac{1-\alpha}{2}\|\boldsymbol{\beta}\|_2^2\bigr)$$
+
+\begin{itemize}
+  \item Mixing parameter $\alpha$
+  \item Handles correlated features
+  \item Best of both worlds
+\end{itemize}
+\end{columns}
+
+\bottomnote{Ridge for many small effects, Lasso for feature selection, Elastic Net for correlated features}
 \end{frame}
 
-\begin{frame}[t]{Lasso Regression (L1)}
-  \textbf{L1 Penalty: Sum of Absolute Coefficients}
-
-  \begin{equation}
-    L_{\text{lasso}}(\boldsymbol{\beta}) = \|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|^2 + \lambda \|\boldsymbol{\beta}\|_1
-  \end{equation}
-
-  \textbf{Properties:}
-  \begin{itemize}
-    \item Produces sparse solutions (some $\beta_j = 0$)
-    \item Automatic feature selection
-    \item No closed-form solution (use coordinate descent)
-  \end{itemize}
-
-  \bottomnote{Lasso: Least Absolute Shrinkage and Selection Operator}
-\end{frame}
-
-\begin{frame}[t]{Ridge vs Lasso Comparison}
-  \begin{center}
-    \includegraphics[width=0.55\textwidth]{06_regularization_comparison/chart.pdf}
-  \end{center}
-
-  \bottomnote{Ridge: smooth shrinkage. Lasso: sparse (feature selection)}
-\end{frame}
-
-\begin{frame}[t]{Elastic Net}
-  \textbf{Combining L1 and L2 Penalties (Zou \& Hastie, 2005)}
-
-  \begin{equation}
-    \min_{\beta} \frac{1}{2N}\|\mathbf{y} - \mathbf{X}\boldsymbol{\beta}\|_2^2 + \lambda\left(\alpha\|\boldsymbol{\beta}\|_1 + \frac{1-\alpha}{2}\|\boldsymbol{\beta}\|_2^2\right)
-  \end{equation}
-
-  where $\alpha \in [0, 1]$ is the mixing parameter.
-
-  \textbf{Benefits:}
-  \begin{itemize}
-    \item Sparsity from L1 when $\alpha > 0$
-    \item Stability from L2 (handles correlated features)
-    \item $\alpha=1$: pure Lasso; $\alpha=0$: pure Ridge
-  \end{itemize}
-
-  \bottomnote{Often best of both worlds for correlated features}
-\end{frame}
-
+% ============================================
+% SLIDE 20: Choosing Lambda (Layout 11 -- Step-by-step)
+% ============================================
 \begin{frame}[t]{Choosing Lambda}
   \textbf{Cross-Validation for Hyperparameter Tuning}
 
   \begin{enumerate}
-    \item Define grid of $\lambda$ values (e.g., $10^{-4}$ to $10^{4}$)
-    \item For each $\lambda$, perform K-fold CV
-    \item Select $\lambda$ with lowest CV error
-    \item Refit on full training data
+    \item \textbf{Define grid} of $\lambda$ values (e.g., $10^{-4}$ to $10^{4}$, log-spaced)
+    \item \textbf{K-fold CV}: For each $\lambda$, compute average validation error
+    \item \textbf{Select} $\lambda$ with lowest CV error
+    \item \textbf{Refit} on full training data with chosen $\lambda$
   \end{enumerate}
 
   \vspace{0.5em}
@@ -792,7 +577,10 @@ D_i = \frac{e_i^2}{p \cdot \text{MSE}} \cdot \frac{h_{ii}}{(1 - h_{ii})^2}
   \bottomnote{Larger $\lambda$ = more regularization = simpler model}
 \end{frame}
 
-\begin{frame}[t]{Decomposing Prediction Error}
+% ============================================
+% SLIDE 21: Bias-Variance Decomposition
+% ============================================
+\begin{frame}[t]{Bias-Variance Decomposition}
   \textbf{Expected Prediction Error}
 
   \begin{equation}
@@ -805,164 +593,344 @@ D_i = \frac{e_i^2}{p \cdot \text{MSE}} \cdot \frac{h_{ii}}{(1 - h_{ii})^2}
     \item \textbf{$\sigma^2$}: Irreducible noise in data
   \end{itemize}
 
-  \bottomnote{We can't reduce irreducible error -- focus on bias and variance}
-\end{frame}
-
-\begin{frame}[t]{The Tradeoff Illustrated}
-  \begin{center}
-    \includegraphics[width=0.55\textwidth]{07_bias_variance/chart.pdf}
-  \end{center}
-
-  \bottomnote{Optimal complexity minimizes total error}
-\end{frame}
-
-\begin{frame}[t]{Regularization and Bias-Variance}
-  \textbf{How Regularization Helps}
-
-  \begin{itemize}
-    \item Increasing $\lambda$: \highlight{increases bias}, \highlight{decreases variance}
-    \item Decreasing $\lambda$: decreases bias, increases variance
-    \item Optimal $\lambda$: minimizes total error
-  \end{itemize}
-
-  \vspace{0.5em}
-  \textbf{In Practice:}
-  \begin{itemize}
-    \item Use CV to find optimal $\lambda$
-    \item Regularization almost always helps when $p$ is large
-  \end{itemize}
-
-  \bottomnote{Regularization trades a little bias for a lot of variance reduction}
+  \bottomnote{We cannot reduce irreducible error -- focus on bias and variance}
 \end{frame}
 
 % ============================================
-% SECTION 6: PRACTICE
+% SLIDE 22: VIF and Multicollinearity (Layout 9 -- Definition-Example)
 % ============================================
-\section{Practice}
+\begin{frame}[t]{VIF and Multicollinearity}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Variance Inflation Factor}
 
-\begin{frame}[t]{Hands-on Exercise}
-  \textbf{Open the Colab Notebook}
-  \begin{itemize}
-    \item Exercise 1: Implement OLS from scratch
-    \item Exercise 2: Use scikit-learn LinearRegression
-    \item Exercise 3: Compare with gradient descent
-  \end{itemize}
-  \vspace{1em}
-  \textbf{Link:} See course materials on GitHub
+\begin{equation}
+  \text{VIF}_j = \frac{1}{1 - R^2_j}
+\end{equation}
+
+where $R^2_j$ is from regressing $x_j$ on all other features.
+
+\begin{itemize}
+  \item VIF $= 1$: No correlation
+  \item VIF $> 5$: Moderate concern
+  \item VIF $> 10$: Serious multicollinearity
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Remedies}
+
+\begin{itemize}
+  \item Remove highly correlated features
+  \item Use Ridge regression ($\lambda > 0$ stabilizes)
+  \item Apply PCA before regression
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Why it matters:}
+\begin{itemize}
+  \item Inflated standard errors
+  \item Unstable coefficient estimates
+  \item Misleading significance tests
+\end{itemize}
+\end{columns}
+
+\bottomnote{Always check VIF before trusting coefficient estimates}
 \end{frame}
 
 % ============================================
-% SECTION 7: DECISION FRAMEWORK
+% SECTION: GENERALIZATION (1 slide)
 % ============================================
-\section{Decision Framework}
+\section{Generalization}
 
-\begin{frame}[t]{Algorithm Selection Guide}
-  \begin{center}
-    \includegraphics[width=0.55\textwidth]{08_decision_flowchart/chart.pdf}
-  \end{center}
+% ============================================
+% SLIDE 23: Train-Test Split and CV (Layout 10 -- Comparison)
+% ============================================
+\begin{frame}[t]{Train-Test Split and Cross-Validation}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Simple Split}
+\begin{itemize}
+  \item 70--80\% train, 20--30\% test
+  \item Report test set metrics
+  \item Fast but high variance estimate
+\end{itemize}
 
-  \bottomnote{Use this framework when choosing regression methods}
-\end{frame}
+\column{0.48\textwidth}
+\textbf{K-Fold Cross-Validation}
+\begin{itemize}
+  \item Split into $K$ folds (typically 5 or 10)
+  \item Train on $K{-}1$ folds, validate on 1
+  \item More reliable with limited data
+\end{itemize}
+\end{columns}
 
-\begin{frame}[t]{Linear Regression: When and Why}
-  \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \textbf{\textcolor{MLGreen}{Use When:}}
-      \begin{itemize}
-        \item Continuous target variable
-        \item Approximate linear relationships
-        \item Interpretability is critical
-        \item Inference on coefficients needed
-        \item Fast prediction required
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{\textcolor{MLRed}{Avoid When:}}
-      \begin{itemize}
-        \item Target is categorical
-        \item Strong non-linear patterns
-        \item Many outliers present
-        \item Features highly correlated
-        \item Prediction accuracy paramount
-      \end{itemize}
-    \end{column}
-  \end{columns}
-
-  \bottomnote{When in doubt, linear regression is a strong baseline}
-\end{frame}
-
-\begin{frame}[t]{Diagnosing Multicollinearity}
-  \textbf{Variance Inflation Factor (VIF)}
-
-  \begin{equation}
-    \text{VIF}_j = \frac{1}{1 - R^2_j}
-  \end{equation}
-
-  where $R^2_j$ is from regressing $x_j$ on all other features.
-
-  \textbf{Interpretation:}
-  \begin{itemize}
-    \item VIF $= 1$: No correlation with other features
-    \item VIF $> 5$: Moderate concern
-    \item VIF $> 10$: Serious multicollinearity
-  \end{itemize}
-
-  \vspace{0.3em}
-  \textbf{Remedies:}
-  \begin{itemize}
-    \item Remove highly correlated features
-    \item Use Ridge regression ($\lambda > 0$ stabilizes)
-    \item Apply PCA before regression
-  \end{itemize}
-
-  \bottomnote{Always check VIF before trusting coefficient estimates}
+\bottomnote{Always evaluate on data the model has never seen}
 \end{frame}
 
 % ============================================
-% SUMMARY
+% SECTION: SUMMARY (2 slides)
 % ============================================
 \section{Summary}
 
+% ============================================
+% SLIDE 24: Key Equations Summary (Layout 12 -- Formula Reference)
+% ============================================
 \begin{frame}[t]{Key Equations Summary}
-  \small
-  \begin{align}
-    \text{Model:} \quad & \mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon} \\
-    \text{OLS Solution:} \quad & \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y} \\
-    \text{Gradient:} \quad & \nabla L = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) \\
-    \text{GD Update:} \quad & \boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L \\
-    \text{Ridge:} \quad & \hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y} \\
-    R^2: \quad & 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}
-  \end{align}
+\small
+\begin{columns}[T]
+\column{0.30\textwidth}
+\textbf{Model}
+
+$$\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$$
+$$\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}$$
+
+\column{0.30\textwidth}
+\textbf{Optimization}
+
+$$\nabla L = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})$$
+$$\boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} - \alpha \nabla L$$
+
+\column{0.30\textwidth}
+\textbf{Regularization}
+
+$$\hat{\boldsymbol{\beta}}_{\text{ridge}} = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}$$
+$$R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}$$
+\end{columns}
+
+\bottomnote{Keep this slide as a reference sheet}
 \end{frame}
 
+% ============================================
+% SLIDE 25: Key Takeaways
+% ============================================
 \begin{frame}[t]{Key Takeaways}
   \begin{enumerate}
-    \item Linear regression minimizes squared error -- closed form or GD
-    \item Matrix notation enables efficient computation
-    \item Gradient descent scales to large datasets
-    \item Regularization (Ridge/Lasso) prevents overfitting
-    \item The bias-variance tradeoff guides model complexity
-    \item Always evaluate on held-out test data
+    \item Linear regression minimizes squared error -- closed form or gradient descent
+    \item Matrix notation enables efficient computation and elegant derivations
+    \item Gradient descent scales to large datasets where normal equations fail
+    \item Regularization (Ridge/Lasso/Elastic Net) prevents overfitting
+    \item The bias-variance tradeoff guides model complexity decisions
   \end{enumerate}
 
   \vspace{0.5em}
   \textbf{Next Session:} Logistic Regression for Classification
+
+  \bottomnote{Foundation for all supervised learning -- next: Logistic Regression}
 \end{frame}
 
-\begin{frame}[t]{References}
-  \footnotesize
+% ============================================
+% APPENDIX
+% ============================================
+\appendix
+
+\section*{Advanced Topics}
+
+% ============================================
+% APPENDIX SLIDE 1: Section Divider
+% ============================================
+\begin{frame}[t]
+\vfill
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{title}
+\usebeamerfont{title}\Large Appendix: Advanced Topics and Proofs\par
+\vspace{0.3em}
+\normalsize These slides are supplementary material for self-study
+\end{beamercolorbox}
+\vfill
+\end{frame}
+
+% ============================================
+% APPENDIX SLIDE 2: CAPM
+% ============================================
+\begin{frame}[t]{Finance Application: The CAPM}
+  \textbf{Capital Asset Pricing Model -- Linear Regression in Finance}
+
+  \begin{equation}
+    R_i - R_f = \alpha_i + \beta_i (R_m - R_f) + \varepsilon_i
+  \end{equation}
+
   \begin{itemize}
-    \item James, Witten, Hastie, Tibshirani (2021). \textit{Introduction to Statistical Learning}. Chapter 3.
-    \item Hastie, Tibshirani, Friedman (2009). \textit{Elements of Statistical Learning}. Chapter 3.
-    \item Bishop (2006). \textit{Pattern Recognition and Machine Learning}. Chapter 3.
+    \item $R_i$: Return of asset $i$
+    \item $R_f$: Risk-free rate (e.g., T-bill)
+    \item $R_m$: Market return (e.g., S\&P 500)
+    \item $\beta_i$: Systematic risk (market sensitivity)
+  \end{itemize}
+
+  \vspace{0.3em}
+  \textbf{Interpretation:} $\beta = 1.2$ means 10\% market rise $\Rightarrow$ 12\% expected asset rise
+
+  \bottomnote{CAPM: The original factor model -- basis for portfolio management}
+\end{frame}
+
+% ============================================
+% APPENDIX SLIDE 3: Gauss-Markov Theorem
+% ============================================
+\begin{frame}[t]{The Gauss-Markov Theorem}
+  \textbf{Why OLS is Special}
+
+  \vspace{0.5em}
+  Under assumptions 1--4 (linearity, exogeneity, homoscedasticity, full rank):
+
+  \begin{center}
+    \textbf{OLS is BLUE} -- Best Linear Unbiased Estimator
+  \end{center}
+
+  \begin{itemize}
+    \item \textbf{Best}: Lowest variance among all linear unbiased estimators
+    \item \textbf{Linear}: Estimator is a linear function of $\mathbf{y}$
+    \item \textbf{Unbiased}: $E[\hat{\boldsymbol{\beta}}] = \boldsymbol{\beta}$
+  \end{itemize}
+
+  \bottomnote{Gauss-Markov justifies why OLS is the default for linear regression}
+\end{frame}
+
+% ============================================
+% APPENDIX SLIDE 4: Gauss-Markov Proof Sketch
+% ============================================
+\begin{frame}[t]{Gauss-Markov: Proof Sketch}
+  \textbf{Goal}: Show OLS $\hat{\boldsymbol{\beta}}$ has minimum variance among all linear unbiased estimators.
+
+  \textbf{Proof}: Let $\tilde{\boldsymbol{\beta}} = \mathbf{Cy}$ be any other linear unbiased estimator. Write $\mathbf{C} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}' + \mathbf{D}$ for some matrix $\mathbf{D}$.
+
+  \begin{itemize}
+    \item Unbiasedness requires $E[\tilde{\boldsymbol{\beta}}] = \boldsymbol{\beta}$, which forces $\mathbf{DX} = \mathbf{0}$
+    \item Then: $\text{Var}(\tilde{\boldsymbol{\beta}}) = \sigma^2(\mathbf{X}'\mathbf{X})^{-1} + \sigma^2\mathbf{DD}'$
+    \item Since $\mathbf{DD}' \succeq \mathbf{0}$:
+  \end{itemize}
+
+  \begin{equation}
+    \text{Var}(\tilde{\boldsymbol{\beta}}) - \text{Var}(\hat{\boldsymbol{\beta}}) = \sigma^2 \mathbf{DD}' \succeq \mathbf{0}
+  \end{equation}
+
+  Therefore OLS has the smallest variance among all linear unbiased estimators. $\square$
+
+  \bottomnote{Any deviation from OLS adds noise without reducing bias}
+\end{frame}
+
+% ============================================
+% APPENDIX SLIDE 5: OLS and Maximum Likelihood
+% ============================================
+\begin{frame}[t]{OLS and Maximum Likelihood Estimation}
+  Under normality $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$, the likelihood is:
+
+  \begin{equation}
+    L(\boldsymbol{\beta}, \sigma^2) = \prod_{i=1}^{n} \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(y_i - \mathbf{x}_i'\boldsymbol{\beta})^2}{2\sigma^2}\right)
+  \end{equation}
+
+  Maximizing the log-likelihood:
+
+  \begin{itemize}
+    \item $\frac{\partial \ell}{\partial \boldsymbol{\beta}} = 0$ gives the \textbf{same normal equations as OLS}
+    \item $\hat{\sigma}^2_{\text{MLE}} = \frac{\text{RSS}}{n}$ (biased; OLS uses $n - p - 1$)
+    \item This connection enables likelihood ratio tests, AIC/BIC model comparison
+  \end{itemize}
+
+  \textbf{Key insight}: OLS $\equiv$ MLE under normality $\Rightarrow$ all MLE properties transfer to OLS.
+
+  \bottomnote{OLS = MLE under normality -- bridges to Logistic Regression (L02)}
+\end{frame}
+
+% ============================================
+% APPENDIX SLIDE 6: Formal Diagnostic Tests
+% ============================================
+\begin{frame}[t]{Formal Assumption Diagnostic Tests}
+\begin{tabular}{lll}
+\toprule
+\textbf{Assumption} & \textbf{Test} & \textbf{$H_0$} \\
+\midrule
+Homoscedasticity & Breusch-Pagan & Constant variance \\
+ & White test & Constant variance (robust) \\
+No autocorrelation & Durbin-Watson & No serial correlation \\
+Normality & Shapiro-Wilk & Residuals are normal \\
+ & Jarque-Bera & Skewness=0, kurtosis=3 \\
+Functional form & Ramsey RESET & No omitted nonlinearities \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3cm}
+\textbf{When assumptions fail:}
+\begin{itemize}
+  \item Heteroscedasticity $\Rightarrow$ White/HC robust standard errors
+  \item Autocorrelation $\Rightarrow$ Newey-West standard errors, GLS
+  \item Non-normality $\Rightarrow$ Bootstrap inference (large $n$: CLT helps)
+\end{itemize}
+
+\bottomnote{Regulators require formal test results -- ``the residuals looked fine'' is insufficient}
+\end{frame}
+
+% ============================================
+% APPENDIX SLIDE 7: Hat Matrix and Cook's Distance
+% ============================================
+\begin{frame}[t]{Hat Matrix and Cook's Distance}
+  The \textbf{hat matrix} maps observed to fitted values: $\hat{\mathbf{y}} = \mathbf{Hy}$ where
+  \begin{equation}
+    \mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'
+  \end{equation}
+
+  \textbf{Leverage}: $h_{ii} \in [1/n, 1]$ measures how far $\mathbf{x}_i$ is from the center of the design space. High leverage ($h_{ii} > 2p/n$): observation \emph{could} be influential.
+
+  \textbf{Cook's Distance} combines leverage and residual:
+  \begin{equation}
+    D_i = \frac{e_i^2}{p \cdot \text{MSE}} \cdot \frac{h_{ii}}{(1 - h_{ii})^2}
+  \end{equation}
+
+  \begin{itemize}
+    \item $D_i > 1$: observation substantially changes $\hat{\boldsymbol{\beta}}$ when removed
+    \item Critical in finance: a single crisis observation can distort the entire model
+  \end{itemize}
+
+  \bottomnote{Investigate points with $D_i > 4/n$ or leverage $h_{ii} > 2(p+1)/n$}
+\end{frame}
+
+% ============================================
+% APPENDIX SLIDE 8: Convergence Theory
+% ============================================
+\begin{frame}[t]{Convergence Theory}
+  \textbf{Convergence Rates for Gradient Descent}
+
+  \begin{itemize}
+    \item \textbf{Convex}: $O(1/t)$ convergence rate (sub-linear)
+    \item \textbf{Strongly convex}: $O(\rho^t)$ where $\rho < 1$ (linear rate)
   \end{itemize}
 
   \vspace{0.5em}
-  \textbf{Online Resources:}
-  \begin{itemize}
-    \item scikit-learn: \url{https://scikit-learn.org/stable/modules/linear_model.html}
-    \item Stanford CS229: \url{https://cs229.stanford.edu/}
-  \end{itemize}
+  \textbf{Learning Rate Condition:}
+  \begin{equation}
+    \eta < \frac{2}{L}
+  \end{equation}
+  where $L$ is the Lipschitz constant of $\nabla L$.
+
+  \vspace{0.3em}
+  \textbf{For OLS specifically}, the optimal learning rate is:
+  \begin{equation}
+    \eta^* = \frac{1}{\lambda_{\max}(\mathbf{X}^\top\mathbf{X})}
+  \end{equation}
+
+  \bottomnote{For OLS, optimal $\eta = 1/\lambda_{\max}(\mathbf{X}^\top\mathbf{X})$}
+\end{frame}
+
+% ============================================
+% APPENDIX SLIDE 9: References (Layout 20 -- Two columns)
+% ============================================
+\begin{frame}[t]{References and Resources}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Textbooks}
+\footnotesize
+\begin{itemize}
+  \item James, Witten, Hastie, Tibshirani (2021). \textit{Introduction to Statistical Learning}. Ch.~3.
+  \item Hastie, Tibshirani, Friedman (2009). \textit{Elements of Statistical Learning}. Ch.~3.
+  \item Bishop (2006). \textit{Pattern Recognition and Machine Learning}. Ch.~3.
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Online Resources}
+\footnotesize
+\begin{itemize}
+  \item scikit-learn: \url{https://scikit-learn.org/stable/modules/linear_model.html}
+  \item Stanford CS229: \url{https://cs229.stanford.edu/}
+\end{itemize}
+\end{columns}
 \end{frame}
 
 \end{document}
