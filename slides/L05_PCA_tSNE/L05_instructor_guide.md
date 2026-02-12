@@ -142,6 +142,30 @@ This topic is assessed in:
 - **Presentations**: Topics 10-12 (UMAP, PCA in Finance, Autoencoders)
 - **Capstone**: Dimensionality reduction for any project
 
+## Slide Build Specification
+
+### Required Content
+- Intro key visual: 3D to 2D projection
+- Must-have derivations: Eigenvalue derivation from covariance matrix, SVD connection, t-SNE gradient, perplexity math
+- No pseudocode needed (PCA is a closed-form computation)
+
+### Chart Requirements
+- Scree plot (overview)
+- PC loadings (deepdive)
+- Reconstruction visualization (deepdive)
+- t-SNE perplexity comparison (deepdive)
+- Swiss roll projection (overview)
+
+### Domain Applications
+- Yield curve PCA: first 3 PCs = level/slope/curvature (worked example)
+- Portfolio risk decomposition
+- t-SNE for market regime detection
+
+### Appendix Content
+- Full eigenvalue derivation
+- SVD-PCA equivalence proof
+- t-SNE gradient derivation
+
 ## Post-Session Notes
 
 *Space for instructor notes after delivering the session*

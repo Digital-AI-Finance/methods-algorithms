@@ -140,6 +140,30 @@ This topic is assessed in:
 - scikit-learn clustering documentation
 - Arthur & Vassilvitskii (2007) K-Means++ paper
 
+## Slide Build Specification
+
+### Required Content
+- Intro key visual: Nearest neighbor intuition (show k=1,3,7 effect)
+- Must-have derivations: Distance metric proofs, K-Means convergence, curse of dimensionality
+- Must-have pseudocode: KNN with tie-breaking, K-Means with empty cluster handling
+
+### Chart Requirements
+- KNN boundaries (overview)
+- Distance heatmap (deepdive)
+- K-Means iteration (overview)
+- Elbow plot (overview)
+- Silhouette plot (deepdive)
+- Voronoi diagram (deepdive)
+
+### Domain Applications
+- Customer segmentation (RFM) (worked example)
+- Fraud anomaly detection via clustering
+
+### Appendix Content
+- Distance metric proofs
+- K-Means convergence proof
+- Empty cluster handling edge cases
+
 ## Post-Session Notes
 
 *Space for instructor notes after delivering the session*

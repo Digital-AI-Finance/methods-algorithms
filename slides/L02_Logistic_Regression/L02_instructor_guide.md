@@ -142,6 +142,30 @@ This topic is assessed in:
 - scikit-learn Logistic Regression User Guide
 - Interpretable ML Book: Logistic Regression chapter
 
+## Slide Build Specification
+
+### Required Content
+- Intro key formula: `P(Y=1) = 1/(1+e^{-z})` (sigmoid)
+- Must-have derivations: MLE derivation, Newton-Raphson
+- Must-have inference: Wald/LR/Score tests, multiclass (softmax)
+
+### Chart Requirements
+- Sigmoid curve (overview)
+- Decision boundary (overview)
+- ROC curve (overview/deepdive)
+- PR curve (deepdive)
+- Confusion matrix (overview)
+- Calibration plot (deepdive)
+
+### Domain Applications
+- Credit scoring / PD estimation (worked example)
+- Basel II/III scorecards
+- Class imbalance in fraud -- MUST discuss for ANY classification task
+
+### Appendix Content
+- Newton-Raphson convergence
+- Multinomial logit theory
+
 ## Post-Session Notes
 
 *Space for instructor notes after delivering the session*

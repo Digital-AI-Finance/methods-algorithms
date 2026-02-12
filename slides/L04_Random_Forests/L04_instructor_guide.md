@@ -167,6 +167,30 @@ This topic is assessed in:
 - scikit-learn ensemble documentation
 - SHAP library for advanced feature importance
 
+## Slide Build Specification
+
+### Required Content
+- Intro key visual: Ensemble voting (wisdom of crowds)
+- Must-have derivations: Gini/entropy derivation, bagging variance reduction proof, boosting loss minimization, SHAP
+- Must-have pseudocode: RF with bootstrap, AdaBoost/XGBoost update
+
+### Chart Requirements
+- Decision tree visualization (overview)
+- Feature importance bar chart (overview)
+- Bootstrap illustration (overview)
+- OOB error convergence (deepdive)
+- Ensemble voting diagram (overview)
+- Variance reduction curve (deepdive)
+
+### Domain Applications
+- Fraud detection with class imbalance (worked example) -- MUST discuss class imbalance
+- Credit risk feature importance
+
+### Appendix Content
+- Gini derivation from first principles
+- Bagging variance reduction proof
+- XGBoost objective function
+
 ## Post-Session Notes
 
 *Space for instructor notes after delivering the session*

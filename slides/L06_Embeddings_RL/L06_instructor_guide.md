@@ -212,6 +212,31 @@ This topic is assessed in:
 - **Presentations**: Topics 13-15 (BERT, DQN, Multi-Armed Bandits)
 - **Capstone**: Can use NLP or RL for project
 
+## Slide Build Specification
+
+### Required Content
+- Intro key visual: Word analogy (king - man + woman = queen)
+- Must-have derivations: Skip-gram objective, negative sampling, Bellman equation derivation, DQN architecture
+- Must-have pseudocode: Q-learning with epsilon-greedy, skip-gram training loop
+
+### Chart Requirements
+- Embedding space visualization (overview)
+- Similarity heatmap (deepdive)
+- RL loop diagram (overview)
+- Q-learning grid (deepdive)
+- Reward curves (deepdive)
+- Policy visualization (deepdive)
+
+### Domain Applications
+- Financial NLP sentiment analysis (worked example)
+- Algorithmic trading with RL
+
+### Appendix Content
+- Skip-gram objective derivation
+- Negative sampling theory
+- Bellman equation convergence
+- DQN architecture details
+
 ## Course Wrap-Up Notes
 
 **Final Session Activities**:

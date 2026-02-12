@@ -141,6 +141,28 @@ This topic is assessed in:
 - ESL Chapter 3: Linear Methods for Regression
 - 3Blue1Brown: Linear Algebra series
 
+## Slide Build Specification
+
+### Required Content
+- Intro key formula: `y = a + bx` (then switch to beta notation)
+- Must-have derivations: OLS normal equation, gradient descent gradient computation
+- Must-have inference: t-test for coefficients, F-test for model
+
+### Chart Requirements
+- Regression surfaces (deepdive)
+- QQ-plot (deepdive)
+- Confidence bands (deepdive)
+- CV error curve (deepdive)
+
+### Domain Applications
+- House price valuation for banks (worked numerical example)
+- CAPM beta estimation
+
+### Appendix Content
+- Gauss-Markov proof
+- MLE connection
+- Convergence theory
+
 ## Post-Session Notes
 
 *Space for instructor notes after delivering the session*
