@@ -97,109 +97,123 @@
 
 \begin{document}
 
+% SLIDE 1: Title Page
 \begin{frame}
 \titlepage
 \end{frame}
 
+% SLIDE 2: Outline
 \begin{frame}{Outline}
   \tableofcontents
 \end{frame}
 
-%% PART 1: DECISION TREES FOUNDATIONS
-\section{Decision Tree Foundations}
-\begin{frame}[t]{Part 1: Decision Tree Foundations}
-\textbf{From Rules to Trees}
-\begin{itemize}
-\item Decision trees encode if-then-else rules
-\item Each node splits data based on a feature threshold
-\item Leaves contain predictions (class or value)
-\end{itemize}
-\vspace{0.5em}
-\textbf{Key Questions}
-\begin{itemize}
-\item How to choose the best split?
-\item When to stop splitting?
-\item How to make predictions?
-\end{itemize}
-\bottomnote{Decision trees: the building blocks of Random Forests}
+% SLIDE 3: Opening Comic
+\begin{frame}{The Ensemble Approach}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{images/1885_ensemble_model.png}
+\end{center}
+\bottomnote{XKCD \#1885 by Randall Munroe (CC BY-NC 2.5)}
 \end{frame}
 
+% SLIDE 4: Learning Objectives
+\begin{frame}[t]{Learning Objectives}
+After this session, you will be able to:
+\begin{enumerate}
+\item \textbf{Derive} the variance reduction formula and analyze the role of tree correlation in ensemble performance
+\item \textbf{Evaluate} Random Forest vs.\ gradient boosting using bias-variance tradeoff analysis
+\item \textbf{Analyze} feature importance using MDI, permutation importance, and SHAP values with statistical inference
+\item \textbf{Critique} ensemble methods for regulatory compliance in financial applications (ECOA, GDPR)
+\end{enumerate}
+\bottomnote{Bloom's Level 4--5: Analyze, Evaluate, Critique}
+\end{frame}
+
+%% ================================================================
+\section{Decision Tree Foundations}
+%% ================================================================
+
+% SLIDE 5: From Rules to Trees
+\begin{frame}[t]{From Rules to Trees}
+\textbf{Decision trees encode if-then-else rules as a hierarchical structure:}
+\begin{itemize}
+\item Each \textbf{internal node} splits data on a feature threshold: $x_j \leq s$
+\item Each \textbf{leaf} contains a prediction (class label or numeric value)
+\item A path from root to leaf represents one decision rule
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Key Questions:}
+\begin{itemize}
+\item How to choose the \textbf{best split} at each node?
+\item When to \textbf{stop splitting}?
+\item How to \textbf{prevent overfitting}?
+\end{itemize}
+\bottomnote{Decision trees: the fundamental building block of Random Forests and gradient boosting}
+\end{frame}
+
+% SLIDE 6: Splitting Criteria: Gini Impurity
 \begin{frame}[t]{Splitting Criteria: Gini Impurity}
 \textbf{Gini Impurity} measures class mixture at a node:
 \[
 G = 1 - \sum_{k=1}^{K} p_k^2
 \]
-where $p_k$ is the proportion of class $k$ samples.
+where $p_k$ is the proportion of class $k$ samples at the node.
 
 \vspace{0.5em}
 \textbf{Properties:}
 \begin{itemize}
-\item $G = 0$: pure node (all samples same class)
-\item $G = 0.5$: maximum for binary; general: $G_{max} = 1 - 1/K$ for $K$ classes
-\item Lower Gini = better split
+\item $G = 0$: pure node (all samples belong to one class)
+\item $G = 0.5$: maximum impurity for binary classification
+\item General maximum: $G_{\max} = 1 - 1/K$ for $K$ classes
+\item \textbf{Lower Gini = better split}
 \end{itemize}
-\bottomnote{Gini impurity: probability of misclassifying a random sample}
+\bottomnote{Gini impurity: the probability of misclassifying a randomly chosen sample}
 \end{frame}
 
+% SLIDE 7: Splitting Criteria: Information Gain
 \begin{frame}[t]{Splitting Criteria: Information Gain}
-\textbf{Entropy} measures disorder:
+\textbf{Entropy} measures disorder at a node:
 \[
-H = -\sum_{k=1}^{K} p_k \log_2(p_k)
+H = -\sum_{k=1}^{K} p_k \log_2(p_k) \qquad \text{Convention: } 0 \cdot \log_2(0) = 0
 \]
-\textbf{Note}: By convention, $0 \cdot \log_2(0) = 0$ (via L'H\^opital's rule)
 
-\textbf{Information Gain}:
+\textbf{Information Gain} from a split:
 \[
 IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 \]
 
-\vspace{0.5em}
-\textbf{Comparison:}
+\vspace{0.3em}
+\textbf{Gini vs.\ Entropy:}
 \begin{itemize}
-\item Gini: faster to compute, tends to isolate most frequent class
-\item Entropy: more balanced trees, slightly slower
-\item In practice: similar performance
+\item Gini: faster to compute, tends to isolate the most frequent class
+\item Entropy: produces more balanced trees, slightly slower ($\log$ computation)
+\item In practice: similar performance---choice rarely matters
 \end{itemize}
-\bottomnote{Both criteria aim to create pure child nodes}
+\bottomnote{Both criteria aim to create the purest possible child nodes}
 \end{frame}
 
+% SLIDE 8: Regression Trees: MSE Criterion
 \begin{frame}[t]{Regression Trees: MSE Criterion}
-\textbf{For regression}, use Mean Squared Error:
+\textbf{For regression}, the splitting criterion uses Mean Squared Error:
 \[
 \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \bar{y})^2
 \]
 
-\textbf{Split quality}:
+\textbf{Split quality} is measured by the reduction in MSE:
 \[
-\text{Reduction} = \text{MSE}(\text{parent}) - \sum_{j} \frac{n_j}{n} \text{MSE}(\text{child}_j)
+\Delta\text{MSE} = \text{MSE}(\text{parent}) - \frac{n_L}{n}\text{MSE}(\text{left}) - \frac{n_R}{n}\text{MSE}(\text{right})
 \]
 
-\textbf{Leaf prediction}: mean of samples in leaf
-\bottomnote{Trees can handle both classification and regression tasks}
-\end{frame}
-
-\begin{frame}[t]{Decision Tree Algorithm}
-\textbf{Recursive Partitioning:}
-\begin{enumerate}
-\item Start with all samples at root
-\item For each feature and threshold:
-    \begin{itemize}
-    \item Calculate impurity reduction
-    \item Select split with maximum reduction
-    \end{itemize}
-\item Create child nodes with split samples
-\item Recurse until stopping criterion met
-\end{enumerate}
-
-\textbf{Stopping Criteria:}
+\vspace{0.3em}
+\textbf{Key properties:}
 \begin{itemize}
-\item Maximum depth reached
-\item Minimum samples per leaf
-\item No improvement in impurity
+\item Leaf prediction = mean of samples in the leaf: $\hat{y} = \bar{y}_{\text{leaf}}$
+\item Equivalent to minimizing within-node variance
+\item Alternative: Mean Absolute Error (more robust to outliers)
 \end{itemize}
-\bottomnote{Greedy is necessary: finding the globally optimal tree is NP-complete}
+\bottomnote{Trees handle both classification and regression via appropriate impurity measures}
 \end{frame}
 
+% SLIDE 9: CART Algorithm (Pseudocode)
 \begin{frame}{CART: Recursive Partitioning Algorithm}
 \textbf{Classification and Regression Trees} (Breiman et al., 1984):
 
@@ -223,308 +237,378 @@ Impurity measures: Gini $= 1 - \sum_k p_k^2$, \; Entropy $= -\sum_k p_k \log_2 p
 \bottomnote{Breiman et al.\ (1984). \textit{Classification and Regression Trees}. Wadsworth.}
 \end{frame}
 
-\begin{frame}[t]{Decision Tree: Fraud Detection Example}
-\vspace{-0.8em}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{01_decision_tree/chart.pdf}
-\end{center}
-\vspace{-0.5em}
-\bottomnote{Each path through the tree represents a fraud detection rule}
-\end{frame}
+% SLIDE 10: Decision Tree: Overfitting and Pruning
+\begin{frame}[t]{Decision Tree: Overfitting and Pruning}
+\textbf{The Overfitting Problem:}
+\begin{itemize}
+\item Fully grown trees can achieve 100\% training accuracy
+\item But generalize poorly---they memorize noise in the data
+\end{itemize}
 
-\begin{frame}[t]{CRITICAL: Class Imbalance in Fraud Detection}
-\textbf{The Reality of Fraud Data}
-\begin{itemize}
-\item Fraud is typically $<$1\% of transactions (100:1 ratio)
-\item A model predicting ``not fraud'' for ALL transactions: 99\% accuracy!
-\item \textbf{Accuracy is the WRONG metric} for imbalanced classification
-\end{itemize}
-\vspace{0.5em}
-\textbf{Correct Evaluation Metrics}
-\begin{itemize}
-\item \textbf{Precision}: Of flagged transactions, how many are fraud?
-\item \textbf{Recall}: Of actual fraud, how many did we catch?
-\item \textbf{F1 Score}: Harmonic mean of precision and recall
-\item \textbf{AUC-PR}: Area under Precision-Recall curve (preferred over ROC)
-\end{itemize}
-\bottomnote{NEVER use accuracy for imbalanced classification!}
-\end{frame}
-
-\begin{frame}[t]{Handling Class Imbalance in Random Forests}
-\textbf{1. Class Weighting} (scikit-learn)
-\begin{itemize}
-\item \texttt{class\_weight='balanced'}: auto-adjust by class frequency
-\item \texttt{class\_weight='balanced\_subsample'}: per-tree balancing
-\end{itemize}
 \vspace{0.3em}
-\textbf{2. Resampling Techniques}
+\textbf{Pre-pruning} (stop early):
 \begin{itemize}
-\item \textbf{SMOTE}: Synthetic Minority Oversampling TEchnique
-\item \textbf{Undersampling}: Reduce majority class
-\item \textbf{Combination}: SMOTE + Tomek links
+\item \texttt{max\_depth}, \texttt{min\_samples\_split}, \texttt{min\_samples\_leaf}
+\item Fast but may stop too early (miss useful splits deeper in the tree)
 \end{itemize}
+
 \vspace{0.3em}
-\textbf{3. Threshold Tuning}
+\textbf{Post-pruning} (grow then cut):
 \begin{itemize}
-\item Default threshold 0.5 rarely optimal for imbalanced data
-\item Choose threshold based on business cost: FN cost $>>$ FP cost for fraud
+\item Cost-complexity pruning: minimize $\sum_{m=1}^{|T|} R_m + \alpha |T|$
+\item $\alpha$ controls the tradeoff: larger $\alpha$ = simpler tree
+\item Select $\alpha$ via cross-validation
 \end{itemize}
-\bottomnote{Always check class distribution BEFORE training any classifier!}
+\bottomnote{Ensembles largely eliminate the need for careful pruning of individual trees}
 \end{frame}
 
-%% PART 2: ENSEMBLE METHODS
+%% ================================================================
 \section{Ensemble Methods}
-\begin{frame}[t]{Part 2: Why Ensembles?}
-\textbf{Problem with Single Trees:}
+%% ================================================================
+
+% SLIDE 11: Why Ensembles?
+\begin{frame}[t]{Why Ensembles?}
+\textbf{The Problem with Single Trees:}
 \begin{itemize}
-\item High variance: small data changes $\rightarrow$ very different trees
-\item Prone to overfitting
-\item Unstable predictions
+\item \textbf{High variance}: small changes in data produce very different trees
+\item \textbf{Overfitting}: deep trees memorize noise
+\item \textbf{Instability}: a single outlier can change the entire tree structure
 \end{itemize}
 
 \vspace{0.5em}
-\textbf{Ensemble Solution:}
+\textbf{The Ensemble Solution:}
 \begin{itemize}
-\item Train multiple diverse models
-\item Combine predictions
+\item Train \textbf{multiple diverse models} on different data subsets
+\item \textbf{Combine predictions} (vote or average)
 \item Reduce variance while maintaining low bias
 \end{itemize}
-\bottomnote{``Wisdom of crowds'': aggregate many weak learners into strong learner}
+
+\vspace{0.3em}
+\textit{``Wisdom of crowds''}: the aggregate judgment of many weak learners can outperform any single strong learner.
+\bottomnote{Condorcet's Jury Theorem (1785): majority vote accuracy increases with number of independent voters}
 \end{frame}
 
+% SLIDE 12: Bootstrap Sampling
 \begin{frame}[t]{Bootstrap Sampling}
-\textbf{Bootstrap}: sample with replacement from original data
+\textbf{Bootstrap}: sample $n$ observations \textit{with replacement} from original data.
 
 \vspace{0.5em}
-\textbf{Properties:}
+\textbf{Key Properties:}
 \begin{itemize}
-\item Each sample: same size as original ($n$ observations)
-\item Expected unique samples: $\approx 63.2\%$ as $n \to \infty$ (converges to $1 - 1/e$)
-\item Remaining $\sim 37\%$: out-of-bag (OOB) samples
+\item Each bootstrap sample has the same size $n$ as the original
+\item Expected unique observations: $\approx 63.2\%$ (as $n \to \infty$, converges to $1 - 1/e$)
+\item Remaining $\sim 37\%$: \textbf{out-of-bag (OOB)} samples---free validation set
 \end{itemize}
 
 \vspace{0.5em}
-\textbf{Effect:}
+\textbf{Why Bootstrap Creates Diversity:}
 \begin{itemize}
-\item Each tree sees different data subset
-\item Creates diversity among trees
-\item OOB samples provide validation
+\item Each tree sees a different subset of the data
+\item Trees disagree on noisy observations $\rightarrow$ errors cancel out
+\item OOB samples enable internal error estimation
 \end{itemize}
-\bottomnote{Bootstrap: key ingredient for reducing variance through aggregation}
+\bottomnote{Efron (1979). Bootstrap methods: another look at the jackknife. \textit{Annals of Statistics}, 7(1), 1--26.}
 \end{frame}
 
-\begin{frame}[t]{Bagging Visualization}
-\vspace{-1.3em}
-\begin{center}
-\includegraphics[width=0.60\textwidth]{03_bootstrap/chart.pdf}
-\end{center}
-\vspace{-1.0em}
-\bottomnote{Bootstrap Aggregating: train on random samples, aggregate predictions}
-\end{frame}
-
+% SLIDE 13: Bagging: Mathematical Foundation
 \begin{frame}[t]{Bagging: Mathematical Foundation}
 \textbf{Variance Reduction by Averaging}
 
-For $B$ independent predictions with variance $\sigma^2$:
+For $B$ predictions, each with variance $\sigma^2$ and pairwise correlation $\rho$:
+
+\vspace{0.3em}
+\textbf{Full derivation:}
 \[
-\text{Var}\left(\frac{1}{B}\sum_{b=1}^{B} \hat{f}_b(x)\right) = \frac{\sigma^2}{B}
+\text{Var}\!\left(\frac{1}{B}\sum_{b=1}^{B} \hat{f}_b\right) = \frac{1}{B^2}\left[B\sigma^2 + B(B-1)\rho\sigma^2\right]
+\]
+\[
+= \frac{\sigma^2}{B} + \frac{B-1}{B}\rho\sigma^2 = \rho\sigma^2 + \frac{(1-\rho)\sigma^2}{B}
 \]
 
-\textbf{With correlation $\rho$}:
-\[
-\text{Var} = \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2
-\]
-
-\textbf{Derivation}: For correlated predictions with $\text{Cov}(f_i, f_j) = \rho\sigma^2$:
-\[
-\text{Var}(\bar{f}) = \frac{1}{B^2}\left[B\sigma^2 + B(B-1)\rho\sigma^2\right] = \rho\sigma^2 + \frac{(1-\rho)\sigma^2}{B}
-\]
-
-\textbf{Key insight}: Reduce correlation between trees to maximize variance reduction
-\bottomnote{Lower correlation between trees = greater ensemble benefit}
+\vspace{0.3em}
+\textbf{Key insight:}
+\begin{itemize}
+\item If independent ($\rho = 0$): $\text{Var} = \sigma^2/B$ --- perfect variance reduction
+\item If perfectly correlated ($\rho = 1$): $\text{Var} = \sigma^2$ --- no benefit at all
+\item \highlight{Reduce $\rho$ between trees to maximize ensemble benefit}
+\end{itemize}
+\bottomnote{This formula is the theoretical foundation for why Random Forests add feature randomization}
 \end{frame}
 
-%% PART 3: RANDOM FORESTS
+% SLIDE 14: Why Bagging Reduces Variance (Proof Sketch)
+\begin{frame}[t]{Why Bagging Reduces Variance (Proof Sketch)}
+\textbf{Setup}: $B$ trees with predictions $\hat{f}_1, \ldots, \hat{f}_B$, each with $\text{Var}(\hat{f}_b) = \sigma^2$ and $\text{Cov}(\hat{f}_i, \hat{f}_j) = \rho\sigma^2$ for $i \neq j$.
+
+\vspace{0.3em}
+\textbf{Step 1}: Variance of the average:
+\[
+\text{Var}\!\left(\bar{f}\right) = \text{Var}\!\left(\frac{1}{B}\sum_{b=1}^{B}\hat{f}_b\right) = \frac{1}{B^2}\sum_{i}\sum_{j}\text{Cov}(\hat{f}_i, \hat{f}_j)
+\]
+
+\textbf{Step 2}: Separate diagonal and off-diagonal terms:
+\[
+= \frac{1}{B^2}\left[\underbrace{B \cdot \sigma^2}_{\text{diagonal}} + \underbrace{B(B-1) \cdot \rho\sigma^2}_{\text{off-diagonal}}\right]
+\]
+
+\textbf{Step 3}: As $B \to \infty$:
+\[
+\text{Var}(\bar{f}) \to \rho\sigma^2
+\]
+
+\textbf{Conclusion}: Correlation $\rho$ is the \textbf{limiting factor}---even infinite trees cannot reduce variance below $\rho\sigma^2$.
+\bottomnote{This motivates feature randomization: the key innovation from bagging to Random Forests}
+\end{frame}
+
+%% ================================================================
 \section{Random Forests Algorithm}
-\begin{frame}[t]{Part 3: Random Forests Algorithm}
-\textbf{Two Sources of Randomness:}
-\begin{enumerate}
-\item \textbf{Bootstrap sampling}: each tree trained on random sample
-\item \textbf{Feature randomization}: each split considers random subset
-\end{enumerate}
+%% ================================================================
+
+% SLIDE 15: Random Forest: Two Sources of Randomness
+\begin{frame}[t]{Random Forest: Two Sources of Randomness}
+\textbf{Source 1: Bootstrap Sampling} (inherited from bagging)
+\begin{itemize}
+\item Each tree trained on a different bootstrap sample
+\item Creates data-level diversity
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Source 2: Feature Randomization} (the key RF innovation)
+\begin{itemize}
+\item At each split, consider only a random subset of $m$ features
+\item Classification default: $m = \sqrt{p}$
+\item Regression default: $m = p/3$
+\item \textbf{Decorrelates trees} beyond what bootstrap alone achieves
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Historical origin:}
+\begin{itemize}
+\item Ho (1995): random subspace method (feature sampling only)
+\item Breiman (2001): combined with bagging $\rightarrow$ Random Forests
+\end{itemize}
+\bottomnote{Feature randomization is what separates Random Forests from simple bagged trees}
+\end{frame}
+
+% SLIDE 16: Random Forest Algorithm (Pseudocode)
+\begin{frame}{Random Forest Algorithm}
+\begin{algorithmic}[1]
+\REQUIRE Training data $\{(x_i, y_i)\}_{i=1}^n$, number of trees $B$, features per split $m$
+\FOR{$b = 1$ to $B$}
+  \STATE Draw bootstrap sample $\mathcal{D}_b$ of size $n$ (with replacement)
+  \STATE Grow tree $T_b$ on $\mathcal{D}_b$:
+  \STATE \quad At each node, select $m$ features randomly (without replacement)
+  \STATE \quad Find best split among $m$ features using impurity criterion
+  \STATE \quad Split until stopping criterion (or node is pure)
+\ENDFOR
+\STATE \textbf{Prediction:}
+\STATE \quad Classification: $\hat{y} = \text{majority vote}\{T_b(x)\}_{b=1}^B$
+\STATE \quad Regression: $\hat{y} = \frac{1}{B}\sum_{b=1}^B T_b(x)$
+\end{algorithmic}
+
+\vspace{0.3em}
+\textbf{Defaults}: $m = \sqrt{p}$ (classification), $m = p/3$ (regression), $B = 100\text{--}500$
+\bottomnote{Breiman (2001). Random Forests. \textit{Machine Learning}, 45(1), 5--32.}
+\end{frame}
+
+% SLIDE 17: Hyperparameters: Number of Trees
+\begin{frame}[t]{Hyperparameters: Number of Trees}
+\textbf{\texttt{n\_estimators}} (number of trees $B$):
+\begin{itemize}
+\item More trees $=$ lower variance; \textbf{Random Forests never overfit} by adding trees
+\item Diminishing returns: most gains occur before $B = 100\text{--}500$
+\item Cost: training and prediction time scale linearly with $B$
+\end{itemize}
 
 \vspace{0.5em}
-\textbf{Feature Subset Size} (at each split):
+\textbf{Practical Guidelines:}
 \begin{itemize}
-\item Classification: $\sqrt{p}$ features (default)
-\item Regression: $p/3$ features (default)
-\item Decorrelates trees more than bagging alone
+\item Start with $B = 100$; increase if OOB error is still decreasing
+\item For production: balance accuracy vs.\ latency requirements
+\item Monitor OOB convergence to find the ``sweet spot''
 \end{itemize}
-\bottomnote{Feature randomization: combines Ho's (1995) random subspace method with Breiman's bagging}
+\bottomnote{Unlike most hyperparameters, more trees cannot hurt accuracy---only cost and latency}
 \end{frame}
 
-\begin{frame}[t]{Random Forest Algorithm}
-\small
-\textbf{Training:}
-\begin{enumerate}
-\item For $b = 1$ to $B$ trees:
-    \begin{itemize}
-    \item Draw bootstrap sample of size $n$
-    \item Grow tree:
-        \begin{itemize}
-        \item At each node, select $m$ features randomly (without replacement)
-        \item Find best split among $m$ features
-        \item Split until stopping criterion
-        \end{itemize}
-    \end{itemize}
-\end{enumerate}
-
-\textbf{Prediction:}
+% SLIDE 18: Hyperparameters: Tree Complexity
+\begin{frame}[t]{Hyperparameters: Tree Complexity}
+\textbf{\texttt{max\_depth}}: Maximum tree depth
 \begin{itemize}
-\item Classification: majority vote across trees
-\item Ties: broken randomly or by lowest class index
-\item Regression: average predictions
+\item Deeper trees capture more complex patterns but increase variance
+\item Default: unlimited (grow full trees)---works well due to bagging
 \end{itemize}
-\bottomnote{Typical: 100-500 trees; more trees improves accuracy (but increases memory/latency)}
+
+\vspace{0.3em}
+\textbf{\texttt{min\_samples\_split}}: Minimum samples required to split a node
+\begin{itemize}
+\item Higher values produce simpler, more regularized trees
+\item Default: 2 (allow splitting until leaves are pure)
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{\texttt{min\_samples\_leaf}}: Minimum samples in each leaf node
+\begin{itemize}
+\item Higher values create smoother predictions
+\item Default: 1 (fully grown trees)
+\end{itemize}
+\bottomnote{Full trees (default) often work well because bagging handles variance reduction}
 \end{frame}
 
+% SLIDE 19: Hyperparameters: Feature Randomization
+\begin{frame}[t]{Hyperparameters: Feature Randomization}
+\textbf{\texttt{max\_features}}: Number of features considered at each split.
+\begin{itemize}
+\item Lower $m$ $=$ more decorrelated trees, but higher individual tree bias
+\item Higher $m$ $=$ stronger individual trees, but higher correlation
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Default Values:}
+\begin{itemize}
+\item Classification: $m = \sqrt{p}$ (e.g., 100 features $\rightarrow$ 10 per split)
+\item Regression: $m = p/3$ (e.g., 30 features $\rightarrow$ 10 per split)
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Tuning Strategy:}
+\begin{itemize}
+\item Try: $\sqrt{p}$, $\log_2(p)$, $p/3$
+\item Cross-validate to find optimal tradeoff
+\end{itemize}
+\bottomnote{Feature randomization is the key differentiator: it controls $\rho$ in the variance formula}
+\end{frame}
+
+%% ================================================================
+\section{Feature Importance and Interpretation}
+%% ================================================================
+
+% SLIDE 20: Feature Importance (chart)
 \begin{frame}[t]{Feature Importance}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{02_feature_importance/chart.pdf}
 \end{center}
-\bottomnote{Mean Decrease in Impurity: sum of impurity reductions from splits on feature}
+\bottomnote{Mean Decrease in Impurity: total impurity reduction from all splits on each feature}
 \end{frame}
 
-\begin{frame}[t]{Feature Importance Methods}
-\textbf{1. Mean Decrease in Impurity (MDI):}
+% SLIDE 21: Mean Decrease in Impurity (MDI)
+\begin{frame}[t]{Mean Decrease in Impurity (MDI)}
+\textbf{Formula:}
 \[
-\text{MDI}(j) = \frac{1}{T}\sum_{t=1}^T \sum_{\text{node } v \text{ splits on } j} p(v) \cdot \Delta I(v)
+\text{MDI}(j) = \frac{1}{T}\sum_{t=1}^{T} \sum_{\substack{\text{node } v \\ \text{splits on } j}} p(v) \cdot \Delta I(v)
 \]
-where $p(v)$ = fraction of samples reaching node $v$, $T$ = number of trees.
-\begin{itemize}
-\item Fast to compute (comes free from training)
-\item Bias toward high-cardinality features
-\end{itemize}
+where $p(v) = $ fraction of samples reaching node $v$, $T = $ number of trees.
 
 \vspace{0.5em}
-\textbf{2. Permutation Importance:}
+\textbf{Advantages:}
 \begin{itemize}
-\item Permute feature values, measure accuracy drop
-\item More reliable, less biased
-\item Slower (requires re-evaluation)
+\item Fast to compute---comes free from the training process
+\item Available via \texttt{rf.feature\_importances\_} in scikit-learn
 \end{itemize}
-\bottomnote{Permutation importance preferred for final feature selection}
+
+\vspace{0.3em}
+\textbf{Limitations:}
+\begin{itemize}
+\item \textbf{Bias toward high-cardinality features} (more possible splits)
+\item Inflated importance for correlated features
+\end{itemize}
+\bottomnote{MDI is a useful first pass but should be validated with permutation importance}
 \end{frame}
 
-\begin{frame}[t]{Statistical Inference for Feature Importance}
-\textbf{Problem}: How significant is a feature's importance score?
-\vspace{0.3em}
+% SLIDE 22: Permutation Importance
+\begin{frame}[t]{Permutation Importance}
+\textbf{Idea}: Randomly shuffle feature $j$, measure how much accuracy drops.
+\begin{enumerate}
+\item Compute baseline score $S$ on validation data
+\item Permute feature $j$'s values (break feature-target association)
+\item Recompute score $S_j^{\pi}$ on permuted data
+\item Importance $= S - S_j^{\pi}$ (larger drop $=$ more important)
+\end{enumerate}
 
-\textbf{Permutation Testing (Altmann et al., 2010)}
+\vspace{0.3em}
+\textbf{Advantages over MDI:}
+\begin{itemize}
+\item Model-agnostic---works with any classifier
+\item Less biased toward high-cardinality features
+\item Uses validation data, so reflects true predictive contribution
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Limitation}: Slower---requires re-evaluation for each feature.
+\bottomnote{Breiman (2001) proposed permutation importance as the preferred method}
+\end{frame}
+
+% SLIDE 23: Statistical Inference for Feature Importance
+\begin{frame}[t]{Statistical Inference for Feature Importance}
+\textbf{Problem}: Is a feature's importance score statistically significant?
+
+\vspace{0.3em}
+\textbf{Permutation Testing} (Altmann et al., 2010):
 \begin{enumerate}
 \item Compute actual importance $I_j$ for feature $j$
-\item Permute feature $j$ labels, recompute importance ($B$ times)
-\item P-value $= \frac{1 + \#(I_j^{perm} \geq I_j)}{1 + B}$
+\item Permute target labels, recompute importance ($B$ times) $\rightarrow$ null distribution
+\item P-value: $p = \frac{1 + \#(I_j^{\text{perm}} \geq I_j)}{1 + B}$
 \end{enumerate}
+
 \vspace{0.3em}
-\textbf{Confidence Intervals}
+\textbf{Bootstrap Confidence Intervals:}
 \begin{itemize}
-\item Bootstrap RF training to get importance distribution
-\item Report 95\% CI: $[\hat{I}_j^{2.5\%}, \hat{I}_j^{97.5\%}]$
+\item Retrain RF multiple times, collect importance distribution
+\item Report 95\% CI: $[\hat{I}_j^{2.5\%},\; \hat{I}_j^{97.5\%}]$
 \item Features with CI crossing zero may not be significant
 \end{itemize}
-\bottomnote{Always report uncertainty in feature importance rankings}
+\bottomnote{Always report uncertainty---point estimates of importance can be misleading}
 \end{frame}
 
+% SLIDE 24: SHAP Values
 \begin{frame}{SHAP Values: Game-Theoretic Feature Importance}
 \textbf{SHapley Additive exPlanations} (Lundberg \& Lee, 2017):
-
 \[
 \phi_j = \sum_{S \subseteq \mathcal{F} \setminus \{j\}} \frac{|S|!(|\mathcal{F}| - |S| - 1)!}{|\mathcal{F}|!} \left[f(S \cup \{j\}) - f(S)\right]
 \]
 
-\textbf{Properties} (unique among all feature attribution methods):
+\textbf{Axiomatic Properties} (unique among attribution methods):
 \begin{itemize}
-\item \textbf{Efficiency}: $\sum_{j=1}^p \phi_j = f(x) - \mathbb{E}[f(X)]$ (attributions sum to prediction)
-\item \textbf{Symmetry}: Equal contributors get equal attribution
+\item \textbf{Efficiency}: $\sum_{j=1}^{p} \phi_j = f(x) - \mathbb{E}[f(X)]$
+\item \textbf{Symmetry}: Equal contributors receive equal attribution
 \item \textbf{Dummy}: Irrelevant features get $\phi_j = 0$
 \item \textbf{Additivity}: Consistent across model ensembles
 \end{itemize}
 
-\textbf{TreeSHAP}: $O(TLD^2)$ exact algorithm for tree ensembles vs.\ $O(2^p)$ brute force
+\textbf{TreeSHAP}: Exact computation in $O(TLD^2)$ vs.\ brute force $O(2^p)$
 
 \medskip
 \textbf{Finance}: SHAP provides the \textit{reason codes} required by ECOA/GDPR for adverse action notices in automated lending decisions.
-
 \bottomnote{Lundberg \& Lee (2017). A unified approach to interpreting model predictions. \textit{NeurIPS}, 4765--4774.}
 \end{frame}
 
-\begin{frame}[t]{Out-of-Bag Error}
-\vspace{-1.3em}
-\begin{center}
-\includegraphics[width=0.50\textwidth]{04_oob_error/chart.pdf}
-\end{center}
-\vspace{-1.0em}
-\bottomnote{OOB error: free cross-validation using samples not in bootstrap}
-\end{frame}
+%% ================================================================
+\section{Bias-Variance and OOB}
+%% ================================================================
 
-\begin{frame}[t]{Out-of-Bag Error: How It Works}
-\textbf{For each observation $i$:}
-\begin{enumerate}
-\item Identify trees where $i$ was OOB (not in bootstrap sample)
-\item Aggregate predictions from only those trees
-\item Compare to true label
-\end{enumerate}
-
-\vspace{0.5em}
-\textbf{Benefits:}
-\begin{itemize}
-\item No separate validation set needed
-\item Uses $\sim 37\%$ of trees per sample
-\item Approximately unbiased estimate of generalization error
-\end{itemize}
-
-\vspace{0.5em}
-\textbf{Why OOB Works:}
-\begin{itemize}
-\item Each sample is OOB for $\sim 36.8\%$ of trees (never used in their training)
-\item Prediction uses only trees that did not see that sample
-\item Approximates the \textbf{0.632 bootstrap estimator}, not leave-one-out CV
-\end{itemize}
-\bottomnote{OOB error approximates the 0.632 bootstrap estimator (Efron \& Tibshirani, 1997)}
-\end{frame}
-
-\begin{frame}[t]{Ensemble Voting}
-\vspace{-0.8em}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{05_ensemble_voting/chart.pdf}
-\end{center}
-\vspace{-0.5em}
-\bottomnote{Classification: majority vote. Regression: average prediction}
-\end{frame}
-
-%% PART 4: BIAS-VARIANCE AND TUNING
-\section{Bias-Variance and Tuning}
-\begin{frame}[t]{Part 4: Bias-Variance Decomposition}
+% SLIDE 25: Bias-Variance Decomposition
+\begin{frame}[t]{Bias-Variance Decomposition}
 \textbf{Expected Prediction Error:}
 \[
-\mathbb{E}[(y - \hat{f}(x))^2] = \text{Bias}^2 + \text{Variance} + \text{Irreducible Error}
+\mathbb{E}\!\left[(y - \hat{f}(x))^2\right] = \underbrace{\text{Bias}^2(\hat{f})}_{\text{systematic error}} + \underbrace{\text{Var}(\hat{f})}_{\text{sensitivity to data}} + \underbrace{\sigma^2_\varepsilon}_{\text{irreducible}}
 \]
 
-\textbf{Single Tree:}
+\vspace{0.3em}
+\textbf{Single Decision Tree:}
 \begin{itemize}
-\item Low bias (can fit complex patterns)
-\item High variance (sensitive to training data)
+\item Low bias (can fit arbitrarily complex patterns)
+\item \textbf{High variance} (small data changes $\rightarrow$ very different trees)
 \end{itemize}
 
+\vspace{0.3em}
 \textbf{Random Forest:}
 \begin{itemize}
-\item Bias: similar to single tree
-\item Variance: reduced by $\approx$ factor of $1/B$ (with decorrelation)
+\item Bias: approximately the same as a single tree
+\item Variance: reduced by factor $\approx \rho + (1-\rho)/B$
+\item Net effect: \textbf{substantially lower total error}
 \end{itemize}
-\bottomnote{Ensembles reduce variance without increasing bias}
+\bottomnote{Ensembles exploit the bias-variance tradeoff: reduce variance without increasing bias}
 \end{frame}
 
+% SLIDE 26: Single Trees: High Variance (chart)
 \begin{frame}[t]{Single Trees: High Variance}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{06a_single_tree_variance/chart.pdf}
@@ -532,6 +616,7 @@ where $p(v)$ = fraction of samples reaching node $v$, $T$ = number of trees.
 \bottomnote{Individual trees overfit to their bootstrap samples, producing erratic predictions}
 \end{frame}
 
+% SLIDE 27: Random Forest: Variance Reduction (chart)
 \begin{frame}[t]{Random Forest: Variance Reduction}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{06b_random_forest_variance/chart.pdf}
@@ -539,192 +624,122 @@ where $p(v)$ = fraction of samples reaching node $v$, $T$ = number of trees.
 \bottomnote{Averaging decorrelated trees dramatically reduces prediction variance}
 \end{frame}
 
-\begin{frame}[t]{Hyperparameters: Number of Trees}
-\textbf{n\_estimators} (number of trees):
-\begin{itemize}
-\item More trees = lower variance, never overfits (but higher resource usage)
-\item Diminishing returns after 100-500 trees
-\item Cost: linear increase in training/prediction time
-\end{itemize}
-
-\vspace{0.5em}
-\textbf{Guidelines:}
-\begin{itemize}
-\item Start with 100, increase if OOB error still decreasing
-\item For production: balance accuracy vs. latency
-\item More trees always better (if time permits)
-\end{itemize}
-\bottomnote{Unlike most hyperparameters, more trees cannot hurt accuracy}
-\end{frame}
-
-\begin{frame}[t]{Hyperparameters: Tree Complexity}
-\textbf{max\_depth}: Maximum tree depth
-\begin{itemize}
-\item Deeper = more complex patterns, higher variance
-\item Default: unlimited (grow full trees)
-\end{itemize}
-
-\textbf{min\_samples\_split}: Minimum samples to split
-\begin{itemize}
-\item Higher = simpler trees, more regularization
-\item Default: 2 (full trees)
-\end{itemize}
-
-\textbf{min\_samples\_leaf}: Minimum samples in leaf
-\begin{itemize}
-\item Higher = smoother predictions
-\item Default: 1 (full trees)
-\end{itemize}
-\bottomnote{Full trees (default) often work well due to bagging's variance reduction}
-\end{frame}
-
-\begin{frame}[t]{Hyperparameters: Feature Randomization}
-\textbf{max\_features}: Features considered at each split
-\begin{itemize}
-\item Lower = more decorrelated trees, higher bias
-\item Higher = less decorrelated, lower bias
-\end{itemize}
-
-\vspace{0.5em}
-\textbf{Defaults:}
-\begin{itemize}
-\item Classification: $\sqrt{p}$ (e.g., 10 features $\rightarrow$ 3)
-\item Regression: $p/3$ (e.g., 30 features $\rightarrow$ 10)
-\end{itemize}
-
-\textbf{Tuning:}
-\begin{itemize}
-\item Try: $\sqrt{p}$, $\log_2(p)$, $p/3$
-\item Cross-validate to find optimal
-\end{itemize}
-\bottomnote{Feature randomization is key differentiator from bagged trees}
-\end{frame}
-
-%% PART 5: PRACTICAL CONSIDERATIONS
-\section{Practical Considerations}
-\begin{frame}[t]{Part 5: Practical Considerations}
-\textbf{Advantages:}
-\begin{itemize}
-\item Excellent accuracy out-of-the-box
-\item Handles mixed feature types
-\item Built-in feature importance
-\item Robust to outliers and missing values
-\item Parallelizable (trees independent)
-\end{itemize}
-
-\textbf{Limitations:}
-\begin{itemize}
-\item Less interpretable than single tree
-\item Memory intensive (stores all trees)
-\item Slower prediction than linear models
-\item Cannot extrapolate beyond training range
-\end{itemize}
-\bottomnote{Random Forests: excellent default choice for tabular data}
-\end{frame}
-
-\begin{frame}[t]{Comparison: Random Forest vs. Others}
+% SLIDE 28: OOB Error (chart)
+\begin{frame}[t]{Out-of-Bag Error Estimation}
+\vspace{-0.5em}
 \begin{center}
-\small
-\begin{tabular}{l|ccccc}
+\includegraphics[width=0.50\textwidth]{04_oob_error/chart.pdf}
+\end{center}
+\vspace{-0.5em}
+\bottomnote{OOB error: ``free'' cross-validation using samples not in the bootstrap}
+\end{frame}
+
+% SLIDE 29: OOB Error: How It Works
+\begin{frame}[t]{OOB Error: How It Works}
+\textbf{For each observation $i$:}
+\begin{enumerate}
+\item Identify trees where observation $i$ was \textbf{out-of-bag} (not in the bootstrap sample)
+\item Aggregate predictions from only those OOB trees
+\item Compare aggregated prediction to true label $y_i$
+\end{enumerate}
+
+\vspace{0.3em}
+\textbf{Properties:}
+\begin{itemize}
+\item Each sample is OOB for $\sim 36.8\%$ of trees (never used in their training)
+\item No separate validation set needed---uses all data for both training and evaluation
+\item Approximates the \textbf{0.632 bootstrap estimator} (Efron \& Tibshirani, 1997)
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Practical Use:}
+\begin{itemize}
+\item Enable via \texttt{oob\_score=True} in scikit-learn
+\item Monitor convergence: plot OOB error vs.\ number of trees
+\end{itemize}
+\bottomnote{OOB error is approximately unbiased and avoids the cost of $k$-fold cross-validation}
+\end{frame}
+
+%% ================================================================
+\section{From Bagging to Boosting}
+%% ================================================================
+
+% SLIDE 30: From Bagging to Boosting
+\begin{frame}[t]{From Bagging to Boosting}
+\textbf{Two Complementary Strategies:}
+
+\vspace{0.3em}
+\begin{center}
+\begin{tabular}{lcc}
 \toprule
-\textbf{Aspect} & \textbf{RF} & \textbf{Single Tree} & \textbf{Logistic} & \textbf{KNN} \\
+\textbf{Property} & \textbf{Bagging (RF)} & \textbf{Boosting} \\
 \midrule
-Accuracy & High & Medium & Medium & Medium \\
-Interpretability & Medium & High & High & Low \\
-Training Speed & Medium & Fast & Fast & Fast \\
-Feature Importance & Yes & Yes & Yes & No \\
-Non-linear & Yes & Yes & No & Yes \\
+Training & Parallel & Sequential \\
+Target & Reduce variance & Reduce bias \\
+Base learners & Full trees & Shallow trees (stumps) \\
+Combination & Average / vote & Weighted sum \\
+Overfit risk & Low & Higher (tune carefully) \\
 \bottomrule
 \end{tabular}
 \end{center}
-\bottomnote{RF trades some interpretability for significant accuracy gains}
+
+\vspace{0.3em}
+\textbf{Core idea of boosting}: Train each new model on the \textit{residuals} (errors) of the previous ensemble---sequentially correcting mistakes.
+\bottomnote{Bagging and boosting are complementary: one reduces variance, the other reduces bias}
 \end{frame}
 
-\begin{frame}[t]{When to Use Random Forests}
-\textbf{Use When:}
-\begin{itemize}
-\item Tabular data with mixed feature types
-\item Non-linear relationships expected
-\item Feature importance needed
-\item Out-of-the-box performance matters
-\end{itemize}
+% SLIDE 31: AdaBoost Algorithm (Pseudocode)
+\begin{frame}{AdaBoost Algorithm}
+\begin{algorithmic}[1]
+\REQUIRE Training data $\{(x_i, y_i)\}_{i=1}^N$ with $y_i \in \{-1, +1\}$
+\STATE Initialize weights: $w_i = 1/N$ for all $i$
+\FOR{$t = 1$ to $T$}
+  \STATE Fit weak learner $h_t$ to weighted data
+  \STATE Compute weighted error: $\epsilon_t = \sum_{i: h_t(x_i) \neq y_i} w_i$
+  \STATE Learner weight: $\alpha_t = \frac{1}{2}\ln\!\left(\frac{1 - \epsilon_t}{\epsilon_t}\right)$
+  \STATE Update: $w_i \leftarrow w_i \cdot \exp\!\bigl(-\alpha_t \, y_i \, h_t(x_i)\bigr)$, then normalize
+\ENDFOR
+\STATE \textbf{Final prediction}: $H(x) = \text{sign}\!\left(\sum_{t=1}^{T} \alpha_t \, h_t(x)\right)$
+\end{algorithmic}
 
-\vspace{0.5em}
-\textbf{Consider Alternatives When:}
-\begin{itemize}
-\item Need fully interpretable model (use single tree)
-\item Very high-dimensional sparse data (use linear models)
-\item Extrapolation required (use parametric models)
-\item Need fastest prediction (use linear/shallow tree)
-\end{itemize}
-\bottomnote{Random Forest: often the first model to try on tabular data}
-\end{frame}
-
-\begin{frame}[t]{Decision Framework}
-\vspace{-0.8em}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
-\end{center}
-\vspace{-0.5em}
-\bottomnote{Start with Random Forest; switch if specific constraints require it}
-\end{frame}
-
-%% PART 6: BOOSTING
-\section{From Bagging to Boosting}
-
-\begin{frame}{From Bagging to Boosting: Weak Learners to Strong}
-\begin{itemize}
-\item Bagging reduces \textbf{variance} by averaging independent models
-\item \textbf{Boosting} reduces \textbf{bias} by sequentially correcting errors
-\item Core idea: train each model on the \textit{residuals} of the previous
-\end{itemize}
-
-\textbf{AdaBoost} (Freund \& Schapire, 1997):
-\begin{enumerate}
-\item Initialize weights $w_i = 1/N$ for all samples
-\item For $t = 1, \ldots, T$:
-\begin{itemize}
-\item Fit weak learner $h_t$ to weighted data
-\item Compute weighted error: $\epsilon_t = \sum_{i: h_t(x_i) \neq y_i} w_i$
-\item Learner weight: $\alpha_t = \frac{1}{2}\ln\!\left(\frac{1 - \epsilon_t}{\epsilon_t}\right)$
-\item Update: $w_i \leftarrow w_i \cdot \exp\!\bigl(-\alpha_t y_i h_t(x_i)\bigr)$, then normalize
-\end{itemize}
-\item Final: $H(x) = \text{sign}\!\left(\sum_{t=1}^T \alpha_t h_t(x)\right)$
-\end{enumerate}
+\vspace{0.3em}
+\textbf{Key insight}: Misclassified samples get higher weights $\rightarrow$ next learner focuses on hard cases.
 \bottomnote{Freund \& Schapire (1997). A decision-theoretic generalization of on-line learning. \textit{JCSS}, 55(1), 119--139.}
 \end{frame}
 
-\begin{frame}{Gradient Boosting: A Functional Gradient Descent}
-\textbf{Key insight}: Boosting as gradient descent in function space (Friedman, 2001)
+% SLIDE 32: Gradient Boosting: Functional Gradient Descent
+\begin{frame}[t]{Gradient Boosting: Functional Gradient Descent}
+\textbf{Key insight}: Boosting as gradient descent in \textit{function space} (Friedman, 2001).
 
+\vspace{0.3em}
 \begin{enumerate}
-\item Initialize $F_0(x) = \arg\min_c \sum_{i=1}^N L(y_i, c)$
+\item Initialize: $F_0(x) = \arg\min_c \sum_{i=1}^{N} L(y_i, c)$
 \item For $m = 1, \ldots, M$:
 \begin{itemize}
-\item Compute pseudo-residuals: $r_{im} = -\left[\frac{\partial L(y_i, F(x_i))}{\partial F(x_i)}\right]_{F=F_{m-1}}$
-\item Fit base learner $h_m$ to pseudo-residuals $\{(x_i, r_{im})\}$
-\item Line search: $\gamma_m = \arg\min_\gamma \sum_{i=1}^N L\!\bigl(y_i, F_{m-1}(x_i) + \gamma h_m(x_i)\bigr)$
-\item Update: $F_m(x) = F_{m-1}(x) + \nu \cdot \gamma_m h_m(x)$
+\item Pseudo-residuals: $r_{im} = -\left[\frac{\partial L(y_i, F(x_i))}{\partial F(x_i)}\right]_{F = F_{m-1}}$
+\item Fit base learner $h_m$ to $\{(x_i, r_{im})\}$
+\item Line search: $\gamma_m = \arg\min_\gamma \sum_{i} L(y_i, F_{m-1}(x_i) + \gamma h_m(x_i))$
+\item Update: $F_m(x) = F_{m-1}(x) + \nu \cdot \gamma_m \, h_m(x)$
 \end{itemize}
 \end{enumerate}
 
-\textbf{Learning rate} $\nu \in (0, 1]$ provides regularization via \textbf{shrinkage}
+\vspace{0.3em}
+\textbf{Shrinkage}: Learning rate $\nu \in (0, 1]$ regularizes by slowing learning.
 
-\medskip
 \textbf{For squared loss}: $r_{im} = y_i - F_{m-1}(x_i)$ (literal residuals!)
-
-\bottomnote{Friedman (2001). Greedy function approximation: A gradient boosting machine. \textit{Annals of Statistics}, 29(5), 1189--1232.}
+\bottomnote{Friedman (2001). Greedy function approximation. \textit{Annals of Statistics}, 29(5), 1189--1232.}
 \end{frame}
 
+% SLIDE 33: XGBoost Objective
 \begin{frame}{XGBoost, LightGBM, CatBoost: Industrial Boosting}
-\textbf{XGBoost} (Chen \& Guestrin, 2016) --- regularized objective:
+\textbf{XGBoost} (Chen \& Guestrin, 2016)---regularized objective with Taylor expansion:
 \[
-\mathcal{L}^{(t)} = \sum_{i=1}^N \left[g_i f_t(x_i) + \tfrac{1}{2} h_i f_t^2(x_i)\right] + \Omega(f_t)
+\mathcal{L}^{(t)} = \sum_{i=1}^{N}\left[g_i f_t(x_i) + \tfrac{1}{2}h_i f_t^2(x_i)\right] + \Omega(f_t)
 \]
-where $g_i = \partial_{\hat{y}^{(t-1)}} L(y_i, \hat{y}^{(t-1)})$, \; $h_i = \partial^2_{\hat{y}^{(t-1)}} L(y_i, \hat{y}^{(t-1)})$
+where $g_i = \partial L / \partial \hat{y}^{(t-1)}$, \; $h_i = \partial^2 L / \partial (\hat{y}^{(t-1)})^2$
 
 \medskip
-Regularization: $\Omega(f) = \gamma T + \tfrac{1}{2}\lambda \sum_{j=1}^T w_j^2$
+Regularization: $\Omega(f) = \gamma T + \tfrac{1}{2}\lambda \sum_{j=1}^{T} w_j^2$
 
 \medskip
 \textbf{Optimal split gain}:
@@ -732,64 +747,120 @@ Regularization: $\Omega(f) = \gamma T + \tfrac{1}{2}\lambda \sum_{j=1}^T w_j^2$
 \text{Gain} = \frac{1}{2}\left[\frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda}\right] - \gamma
 \]
 
-\medskip
 \begin{tabular}{lll}
 \textbf{LightGBM}: & Leaf-wise growth, histogram binning & (Ke et al., 2017) \\
 \textbf{CatBoost}: & Ordered boosting, native categoricals & (Prokhorenkova et al., 2018)
 \end{tabular}
-
 \bottomnote{Chen \& Guestrin (2016). XGBoost: A scalable tree boosting system. \textit{KDD}, 785--794.}
 \end{frame}
 
-\begin{frame}{Boosting in Finance: The Dominant Paradigm}
-\textbf{Credit scoring} --- XGBoost/LightGBM dominate competitions (Kaggle):
+% SLIDE 34: Boosting in Finance
+\begin{frame}[t]{Boosting in Finance: The Dominant Paradigm}
+\textbf{Credit scoring}---XGBoost/LightGBM dominate competitions:
 \begin{itemize}
-\item Home Credit Default Risk (2018): Top 50 all used gradient boosting
-\item Handles missing values natively (learned split direction)
+\item Home Credit Default Risk (Kaggle 2018): top 50 all used gradient boosting
 \item Built-in monotonicity constraints for regulatory compliance
 \end{itemize}
 
-\medskip
-\textbf{Fraud detection}:
+\vspace{0.3em}
+\textbf{Fraud detection}---LightGBM fast enough for real-time ($<$5ms):
 \begin{itemize}
-\item LightGBM: Fast enough for real-time scoring ($<$5ms per transaction)
 \item Handles extreme class imbalance via \texttt{scale\_pos\_weight}
+\item Histogram binning enables deployment on streaming data
 \end{itemize}
 
-\medskip
-\textbf{Random Forests vs.\ Boosting --- When to choose?}
+\vspace{0.3em}
 \begin{center}
+\small
 \begin{tabular}{lcc}
 \toprule
-\textbf{Criterion} & \textbf{RF} & \textbf{Boosting} \\
+\textbf{Criterion} & \textbf{Random Forest} & \textbf{Boosting} \\
 \midrule
 Bias-variance & Low variance & Low bias \\
 Overfitting risk & Low & Higher (tune carefully) \\
 Interpretability & Feature importance & SHAP values \\
-Speed (inference) & Parallelizable & Sequential \\
 Kaggle/industry & Baseline & State-of-the-art \\
 \bottomrule
 \end{tabular}
 \end{center}
-\bottomnote{See Bent\'ejac et al.\ (2021) for comprehensive RF vs.\ boosting comparison.}
+\bottomnote{See Bent\'ejac et al.\ (2021) for a comprehensive RF vs.\ boosting benchmark.}
 \end{frame}
 
-\section{Practice}
+%% ================================================================
+\section{Finance Applications}
+%% ================================================================
 
-\begin{frame}[t]{Hands-on Exercise}
-  \textbf{Open the Colab Notebook}
-  \begin{itemize}
-    \item Exercise 1: Train a decision tree on credit data
-    \item Exercise 2: Build a random forest and analyze feature importance
-    \item Exercise 3: Tune hyperparameters with cross-validation
-  \end{itemize}
-  \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} See course materials for Colab notebook
+% SLIDE 35: CRITICAL: Class Imbalance in Fraud Detection
+\begin{frame}[t]{CRITICAL: Class Imbalance in Fraud Detection}
+\textbf{The Reality of Fraud Data:}
+\begin{itemize}
+\item Fraud is typically $<$1\% of transactions (100:1 imbalance)
+\item A model predicting ``not fraud'' for ALL transactions achieves 99\% accuracy!
+\item \highlight{Accuracy is the WRONG metric} for imbalanced classification
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Correct Evaluation Metrics:}
+\begin{itemize}
+\item \textbf{Precision}: Of flagged transactions, how many are actually fraud?
+\item \textbf{Recall}: Of actual fraud cases, how many did we catch?
+\item \textbf{F1 Score}: Harmonic mean $= 2 \cdot \frac{\text{Prec} \cdot \text{Rec}}{\text{Prec} + \text{Rec}}$
+\item \textbf{AUC-PR}: Area under Precision-Recall curve (preferred over ROC-AUC)
+\end{itemize}
+\bottomnote{NEVER use accuracy for imbalanced classification---it is dangerously misleading}
 \end{frame}
 
+% SLIDE 36: Handling Class Imbalance
+\begin{frame}[t]{Handling Class Imbalance}
+\textbf{1. Class Weighting} (scikit-learn):
+\begin{itemize}
+\item \texttt{class\_weight='balanced'}: auto-adjust by inverse class frequency
+\item \texttt{class\_weight='balanced\_subsample'}: per-tree balancing in RF
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{2. Resampling Techniques:}
+\begin{itemize}
+\item \textbf{SMOTE}: Synthetic Minority Oversampling TEchnique---generates synthetic minority samples
+\item \textbf{Undersampling}: Reduce majority class (risk: losing information)
+\item \textbf{Combination}: SMOTE + Tomek links for cleaner boundaries
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{3. Threshold and Cost-based Tuning:}
+\begin{itemize}
+\item Default threshold 0.5 is rarely optimal for imbalanced data
+\item Choose threshold based on business costs: FN cost $\gg$ FP cost for fraud
+\end{itemize}
+\bottomnote{Always check class distribution BEFORE training any classifier!}
+\end{frame}
+
+% SLIDE 37: Credit Risk Feature Importance
+\begin{frame}[t]{Credit Risk: Feature Importance in Practice}
+\textbf{Worked Example}---Top features in credit scoring:
+\begin{enumerate}
+\item \textbf{Payment history} (35\%)---most predictive of default
+\item \textbf{Debt-to-income ratio} (25\%)---capacity to repay
+\item \textbf{Credit utilization} (20\%)---current leverage
+\item \textbf{Length of credit history} (10\%)---track record
+\end{enumerate}
+
+\vspace{0.3em}
+\textbf{From Importance to Business Decisions:}
+\begin{itemize}
+\item SHAP waterfall plots show \textit{why} each applicant was approved/denied
+\item Regulatory requirement: provide \textbf{adverse action reasons} (ECOA)
+\item Top 3--4 SHAP features become the reason codes on denial letters
+\end{itemize}
+\bottomnote{Feature importance bridges the gap between model predictions and actionable business decisions}
+\end{frame}
+
+%% ================================================================
 \section{Implementation}
+%% ================================================================
 
-\begin{frame}[t,fragile]{Implementation: Complete Example}
+% SLIDE 38: Implementation: sklearn Example
+\begin{frame}[t,fragile]{Implementation: scikit-learn Example}
 \small
 \begin{verbatim}
 from sklearn.ensemble import RandomForestClassifier
@@ -797,14 +868,14 @@ from sklearn.model_selection import cross_val_score
 
 # Initialize with key hyperparameters
 rf = RandomForestClassifier(
-    n_estimators=200,      # Number of trees
-    max_features='sqrt',   # Features per split
-    max_depth=None,        # Full trees (default)
-    min_samples_leaf=1,    # Minimum samples in leaf
+    n_estimators=200,        # Number of trees
+    max_features='sqrt',     # Features per split
+    max_depth=None,          # Full trees (default)
+    min_samples_leaf=1,      # Minimum samples in leaf
     class_weight='balanced', # Handle imbalanced data
-    oob_score=True,        # Enable OOB error
-    n_jobs=-1,             # Use all CPU cores
-    random_state=42        # Reproducibility
+    oob_score=True,          # Enable OOB error
+    n_jobs=-1,               # Use all CPU cores
+    random_state=42          # Reproducibility
 )
 
 # Train and evaluate
@@ -812,49 +883,332 @@ rf.fit(X_train, y_train)
 print(f"OOB Score: {rf.oob_score_:.3f}")
 print(f"CV Score: {cross_val_score(rf, X, y, cv=5).mean():.3f}")
 \end{verbatim}
-\bottomnote{Key: class\_weight='balanced' for imbalanced fraud detection}
+\bottomnote{Key: \texttt{class\_weight='balanced'} is critical for imbalanced fraud detection}
 \end{frame}
 
-\section{Summary}
+% SLIDE 39: Comparison: RF vs Others
+\begin{frame}[t]{Comparison: Random Forest vs.\ Alternatives}
+\begin{center}
+\small
+\begin{tabular}{l|ccccc}
+\toprule
+\textbf{Aspect} & \textbf{RF} & \textbf{Single Tree} & \textbf{Logistic} & \textbf{KNN} & \textbf{XGBoost} \\
+\midrule
+Accuracy & High & Medium & Medium & Medium & High \\
+Interpretability & Medium & High & High & Low & Low \\
+Training Speed & Medium & Fast & Fast & Fast & Slow \\
+Feature Import. & Yes & Yes & Coef. & No & Yes \\
+Non-linear & Yes & Yes & No & Yes & Yes \\
+Overfit Risk & Low & High & Low & Medium & Medium \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-\begin{frame}[t]{Summary: Random Forests}
+\vspace{0.3em}
+\textbf{When to choose RF:} tabular data, mixed feature types, need feature importance, want robust out-of-the-box performance with minimal tuning.
+\bottomnote{RF trades some interpretability for significant accuracy and robustness gains}
+\end{frame}
+
+%% ================================================================
+\section{Practice and Summary}
+%% ================================================================
+
+% SLIDE 40: Hands-on Exercise
+\begin{frame}[t]{Hands-on Exercises}
+\textbf{Exercise 1} (Foundations): Train a single decision tree on credit data. Visualize the tree structure. Compute Gini impurity manually for the root split.
+
+\vspace{0.5em}
+\textbf{Exercise 2} (Random Forest): Build a Random Forest with 200 trees. Compare OOB error to 5-fold CV. Analyze feature importance using both MDI and permutation methods.
+
+\vspace{0.5em}
+\textbf{Exercise 3} (Advanced): Tune \texttt{max\_features} and \texttt{n\_estimators} via grid search. Apply to imbalanced fraud detection with \texttt{class\_weight='balanced'}. Generate SHAP summary plots.
+\bottomnote{Exercises progress from Bloom's Level 2 (understand) to Level 5 (evaluate)}
+\end{frame}
+
+% SLIDE 41: Summary
+\begin{frame}[t]{Summary: Random Forests Deep Dive}
 \textbf{Core Concepts:}
 \begin{itemize}
-\item Ensemble of decision trees with bootstrap + feature randomization
-\item Reduces variance while maintaining low bias
-\item OOB error provides free cross-validation
-\item \textbf{Breiman's insight}: Low tree correlation + high tree strength = best generalization
+\item Ensemble of decision trees with \textbf{bootstrap sampling + feature randomization}
+\item Variance reduction: $\text{Var}(\bar{f}) = \rho\sigma^2 + (1-\rho)\sigma^2/B$
+\item OOB error provides ``free'' cross-validation
+\item Boosting complements bagging: sequential bias reduction vs.\ parallel variance reduction
 \end{itemize}
 
+\vspace{0.3em}
 \textbf{Practical Takeaways:}
 \begin{itemize}
-\item Excellent default for tabular data
-\item Feature importance aids interpretation
-\item More trees = higher accuracy (but more memory/latency)
-\item Hyperparameter tuning often optional, but recommended for imbalanced data
+\item RF is the best ``first model'' for tabular data---robust and minimal tuning
+\item SHAP values enable regulatory-compliant explanations (ECOA, GDPR)
+\item For imbalanced data: use \texttt{class\_weight='balanced'}, evaluate with AUC-PR
+\item XGBoost/LightGBM often outperform RF with careful tuning
 \end{itemize}
-\bottomnote{Next: PCA and t-SNE for dimensionality reduction}
+\bottomnote{Next session: PCA and t-SNE for dimensionality reduction}
 \end{frame}
 
-\section{References}
+% SLIDE 42: Closing Comic
+\begin{frame}{Closing Thought}
+\begin{center}
+\Large
+\textit{``Stir the pile of decision trees until\\[0.3em] the validation loss converges.''}
+\end{center}
 
-\begin{frame}[t]{References}
+\vspace{1em}
+\begin{center}
+\normalsize
+--- Adapted from XKCD \#1838 ``Machine Learning''
+\end{center}
+\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5)}
+\end{frame}
+
+%% ================================================================
+%% APPENDIX
+%% ================================================================
+\appendix
+\section*{Advanced Topics}
+
+% SLIDE A1: Appendix Divider
+\begin{frame}{}
+\vfill
+\begin{center}
+{\Huge \textcolor{mlpurple}{\textbf{Appendix}}}
+
+\vspace{1em}
+{\Large Advanced Topics}
+\end{center}
+\vfill
+\bottomnote{Topics: Gini derivation, bagging proof, bootstrap 63.2\% rule, consistency, XGBoost derivation, AdaBoost-exponential loss, SHAP axioms, complexity analysis}
+\end{frame}
+
+% SLIDE A2: Gini Impurity Derivation
+\begin{frame}[t]{Appendix: Gini Impurity from First Principles}
+\textbf{Setup}: A node contains samples from $K$ classes with proportions $p_1, \ldots, p_K$.
+
+\vspace{0.3em}
+\textbf{Derivation} (expected misclassification probability):
+\begin{enumerate}
+\item Pick a random sample: class $k$ with probability $p_k$
+\item Classify it using the class distribution: assign class $j$ with probability $p_j$
+\item Misclassification probability for a class-$k$ sample: $1 - p_k$
+\end{enumerate}
+
+\vspace{0.3em}
+\textbf{Expected misclassification rate}:
+\[
+G = \sum_{k=1}^{K} p_k(1 - p_k) = \sum_{k=1}^{K} p_k - \sum_{k=1}^{K} p_k^2 = 1 - \sum_{k=1}^{K} p_k^2
+\]
+
+\textbf{Connection to variance}: For binary case ($p, 1-p$):
+\[
+G = 2p(1-p) = 2\,\text{Var}(\text{Bernoulli}(p))
+\]
+
+Gini impurity is proportional to the variance of the class indicator variable.
+\bottomnote{Gini impurity has a natural interpretation as expected misclassification under random labeling}
+\end{frame}
+
+% SLIDE A3: Bagging Variance Reduction: Full Proof
+\begin{frame}[t]{Appendix: Bagging Variance Reduction---Full Proof}
+\textbf{Given}: $B$ predictions $\hat{f}_1, \ldots, \hat{f}_B$ with $\text{Var}(\hat{f}_b) = \sigma^2$, $\text{Corr}(\hat{f}_i, \hat{f}_j) = \rho$ for $i \neq j$.
+
+\vspace{0.2em}
+\textbf{Step 1}: $\text{Var}(\bar{f}) = \text{Var}\!\left(\frac{1}{B}\sum_{b=1}^B \hat{f}_b\right) = \frac{1}{B^2}\sum_{i=1}^B\sum_{j=1}^B \text{Cov}(\hat{f}_i, \hat{f}_j)$
+
+\vspace{0.2em}
+\textbf{Step 2}: Separate terms:
+\[
+= \frac{1}{B^2}\!\left[\sum_{i=1}^B \text{Var}(\hat{f}_i) + \sum_{i \neq j} \text{Cov}(\hat{f}_i, \hat{f}_j)\right] = \frac{1}{B^2}\!\left[B\sigma^2 + B(B\!-\!1)\rho\sigma^2\right]
+\]
+
+\textbf{Step 3}: Simplify:
+\[
+= \frac{\sigma^2}{B} + \frac{B-1}{B}\rho\sigma^2 = \frac{\sigma^2}{B}(1 - \rho) + \rho\sigma^2
+\]
+
+\textbf{Step 4}: Limiting behavior as $B \to \infty$: \; $\text{Var}(\bar{f}) \to \rho\sigma^2$
+
+\textbf{Conclusion}: Even with infinitely many trees, variance cannot go below $\rho\sigma^2$. This is why RF adds feature randomization: to reduce $\rho$.
+\bottomnote{The irreducible floor $\rho\sigma^2$ is the fundamental reason Random Forests randomize feature subsets}
+\end{frame}
+
+% SLIDE A4: Bootstrap: The 63.2% Rule
+\begin{frame}[t]{Appendix: Bootstrap---The 63.2\% Rule}
+\textbf{Claim}: In a bootstrap sample of size $n$, approximately 63.2\% of observations are unique.
+
+\vspace{0.3em}
+\textbf{Proof}:
+\begin{enumerate}
+\item Probability that observation $i$ is \textit{not} selected in one draw: $1 - \frac{1}{n}$
+\item Probability not selected in any of $n$ draws: $\left(1 - \frac{1}{n}\right)^n$
+\item Taking the limit as $n \to \infty$:
+\end{enumerate}
+\[
+\lim_{n \to \infty} \left(1 - \frac{1}{n}\right)^n = e^{-1} \approx 0.368
+\]
+
+\textbf{Taylor expansion}: $\ln\!\left(1 - \frac{1}{n}\right) = -\frac{1}{n} - \frac{1}{2n^2} - \cdots \approx -\frac{1}{n}$
+
+Therefore: $\left(1 - \frac{1}{n}\right)^n \approx e^{n \cdot (-1/n)} = e^{-1}$
+
+\vspace{0.3em}
+$P(\text{selected at least once}) = 1 - e^{-1} \approx 0.632$
+
+\textbf{Practical implication}: Each tree's OOB set contains $\sim$37\% of the training data.
+\bottomnote{For $n = 1000$: expected unique samples $= 632$, OOB samples $= 368$}
+\end{frame}
+
+% SLIDE A5: Random Forest Consistency
+\begin{frame}[t]{Appendix: Random Forest Consistency}
+\textbf{Question}: Does a Random Forest converge to the true function as $n \to \infty$?
+
+\vspace{0.3em}
+\textbf{Breiman (2001)}: Strong Law of Large Numbers for Forests
+\begin{itemize}
+\item As $B \to \infty$, the RF generalization error converges a.s.
+\item The forest does not overfit by adding trees: $\text{PE}^* \leq \bar{\rho}\, \frac{s^2}{(E_\theta[s])^2}$
+\item where $\bar{\rho}$ = mean correlation, $s$ = margin strength
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Scornet, Biau \& Vert (2015)}: Formal consistency proof
+\begin{itemize}
+\item Proved: Breiman's RF is consistent for additive regression models
+\item Key condition: $\min(n_{\min}, p) \to \infty$ and $k/p \to 0$
+\item Result: $\mathbb{E}[\hat{f}_n(x)] \to f(x)$ as $n \to \infty$
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Wager \& Athey (2018)}: Asymptotic normality and confidence intervals for RF predictions---enables statistical inference with forests.
+\bottomnote{Scornet et al.\ (2015). Consistency of random forests. \textit{Annals of Statistics}, 43(4), 1716--1741.}
+\end{frame}
+
+% SLIDE A6: XGBoost Objective Derivation
+\begin{frame}[t]{Appendix: XGBoost Objective Derivation}
+\textbf{Start}: Loss at iteration $t$ with second-order Taylor expansion:
+\[
+\mathcal{L}^{(t)} = \sum_{i=1}^{N} L\!\left(y_i,\, \hat{y}_i^{(t-1)} + f_t(x_i)\right) + \Omega(f_t)
+\]
+\[
+\approx \sum_{i=1}^{N}\left[L(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \tfrac{1}{2}h_i f_t^2(x_i)\right] + \Omega(f_t)
+\]
+where $g_i = \partial L/\partial \hat{y}^{(t-1)}$, $h_i = \partial^2 L / \partial (\hat{y}^{(t-1)})^2$.
+
+\vspace{0.3em}
+\textbf{Optimal leaf weights}: For leaf $j$ with samples $I_j$:
+\[
+w_j^* = -\frac{G_j}{H_j + \lambda}, \quad G_j = \sum_{i \in I_j} g_i, \quad H_j = \sum_{i \in I_j} h_i
+\]
+
+\textbf{Optimal split gain}:
+\[
+\text{Gain} = \frac{1}{2}\!\left[\frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda}\right] - \gamma
+\]
+\bottomnote{The second-order approximation enables efficient exact greedy split finding}
+\end{frame}
+
+% SLIDE A7: AdaBoost as Exponential Loss Minimization
+\begin{frame}[t]{Appendix: AdaBoost as Exponential Loss Minimization}
+\textbf{Claim}: AdaBoost minimizes the exponential loss function:
+\[
+L = \sum_{i=1}^{N} \exp\!\left(-y_i F(x_i)\right), \quad F(x) = \sum_{t=1}^{T} \alpha_t h_t(x)
+\]
+
+\textbf{Proof sketch} (forward stagewise additive modeling):
+\begin{enumerate}
+\item At step $t$, minimize $L_t = \sum_i w_i^{(t)} \exp(-y_i \alpha_t h_t(x_i))$ where $w_i^{(t)} = \exp(-y_i F_{t-1}(x_i))$
+\item Optimal $h_t$: minimizes weighted classification error $\epsilon_t = \sum_{i: h_t(x_i) \neq y_i} w_i$
+\item Optimal $\alpha_t$: $\frac{\partial L_t}{\partial \alpha_t} = 0 \Rightarrow \alpha_t = \frac{1}{2}\ln\frac{1-\epsilon_t}{\epsilon_t}$
+\end{enumerate}
+
+\vspace{0.3em}
+\textbf{Connection to logistic regression:}
+\begin{itemize}
+\item Exponential loss $\to$ logistic loss: yields LogitBoost
+\item Both are proper scoring rules; logistic loss is more robust to outliers
+\end{itemize}
+\bottomnote{Friedman, Hastie \& Tibshirani (2000). Additive logistic regression. \textit{Annals of Statistics}, 28(2), 337--407.}
+\end{frame}
+
+% SLIDE A8: SHAP: Axioms and TreeSHAP Complexity
+\begin{frame}[t]{Appendix: SHAP Axioms and TreeSHAP Complexity}
+\textbf{Shapley's Axioms} (unique attribution satisfying all four):
+\begin{enumerate}
+\item \textbf{Efficiency}: $\sum_j \phi_j = f(x) - \mathbb{E}[f(X)]$ (attributions explain the full prediction)
+\item \textbf{Symmetry}: If $f(S \cup \{i\}) = f(S \cup \{j\})$ for all $S$, then $\phi_i = \phi_j$
+\item \textbf{Dummy}: If feature $j$ never changes $f$, then $\phi_j = 0$
+\item \textbf{Additivity}: For $f = f_1 + f_2$: $\phi_j(f) = \phi_j(f_1) + \phi_j(f_2)$
+\end{enumerate}
+
+\vspace{0.3em}
+\textbf{Complexity Comparison:}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Method} & \textbf{Complexity} & \textbf{Exact?} \\
+\midrule
+Brute force Shapley & $O(2^p)$ & Yes \\
+KernelSHAP & $O(p \cdot M)$ ($M$ samples) & Approximate \\
+TreeSHAP & $O(T \cdot L \cdot D^2)$ & Yes \\
+\bottomrule
+\end{tabular}
+\end{center}
+where $T$ = trees, $L$ = max leaves, $D$ = max depth, $p$ = features.
+\bottomnote{Lundberg et al.\ (2020). From local explanations to global understanding with TreeSHAP. \textit{Nature MI}, 2, 56--67.}
+\end{frame}
+
+% SLIDE A9: Computational Complexity
+\begin{frame}[t]{Appendix: Computational Complexity}
+\textbf{Training Complexity:}
+\[
+O(B \cdot n \cdot m \cdot \log n)
+\]
+where $B$ = trees, $n$ = samples, $m$ = features per split ($\sqrt{p}$ or $p/3$).
+
+\vspace{0.3em}
+\textbf{Prediction Complexity:}
+\[
+O(B \cdot \text{depth}) \quad \text{per sample}
+\]
+
+\textbf{Memory:}
+\[
+O(B \cdot \text{nodes per tree}) \approx O(B \cdot 2n) \quad \text{for full trees}
+\]
+
+\vspace{0.3em}
+\textbf{Parallelization:}
+\begin{itemize}
+\item Trees are \textbf{embarrassingly parallel}---train on separate cores
+\item \texttt{n\_jobs=-1} in scikit-learn uses all available CPU cores
+\item Prediction also parallelizable across trees (and across samples)
+\end{itemize}
+\bottomnote{RF scales linearly with $B$ and $n$---practical for datasets up to millions of samples}
+\end{frame}
+
+% SLIDE A10: References and Resources
+\begin{frame}[t]{Appendix: References and Further Reading}
 \small
 \textbf{Textbooks:}
 \begin{itemize}
-\item James et al. (2021). \textit{ISLR}, Chapter 8: Tree-Based Methods
-\item Hastie et al. (2009). \textit{ESL}, Chapter 15: Random Forests
+\item James et al.\ (2021). \textit{An Introduction to Statistical Learning}, Ch.\ 8: Tree-Based Methods
+\item Hastie et al.\ (2009). \textit{Elements of Statistical Learning}, Ch.\ 15: Random Forests
 \end{itemize}
 
 \textbf{Original Papers:}
 \begin{itemize}
-\item Breiman, L. (2001). Random Forests. \textit{Machine Learning}, 45(1), 5-32.
-\item Breiman, L. (1996). Bagging Predictors. \textit{Machine Learning}, 24(2), 123-140.
-\item Friedman, J.H. (2001). Greedy function approximation. \textit{Annals of Statistics}, 29(5).
+\item Breiman (2001). Random Forests. \textit{Machine Learning}, 45(1), 5--32.
+\item Friedman (2001). Greedy function approximation. \textit{Annals of Statistics}, 29(5), 1189--1232.
 \item Chen \& Guestrin (2016). XGBoost. \textit{KDD}, 785--794.
 \item Lundberg \& Lee (2017). SHAP. \textit{NeurIPS}, 4765--4774.
 \end{itemize}
-\bottomnote{Breiman's 2001 paper: one of the most cited in ML}
+
+\textbf{Software:}
+\begin{itemize}
+\item \texttt{scikit-learn}: \url{https://scikit-learn.org}
+\item \texttt{xgboost}: \url{https://xgboost.readthedocs.io}
+\item \texttt{shap}: \url{https://shap.readthedocs.io}
+\end{itemize}
+\bottomnote{Recommended starting point: ISLR Chapter 8 for intuition, then Breiman (2001) for theory}
 \end{frame}
 
 \end{document}

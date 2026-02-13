@@ -98,16 +98,80 @@
 
 \begin{document}
 
+% ============================================================
+% ZONE 1: INTRODUCTION (7 slides, NO formulas, NO Greek letters)
+% ============================================================
+
+% Slide 1: Title Page
 \begin{frame}
 \titlepage
 \end{frame}
 
+% Slide 2: Outline
 \begin{frame}{Outline}
   \tableofcontents
+\bottomnote{Three zones: Introduction, Core Content (PMSP), and Wrap-Up}
 \end{frame}
 
-\section{Problem}
+% Slide 3: Opening Comic (XKCD #1838)
+\begin{frame}[t]{When All You Have Is Linear Algebra...}
+\vspace{0.3em}
+\begin{center}
+\includegraphics[height=0.70\textheight]{images/1838_machine_learning.png}
+\end{center}
+\vspace{0.2em}
+\begin{center}
+\textit{``You pour the data into this big pile of linear algebra,
+then collect the answers on the other side.''}
+\end{center}
+\bottomnote{XKCD \#1838 ``Machine Learning'' by Randall Munroe (CC BY-NC 2.5)}
+\end{frame}
 
+% Slide 4: The Text Data Challenge
+\begin{frame}[t]{The Text Data Challenge}
+\textbf{Financial text is everywhere---but machines cannot read}
+\begin{itemize}
+\item Earnings calls, analyst reports, and news articles contain market-moving signals
+\item Text is unstructured: no rows, no columns, no obvious features
+\item We need to capture semantic meaning---``bullish'' should be close to ``positive outlook''
+\end{itemize}
+\vspace{0.5em}
+\textbf{The core question:} How do we convert words into numbers that preserve meaning?
+\bottomnote{Embeddings turn text into numbers that ML models can process}
+\end{frame}
+
+% Slide 5: The Sequential Decision Challenge
+\begin{frame}[t]{The Sequential Decision Challenge}
+\textbf{Trading is not a one-shot prediction---it is a sequence of decisions}
+\begin{itemize}
+\item A portfolio manager makes buy, sell, and hold decisions every day
+\item Each action has delayed consequences: today's trade affects next week's P\&L
+\item The explore-vs-exploit dilemma: stick with what works or try something new?
+\end{itemize}
+\vspace{0.5em}
+\textbf{The core question:} How do we learn an optimal strategy from trial and error?
+\bottomnote{Reinforcement learning: learning from trial and error with delayed rewards}
+\end{frame}
+
+% Slide 6: Why Banks and Asset Managers Care
+\begin{frame}[t]{Why Banks and Asset Managers Care}
+\textbf{Embedding Applications in Finance}
+\begin{itemize}
+\item \textbf{Sentiment analysis:} Classify news as positive/negative for trading signals
+\item \textbf{Document similarity:} Find related filings, detect duplicate reports
+\item \textbf{Entity recognition:} Extract company names, tickers, and financial events
+\end{itemize}
+\vspace{0.5em}
+\textbf{Reinforcement Learning Applications in Finance}
+\begin{itemize}
+\item \textbf{Algorithmic trading:} Learn buy/sell/hold policies from market data
+\item \textbf{Portfolio rebalancing:} Optimize allocation over time with transaction costs
+\item \textbf{Optimal execution:} Minimize market impact when filling large orders
+\end{itemize}
+\bottomnote{Both techniques address real problems in quantitative finance and risk management}
+\end{frame}
+
+% Slide 7: Learning Objectives
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
 \begin{enumerate}
@@ -116,40 +180,36 @@
 \item \textbf{Analyze} the convergence properties of Q-learning and the role of the exploration--exploitation tradeoff
 \item \textbf{Critique} RL-based trading strategies and their limitations (transaction costs, non-stationarity, overfitting)
 \end{enumerate}
+\vspace{0.3em}
+\textbf{Finance Application:} Sentiment-driven trading signals and sequential portfolio optimization
 \bottomnote{Bloom's taxonomy levels 4--5: Analyze, Evaluate, Derive, Critique}
 \end{frame}
 
+% ============================================================
+% ZONE 2: CORE CONTENT (14 slides, PMSP sections)
+% ============================================================
+
+\section{Problem}
+
+% Slide 8: The Business Problem
 \begin{frame}[t]{The Business Problem}
-\textbf{Text Data Challenge}
+\textbf{Text Data: One-Hot Encoding Wastes Dimensions}
 \begin{itemize}
-\item Financial news, reports, social media contain valuable signals
-\item Text is unstructured---how to feed it to ML models?
-\item Need to capture semantic meaning (``bullish'' similar to ``positive'')
+\item A vocabulary of 50,000 words $\Rightarrow$ 50,000-dimensional sparse vectors
+\item No notion of similarity: ``bank'' and ``financial institution'' are equally distant
+\item Embeddings compress words into dense vectors of 100--768 dimensions
 \end{itemize}
 \vspace{0.5em}
-\textbf{Sequential Decision Challenge}
+\textbf{Sequential Decisions: Delayed Reward Signals}
 \begin{itemize}
-\item Trading requires sequences of buy/sell/hold decisions
-\item Actions have delayed consequences (profit realized later)
+\item Supervised learning needs immediate labels; trading profit is realized days later
+\item The agent must learn which past actions led to eventual gains or losses
+\item RL explicitly models the credit-assignment problem via reward discounting
 \end{itemize}
-\bottomnote{Embeddings solve text, RL solves sequential decisions}
+\bottomnote{Embeddings solve the text problem; RL solves the sequential decision problem}
 \end{frame}
 
-\begin{frame}[t]{Why Is This Hard?}
-\begin{center}
-\textit{``There are only two hard problems in NLP: understanding language, and getting your regex to work.''} --- adapted from Phil Karlton
-\end{center}
-\vspace{1em}
-\textbf{This Lecture:}
-\begin{itemize}
-\item Part 1: Turn text into numbers that capture meaning (Embeddings)
-\item Part 2: Learn to make good decisions over time (RL)
-\end{itemize}
-\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5): ``Machine Learning'' --- relevant to both topics}
-\end{frame}
-
-\section{Method}
-
+% Slide 9: Key Equations
 \begin{frame}[t]{Key Equations}
 \textbf{Embeddings --- Skip-Gram Objective:}
 \[
@@ -173,6 +233,9 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \bottomnote{These four equations are the mathematical backbone of this lecture}
 \end{frame}
 
+\section{Method}
+
+% Slide 10: Word Embedding Space (CHART 01)
 \begin{frame}[t]{Word Embedding Space}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{01_word_embedding_space/chart.pdf}
@@ -180,58 +243,145 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \bottomnote{Similar words cluster together in embedding space}
 \end{frame}
 
-\begin{frame}[t]{Embedding Similarity}
-\begin{center}
-\includegraphics[width=0.50\textwidth]{02_similarity_heatmap/chart.pdf}
-\end{center}
-\bottomnote{Cosine similarity captures semantic relationships}
+% Slide 11: From Words to Vectors
+\begin{frame}[t]{From Words to Vectors}
+\textbf{The Distributional Hypothesis}
+\begin{quote}
+``You shall know a word by the company it keeps.'' --- J.R.\ Firth (1957)
+\end{quote}
+\vspace{0.3em}
+\begin{itemize}
+\item Words appearing in similar contexts have similar meanings
+\item \textbf{Dense} vectors (100--300 dims) replace \textbf{sparse} one-hot vectors (50,000+ dims)
+\item \textbf{Word2Vec core idea:} Train a shallow neural network to predict context words from a target word (Skip-Gram) or vice versa (CBOW)
+\end{itemize}
+\bottomnote{Word2Vec: the breakthrough that made word embeddings practical (Mikolov et al., 2013)}
 \end{frame}
 
+% Slide 12: Static vs. Contextual Embeddings
+\begin{frame}[t]{Static vs.\ Contextual Embeddings}
+\textbf{Static Embeddings} (Word2Vec, GloVe)
+\begin{itemize}
+\item One fixed vector per word, regardless of context
+\item ``bank'' always maps to the same point---whether river bank or investment bank
+\end{itemize}
+\vspace{0.5em}
+\textbf{Contextual Embeddings} (BERT, FinBERT)
+\begin{itemize}
+\item Different vector for each occurrence, depending on surrounding sentence
+\item ``The \textbf{bank} approved the loan'' vs.\ ``We walked along the river \textbf{bank}''
+\item FinBERT: BERT fine-tuned on financial text---captures domain nuance
+\end{itemize}
+\bottomnote{Static: one meaning per word. Contextual: meaning adapts to context.}
+\end{frame}
+
+% Slide 13: RL: Agent-Environment Loop (CHART 03)
 \begin{frame}[t]{RL: Agent-Environment Loop}
-\begin{center}
-\includegraphics[width=0.55\textwidth]{03_rl_loop/chart.pdf}
-\end{center}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{03_rl_loop/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\textbf{Five core components:}
+\begin{itemize}
+\item \textbf{Agent:} The decision maker (e.g., trading algorithm)
+\item \textbf{Environment:} The market or simulator
+\item \textbf{State:} Current portfolio, prices, indicators
+\item \textbf{Action:} Buy, sell, or hold
+\item \textbf{Reward:} P\&L after each action
+\end{itemize}
+\end{column}
+\end{columns}
 \bottomnote{Agent takes actions, receives rewards, learns optimal policy}
 \end{frame}
 
-\begin{frame}[t]{Q-Learning: Value Function}
-\begin{center}
-\includegraphics[width=0.45\textwidth]{04_q_learning_grid/chart.pdf}
-\end{center}
-\bottomnote{Q-values show expected reward from each state-action}
+% Slide 14: Q-Learning at a Glance
+\begin{frame}[t]{Q-Learning at a Glance}
+\textbf{What is Q(s, a)?}
+\begin{itemize}
+\item The expected total discounted reward from taking action $a$ in state $s$, then acting optimally
+\end{itemize}
+\vspace{0.3em}
+\textbf{How does the agent learn?}
+\begin{itemize}
+\item \textbf{Update rule:} Blend old estimate with new evidence (controlled by learning rate $\alpha$)
+\item \textbf{Target:} Immediate reward $r$ plus discounted best future value $\gamma \max_{a'} Q(s', a')$
+\item Old and new are mixed: $Q_{\text{new}} = (1-\alpha)\,Q_{\text{old}} + \alpha\,[\text{target}]$
+\end{itemize}
+\vspace{0.3em}
+\textbf{Exploration vs.\ Exploitation}
+\begin{itemize}
+\item $\epsilon$-greedy: with probability $\epsilon$, choose a random action (explore); otherwise, choose the best known action (exploit)
+\end{itemize}
+\bottomnote{Q-learning: the foundation of value-based reinforcement learning}
 \end{frame}
 
 \section{Solution}
 
+% Slide 15: Learning Progress (CHART 05)
 \begin{frame}[t]{Learning Progress}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{05_reward_curves/chart.pdf}
 \end{center}
-\bottomnote{RL agents improve through exploration and exploitation}
+\bottomnote{RL agents improve through exploration and exploitation over many episodes}
 \end{frame}
 
-\begin{frame}[t]{Learned Trading Policy}
+% Slide 16: Embeddings in Finance: Sentiment Analysis
+\begin{frame}[t]{Embeddings in Finance: Sentiment Analysis}
+\textbf{Worked Example}
+\begin{itemize}
+\item Input headline: ``Fed signals aggressive rate hike amid inflation fears''
+\item Embed headline into a 768-dimensional vector using FinBERT
+\item Compute cosine similarity to positive/negative anchor phrases
+\item Classification: \textbf{Negative sentiment} (bearish for equities)
+\end{itemize}
+\vspace{0.3em}
+\textbf{Why FinBERT?}
+\begin{itemize}
+\item General BERT struggles with financial jargon (``hawkish'', ``dovish'')
+\item FinBERT achieves 87\% accuracy on financial sentiment (Araci, 2019)
+\end{itemize}
+\bottomnote{Simplified example --- real embeddings are 300--768 dimensions}
+\end{frame}
+
+% Slide 17: RL in Finance: Trading Agents
+\begin{frame}[t]{RL in Finance: Trading Agents}
+\textbf{Formulation}
+\begin{itemize}
+\item \textbf{State:} Price history, technical indicators, current position
+\item \textbf{Action:} Buy, sell, hold (possibly with position sizing)
+\item \textbf{Reward:} Risk-adjusted return (e.g., Sharpe ratio per step)
+\end{itemize}
+\vspace{0.3em}
+\textbf{Key Challenges}
+\begin{itemize}
+\item \textbf{Non-stationarity:} Market regimes shift---policies trained on bull markets fail in crashes
+\item \textbf{Overfitting:} Agent memorizes historical patterns that do not repeat
+\item \textbf{Partial observability:} The agent never sees all relevant information
+\end{itemize}
+\bottomnote{RL for trading is an active research area; not a solved problem}
+\end{frame}
+
+% Slide 18: Comparison Table (Condensed)
+\begin{frame}[t]{Embeddings vs.\ Reinforcement Learning}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{06_policy_viz/chart.pdf}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lll}
+\toprule
+ & \textbf{Embeddings} & \textbf{Reinforcement Learning} \\
+\midrule
+\textbf{Input} & Text data (words, sentences, docs) & Sequential decisions with delayed feedback \\
+\textbf{Learns} & Semantic representations (dense vectors) & Optimal policy (state $\to$ action mapping) \\
+\textbf{Finance Use} & Sentiment analysis, document similarity & Trading strategies, portfolio optimization \\
+\bottomrule
+\end{tabular}
 \end{center}
-\bottomnote{Policy maps states to actions (when to buy/sell/hold)}
+\bottomnote{Both transform complex inputs into learnable representations}
 \end{frame}
 
 \section{Practice}
 
-\begin{frame}[t]{Hands-on Exercise}
-  \textbf{Open the Colab Notebook}
-  \begin{itemize}
-    \item Exercise 1: Explore word embeddings with Word2Vec
-    \item Exercise 2: Implement basic Q-learning
-    \item Exercise 3: Apply RL to a simple trading environment
-  \end{itemize}
-  \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L06_embeddings_rl.ipynb}
-\end{frame}
-
-\section{Decision Framework}
-
+% Slide 19: Decision Framework (CHART 07)
 \begin{frame}[t]{Decision Framework}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{07_decision_flowchart/chart.pdf}
@@ -239,15 +389,103 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \bottomnote{Embeddings for text, RL for sequential decisions with delayed rewards}
 \end{frame}
 
+% Slide 20: Practical Tips
+\begin{frame}[t]{Practical Tips}
+\textbf{Embeddings}
+\begin{itemize}
+\item Start with pre-trained models (Word2Vec, GloVe, or FinBERT)---training from scratch requires massive corpora
+\item Match the domain: financial text needs financial embeddings
+\item Visualize with t-SNE to sanity-check that clusters make sense
+\end{itemize}
+\vspace{0.5em}
+\textbf{Reinforcement Learning}
+\begin{itemize}
+\item Start simple: tabular Q-learning before DQN or policy gradient
+\item Design rewards carefully---reward shaping prevents sparse-signal problems
+\item Normalize states: RL is sensitive to feature scales
+\end{itemize}
+\bottomnote{Both domains: start simple, iterate, validate thoroughly}
+\end{frame}
+
+% Slide 21: Hands-on Exercise
+\begin{frame}[t]{Hands-on Exercise}
+\textbf{Open the Colab Notebook}
+\begin{enumerate}
+\item \textbf{Exercise 1:} Explore word embeddings with Word2Vec---find similar words and visualize clusters
+\item \textbf{Exercise 2:} Implement basic Q-learning on a grid-world environment
+\item \textbf{Exercise 3:} Apply RL to a simple trading environment and analyze the learned policy
+\end{enumerate}
+\vspace{0.5em}
+\textbf{Link:} \url{https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L06_embeddings_rl.ipynb}
+\bottomnote{Notebooks available on the course GitHub page --- see the L06 folder}
+\end{frame}
+
+% ============================================================
+% ZONE 3: WRAP-UP (3 slides)
+% ============================================================
+
 \section{Summary}
 
+% Slide 22: Key Takeaways
+\begin{frame}[t]{Key Takeaways}
+\textbf{Embeddings}
+\begin{itemize}
+\item Words become dense vectors where proximity encodes semantic similarity
+\item Pre-trained models (Word2Vec, GloVe, FinBERT) give you a strong starting point
+\end{itemize}
+\vspace{0.3em}
+\textbf{Reinforcement Learning}
+\begin{itemize}
+\item An agent interacts with an environment, learning from rewards over time
+\item Q-learning and DQN provide practical algorithms for value-based control
+\end{itemize}
+\vspace{0.3em}
+\textbf{Finance Applications}
+\begin{itemize}
+\item Embeddings power sentiment analysis, document search, and entity extraction
+\item RL enables algorithmic trading, portfolio rebalancing, and optimal execution
+\end{itemize}
+\vspace{0.3em}
+\textbf{Key Insight:} Both methods transform raw, complex inputs into structured representations that machines can learn from.
+\bottomnote{Course complete! Apply these methods in your capstone project}
+\end{frame}
+
+% Slide 23: Closing Comic (text callback)
+\begin{frame}[t]{Closing Thought}
+\vspace{2em}
+\begin{center}
+\Large\textit{``We poured financial news into a pile of linear algebra}
+
+\textit{and got sentiment scores on the other side.}
+
+\vspace{0.5em}
+
+\textit{Then we poured the sentiment scores into a reinforcement learner}
+
+\textit{and got a trading strategy on the other side.}
+
+\vspace{0.5em}
+
+\textit{The strategy said: `Buy and hold.'\,''}
+\end{center}
+
+\vspace{1em}
+\begin{center}
+\normalsize --- Adapted from XKCD \#1838 ``Machine Learning'' by Randall Munroe
+\end{center}
+\bottomnote{Callback to XKCD \#1838 by Randall Munroe (CC BY-NC 2.5)}
+\end{frame}
+
+% Slide 24: References
 \begin{frame}[t]{References}
-  \footnotesize
-  \begin{itemize}
-    \item Mikolov et al. (2013). \textit{Efficient Estimation of Word Representations in Vector Space}. arXiv.
-    \item Sutton, R. \& Barto, A. (2018). \textit{Reinforcement Learning: An Introduction}. MIT Press.
-    \item Jurafsky \& Martin (2024). \textit{Speech and Language Processing}. \url{https://web.stanford.edu/~jurafsky/slp3/}
-  \end{itemize}
+\footnotesize
+\begin{itemize}
+\item Mikolov, T., Chen, K., Corrado, G. \& Dean, J. (2013). \textit{Efficient Estimation of Word Representations in Vector Space}. arXiv:1301.3781.
+\item Sutton, R.S. \& Barto, A.G. (2018). \textit{Reinforcement Learning: An Introduction}, 2nd ed. MIT Press. Free at \url{http://incompleteideas.net/book/the-book-2nd.html}
+\item Jurafsky, D. \& Martin, J.H. (2024). \textit{Speech and Language Processing}, 3rd ed. \url{https://web.stanford.edu/~jurafsky/slp3/}
+\item Araci, D. (2019). \textit{FinBERT: Financial Sentiment Analysis with Pre-Trained Language Models}. arXiv:1908.10063.
+\end{itemize}
+\bottomnote{Sutton \& Barto: the definitive RL textbook (free at incompleteideas.net)}
 \end{frame}
 
 \end{document}

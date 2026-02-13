@@ -97,160 +97,412 @@
 
 \begin{document}
 
+% ============================================================
+% ZONE 1: INTRODUCTION (7 slides, NO formulas, NO Greek letters)
+% ============================================================
+
+% SLIDE 1: Title Page
 \begin{frame}
 \titlepage
 \end{frame}
 
+% SLIDE 2: Outline
 \begin{frame}{Outline}
   \tableofcontents
+\bottomnote{Three zones: Introduction, Core Content (PMSP), and Wrap-Up}
 \end{frame}
 
-\section{Problem}
+% SLIDE 3: Opening Comic
+\begin{frame}[t]{The Ensemble Approach}
+\vspace{0.5em}
+\begin{center}
+\includegraphics[width=0.45\textwidth]{images/1885_ensemble_model.png}
+\end{center}
+\vspace{0.3em}
+\begin{center}
+\textit{When one model is not enough, why not use all of them?}
+\end{center}
+\bottomnote{XKCD \#1885 ``Ensemble Model'' by Randall Munroe (CC BY-NC 2.5)}
+\end{frame}
 
+% SLIDE 4: The Wisdom of Crowds
+\begin{frame}[t]{The Wisdom of Crowds}
+\textbf{Combining opinions beats relying on one expert}
+\begin{itemize}
+  \item \highlight{Voting and polling:} election forecasts aggregate many polls, not just one
+  \item \highlight{Audience lifelines:} ``Ask the Audience'' on quiz shows beats ``Phone a Friend''
+  \item \highlight{Medical diagnosis:} second opinions reduce misdiagnosis rates significantly
+\end{itemize}
+\vspace{0.8em}
+\textbf{The core insight:}
+\begin{itemize}
+  \item Individual predictions are noisy and biased in different directions
+  \item Averaging many independent estimates cancels out individual errors
+  \item The crowd is smarter than any single member
+\end{itemize}
+\bottomnote{Francis Galton (1907): crowd's median estimate of an ox's weight was within 1\% of the true value}
+\end{frame}
+
+% SLIDE 5: From One Tree to a Forest
+\begin{frame}[t]{From One Tree to a Forest}
+\textbf{One person's opinion vs.\ the wisdom of the crowd}
+\begin{itemize}
+  \item A single decision tree is like asking one analyst for a recommendation
+  \item Small changes in data can completely change that analyst's conclusion
+  \item The result: unstable, high-variance predictions you cannot rely on
+\end{itemize}
+\vspace{0.8em}
+\textbf{The forest solution}
+\begin{itemize}
+  \item Train many trees, each on a slightly different version of the data
+  \item Combine their predictions: stable, robust, reliable
+  \item In fraud detection: one tree may miss a pattern; 500 trees will catch it
+\end{itemize}
+\bottomnote{Random Forests trade a small increase in bias for a large reduction in variance}
+\end{frame}
+
+% SLIDE 6: Why Banks Use Ensembles
+\begin{frame}[t]{Why Banks Use Ensembles}
+\textbf{Regulatory and business requirements}
+\begin{itemize}
+  \item \highlight{Accuracy:} fraudulent transactions cost the banking industry billions annually
+  \item \highlight{Interpretability:} regulators (Basel, EBA) demand explanations for every decision
+  \item \highlight{Robustness:} models must perform consistently across different market conditions
+\end{itemize}
+\vspace{0.8em}
+\textbf{Why Random Forests fit the bill}
+\begin{itemize}
+  \item Built-in feature importance satisfies explainability requirements
+  \item Ensemble averaging resists overfitting to noisy transaction data
+  \item No feature scaling needed -- handles mixed data types naturally
+\end{itemize}
+\bottomnote{Random Forests remain a top choice in banking for fraud, credit scoring, and AML}
+\end{frame}
+
+% SLIDE 7: Learning Objectives
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
 \begin{enumerate}
-\item \textbf{Derive} the variance reduction formula for bagging and analyze the role of tree correlation
-\item \textbf{Evaluate} Random Forest vs.\ gradient boosting for a given prediction task using bias-variance tradeoff
-\item \textbf{Analyze} feature importance using permutation importance, MDI, and SHAP values
-\item \textbf{Critique} ensemble methods for regulatory compliance in financial applications
+  \item \textbf{Analyze} how bootstrap aggregating reduces prediction variance through tree decorrelation
+  \item \textbf{Evaluate} Random Forest hyperparameters for optimal bias-variance tradeoff
+  \item \textbf{Compare} feature importance methods (MDI, permutation, SHAP) for model interpretation
+  \item \textbf{Critique} ensemble methods for regulatory compliance in fraud detection
 \end{enumerate}
-\vspace{1em}
+\vspace{0.8em}
 \textbf{Finance Application:} Fraud detection with interpretable feature importance
-\bottomnote{Bloom's Level 4--5: Analyze, Evaluate, Critique --- MSc-level objectives}
+\bottomnote{Bloom's Level 4--5: Analyze, Evaluate, Compare, Critique --- MSc-level objectives}
 \end{frame}
 
-\begin{frame}[t]{The Business Problem}
-\textbf{Fraud Detection Challenge}
-\begin{itemize}
-\item Need high accuracy: fraudulent transactions cost millions
-\item Need interpretability: explain why transaction flagged
-\item Complex patterns: fraud evolves and adapts
-\end{itemize}
-\vspace{0.5em}
-\textbf{Why Random Forests?}
-\begin{itemize}
-\item Combines many trees for robust predictions
-\item Built-in feature importance ranking
-\item Handles non-linear relationships naturally
-\end{itemize}
-\bottomnote{Ensemble methods: ``wisdom of crowds'' for machine learning}
-\end{frame}
+% ============================================================
+% ZONE 2: CORE CONTENT (14 slides, PMSP framework)
+% ============================================================
 
-\section{Method}
+% ------------------------------
+\section{Problem}
+% ------------------------------
 
+% SLIDE 8: Decision Tree Structure
 \begin{frame}[t]{Decision Tree Structure}
 \vspace{-0.8em}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{01_decision_tree/chart.pdf}
 \end{center}
 \vspace{-0.5em}
-\bottomnote{Trees split data using simple rules at each node until reaching a prediction}
+\bottomnote{Decision trees are the building blocks of Random Forests -- each tree partitions the feature space recursively}
 \end{frame}
 
-\begin{frame}[t]{Feature Importance}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{02_feature_importance/chart.pdf}
-\end{center}
-\bottomnote{Random Forests automatically rank which features matter most for prediction}
+% SLIDE 9: The Overfitting Problem
+\begin{frame}[t]{The Overfitting Problem}
+\textbf{Why single decision trees are unreliable}
+\begin{itemize}
+  \item \highlight{High variance:} small changes in training data produce completely different trees
+  \item \highlight{Sensitivity:} adding or removing a few samples can change every split in the tree
+  \item \highlight{Overfitting:} deep trees memorize noise instead of learning generalizable patterns
+\end{itemize}
+\vspace{0.8em}
+\textbf{The consequences in practice}
+\begin{itemize}
+  \item A fraud detection tree trained on Monday's data may fail on Tuesday's transactions
+  \item Unstable predictions undermine trust in the model and regulatory confidence
+  \item We need a method that keeps the flexibility of trees but eliminates the instability
+\end{itemize}
+\bottomnote{The bias-variance tradeoff: single trees have low bias but dangerously high variance}
 \end{frame}
 
+% ------------------------------
+\section{Method}
+% ------------------------------
+
+% SLIDE 10: Bootstrap Aggregating
 \begin{frame}[t]{Bootstrap Aggregating (Bagging)}
-\vspace{-1.3em}
+\vspace{-1.0em}
 \begin{center}
 \includegraphics[width=0.60\textwidth]{03_bootstrap/chart.pdf}
 \end{center}
-\vspace{-1.0em}
-\bottomnote{Each tree trains on a random sample, reducing overfitting}
+\vspace{-0.8em}
+\textbf{Key idea:} draw $B$ bootstrap samples (with replacement), train one tree on each, average predictions.
+\bottomnote{Bagging: sampling with replacement creates diverse training sets -- each tree sees roughly 63.2\% of original data}
 \end{frame}
 
-\begin{frame}[t]{Key Equations: Random Forest Theory}
-\textbf{Gini Impurity} (split criterion):
+% SLIDE 11: Bagging Variance Reduction
+\begin{frame}[t]{Bagging Variance Reduction}
+\textbf{Why does averaging trees reduce variance?}
 \[
-G = 1 - \sum_{k=1}^K p_k^2
+\text{Var}(\bar{f}) = \rho\,\sigma^2 + \frac{1 - \rho}{B}\,\sigma^2
 \]
+\begin{itemize}
+  \item $\rho$ = average pairwise correlation between trees
+  \item $\sigma^2$ = variance of a single tree
+  \item $B$ = number of trees in the ensemble
+\end{itemize}
+\vspace{0.5em}
+\textbf{Two levers for variance reduction:}
+\begin{itemize}
+  \item \highlight{Increase $B$:} more trees shrink the second term toward zero
+  \item \highlight{Decrease $\rho$:} decorrelating trees shrinks the dominant first term
+\end{itemize}
+\vspace{0.3em}
+\textbf{Key insight:} once $B$ is large enough, reducing $\rho$ is the only way to improve further.
+\bottomnote{This formula is the theoretical foundation of Random Forests -- decorrelation is the key innovation}
+\end{frame}
 
-\textbf{Bagging Variance Reduction} (with correlated trees):
+% SLIDE 12: Random Forest Innovation
+\begin{frame}[t]{The Random Forest Innovation}
+\textbf{Two sources of randomness}
+\begin{itemize}
+  \item \highlight{Bootstrap sampling:} each tree trains on a different random subset of observations
+  \item \highlight{Feature randomization:} at each split, consider only $m$ randomly chosen features
+\end{itemize}
+\vspace{0.5em}
+\textbf{How many features per split?}
+\begin{itemize}
+  \item Classification: $m \approx \sqrt{p}$ \quad (e.g., 10 features from 100)
+  \item Regression: $m \approx p/3$ \quad (e.g., 33 features from 100)
+\end{itemize}
+\vspace{0.5em}
+\textbf{Why this works:} Feature subsampling prevents dominant predictors from appearing in every tree, which \highlight{decorrelates} the trees and reduces $\rho$ in the variance formula.
+\bottomnote{Breiman (2001): the combination of bagging + feature randomization is what makes Random Forests so effective}
+\end{frame}
+
+% SLIDE 13: Gini Impurity and Information Gain
+\begin{frame}[t]{Gini Impurity and Information Gain}
+\textbf{Gini Impurity} (default in scikit-learn):
 \[
-\text{Var}(\bar{f}) = \rho\sigma^2 + \frac{1-\rho}{B}\sigma^2
+G = 1 - \sum_{k=1}^{K} p_k^2
 \]
-where $\rho$ = pairwise tree correlation, $B$ = number of trees
-
-\medskip
-\textbf{Random Forest Decorrelation}: Feature subsampling with $m \approx \sqrt{p}$ features per split reduces $\rho$, amplifying the variance reduction effect.
-
-\medskip
-\textbf{OOB Error}: Each sample is excluded from $\approx 36.8\%$ of trees ($P(\text{not selected}) = (1-1/n)^n \to 1/e$). OOB predictions aggregate only from those excluded trees.
-\bottomnote{These equations formalize why ensembles of decorrelated trees outperform single models}
+\textbf{Entropy} (information-theoretic alternative):
+\[
+H = -\sum_{k=1}^{K} p_k \log_2(p_k)
+\]
+\textbf{Information Gain} from splitting on feature $A$:
+\[
+\text{IG}(A) = H(\text{parent}) - \sum_{j} \frac{n_j}{n}\,H(\text{child}_j)
+\]
+\begin{itemize}
+  \item Gini and Entropy produce nearly identical splits in practice
+  \item The tree greedily picks the feature and threshold that maximizes IG at each node
+\end{itemize}
+\bottomnote{Both criteria measure impurity -- the tree splits to create purer child nodes at each step}
 \end{frame}
 
-\begin{frame}[t]{Out-of-Bag Error}
-\vspace{-1.2em}
-\begin{center}
-\includegraphics[width=0.50\textwidth]{04_oob_error/chart.pdf}
-\end{center}
-\vspace{-0.9em}
-\bottomnote{OOB error provides free cross-validation without held-out test set}
+% SLIDE 14: OOB Error (text-only)
+\begin{frame}[t]{Out-of-Bag (OOB) Error}
+\textbf{Free cross-validation built into bagging}
+\begin{itemize}
+  \item Each bootstrap sample excludes roughly 36.8\% of observations
+  \item Probability of exclusion: $(1 - 1/n)^n \to 1/e \approx 0.368$ as $n \to \infty$
+  \item For each observation, predict using \textit{only} the trees that did not train on it
+\end{itemize}
+\vspace{0.5em}
+\textbf{Why OOB error matters:}
+\begin{itemize}
+  \item \highlight{No separate validation set needed} -- saves precious labeled data
+  \item Closely approximates leave-one-out cross-validation accuracy
+  \item Available at no extra computational cost during training
+\end{itemize}
+\vspace{0.5em}
+\textbf{Practical use:} Set \texttt{oob\_score=True} in scikit-learn to monitor generalization performance during training without any additional code.
+\bottomnote{OOB error is one of the key practical advantages of Random Forests over other ensemble methods}
 \end{frame}
 
+% ------------------------------
+\section{Solution}
+% ------------------------------
+
+% SLIDE 15: Ensemble Voting
 \begin{frame}[t]{Ensemble Voting}
 \vspace{-0.8em}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{05_ensemble_voting/chart.pdf}
 \end{center}
 \vspace{-0.5em}
-\bottomnote{Final prediction combines votes from all trees (majority for classification)}
+\bottomnote{Classification: majority vote across all trees. Regression: average of all tree predictions.}
 \end{frame}
 
-\section{Solution}
+% SLIDE 16: Feature Importance Overview
+\begin{frame}[t]{Feature Importance Methods}
+\textbf{Three approaches to understanding what the model learned:}
+\begin{itemize}
+  \item \highlight{MDI (Mean Decrease in Impurity):} sum of Gini/Entropy reductions from splits on each feature across all trees. Fast but biased toward high-cardinality features.
+  \item \highlight{Permutation Importance:} randomly shuffle one feature, measure how much accuracy drops. Model-agnostic and unbiased, but slower.
+  \item \highlight{SHAP Values:} game-theoretic approach assigning each feature a contribution to each individual prediction. Most informative but computationally expensive.
+\end{itemize}
+\vspace{0.3em}
+\textbf{Recommendation:} Use permutation importance for model selection, SHAP for regulatory explanations.
+\bottomnote{Feature importance is what makes Random Forests interpretable -- critical for regulated industries}
+\end{frame}
 
-\begin{frame}[t]{Single Trees: High Variance}
+% SLIDE 17: Fraud Detection with RF
+\begin{frame}[t]{Fraud Detection with Random Forests}
+\textbf{The class imbalance problem}
+\begin{itemize}
+  \item Fraudulent transactions are typically less than 1\% of all transactions
+  \item A naive model predicting ``not fraud'' achieves 99\%+ accuracy -- but catches zero fraud
+  \item \highlight{Accuracy is the wrong metric} for imbalanced classification
+\end{itemize}
+\vspace{0.5em}
+\textbf{Correct evaluation metrics:}
+\begin{itemize}
+  \item \textbf{Precision:} of flagged transactions, how many are actually fraud?
+  \item \textbf{Recall:} of all fraud, how much did we catch?
+  \item \textbf{AUC-PR:} area under the Precision-Recall curve (preferred over ROC for imbalanced data)
+\end{itemize}
+\vspace{0.3em}
+Use \texttt{class\_weight='balanced'} in scikit-learn to upweight the minority class automatically.
+\bottomnote{In fraud detection, a missed fraud (false negative) is far more costly than a false alarm (false positive)}
+\end{frame}
+
+% SLIDE 18: Handling Class Imbalance
+\begin{frame}[t]{Handling Class Imbalance}
+\textbf{Data-level strategies}
+\begin{itemize}
+  \item \highlight{SMOTE:} generate synthetic minority samples by interpolating between existing fraud cases
+  \item \highlight{Undersampling:} reduce majority class to match minority -- risks losing information
+  \item \highlight{Threshold tuning:} adjust the classification threshold to favor recall over precision
+\end{itemize}
+\vspace{0.5em}
+\textbf{Cost-sensitive learning}
+\begin{itemize}
+  \item Assign higher misclassification cost to false negatives (missed fraud)
+  \item In banking: cost of missing one fraud case far exceeds cost of investigating a false alarm
+  \item Random Forests support cost-sensitive learning via \texttt{class\_weight} and \texttt{sample\_weight}
+\end{itemize}
+\bottomnote{Combine multiple strategies: SMOTE + threshold tuning + cost-sensitive weights for best results}
+\end{frame}
+
+% SLIDE 19: RF vs Boosting Overview
+\begin{frame}[t]{Random Forests vs.\ Boosting}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{06a_single_tree_variance/chart.pdf}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Property} & \textbf{Random Forest} & \textbf{Boosting} \\
+\midrule
+Training approach & Parallel (independent trees) & Sequential (correct errors) \\
+Primarily reduces & Variance & Bias \\
+Overfitting risk & Low & Higher (needs careful tuning) \\
+Hyperparameter sensitivity & Low & High \\
+State-of-the-art accuracy & Competitive & Often superior \\
+Interpretability & Feature importance built-in & SHAP required \\
+\bottomrule
+\end{tabular}
 \end{center}
-\bottomnote{Each tree trained on different bootstrap sample produces different predictions}
+\vspace{0.5em}
+\textbf{Modern boosting:} XGBoost, LightGBM, and CatBoost dominate Kaggle competitions and production ML systems. Random Forests remain the robust, low-tuning baseline.
+\bottomnote{Both are ensemble methods but with fundamentally different strategies for improving predictions}
 \end{frame}
 
-\begin{frame}[t]{Random Forest: Reduced Variance}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{06b_random_forest_variance/chart.pdf}
-\end{center}
-\bottomnote{Averaging many high-variance trees produces low-variance ensemble}
+% SLIDE 20: From Bagging to Boosting
+\begin{frame}[t]{From Bagging to Boosting}
+\textbf{Bagging (Random Forests):}
+\begin{itemize}
+  \item Train trees \highlight{in parallel} on independent bootstrap samples
+  \item Each tree votes equally -- reduces variance by averaging
+  \item Trees are deliberately decorrelated via feature randomization
+\end{itemize}
+\vspace{0.5em}
+\textbf{Boosting (XGBoost, LightGBM):}
+\begin{itemize}
+  \item Train trees \highlight{sequentially} -- each new tree focuses on previous errors
+  \item Core idea: fit the next tree to the residuals of the current ensemble
+  \item Later trees get lower weight to prevent overfitting (learning rate)
+\end{itemize}
+\vspace{0.3em}
+\textbf{When to choose which:} Use RF when you need a reliable baseline with minimal tuning. Use boosting when you need maximum predictive accuracy and can invest in hyperparameter optimization.
+\bottomnote{Bagging reduces variance (parallel, independent). Boosting reduces bias (sequential, adaptive).}
 \end{frame}
 
-\section{Practice}
-
-\begin{frame}[t]{Hands-on Exercise}
-  \textbf{Open the Colab Notebook}
-  \begin{itemize}
-    \item Exercise 1: Train a decision tree on credit data
-    \item Exercise 2: Build a random forest and analyze feature importance
-    \item Exercise 3: Tune hyperparameters with cross-validation
-  \end{itemize}
-  \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} See course materials for Colab notebook
-\end{frame}
-
-\section{Decision Framework}
-
-\begin{frame}[t]{Decision Framework}
+% SLIDE 21: Decision Flowchart
+\begin{frame}[t]{When to Use Random Forests}
 \vspace{-0.8em}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
 \vspace{-0.5em}
-\bottomnote{Random Forests excel when accuracy and feature importance both matter}
+\bottomnote{Use this flowchart to decide whether Random Forests are the right tool for your problem}
 \end{frame}
 
-\section{Summary}
+% ------------------------------
+\section{Practice}
+% ------------------------------
 
+% SLIDE 22: Hands-on Exercise
+\begin{frame}[t]{Hands-on Exercise}
+\textbf{Open the Colab Notebook}
+\begin{enumerate}
+  \item \textbf{Exercise 1:} Train a single decision tree on credit card transaction data and visualize its structure
+  \item \textbf{Exercise 2:} Build a Random Forest, compare OOB error to test error, and analyze feature importance
+  \item \textbf{Exercise 3:} Tune \texttt{n\_estimators}, \texttt{max\_depth}, and \texttt{max\_features} using cross-validation
+\end{enumerate}
+\vspace{0.5em}
+\textbf{Challenge:} Can you beat the single tree's AUC-PR by at least 10\% with your tuned Random Forest?
+\vspace{0.5em}
+\textbf{Link:} \url{https://colab.research.google.com/} -- see course materials for notebook
+\bottomnote{Hands-on practice: apply the theory to real credit card fraud data with scikit-learn}
+\end{frame}
+
+% ============================================================
+% ZONE 3: WRAP-UP (3 slides)
+% ============================================================
+
+% SLIDE 23: Key Takeaways
+\begin{frame}[t]{Key Takeaways}
+\textbf{What you should remember from this lecture:}
+\begin{enumerate}
+  \item \highlight{Ensemble = Wisdom of Crowds} -- combining many weak learners produces a strong learner
+  \item \highlight{Bootstrap + Feature Randomization} -- two sources of randomness decorrelate trees and reduce variance
+  \item \highlight{OOB Error for Free CV} -- built-in validation without holding out data
+  \item \highlight{Feature Importance for Interpretation} -- MDI, permutation, and SHAP make Random Forests explainable for regulators
+\end{enumerate}
+\vspace{0.5em}
+\textbf{Next lecture:} PCA and t-SNE -- dimensionality reduction for visualization and feature engineering
+\bottomnote{Random Forests: robust, interpretable, and production-ready -- the reliable workhorse of applied ML}
+\end{frame}
+
+% SLIDE 24: Closing Comic
+\begin{frame}[t]{Closing Thought}
+\vspace{1.5em}
+\begin{center}
+\Large\textit{``Pour the data into this pile of decision trees}\\[0.3em]
+\textit{and see what comes out.''}
+\end{center}
+\vspace{1.0em}
+\begin{center}
+\normalsize The beauty of Random Forests: sometimes the simplest ensemble\\
+approach is exactly what you need.
+\end{center}
+\bottomnote{Adapted from XKCD \#1838 ``Machine Learning'' by Randall Munroe (CC BY-NC 2.5)}
+\end{frame}
+
+% SLIDE 25: References
 \begin{frame}[t]{References}
-  \footnotesize
-  \begin{itemize}
-    \item Breiman, L. (2001). \textit{Random Forests}. Machine Learning, 45(1), 5-32.
-    \item James et al. (2021). \textit{Introduction to Statistical Learning}. \url{https://www.statlearning.com/}
-    \item Hastie et al. (2009). \textit{Elements of Statistical Learning}. \url{https://hastie.su.domains/ElemStatLearn/}
-  \end{itemize}
+\footnotesize
+\begin{itemize}
+  \item Breiman, L.\ (2001). \textit{Random Forests}. Machine Learning, 45(1), 5--32.
+  \item James, G., Witten, D., Hastie, T., \& Tibshirani, R.\ (2021). \textit{An Introduction to Statistical Learning}, 2nd ed., Chapter 8. \url{https://www.statlearning.com/}
+  \item Hastie, T., Tibshirani, R., \& Friedman, J.\ (2009). \textit{The Elements of Statistical Learning}, 2nd ed., Chapter 15. \url{https://hastie.su.domains/ElemStatLearn/}
+  \item Chen, T.\ \& Guestrin, C.\ (2016). \textit{XGBoost: A Scalable Tree Boosting System}. Proceedings of KDD 2016, 785--794.
+\end{itemize}
+\bottomnote{Recommended reading: ISLR Chapter 8 for intuition, ESL Chapter 15 for mathematical depth}
 \end{frame}
 
 \end{document}

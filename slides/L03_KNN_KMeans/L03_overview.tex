@@ -91,152 +91,426 @@
 \newcommand{\mathbold}[1]{\boldsymbol{#1}}
 
 \title[L03: KNN \& K-Means]{L03: K-Nearest Neighbors \& K-Means}
-\subtitle{Classification and Clustering with Distance}
+\subtitle{Overview}
 \author{Methods and Algorithms}
+\institute{MSc Data Science}
 \date{Spring 2026}
 
 \begin{document}
 
+% ============================================================================
+% ZONE 1: INTRODUCTION (NO formulas, NO Greek letters)
+% ============================================================================
+
+% SLIDE 1: Title Page
 \begin{frame}
 \titlepage
 \end{frame}
 
+% ============================================================================
+% SLIDE 2: Outline
 \begin{frame}{Outline}
-  \tableofcontents
+\tableofcontents
 \end{frame}
 
-\section{Problem}
+% ============================================================================
+% SLIDE 3: Opening Comic -- XKCD #1838
+\begin{frame}[t]{How Machine Learning Works}
+\begin{center}
+\includegraphics[height=0.65\textheight]{images/1838_machine_learning.png}
+\end{center}
+\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5) -- ``Pour the data into this pile of linear algebra''}
+\end{frame}
 
+% ============================================================================
+% SLIDE 4: Classification vs Clustering
+\begin{frame}[t]{Classification vs Clustering}
+\textbf{Two distinct problems banks face every day}
+\vspace{0.5em}
+
+\textbf{Classification (Supervised Learning)}
+\begin{itemize}
+\item Labeled training data: we know the right answers
+\item Predict fraud vs legitimate, approve vs deny
+\end{itemize}
+\vspace{0.5em}
+
+\textbf{Clustering (Unsupervised Learning)}
+\begin{itemize}
+\item No labels: discover natural groups in the data
+\item Find customer segments for targeted products
+\end{itemize}
+
+\bottomnote{KNN = classification with labels, K-Means = clustering without labels}
+\end{frame}
+
+% ============================================================================
+% SLIDE 5: The Nearest Neighbor Idea
+\begin{frame}[t]{The Nearest Neighbor Idea}
+\textbf{Human intuition: ``similar things behave similarly''}
+\vspace{0.5em}
+
+\begin{itemize}
+\item Medicine: patients with similar symptoms receive similar diagnoses
+\item Finance: borrowers with similar profiles have similar default rates
+\item Retail: customers who bought similar products want similar recommendations
+\end{itemize}
+\vspace{0.5em}
+
+KNN formalizes this reasoning: to predict an outcome, find the most similar past cases and use their known outcomes.
+
+\bottomnote{KNN formalizes our natural reasoning: look at similar past cases to predict new ones}
+\end{frame}
+
+% ============================================================================
+% SLIDE 6: Why Banks Segment Customers
+\begin{frame}[t]{Why Banks Segment Customers}
+\textbf{Business motivation for clustering}
+\vspace{0.5em}
+
+\begin{itemize}
+\item \textbf{Targeted products:} Premium clients get wealth management, students get starter accounts
+\item \textbf{Risk management:} Group loans by risk profile for portfolio diversification
+\item \textbf{Regulatory compliance:} Differentiated treatment by risk tier (Basel requirements)
+\end{itemize}
+\vspace{0.5em}
+
+Segmentation transforms raw customer data into actionable business strategy.
+
+\bottomnote{Segmentation transforms raw customer data into actionable business insights}
+\end{frame}
+
+% ============================================================================
+% SLIDE 7: Learning Objectives
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
 \begin{enumerate}
-\item Analyze the bias-variance tradeoff in KNN as a function of $K$ and derive the consistency bound
-\item Prove K-Means convergence and evaluate initialization strategies (K-Means++)
-\item Evaluate cluster validity using silhouette analysis, Hopkins statistic, and Gap statistic
-\item Compare distance metrics and analyze their impact on algorithm performance in high dimensions
+\item \textbf{Analyze} the bias-variance tradeoff in KNN as a function of $K$
+\item \textbf{Prove} K-Means convergence and evaluate initialization strategies
+\item \textbf{Evaluate} cluster validity using silhouette analysis and Gap statistic
+\item \textbf{Compare} distance metrics and their impact in high dimensions
 \end{enumerate}
-\vspace{0.5em}
+\vspace{1em}
 \textbf{Finance Applications:} Customer segmentation, fraud detection
 \bottomnote{Bloom's Level 4--5: Analyze, Evaluate, Prove, Compare}
 \end{frame}
 
-\begin{frame}[t]{The Business Problem}
-\textbf{Two Distinct Problems}
+% ============================================================================
+% ZONE 2: CORE CONTENT (PMSP -- formulas allowed)
+% ============================================================================
 
-\textbf{1. Classification (Supervised)}
+\section{Problem}
+
+% ============================================================================
+% SLIDE 8: The Business Problem
+\begin{frame}[t]{The Business Problem}
+\textbf{Classification vs Clustering in Practice}
+\vspace{0.5em}
+
 \begin{itemize}
-\item Given labeled examples: is this transaction fraudulent?
-\item ``Show me similar past transactions and their outcomes''
+\item \textbf{Fraud detection} (classification): labeled historical transactions, predict new ones
+\item \textbf{Customer segmentation} (clustering): no predefined groups, discover structure
+\item \textbf{Beware the ``K'':} $K$ in KNN = number of neighbors; $K$ in K-Means = number of clusters
 \end{itemize}
 \vspace{0.5em}
-\textbf{2. Clustering (Unsupervised)}
-\begin{itemize}
-\item No labels: what natural customer segments exist?
-\item ``Group customers by behavior for targeted marketing''
-\end{itemize}
-\bottomnote{KNN = classification with labels, K-Means = clustering without labels}
+
+\begin{block}{When Supervised vs Unsupervised?}
+Labels available $\rightarrow$ KNN (or other classifiers)\\
+No labels, seek structure $\rightarrow$ K-Means (or other clustering)
+\end{block}
+
+\bottomnote{Same letter ``K'' means fundamentally different things in each algorithm}
 \end{frame}
 
-\section{Method}
-
-\begin{frame}[t]{KNN: Decision Boundaries}
+% ============================================================================
+% SLIDE 9: KNN Decision Boundaries
+\begin{frame}[t]{KNN Decision Boundaries}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{01_knn_boundaries/chart.pdf}
 \end{center}
-\bottomnote{KNN creates non-linear, flexible decision boundaries based on local data}
+\bottomnote{KNN creates non-linear, flexible decision boundaries that adapt to local data density}
 \end{frame}
 
-\begin{frame}[t]{Distance Metrics}
-\begin{center}
-\includegraphics[width=0.50\textwidth]{02_distance_metrics/chart.pdf}
-\end{center}
-\bottomnote{Choice of metric affects which points are considered ``nearest''}
-\end{frame}
+% ============================================================================
+\section{Method}
 
-\begin{frame}[t]{Key Equations}
-\textbf{Euclidean distance}:
-\begin{equation}
+% ============================================================================
+% SLIDE 10: Distance -- How to Measure Similarity
+\begin{frame}[t]{Distance: How to Measure Similarity}
+\textbf{Euclidean distance} (most common):
+\[
 d(\mathbf{x}, \mathbf{x}') = \sqrt{\sum_{j=1}^p (x_j - x'_j)^2}
-\end{equation}
+\]
 
-\textbf{KNN classification} (majority vote among $k$ nearest neighbors):
-\begin{equation}
-\hat{y} = \text{majority vote among } k \text{ nearest neighbors}
-\end{equation}
+\textbf{Manhattan distance:} $d(\mathbf{x}, \mathbf{x}') = \sum_{j=1}^p |x_j - x'_j|$
+\vspace{0.5em}
 
-\textbf{K-Means objective}:
-\begin{equation}
-\min_{\mu_1,\ldots,\mu_K} \sum_{k=1}^K \sum_{\mathbf{x}_i \in C_k} \|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2
-\end{equation}
+\begin{itemize}
+\item \textbf{Feature scaling is critical:} salary in thousands vs age in decades
+\item Always standardize features before computing distances
+\item Choice of metric affects which points are ``nearest''
+\end{itemize}
 
-\textbf{Silhouette}: $s(i) = \frac{b(i) - a(i)}{\max\{a(i), b(i)\}} \in [-1, 1]$
-
-\bottomnote{$a(i)$ = mean intra-cluster distance; $b(i)$ = mean nearest-cluster distance}
+\bottomnote{Unscaled features let high-magnitude variables dominate the distance calculation}
 \end{frame}
 
+% ============================================================================
+% SLIDE 11: KNN Classification
+\begin{frame}[t]{KNN Classification}
+\textbf{Majority vote} among $K$ nearest neighbors:
+\[
+\hat{y}(\mathbf{x}) = \arg\max_{c} \sum_{i \in \mathcal{N}_K(\mathbf{x})} \mathbf{1}(y_i = c)
+\]
+
+\textbf{Weighted vote} (optional): closer neighbors get more influence
+\vspace{0.5em}
+
+\begin{itemize}
+\item \textbf{$K = 1$:} perfectly fits training data, high variance (overfitting)
+\item \textbf{$K$ large:} smoother boundaries, high bias (underfitting)
+\item \textbf{Sweet spot:} use cross-validation to select $K$
+\end{itemize}
+
+\bottomnote{The bias-variance tradeoff: small $K$ = complex boundary, large $K$ = smooth boundary}
+\end{frame}
+
+% ============================================================================
+% SLIDE 12: K-Means -- The Objective
+\begin{frame}[t]{K-Means: The Objective}
+\textbf{Minimize within-cluster sum of squares (WCSS):}
+\[
+\min_{\boldsymbol{\mu}_1, \ldots, \boldsymbol{\mu}_K} \sum_{k=1}^{K} \sum_{\mathbf{x}_i \in C_k} \|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2
+\]
+
+\begin{itemize}
+\item Each point assigned to its \textbf{nearest centroid}
+\item Centroids are the \textbf{mean} of their assigned points
+\item NP-hard in general, but Lloyd's algorithm finds good local minima
+\end{itemize}
+
+\bottomnote{WCSS measures how tightly packed points are within each cluster}
+\end{frame}
+
+% ============================================================================
+% SLIDE 13: K-Means -- The Algorithm
 \begin{frame}[t]{K-Means: The Algorithm}
+\textbf{Lloyd's Algorithm (3 Steps):}
+\vspace{0.5em}
+
+\begin{enumerate}
+\item \textbf{Initialize:} choose $K$ starting centroids
+\item \textbf{Assign:} each point to its nearest centroid
+\item \textbf{Update:} recompute centroids as cluster means
+\end{enumerate}
+\vspace{0.5em}
+
+Repeat steps 2--3 until assignments stop changing.
+
+\begin{block}{Convergence Guarantee}
+WCSS decreases (or stays equal) at every step $\Rightarrow$ guaranteed to converge in finite iterations.
+\end{block}
+
+\bottomnote{Convergence is guaranteed but only to a local minimum -- initialization matters}
+\end{frame}
+
+% ============================================================================
+% SLIDE 14: K-Means Iteration
+\begin{frame}[t]{K-Means Iteration}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{03_kmeans_iteration/chart.pdf}
 \end{center}
-\bottomnote{Iteratively assign points and update centroids until convergence}
+\bottomnote{Iteratively assign points to nearest centroid, then update centroids until convergence}
 \end{frame}
 
+% ============================================================================
+% SLIDE 15: Choosing K -- Elbow Method
 \begin{frame}[t]{Choosing K: Elbow Method}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{04_elbow_method/chart.pdf}
 \end{center}
-\bottomnote{Look for the ``elbow'' where adding clusters gives diminishing returns}
+\bottomnote{Look for the ``elbow'' where adding more clusters gives diminishing returns in WCSS reduction}
 \end{frame}
 
+% ============================================================================
+% SLIDE 16: K-Means++ Smart Initialization
+\begin{frame}[t]{K-Means++: Smart Initialization}
+\textbf{Problem:} random initialization can lead to poor local minima.
+\vspace{0.5em}
+
+\textbf{K-Means++ strategy:}
+\begin{enumerate}
+\item Pick first centroid uniformly at random
+\item Pick next centroid with probability proportional to $d^2$ from nearest existing centroid
+\item Repeat until $K$ centroids chosen
+\end{enumerate}
+\vspace{0.5em}
+
+\begin{itemize}
+\item \textbf{Guarantee:} $O(\log K)$-competitive with optimal clustering
+\item \textbf{Default} in scikit-learn's \texttt{KMeans(init='k-means++')}
+\end{itemize}
+
+\bottomnote{Arthur \& Vassilvitskii (2007): K-Means++ spreads initial centroids apart for better convergence}
+\end{frame}
+
+% ============================================================================
 \section{Solution}
 
-\begin{frame}[t]{Cluster Quality: Silhouette Analysis}
+% ============================================================================
+% SLIDE 17: KNN vs K-Means Comparison
+\begin{frame}[t]{KNN vs K-Means: Side-by-Side}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{05_silhouette/chart.pdf}
+\begin{tabular}{lll}
+\toprule
+\textbf{Property} & \textbf{KNN} & \textbf{K-Means} \\
+\midrule
+Task & Classification & Clustering \\
+Learning & Supervised & Unsupervised \\
+$K$ means & Neighbors & Clusters \\
+Training & None (lazy) & Iterative \\
+Prediction & $O(np)$ per query & $O(Kp)$ per query \\
+Output & Class label & Cluster ID \\
+Complexity & Scales with data & Scales with $K$ \\
+\bottomrule
+\end{tabular}
 \end{center}
-\bottomnote{Silhouette score measures how similar points are to their own cluster}
+
+\bottomnote{Despite sharing ``K'', these algorithms solve fundamentally different problems}
 \end{frame}
 
-\begin{frame}[t]{K-Means Decision Regions}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{06_voronoi/chart.pdf}
-\end{center}
-\bottomnote{Each region contains all points closest to one centroid}
+% ============================================================================
+% SLIDE 18: Finance Application -- Customer Segmentation
+\begin{frame}[t]{Finance: Customer Segmentation}
+\textbf{RFM Analysis with K-Means}
+\vspace{0.5em}
+
+\begin{itemize}
+\item \textbf{Features:} Recency (last transaction), Frequency (transaction count), Monetary (total spend)
+\item \textbf{Standardize} all features before clustering (different scales)
+\item \textbf{Result:} actionable segment profiles (e.g., high-value loyal, at-risk churners)
+\end{itemize}
+\vspace{0.5em}
+
+\begin{block}{Business Impact}
+Each segment receives tailored products, pricing, and communication strategies.
+\end{block}
+
+\bottomnote{RFM segmentation is a standard technique in retail banking and CRM analytics}
 \end{frame}
 
-\section{Practice}
+% ============================================================================
+% SLIDE 19: Finance Application -- Fraud Detection
+\begin{frame}[t]{Finance: Fraud Detection with KNN}
+\textbf{The class imbalance challenge:} fraud is rare ($<$1\% of transactions).
+\vspace{0.5em}
 
-\begin{frame}[t]{Hands-on Exercise}
-  \textbf{Open the Colab Notebook}
-  \begin{itemize}
-    \item Exercise 1: Implement KNN classifier from scratch
-    \item Exercise 2: Apply K-Means to customer segmentation data
-    \item Exercise 3: Compare distance metrics and k values
-  \end{itemize}
-  \vspace{1em}
-  \textbf{Link:} See course materials for Colab notebook
+\begin{itemize}
+\item \textbf{Problem:} accuracy is misleading (99\% accuracy by predicting ``no fraud'')
+\item \textbf{Solutions:} SMOTE oversampling, distance-weighted KNN, cost-sensitive learning
+\item \textbf{Metric:} use Precision-Recall AUC, not accuracy
+\end{itemize}
+\vspace{0.5em}
+
+\begin{block}{Why KNN Works Here}
+Fraudulent transactions cluster in feature space -- KNN detects them by proximity to known fraud cases.
+\end{block}
+
+\bottomnote{In fraud detection, false negatives (missed fraud) are far costlier than false positives}
 \end{frame}
 
-\section{Decision Framework}
-
+% ============================================================================
+% SLIDE 20: Decision Framework
 \begin{frame}[t]{Decision Framework}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
-\bottomnote{KNN for labeled data classification, K-Means for unlabeled clustering}
+\bottomnote{KNN for labeled data classification, K-Means for unlabeled data clustering}
 \end{frame}
+
+% ============================================================================
+\section{Practice}
+
+% ============================================================================
+% SLIDE 21: Hands-on Exercise
+\begin{frame}[t]{Hands-on Exercise}
+\textbf{Open the Colab Notebook}
+\vspace{0.5em}
+
+\begin{enumerate}
+\item \textbf{KNN from scratch:} implement distance calculation and majority vote
+\item \textbf{Customer segmentation:} apply K-Means to RFM banking data, interpret clusters
+\item \textbf{Model selection:} compare distance metrics and $K$ values using cross-validation
+\end{enumerate}
+\vspace{1em}
+\textbf{Link:} See course materials for Colab notebook
+
+\bottomnote{Exercises progress from implementation to application to critical evaluation}
+\end{frame}
+
+% ============================================================================
+% ZONE 3: WRAP-UP
+% ============================================================================
 
 \section{Summary}
 
+% ============================================================================
+% SLIDE 22: Key Takeaways
 \begin{frame}[t]{Key Takeaways}
-  \textbf{Remember}
-  \begin{itemize}
-    \item KNN: supervised classification using nearest neighbors
-    \item K-Means: unsupervised clustering with iterative centroids
-    \item Distance metrics and K selection are critical choices
-    \item Finance use cases: fraud detection, customer segmentation
-  \end{itemize}
-  \bottomnote{Next lecture: L04 Random Forests}
+\textbf{KNN (Classification)}
+\begin{itemize}
+\item Non-parametric, lazy learner -- no training phase
+\item Small $K$: flexible but noisy; large $K$: smooth but biased
+\end{itemize}
+\vspace{0.3em}
+
+\textbf{K-Means (Clustering)}
+\begin{itemize}
+\item Iterative algorithm with guaranteed convergence (to local minimum)
+\item K-Means++ initialization avoids poor starting points
+\end{itemize}
+\vspace{0.3em}
+
+\textbf{Common Considerations}
+\begin{itemize}
+\item Feature scaling is essential for both algorithms
+\item Choosing $K$ requires validation (cross-validation or elbow/silhouette)
+\end{itemize}
+
+\bottomnote{Both algorithms depend critically on distance -- get the distance right, get the result right}
+\end{frame}
+
+% ============================================================================
+% SLIDE 23: Closing Comic
+\begin{frame}[t]{Until Next Time...}
+\begin{center}
+\textit{``Even K-Means would struggle to cluster the ways students misuse K-Means.''}\\[0.5em]
+With KNN and K-Means, you can now classify the known and discover the unknown.
+\end{center}
+\vspace{1em}
+\textbf{Next Session:} L04 -- Random Forests (from distance-based to tree-based methods)
+\bottomnote{XKCD \#2731 callback -- clustering is easy, knowing when to cluster is the hard part}
+\end{frame}
+
+% ============================================================================
+% SLIDE 24: References
+\begin{frame}[t]{References}
+\textbf{Core Textbooks}
+\begin{itemize}
+\item James et al., \textit{ISLR} (2021), Chapters 2 \& 12
+\item Hastie et al., \textit{Elements of Statistical Learning} (2009), Chapters 13 \& 14
+\end{itemize}
+\vspace{0.5em}
+
+\textbf{Key Papers}
+\begin{itemize}
+\item Arthur \& Vassilvitskii (2007), ``K-Means++: The Advantages of Careful Seeding''
+\item Cover \& Hart (1967), ``Nearest Neighbor Pattern Classification''
+\end{itemize}
+\vspace{0.5em}
+
+\textbf{Next Lecture:} L04 -- Random Forests: ensemble methods and tree-based learning
+
+\bottomnote{ISLR Chapter 2 covers KNN; Chapter 12 covers clustering including K-Means}
 \end{frame}
 
 \end{document}

@@ -93,153 +93,332 @@
 \title[L05: PCA \& t-SNE]{L05: PCA \& t-SNE}
 \subtitle{Dimensionality Reduction for Visualization and Preprocessing}
 \author{Methods and Algorithms}
+\institute{MSc Data Science}
 \date{Spring 2026}
 
 \begin{document}
 
+% ============================================================
+% ZONE 1: INTRODUCTION (7 slides, NO formulas, NO Greek letters)
+% ============================================================
+
+% SLIDE 1: Title Page
 \begin{frame}
 \titlepage
 \end{frame}
 
+% SLIDE 2: Outline
 \begin{frame}{Outline}
   \tableofcontents
+\bottomnote{Three zones: Introduction, Core Content (PMSP), and Wrap-Up}
 \end{frame}
 
+% SLIDE 3: Opening Comic
+\begin{frame}[t]{Fitting Curves in High Dimensions}
+\vspace{0.3em}
+\begin{center}
+\includegraphics[height=0.70\textheight]{images/2048_curve_fitting.png}
+\end{center}
+\vspace{0.2em}
+\begin{center}
+\textit{``With enough dimensions, every dataset looks like a straight line.''}
+\end{center}
+\bottomnote{XKCD \#2048 ``Curve Fitting'' by Randall Munroe (CC BY-NC 2.5)}
+\end{frame}
+
+% SLIDE 4: The Dimensionality Problem
+\begin{frame}[t]{The Dimensionality Problem}
+\textbf{Why high dimensions are a headache}
+\begin{itemize}
+  \item \highlight{Too many features:} a portfolio with 100 assets lives in a 100-dimensional space
+  \item \highlight{Beyond human perception:} we cannot visualize anything beyond 3 dimensions
+  \item \highlight{Redundant information:} many features are correlated and carry overlapping signals
+  \item \highlight{The goal:} compress data to fewer dimensions while preserving essential structure
+\end{itemize}
+\bottomnote{High dimensions cause sparsity, increase computation, and invite overfitting}
+\end{frame}
+
+% SLIDE 5: Two Approaches to Reduction
+\begin{frame}[t]{Two Approaches to Dimensionality Reduction}
+\textbf{PCA --- Find directions of greatest spread}
+\begin{itemize}
+  \item Like choosing the best camera angle to photograph a 3D object
+  \item Linear, fast, and mathematically elegant
+\end{itemize}
+\vspace{0.8em}
+\textbf{t-SNE --- Preserve which points are neighbors}
+\begin{itemize}
+  \item Like seating friends together at a wedding reception
+  \item Non-linear, captures complex structure, but visualization only
+\end{itemize}
+\bottomnote{PCA preserves global variance; t-SNE preserves local neighborhood relationships}
+\end{frame}
+
+% SLIDE 6: Why Banks Care
+\begin{frame}[t]{Why Banks Care About Dimensionality Reduction}
+\textbf{Real applications in finance and banking}
+\begin{itemize}
+  \item \highlight{Yield curves:} 20+ maturities collapse to just 3 interpretable factors
+  \item \highlight{Portfolio risk:} hundreds of correlated assets reduce to a few risk drivers
+  \item \highlight{Customer analytics:} visual clusters reveal segments in high-dimensional data
+  \item \highlight{Market regimes:} embeddings separate calm, volatile, and transition periods
+\end{itemize}
+\bottomnote{Dimensionality reduction is a daily tool in quantitative finance and risk management}
+\end{frame}
+
+% SLIDE 7: Learning Objectives
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this lecture, you will be able to:}
 \begin{enumerate}
-\item \textbf{Derive} PCA from the variance maximization principle and prove the SVD--PCA equivalence
-\item \textbf{Evaluate} dimensionality reduction methods (PCA vs.\ t-SNE vs.\ UMAP) for a given dataset
-\item \textbf{Analyze} the effect of hyperparameters (perplexity, learning rate) on t-SNE embeddings
-\item \textbf{Critique} PCA assumptions and limitations for nonlinear financial data (e.g., yield curves)
+  \item \textbf{Derive} PCA from variance maximization and explain the SVD--PCA equivalence
+  \item \textbf{Evaluate} dimensionality reduction methods (PCA vs.\ t-SNE vs.\ UMAP) for a given dataset
+  \item \textbf{Analyze} the effect of hyperparameters (perplexity, learning rate) on t-SNE embeddings
+  \item \textbf{Critique} PCA assumptions and limitations for nonlinear financial data (e.g., yield curves)
 \end{enumerate}
 \vspace{0.5em}
-\textbf{Finance Application:} Portfolio risk decomposition, yield curve analysis, asset clustering
+\textbf{Finance Application:} Portfolio risk decomposition, yield curve analysis, market regime detection
 \bottomnote{Bloom's Level 4--5: Analyze, Evaluate, Create}
 \end{frame}
 
+% ============================================================
+% ZONE 2: CORE CONTENT (14 slides, PMSP sections)
+% ============================================================
+
 \section{Problem}
 
+% SLIDE 8: The Business Problem
 \begin{frame}[t]{The Business Problem}
-\textbf{Curse of Dimensionality}
+\textbf{Curse of Dimensionality in Practice}
 \begin{itemize}
-\item Portfolio with 100+ assets: hard to visualize relationships
-\item Customer data with dozens of features: redundant information
-\item High dimensions cause sparsity and computational issues
+  \item \highlight{Portfolio management:} 100+ correlated assets make risk estimation unstable
+  \item \highlight{Customer profiling:} dozens of behavioral features with heavy redundancy
+  \item \highlight{Consequences:} data becomes sparse, models overfit, computation explodes
 \end{itemize}
 \vspace{0.5em}
-\textbf{Solutions}
+\textbf{What we need:}
 \begin{itemize}
-\item \textbf{PCA}: Linear projection preserving maximum variance
-\item \textbf{t-SNE}: Non-linear embedding preserving local structure
+  \item Compress many features into a few meaningful dimensions
+  \item Preserve the relationships that matter for downstream tasks
 \end{itemize}
-\bottomnote{Reduce dimensions while preserving important information}
+\bottomnote{Dimensionality reduction tackles sparsity, overfitting, and computational cost simultaneously}
 \end{frame}
 
-\begin{frame}[t]{Key Equations}
-\textbf{Covariance Matrix} (from mean-centered data $X_c$):
+% SLIDE 9: Key Equations -- PCA
+\begin{frame}[t]{Key Equations: PCA}
+\textbf{Covariance Matrix} (from mean-centered data $X_c = X - \bar{X}$):
 \[
-C = \frac{1}{n-1} X_c^\top X_c
+C = \frac{1}{n-1}\, X_c^\top X_c
 \]
 
-\textbf{Eigendecomposition}: $C\, v_k = \lambda_k\, v_k$ \quad (principal directions \& variances)
-
-\textbf{Explained Variance Ratio}:
+\textbf{Eigendecomposition}: find directions and magnitudes
 \[
-\text{EVR}_k = \frac{\lambda_k}{\sum_{j=1}^{p} \lambda_j}
+C\, \mathbf{v}_k = \lambda_k\, \mathbf{v}_k
 \]
 
-\textbf{t-SNE High-Dimensional Similarity}:
+\textbf{Explained Variance Ratio}: how much each component captures
+\[
+\text{EVR}_k = \frac{\lambda_k}{\displaystyle\sum_{j=1}^{p} \lambda_j}
+\]
+\bottomnote{PCA reduces to an eigenvalue problem on the covariance matrix}
+\end{frame}
+
+% SLIDE 10: Key Equations -- t-SNE
+\begin{frame}[t]{Key Equations: t-SNE}
+\textbf{High-dimensional similarity} (Gaussian kernel):
 \[
 p_{j|i} = \frac{\exp\!\bigl(-\|x_i - x_j\|^2 / 2\sigma_i^2\bigr)}{\sum_{k \neq i}\exp\!\bigl(-\|x_i - x_k\|^2 / 2\sigma_i^2\bigr)}
 \]
 
-\bottomnote{PCA: linear eigen-problem; t-SNE: probabilistic neighbor embedding}
+\textbf{Low-dimensional similarity} (Student-$t$ with 1 degree of freedom):
+\[
+q_{ij} = \frac{\bigl(1 + \|y_i - y_j\|^2\bigr)^{-1}}{\sum_{k \neq l}\bigl(1 + \|y_k - y_l\|^2\bigr)^{-1}}
+\]
+
+\textbf{Objective}: minimize the Kullback--Leibler divergence $\text{KL}(P \| Q)$
+\bottomnote{The heavy-tailed $t$-distribution in low-D prevents crowding of moderate neighbors}
 \end{frame}
 
 \section{Method}
 
-\begin{frame}[t]{Scree Plot: Choosing Components}
+% SLIDE 11: Scree Plot (CHART)
+\begin{frame}[t]{Scree Plot: Choosing the Number of Components}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{01_scree_plot/chart.pdf}
 \end{center}
-\bottomnote{Choose k components capturing 80-95\% of variance, or at the ``elbow''}
+\bottomnote{Choose $k$ capturing 80--95\% variance or at the elbow --- Kaiser criterion ($\lambda > 1$) valid for correlation matrix only}
 \end{frame}
 
-\begin{frame}[t]{Principal Components}
-\vspace{-0.5em}
-\begin{center}
-\includegraphics[width=0.55\textwidth]{02_principal_components/chart.pdf}
-\end{center}
-\vspace{-0.3em}
-\bottomnote{Principal components are orthogonal directions of maximum variance}
+% SLIDE 12: Yield Curve PCA
+\begin{frame}[t]{Yield Curve PCA: Three Factors Explain 98\%}
+\textbf{Three principal components capture nearly all yield curve variation:}
+\begin{itemize}
+  \item \highlight{PC1 --- Level ($\sim$85\%):} all maturities load in the same direction; a parallel shift up or down
+  \item \highlight{PC2 --- Slope ($\sim$10\%):} short and long maturities load with opposite signs; steepening or flattening
+  \item \highlight{PC3 --- Curvature ($\sim$3\%):} short and long load positively, middle negatively; a butterfly twist
+\end{itemize}
+\vspace{0.3em}
+Together these three factors explain over 98\% of daily yield curve movements.
+\bottomnote{Level--Slope--Curvature decomposition is the foundation of fixed-income risk management}
 \end{frame}
 
-\begin{frame}[t]{Reconstruction Error}
+% SLIDE 13: PCA on Swiss Roll (CHART)
+\begin{frame}[t]{PCA on Swiss Roll: Linear Limits}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{03_reconstruction/chart.pdf}
+\includegraphics[width=0.65\textwidth]{05a_pca_swiss_roll/chart.pdf}
 \end{center}
-\bottomnote{More components = lower error, but diminishing returns after elbow}
+\bottomnote{PCA projects linearly and cannot unroll a curved manifold --- distant points on the surface overlap}
+\end{frame}
+
+% SLIDE 14: t-SNE on Swiss Roll (CHART)
+\begin{frame}[t]{t-SNE on Swiss Roll: Unrolling the Manifold}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{05b_tsne_swiss_roll/chart.pdf}
+\end{center}
+\bottomnote{t-SNE preserves local neighborhoods and successfully unrolls the non-linear manifold structure}
+\end{frame}
+
+% SLIDE 15: t-SNE Cluster Preservation (CHART)
+\begin{frame}[t]{t-SNE Cluster Preservation: MNIST Digits}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{06c_tsne_cluster_projection/chart.pdf}
+\end{center}
+\bottomnote{t-SNE on 784-dimensional MNIST data: digit classes form clearly separated clusters in 2D}
+\end{frame}
+
+% SLIDE 16: t-SNE Caveats
+\begin{frame}[t]{t-SNE Caveats: What You Cannot Conclude}
+\textbf{Common misinterpretations to avoid:}
+\begin{itemize}
+  \item \highlight{Cluster sizes are not meaningful:} visual size depends on local density, not group count
+  \item \highlight{Inter-cluster distances are not meaningful:} only within-cluster proximity is preserved
+  \item \highlight{Results are non-deterministic:} different random seeds produce different layouts
+\end{itemize}
+\vspace{0.5em}
+\textbf{Best practice pipeline:}
+\begin{itemize}
+  \item Standardize features, then PCA to 30--50 dimensions, then t-SNE to 2D
+  \item Use t-SNE for \textbf{visualization only} --- never as input features for downstream models
+\end{itemize}
+\bottomnote{t-SNE is an exploratory tool, not a preprocessing step --- always verify patterns with other methods}
 \end{frame}
 
 \section{Solution}
 
-\begin{frame}[t]{t-SNE: Perplexity Effect}
+% SLIDE 17: PCA vs t-SNE Comparison Table
+\begin{frame}[t]{PCA vs.\ t-SNE: Head-to-Head Comparison}
+\vspace{0.3em}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{04b_tsne_perplexity_30/chart.pdf}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Property} & \textbf{PCA} & \textbf{t-SNE} \\
+\midrule
+Type & Linear & Non-linear \\
+Speed & Fast ($O(np^2)$) & Slow ($O(n^2)$ naive) \\
+Deterministic & Yes & No (random init) \\
+Preserves & Global variance & Local neighborhoods \\
+Reversible & Yes (approx.) & No \\
+Use for ML features & Yes & No \\
+Visualization & Limited & Excellent \\
+\bottomrule
+\end{tabular}
 \end{center}
-\bottomnote{Perplexity controls local vs global structure preservation (try 5-50)}
+\bottomnote{PCA for preprocessing and speed; t-SNE for visualization and exploration}
 \end{frame}
 
-\begin{frame}[t]{PCA vs t-SNE: Swiss Roll}
-\begin{center}
-\includegraphics[width=0.55\textwidth]{05b_tsne_swiss_roll/chart.pdf}
-\end{center}
-\bottomnote{t-SNE unrolls non-linear manifolds that PCA cannot handle}
+% SLIDE 18: Portfolio Risk Decomposition
+\begin{frame}[t]{Portfolio Risk Decomposition with PCA}
+\textbf{Reducing 100 assets to a few interpretable risk factors:}
+\begin{itemize}
+  \item \highlight{PC1 --- Market factor:} broad market movement affecting all assets (largest eigenvalue)
+  \item \highlight{PC2--3 --- Sector factors:} industry-specific rotations (e.g., tech vs.\ energy)
+  \item \highlight{Higher PCs --- Idiosyncratic risk:} asset-specific noise, often discarded
+\end{itemize}
+\vspace{0.5em}
+\textbf{Practical impact:}
+\begin{itemize}
+  \item Covariance estimation stabilized: estimate 3--5 factor loadings instead of 5{,}050 correlations
+  \item Regulatory capital models (Basel) use PCA-based factor decompositions
+\end{itemize}
+\bottomnote{PCA-based factor models are the backbone of portfolio risk management and stress testing}
 \end{frame}
 
-\begin{frame}[t]{Cluster Preservation}
-\vspace{-0.5em}
-\begin{center}
-\includegraphics[width=0.55\textwidth]{06c_tsne_cluster_projection/chart.pdf}
-\end{center}
-\vspace{-0.3em}
-\bottomnote{t-SNE on MNIST digits: clear digit clusters vs.\ overlapping PCA projection}
+% SLIDE 19: Market Regime Detection with t-SNE
+\begin{frame}[t]{Market Regime Detection with t-SNE}
+\textbf{Visualizing hidden structure in market data:}
+\begin{itemize}
+  \item \highlight{Input features:} rolling volatility, correlations, spreads, volumes across asset classes
+  \item \highlight{t-SNE projection:} reveals distinct clusters corresponding to market regimes
+  \item \highlight{Typical regimes:} calm/low-vol, crisis/high-vol, and transition periods
+\end{itemize}
+\vspace{0.5em}
+\textbf{Application:} use detected regimes to build regime-conditional strategies and risk models.
+\bottomnote{t-SNE visualization guides hypothesis generation --- confirm regimes with formal clustering}
 \end{frame}
 
-\section{Practice}
+% SLIDE 20: Decision Framework (CHART)
+\begin{frame}[t]{Decision Framework: Which Method to Use?}
+\vspace{-1mm}
+\begin{center}
+\includegraphics[width=0.62\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+\vspace{-1mm}
+\bottomnote{Start with PCA for preprocessing; add t-SNE when you need 2D visualization of complex structure}
+\end{frame}
 
+% SLIDE 21: Hands-on Exercise
 \begin{frame}[t]{Hands-on Exercise}
-  \textbf{Open the Colab Notebook}
-  \begin{itemize}
-    \item Exercise 1: Apply PCA to high-dimensional finance data
-    \item Exercise 2: Visualize clusters with t-SNE
-    \item Exercise 3: Compare PCA vs t-SNE for different datasets
-  \end{itemize}
-  \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/} See course materials
+\textbf{Open the Colab Notebook and complete these exercises:}
+\begin{enumerate}
+  \item \textbf{PCA on finance data:} apply PCA to a multi-asset return dataset, plot the scree curve, and interpret the first three components
+  \item \textbf{t-SNE visualization:} embed high-dimensional customer or market data into 2D and identify visual clusters
+  \item \textbf{Method comparison:} run both PCA and t-SNE on the same dataset and discuss what each method reveals and misses
+\end{enumerate}
+\bottomnote{Notebooks available on the course GitHub page --- see the L05 folder}
 \end{frame}
 
-\section{Decision Framework}
-
-\begin{frame}[t]{Decision Framework}
-\vspace{-0.5em}
-\begin{center}
-\includegraphics[width=0.55\textwidth]{07_decision_flowchart/chart.pdf}
-\end{center}
-\vspace{-0.3em}
-\bottomnote{PCA for preprocessing/speed, t-SNE for visualization only}
-\end{frame}
+% ============================================================
+% ZONE 3: WRAP-UP (3 slides)
+% ============================================================
 
 \section{Summary}
 
+% SLIDE 22: Key Takeaways
+\begin{frame}[t]{Key Takeaways}
+\textbf{What to remember from this lecture:}
+\begin{itemize}
+  \item \highlight{PCA:} linear, fast, reversible --- use for preprocessing, denoising, and factor extraction
+  \item \highlight{t-SNE:} non-linear, stochastic --- use for 2D/3D visualization only, never as ML features
+  \item \highlight{Standard pipeline:} Standardize $\rightarrow$ PCA (30--50 dims) $\rightarrow$ t-SNE (2D) for best results
+  \item \highlight{Finance:} yield curve decomposition, portfolio factor models, market regime detection
+\end{itemize}
+\bottomnote{Dimensionality reduction is both a preprocessing tool (PCA) and an exploration tool (t-SNE)}
+\end{frame}
+
+% SLIDE 23: Closing Comic
+\begin{frame}[t]{Closing Thought}
+\vspace{2em}
+\begin{center}
+\Large\textit{``We reduced our 100-dimensional portfolio to 3 principal components.\\[0.5em]
+The fourth component? That's just noise\ldots\ probably.''}
+\end{center}
+\vspace{1em}
+\begin{center}
+\normalsize --- Overheard in a quantitative risk team
+\end{center}
+\bottomnote{Adapted from XKCD \#2400 ``Statistics'' by Randall Munroe (CC BY-NC 2.5)}
+\end{frame}
+
+% SLIDE 24: References
 \begin{frame}[t]{References}
-  \footnotesize
-  \begin{itemize}
-    \item Jolliffe, I.T. (2002). \textit{Principal Component Analysis}. Springer.
-    \item van der Maaten, L. \& Hinton, G. (2008). \textit{Visualizing Data using t-SNE}. JMLR.
-    \item James et al. (2021). \textit{Introduction to Statistical Learning}. \url{https://www.statlearning.com/}
-  \end{itemize}
+\footnotesize
+\begin{itemize}
+  \item Jolliffe, I.T. (2002). \textit{Principal Component Analysis}, 2nd ed. Springer.
+  \item van der Maaten, L. \& Hinton, G. (2008). Visualizing Data using t-SNE. \textit{JMLR}, 9, 2579--2605.
+  \item James, G., Witten, D., Hastie, T., \& Tibshirani, R. (2021). \textit{An Introduction to Statistical Learning}, Ch.~12.
+  \item Hastie, T., Tibshirani, R., \& Friedman, J. (2009). \textit{The Elements of Statistical Learning}, Ch.~14.
+  \item McInnes, L., Healy, J., \& Melville, J. (2018). UMAP: Uniform Manifold Approximation. \textit{arXiv:1802.03426}.
+\end{itemize}
+\bottomnote{Core readings: Jolliffe (PCA theory), van der Maaten \& Hinton (t-SNE), McInnes et al. (UMAP)}
 \end{frame}
 
 \end{document}

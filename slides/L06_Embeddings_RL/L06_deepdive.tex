@@ -98,17 +98,47 @@
 
 \begin{document}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MAIN BODY (42 slides)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Slide 1: Title
 \begin{frame}
 \titlepage
 \end{frame}
 
+%% Slide 2: Outline
 \begin{frame}{Outline}
   \tableofcontents
 \end{frame}
 
-\section{Problem}
+%% Slide 3: Opening Comic
+\begin{frame}[t]{Pouring Data into Linear Algebra}
+\begin{center}
+\includegraphics[height=0.65\textheight]{images/1838_machine_learning.png}
+\end{center}
+\bottomnote{XKCD \#1838 ``Machine Learning'' by Randall Munroe (CC BY-NC 2.5)}
+\end{frame}
 
-%% PART 1: WORD EMBEDDINGS
+%% Slide 4: Learning Objectives
+\begin{frame}[t]{Learning Objectives}
+After this lecture, you will be able to:
+\begin{enumerate}
+\item \textbf{Derive} the Skip-Gram objective and negative sampling approximation
+\item \textbf{Evaluate} static vs contextual embeddings (Word2Vec, GloVe, FinBERT)
+\item \textbf{Analyze} Q-learning convergence and the exploration-exploitation trade-off
+\item \textbf{Critique} RL trading strategies (transaction costs, non-stationarity, overfitting)
+\end{enumerate}
+\vspace{0.5em}
+\textbf{Finance Applications:} Sentiment analysis with embeddings, algorithmic trading with RL
+\bottomnote{Bloom's Levels 4--5: Analyze, Evaluate, Derive, Critique}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Word Embeddings}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Slide 5: Part 1: Word Embeddings Introduction
 \begin{frame}[t]{Part 1: Word Embeddings Introduction}
 \textbf{The Problem with One-Hot Encoding}
 \begin{itemize}
@@ -126,8 +156,7 @@
 \bottomnote{``You shall know a word by the company it keeps'' -- Firth, 1957}
 \end{frame}
 
-\section{Method}
-
+%% Slide 6: Word2Vec: Skip-gram
 \begin{frame}[t]{Word2Vec: Skip-gram}
 \textbf{Objective:} Predict context words given target word
 \[
@@ -143,6 +172,7 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \bottomnote{Skip-gram works well for rare words; CBOW better for frequent words}
 \end{frame}
 
+%% Slide 7: Skip-gram: Computational Challenge (HOSTILE REVIEW FIX C1)
 \begin{frame}[t]{Skip-gram: Computational Challenge}
 \textbf{Problem:} The softmax denominator sums over \highlight{entire vocabulary}:
 \[
@@ -165,6 +195,7 @@ Replace full softmax with binary classification:
 \bottomnote{Negative sampling: the key innovation that made Word2Vec practical}
 \end{frame}
 
+%% Slide 8: Negative Sampling Illustrated (CHART 10)
 \begin{frame}[t]{Negative Sampling Illustrated}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{10_negative_sampling/chart.pdf}
@@ -172,6 +203,7 @@ Replace full softmax with binary classification:
 \bottomnote{Binary classification: distinguish true context words from random ``noise'' words}
 \end{frame}
 
+%% Slide 9: Skip-gram Architecture (CHART 08)
 \begin{frame}[t]{Skip-gram Architecture}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{08_skipgram_architecture/chart.pdf}
@@ -179,7 +211,8 @@ Replace full softmax with binary classification:
 \bottomnote{Two embedding matrices: input $W$ (word vectors) and output $W'$ (context vectors)}
 \end{frame}
 
-\begin{frame}[t]{Skip-Gram with Negative Sampling: Algorithm}
+%% Slide 10: Skip-Gram with Negative Sampling: Algorithm (HOSTILE REVIEW FIX M4, INSTRUCTOR GUIDE)
+\begin{frame}[fragile,t]{Skip-Gram with Negative Sampling: Algorithm}
 \begin{algorithmic}[1]
 \REQUIRE corpus, embedding dim $d$, negatives $k$, window size, epochs
 \STATE Initialize $W, W' \in \mathbb{R}^{|V| \times d}$ randomly
@@ -187,7 +220,7 @@ Replace full softmax with binary classification:
   \FOR{each word $w_t$ in corpus}
     \FOR{each context word $w_c$ within window}
       \STATE \textbf{Positive}: update $(w_t, w_c)$ to increase $\sigma(v_{w_t}^\top v'_{w_c})$
-      \FOR{$i = 1, \ldots, k$} \COMMENT{$k$ negative samples}
+      \FOR{$i = 1, \ldots, k$}
         \STATE Sample $w_n \sim P_n(w) \propto f(w)^{3/4}$
         \STATE \textbf{Negative}: update $(w_t, w_n)$ to decrease $\sigma(v_{w_t}^\top v'_{w_n})$
       \ENDFOR
@@ -196,17 +229,16 @@ Replace full softmax with binary classification:
 \ENDFOR
 \RETURN $W$ (word embeddings)
 \end{algorithmic}
-
-\bottomnote{Mikolov et al.\ (2013). Distributed representations of words and phrases. \textit{NeurIPS}, 3111--3119.}
+\vspace{0.5em}
+\textbf{Key}: Negative sampling (3-5 negatives per positive) replaces expensive softmax over entire vocabulary.
+\vfill
+\vspace{-2mm}
+\textcolor{mllavender2}{\rule{\textwidth}{0.4pt}}
+\vspace{1mm}
+{\footnotesize\textbf{Mikolov et al.\ (2013). Distributed representations of words and phrases. \textit{NeurIPS}, 3111--3119.}}
 \end{frame}
 
-\begin{frame}[t]{Word Embedding Space}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{01_word_embedding_space/chart.pdf}
-\end{center}
-\bottomnote{Finance terms cluster by semantic category in embedding space}
-\end{frame}
-
+%% Slide 11: Word Analogies
 \begin{frame}[t]{Word Analogies}
 \textbf{Famous Example:}
 \[
@@ -227,6 +259,7 @@ Replace full softmax with binary classification:
 \bottomnote{Embeddings capture relational structure, not just similarity}
 \end{frame}
 
+%% Slide 12: Word Analogy Limitations (HOSTILE REVIEW FIX M2)
 \begin{frame}[t]{Word Analogy Limitations}
 \textbf{Known Issues:}
 \begin{itemize}
@@ -244,6 +277,7 @@ Replace full softmax with binary classification:
 \bottomnote{Critical thinking: embeddings capture statistical patterns, including harmful ones}
 \end{frame}
 
+%% Slide 13: Similarity Measures (CHART 02, HOSTILE REVIEW Mi3 already applied)
 \begin{frame}[t]{Similarity Measures}
 \textbf{Cosine Similarity:}
 \[
@@ -261,6 +295,7 @@ Replace full softmax with binary classification:
 \bottomnote{Cosine similarity ignores magnitude, focuses on direction}
 \end{frame}
 
+%% Slide 14: Pre-trained Embeddings (HOSTILE REVIEW Mo1 already applied)
 \begin{frame}[t]{Pre-trained Embeddings}
 \textbf{Popular Options:}
 \begin{itemize}
@@ -277,6 +312,7 @@ Replace full softmax with binary classification:
 \bottomnote{Fine-tuning pre-trained embeddings usually outperforms training from scratch}
 \end{frame}
 
+%% Slide 15: Static vs Contextual Embeddings (HOSTILE REVIEW FIX M5)
 \begin{frame}[t]{Static vs Contextual Embeddings}
 \textbf{Static Embeddings} (Word2Vec, GloVe, FastText):
 \begin{itemize}
@@ -296,6 +332,7 @@ Replace full softmax with binary classification:
 \bottomnote{Static: one meaning per word. Contextual: meaning depends on context.}
 \end{frame}
 
+%% Slide 16: Embeddings in Finance
 \begin{frame}[t]{Embeddings in Finance}
 \textbf{Applications:}
 \begin{itemize}
@@ -314,6 +351,7 @@ Replace full softmax with binary classification:
 \bottomnote{Aggregate word embeddings to represent documents}
 \end{frame}
 
+%% Slide 17: Finance Example: Embedding-Based Sentiment (HOSTILE REVIEW FIX C2a)
 \begin{frame}[t]{Finance Example: Embedding-Based Sentiment}
 \textbf{Task:} Classify ``Fed signals rate hike'' as positive or negative
 \vspace{0.3em}
@@ -336,9 +374,11 @@ Replace full softmax with binary classification:
 \bottomnote{Simplified example --- real embeddings are 300-768 dimensions with learned sentiment structure}
 \end{frame}
 
-\section{Solution}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Reinforcement Learning Framework}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% PART 2: REINFORCEMENT LEARNING
+%% Slide 18: Part 2: Reinforcement Learning Framework
 \begin{frame}[t]{Part 2: Reinforcement Learning Framework}
 \textbf{Key Components:}
 \vspace{-0.2em}
@@ -349,14 +389,15 @@ Replace full softmax with binary classification:
 \item \textbf{Action} $a$: What agent can do
 \item \textbf{Reward} $r$: Feedback signal
 \end{itemize}
-\vspace{-0.8em}
+\vspace{0.5em}
+\textbf{The RL Loop:}
 \begin{center}
-\includegraphics[width=0.45\textwidth]{03_rl_loop/chart.pdf}
+Agent observes State $\rightarrow$ Agent selects Action $\rightarrow$ Environment transitions $\rightarrow$ Environment emits Reward $\rightarrow$ Agent updates $\rightarrow$ (repeat)
 \end{center}
-\vspace{-0.5em}
 \bottomnote{RL: Learning from interaction, not from labeled examples}
 \end{frame}
 
+%% Slide 19: Markov Decision Process (HOSTILE REVIEW Mo4 already applied)
 \begin{frame}[t]{Markov Decision Process}
 \textbf{MDP Tuple:} $(S, A, P, R, \gamma)$
 \begin{itemize}
@@ -374,6 +415,7 @@ P(s_{t+1} | s_t, a_t, s_{t-1}, ...) = P(s_{t+1} | s_t, a_t)
 \bottomnote{Future depends only on current state, not history}
 \end{frame}
 
+%% Slide 20: Policy and Value Functions
 \begin{frame}[t]{Policy and Value Functions}
 \textbf{Policy:} $\pi(a|s) = P(A_t = a | S_t = s)$
 \begin{itemize}
@@ -393,6 +435,7 @@ Q^\pi(s, a) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 =
 \bottomnote{Q-function: expected return starting from state s, taking action a}
 \end{frame}
 
+%% Slide 21: Bellman Equation
 \begin{frame}[t]{Bellman Equation}
 \textbf{Optimal Q-Function:}
 \[
@@ -412,6 +455,7 @@ Q^*(s, a) = \mathbb{E} \left[ R + \gamma \max_{a'} Q^*(s', a') \right]
 \bottomnote{Bellman equation: foundation of all value-based RL methods}
 \end{frame}
 
+%% Slide 22: Temporal Difference Learning (HOSTILE REVIEW FIX M3)
 \begin{frame}[t]{Temporal Difference Learning}
 \textbf{TD(0) Update Rule} --- learn from each transition:
 \[
@@ -428,6 +472,11 @@ V(s) \leftarrow V(s) + \alpha \left[ r + \gamma V(s') - V(s) \right]
 \bottomnote{TD learning: the theoretical foundation connecting DP, MC, and Q-learning (Sutton, 1988)}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Q-Learning and Trading}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Slide 23: Q-Learning Algorithm (HOSTILE REVIEW FIX M9: Robbins-Monro in bottomnote)
 \begin{frame}[t]{Q-Learning Algorithm}
 \textbf{Update Rule:}
 \[
@@ -445,9 +494,10 @@ Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s,
 \item Update $Q(s, a)$
 \end{itemize}
 \end{enumerate}
-\bottomnote{Q-learning is off-policy: converges to $Q^*$ given sufficient exploration and decaying $\alpha$ (Watkins \& Dayan, 1992)}
+\bottomnote{Q-learning is off-policy: converges to $Q^*$ given Robbins-Monro conditions ($\sum \alpha_t = \infty$, $\sum \alpha_t^2 < \infty$) and sufficient exploration (Watkins \& Dayan, 1992)}
 \end{frame}
 
+%% Slide 24: Q-Learning: Worked Example (HOSTILE REVIEW FIX M8)
 \begin{frame}[t]{Q-Learning: Worked Example}
 \textbf{Trading scenario:} State $s_1$ = [RSI=25, position=none]
 
@@ -472,6 +522,7 @@ Q(s_1, \text{buy}) \leftarrow 3.2 + 0.1 \times (-0.1) = \mathbf{3.19}
 \bottomnote{Each update moves Q toward the ``better'' estimate: immediate reward + discounted future}
 \end{frame}
 
+%% Slide 25: Q-Learning Algorithm: Pseudocode (INSTRUCTOR GUIDE REQUIREMENT)
 \begin{frame}[t]{Q-Learning Algorithm: Pseudocode}
 \begin{algorithmic}[1]
 \REQUIRE environment, $\alpha$, $\gamma$, $\epsilon$, episodes
@@ -494,6 +545,7 @@ Q(s_1, \text{buy}) \leftarrow 3.2 + 0.1 \times (-0.1) = \mathbf{3.19}
 \bottomnote{Watkins \& Dayan (1992). Q-learning. \textit{Machine Learning}, 8(3-4), 279--292.}
 \end{frame}
 
+%% Slide 26: Q-Values Visualization (CHART 04)
 \begin{frame}[t]{Q-Values Visualization}
 \vspace{-0.5em}
 \begin{center}
@@ -503,6 +555,7 @@ Q(s_1, \text{buy}) \leftarrow 3.2 + 0.1 \times (-0.1) = \mathbf{3.19}
 \bottomnote{Arrows show policy; colors show Q-values (green=high, red=negative)}
 \end{frame}
 
+%% Slide 27: Exploration vs Exploitation
 \begin{frame}[t]{Exploration vs Exploitation}
 \textbf{The Dilemma:}
 \begin{itemize}
@@ -526,15 +579,8 @@ a = \begin{cases}
 \bottomnote{Balance: too much exploration wastes time; too little misses optima}
 \end{frame}
 
-\begin{frame}[t]{Learning Curves}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{05_reward_curves/chart.pdf}
-\end{center}
-\bottomnote{Reward improves as agent learns; DQN often outperforms tabular Q-learning}
-\end{frame}
-
-%% PART 3: RL IN FINANCE
-\begin{frame}[t]{Part 3: RL for Trading}
+%% Slide 28: RL for Trading
+\begin{frame}[t]{RL for Trading}
 \textbf{Formulation:}
 \begin{itemize}
 \item \textbf{State}: Price history, portfolio, technical indicators
@@ -552,6 +598,7 @@ a = \begin{cases}
 \bottomnote{RL for trading is active research area; not solved problem}
 \end{frame}
 
+%% Slide 29: Trading Reward Function Design (HOSTILE REVIEW FIX C2b)
 \begin{frame}[t]{Trading Reward Function Design}
 \textbf{Reward with transaction costs:}
 \[
@@ -575,6 +622,7 @@ where $R_t^{\text{portfolio}}$ = portfolio return, $c$ = transaction cost rate, 
 \bottomnote{Reward design is THE most critical decision in RL for trading}
 \end{frame}
 
+%% Slide 30: Backtesting RL Trading Strategies
 \begin{frame}[t]{Backtesting RL Trading Strategies}
 \textbf{Critical Challenge:} RL agents overfit to historical data
 
@@ -595,6 +643,7 @@ where $R_t^{\text{portfolio}}$ = portfolio return, $c$ = transaction cost rate, 
 \bottomnote{If your RL agent beats buy-and-hold after costs, you likely have a bug --- verify carefully}
 \end{frame}
 
+%% Slide 31: Trading Policy (CHART 06)
 \begin{frame}[t]{Trading Policy}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{06_policy_viz/chart.pdf}
@@ -602,6 +651,11 @@ where $R_t^{\text{portfolio}}$ = portfolio return, $c$ = transaction cost rate, 
 \bottomnote{Q-learning trained policy: agent discovers buy/sell/hold regions from reward signal}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Deep RL and Advanced Methods}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Slide 32: Deep Q-Networks (DQN) (CHART 09, HOSTILE REVIEW FIX M7)
 \begin{frame}[t]{Deep Q-Networks (DQN)}
 \textbf{Idea}: Neural network approximates Q-function: $Q(s, a; \theta) \approx Q^*(s, a)$
 
@@ -623,6 +677,7 @@ L(\theta) = \mathbb{E}\left[\left(r + \gamma \max_{a'} Q(s', a'; \theta^-) - Q(s
 \bottomnote{DQN: Atari-level play from raw pixels (Mnih et al., 2015); loss is mean squared TD error}
 \end{frame}
 
+%% Slide 33: Policy Gradient Methods (HOSTILE REVIEW FIX M6)
 \begin{frame}[t]{Policy Gradient Methods}
 \textbf{Policy Gradient Theorem} (Sutton et al., 2000):
 \[
@@ -638,6 +693,7 @@ where $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$ is the \textbf{advantage function}
 \bottomnote{Policy gradient handles continuous actions; advantage reduces variance vs raw returns}
 \end{frame}
 
+%% Slide 34: Statistical Inference for Embeddings & RL (HOSTILE REVIEW FIX C4)
 \begin{frame}[t]{Statistical Inference for Embeddings \& RL}
 \textbf{Embedding Uncertainty:}
 \begin{itemize}
@@ -656,8 +712,11 @@ where $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$ is the \textbf{advantage function}
 \bottomnote{Always report uncertainty --- a single training run is not evidence of a good policy}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Practice}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% Slide 35: Hands-on Exercise
 \begin{frame}[t]{Hands-on Exercise}
   \textbf{Open the Colab Notebook}
   \begin{itemize}
@@ -669,19 +728,13 @@ where $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$ is the \textbf{advantage function}
   \textbf{Link:} \url{https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L06_embeddings_rl.ipynb}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Decision Framework}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% PART 4: COMPARISON
-\begin{frame}[t]{Part 4: When to Use What}
-\vspace{-0.5em}
-\begin{center}
-\includegraphics[width=0.50\textwidth]{07_decision_flowchart/chart.pdf}
-\end{center}
+%% Slide 36: When to Use What (Full Comparison Table — NO chart 07)
+\begin{frame}[t]{When to Use What}
 \vspace{-0.3em}
-\bottomnote{Embeddings for text/categorical; RL for sequential decisions}
-\end{frame}
-
-\begin{frame}[t]{Comparison Table}
 \begin{center}
 \small
 \begin{tabular}{l|cc}
@@ -700,10 +753,8 @@ Finance use & Sentiment & Trading \\
 \bottomnote{Both transform complex inputs into learnable representations}
 \end{frame}
 
-\section{Summary}
-
-%% PART 5: IMPLEMENTATION
-\begin{frame}[t,fragile]{Part 5: Implementation}
+%% Slide 37: Implementation (fragile)
+\begin{frame}[t,fragile]{Implementation}
 \textbf{Embeddings in Python:}
 \small
 \begin{itemize}
@@ -723,6 +774,7 @@ Finance use & Sentiment & Trading \\
 \bottomnote{Start with pre-trained embeddings; use stable-baselines3 for RL}
 \end{frame}
 
+%% Slide 38: Practical Tips
 \begin{frame}[t]{Practical Tips}
 \textbf{Embeddings:}
 \begin{itemize}
@@ -741,7 +793,12 @@ Finance use & Sentiment & Trading \\
 \bottomnote{Both domains: start simple, iterate, validate thoroughly}
 \end{frame}
 
-\begin{frame}[t]{Summary}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Summary}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Slide 39: Key Takeaways
+\begin{frame}[t]{Key Takeaways}
 \textbf{Embeddings:}
 \begin{itemize}
 \item Dense vector representations of text/categories
@@ -760,31 +817,236 @@ Finance use & Sentiment & Trading \\
 \bottomnote{Course complete! Apply these methods in your capstone project}
 \end{frame}
 
-\begin{frame}[t]{References}
+%% Slide 40: Closing Comic (XKCD #1838 text callback)
+\begin{frame}[t]{Closing Thought}
+\vspace{2em}
+\begin{center}
+\Large\textit{``After six lectures of methods and algorithms,}
+
+\textit{we've learned the most important lesson:}
+
+\vspace{0.5em}
+
+\textit{pour the data into the right pile of linear algebra,}
+
+\textit{and the answers will come out the other side.}
+
+\vspace{0.5em}
+
+\textit{The hard part is knowing which pile.'\,''}
+\end{center}
+
+\vspace{1em}
+\begin{center}
+\normalsize --- Adapted from XKCD \#1838 ``Machine Learning'' by Randall Munroe
+\end{center}
+\bottomnote{Callback to XKCD \#1838 by Randall Munroe (CC BY-NC 2.5). Course complete!}
+\end{frame}
+
+%% Slide 41: References (Embeddings)
+\begin{frame}[t]{References: Embeddings}
 \small
-\textbf{Embeddings:}
 \begin{itemize}
-\item Mikolov et al. (2013). Word2Vec
-\item Pennington et al. (2014). GloVe
-\item Devlin et al. (2019). BERT
-\item Levy \& Goldberg (2014). Linguistic Regularities in Word Embeddings
-\item Bolukbasi et al. (2016). Man is to Computer Programmer as Woman is to Homemaker?
+\item Mikolov, T., Sutskever, I., Chen, K., Corrado, G., \& Dean, J. (2013). Distributed representations of words and phrases and their compositionality. \textit{NeurIPS}, 3111--3119.
+\item Pennington, J., Socher, R., \& Manning, C. (2014). GloVe: Global vectors for word representation. \textit{EMNLP}, 1532--1543.
+\item Devlin, J., Chang, M.-W., Lee, K., \& Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers. \textit{NAACL}, 4171--4186.
+\item Levy, O. \& Goldberg, Y. (2014). Linguistic regularities in sparse and explicit word representations. \textit{CoNLL}, 171--180.
+\item Bolukbasi, T., Chang, K.-W., Zou, J., Saligrama, V., \& Kalai, A. (2016). Man is to computer programmer as woman is to homemaker? Debiasing word embeddings. \textit{NeurIPS}, 4349--4357.
 \end{itemize}
+\end{frame}
 
-\textbf{Reinforcement Learning:}
+%% Slide 42: References (RL and Finance)
+\begin{frame}[t]{References: RL and Finance}
+\small
 \begin{itemize}
-\item Sutton \& Barto (2018). RL: An Introduction (free online)
-\item Mnih et al. (2015). DQN (Atari)
-\item Schulman et al. (2017). PPO
-\item Watkins \& Dayan (1992). Q-Learning Convergence
-\end{itemize}
-
-\textbf{Finance Applications:}
-\begin{itemize}
-\item Liu et al. (2021). FinRL: Deep RL for Trading
-\item Araci (2019). FinBERT
+\item Sutton, R. \& Barto, A. (2018). \textit{Reinforcement Learning: An Introduction} (2nd ed.). MIT Press.
+\item Mnih, V., Kavukcuoglu, K., Silver, D., et al. (2015). Human-level control through deep reinforcement learning. \textit{Nature}, 518, 529--533.
+\item Schulman, J., Wolski, F., Dhariwal, P., Radford, A., \& Klimov, O. (2017). Proximal policy optimization algorithms. \textit{arXiv:1707.06347}.
+\item Watkins, C. \& Dayan, P. (1992). Q-learning. \textit{Machine Learning}, 8(3-4), 279--292.
+\item Liu, X.-Y., Yang, H., Gao, J., \& Wang, C. (2021). FinRL: Deep reinforcement learning framework for automated trading. \textit{SSRN}.
+\item Araci, D. (2019). FinBERT: Financial sentiment analysis with pre-trained language models. \textit{arXiv:1908.10063}.
 \end{itemize}
 \bottomnote{Sutton \& Barto: the definitive RL textbook (free at incompleteideas.net)}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDIX (8 slides)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+\section*{Advanced Topics}
+
+%% Slide A1: Appendix Divider
+\begin{frame}
+\begin{center}
+\vspace{2cm}
+{\Huge \textcolor{mlpurple}{Appendix}}
+
+\vspace{0.5cm}
+{\Large Advanced Topics and Proofs}
+
+\vspace{0.5cm}
+{\normalsize Supplementary material for self-study and reference}
+\end{center}
+\bottomnote{Appendix slides are not covered in lecture --- provided for advanced students and exam preparation.}
+\end{frame}
+
+%% Slide A2: Skip-Gram Objective Derivation
+\begin{frame}[t]{Skip-Gram Objective Derivation}
+\textbf{Maximum Likelihood Objective:}
+
+Given corpus of word-context pairs $(w_t, w_c)$, maximize:
+\[
+\mathcal{L} = \sum_{(w_t, w_c) \in D} \log P(w_c | w_t)
+\]
+
+\textbf{With softmax parameterization:}
+\[
+\log P(w_c | w_t) = v_{w_c}^{\prime\top} v_{w_t} - \log \sum_{w \in V} \exp(v_w^{\prime\top} v_{w_t})
+\]
+
+\textbf{Simplification:} The log-sum-exp term is the log-partition function. Maximizing $\mathcal{L}$ is equivalent to minimizing cross-entropy between the model distribution and the empirical context distribution.
+
+\vspace{0.3em}
+\textbf{Connection to cross-entropy:}
+\[
+H(p_{\text{empirical}}, p_{\text{model}}) = -\sum_{w_c} \hat{p}(w_c | w_t) \log p_\theta(w_c | w_t)
+\]
+\bottomnote{Skip-Gram is a discriminative model: it models $P(\text{context}|\text{target})$ directly, not a generative process}
+\end{frame}
+
+%% Slide A3: Negative Sampling Theory
+\begin{frame}[t]{Negative Sampling Theory}
+\textbf{Origin: Noise Contrastive Estimation (NCE)}
+\begin{itemize}
+\item NCE (Gutmann \& Hyv\"arinen, 2012): estimate unnormalized models by contrasting data with noise
+\item Negative sampling is a simplified variant of NCE
+\end{itemize}
+\vspace{0.3em}
+\textbf{Why the $3/4$ Power?}
+\begin{itemize}
+\item Noise distribution: $P_n(w) \propto f(w)^{3/4}$ where $f(w)$ is unigram frequency
+\item Exponent $< 1$ upweights rare words relative to frequency
+\item Empirically chosen by Mikolov et al.\ (2013) --- not theoretically derived
+\end{itemize}
+\vspace{0.3em}
+\textbf{Implicit Matrix Factorization} (Levy \& Goldberg, 2014):
+
+SGNS implicitly factorizes a shifted PMI matrix:
+\[
+v_w \cdot v_c' \approx \text{PMI}(w, c) - \log k
+\]
+where PMI$(w,c) = \log \frac{P(w,c)}{P(w)P(c)}$ and $k$ = number of negatives
+\bottomnote{Negative sampling implicitly factorizes a shifted PMI matrix}
+\end{frame}
+
+%% Slide A4: Bellman Equation Convergence
+\begin{frame}[t]{Bellman Equation Convergence}
+\textbf{Robbins-Monro Conditions} for step sizes $\alpha_t$:
+\[
+\sum_{t=0}^{\infty} \alpha_t = \infty, \qquad \sum_{t=0}^{\infty} \alpha_t^2 < \infty
+\]
+\vspace{0.3em}
+\textbf{Contraction Mapping Argument:}
+\begin{itemize}
+\item The Bellman optimality operator $T$ is a $\gamma$-contraction in $\ell_\infty$-norm
+\item $\|TQ_1 - TQ_2\|_\infty \leq \gamma \|Q_1 - Q_2\|_\infty$
+\item By Banach fixed-point theorem, $T$ has unique fixed point $Q^*$
+\item Q-learning converges to $Q^*$ when Robbins-Monro conditions hold and all $(s,a)$ pairs visited infinitely often
+\end{itemize}
+\vspace{0.3em}
+\textbf{Fixed $\alpha$ Issue:}
+\begin{itemize}
+\item Constant $\alpha$ violates $\sum \alpha_t^2 < \infty$ --- Q-values oscillate around $Q^*$
+\item In practice: fixed $\alpha$ works well in non-stationary environments (tracks changes)
+\end{itemize}
+\bottomnote{Watkins \& Dayan (1992): formal convergence proof requires decaying step sizes and full exploration}
+\end{frame}
+
+%% Slide A5: DQN Architecture Details
+\begin{frame}[t]{DQN Architecture Details}
+\textbf{Experience Replay Buffer:}
+\begin{itemize}
+\item Store transitions $(s, a, r, s', \text{done})$ in buffer of size $N$ (e.g., $10^6$)
+\item Sample uniform random mini-batches for training
+\item Breaks temporal correlation $\rightarrow$ approximately i.i.d.\ data
+\end{itemize}
+\vspace{0.3em}
+\textbf{Target Network Updates:}
+\begin{itemize}
+\item \textbf{Hard update}: Copy $\theta^- \leftarrow \theta$ every $C$ steps (Mnih et al., 2015)
+\item \textbf{Soft update}: $\theta^- \leftarrow \tau\theta + (1-\tau)\theta^-$ with $\tau \ll 1$ (Polyak averaging)
+\end{itemize}
+\vspace{0.3em}
+\textbf{Extensions:}
+\begin{itemize}
+\item \textbf{Double DQN} (van Hasselt et al., 2016): Decouple action selection from evaluation to reduce overestimation bias
+\item \textbf{Dueling DQN} (Wang et al., 2016): Separate value $V(s)$ and advantage $A(s,a)$ streams: $Q(s,a) = V(s) + A(s,a) - \bar{A}(s)$
+\end{itemize}
+\bottomnote{Mnih et al. (2015): DQN achieved human-level play on 29/49 Atari games}
+\end{frame}
+
+%% Slide A6: Word Embedding Bias and Fairness
+\begin{frame}[t]{Word Embedding Bias and Fairness}
+\textbf{Bias in Word Embeddings} (Bolukbasi et al., 2016):
+\begin{itemize}
+\item Gender: he:doctor :: she:nurse (reflects training corpus stereotypes)
+\item Race, religion, and other protected attributes similarly affected
+\end{itemize}
+\vspace{0.3em}
+\textbf{Debiasing Techniques:}
+\begin{itemize}
+\item \textbf{Post-hoc projection}: Remove gender direction from embedding space
+\item \textbf{Counterfactual data augmentation}: Balance training examples
+\item \textbf{Adversarial debiasing}: Train to be invariant to protected attributes
+\end{itemize}
+\vspace{0.3em}
+\textbf{Finance Implications:}
+\begin{itemize}
+\item Biased embeddings in \highlight{credit scoring} can violate fair lending laws
+\item \highlight{Hiring tools} using biased embeddings risk discrimination claims
+\item \textbf{EU AI Act}: High-risk AI systems (credit, hiring) require bias auditing
+\end{itemize}
+\bottomnote{Embedding bias is a compliance risk in regulated financial services}
+\end{frame}
+
+%% Slide A7: SARSA vs Q-Learning
+\begin{frame}[t]{SARSA vs Q-Learning}
+\textbf{SARSA} (on-policy):
+\[
+Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma Q(s', a') - Q(s,a)\bigr]
+\]
+Uses the \textbf{actual next action} $a'$ chosen by the current policy.
+
+\vspace{0.3em}
+\textbf{Q-Learning} (off-policy):
+\[
+Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\bigr]
+\]
+Uses the \textbf{greedy maximum} regardless of what action was actually taken.
+
+\vspace{0.3em}
+\textbf{Key Differences:}
+\begin{itemize}
+\item \textbf{Safety}: SARSA accounts for exploration risk; Q-learning ignores it
+\item \textbf{Cliff-walking example}: SARSA learns the safe path (away from cliff edge); Q-learning learns the optimal but risky path (along the edge)
+\item \textbf{Convergence}: Both converge given Robbins-Monro conditions; Q-learning to $Q^*$, SARSA to $Q^\pi$
+\end{itemize}
+\bottomnote{SARSA: safer path; Q-learning: optimal path}
+\end{frame}
+
+%% Slide A8: References and Further Reading
+\begin{frame}[t]{Appendix References and Further Reading}
+\small
+\begin{itemize}
+\item Levy, O. \& Goldberg, Y. (2014). Neural word embedding as implicit matrix factorization. \textit{NeurIPS}, 2177--2185.
+\item Bolukbasi, T. et al. (2016). Man is to computer programmer as woman is to homemaker? Debiasing word embeddings. \textit{NeurIPS}, 4349--4357.
+\item Watkins, C. \& Dayan, P. (1992). Q-learning. \textit{Machine Learning}, 8(3-4), 279--292.
+\item van Hasselt, H., Guez, A., \& Silver, D. (2016). Deep reinforcement learning with double Q-learning. \textit{AAAI}, 2094--2100.
+\item Wang, Z., Schaul, T., Hessel, M., et al. (2016). Dueling network architectures for deep reinforcement learning. \textit{ICML}, 1995--2003.
+\item Sutton, R. \& Barto, A. (2018). \textit{Reinforcement Learning: An Introduction}, Chapters 6 and 16. MIT Press.
+\end{itemize}
+\bottomnote{All appendix references are freely available online}
 \end{frame}
 
 \end{document}

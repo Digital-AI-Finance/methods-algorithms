@@ -93,159 +93,573 @@
 \title[L02: Logistic Regression]{L02: Logistic Regression}
 \subtitle{Classification with Probability Estimates}
 \author{Methods and Algorithms}
+\institute{MSc Data Science}
 \date{Spring 2026}
 
 \begin{document}
 
+% ============================================================
+% ZONE 1: INTRODUCTION (NO formulas, NO Greek letters)
+% ============================================================
+
+% ============================================
+% SLIDE 1: Title Page
+% ============================================
 \begin{frame}
-\titlepage
+  \titlepage
 \end{frame}
 
-% Outline
+% ============================================
+% SLIDE 2: Outline
+% ============================================
 \begin{frame}{Outline}
   \tableofcontents
 \end{frame}
 
-% Slide 2: Learning Objectives
-\begin{frame}[t]{Learning Objectives}
-\textbf{By the end of this lecture, you will be able to:}
-\begin{enumerate}
-\item Derive the MLE for logistic regression via gradient of the log-likelihood
-\item Analyze model fit using deviance, LRT, AIC/BIC, and Hosmer-Lemeshow
-\item Evaluate classification performance using ROC, calibration, and cost-sensitive metrics
-\item Apply logistic regression to credit scoring with regulatory interpretation (Basel PD)
-\end{enumerate}
-\vspace{1em}
-\textbf{Finance Application:} Credit scoring and probability of default (PD)
-\bottomnote{Bloom's Levels 4--5: Analyze, Evaluate, Create}
+% ============================================
+% SECTION: INTRODUCTION
+% ============================================
+\section{Introduction}
+
+% ============================================
+% SLIDE 3: Opening Comic -- XKCD #1132
+% ============================================
+\begin{frame}[t]{The Classification Challenge}
+\begin{center}
+\includegraphics[height=0.70\textheight]{images/1132_frequentist_bayesian.png}
+\end{center}
+\bottomnote{XKCD \#1132 by Randall Munroe (CC BY-NC 2.5)}
 \end{frame}
 
-% Slide 3: Motivation
-\section{Problem}
-
+% ============================================
+% SLIDE 4: Why Logistic Regression?
+% ============================================
 \begin{frame}[t]{Why Logistic Regression?}
 \textbf{The Business Problem}
 \begin{itemize}
-\item Banks must decide: approve or reject loan applications
-\item Need probability of default, not just yes/no prediction
-\item Regulatory requirement: interpretable, auditable models
+  \item Banks process millions of loan applications every year -- each one is a \highlight{yes/no decision}
+  \item A wrong ``yes'' costs the bank the entire loan amount; a wrong ``no'' loses a profitable customer
+  \item Regulators demand models that are \textbf{interpretable}, \textbf{auditable}, and produce \textbf{calibrated probabilities}
 \end{itemize}
-\vspace{0.5em}
-\textbf{Why Not Linear Regression?}
+
+\vspace{0.8em}
+\textbf{The Standard Tool}
 \begin{itemize}
-\item Linear regression can predict values outside [0,1]
-\item Binary outcomes need probability-based approach
-\item Logistic regression outputs calibrated probabilities
+  \item Logistic regression has been the \textbf{industry standard for credit scoring} since the 1980s
+  \item It is fast to train, easy to explain, and directly outputs the probability of default
 \end{itemize}
-\bottomnote{Logistic regression: the industry standard for credit scoring since 1980s}
+\bottomnote{Every major bank uses logistic regression in its credit risk pipeline}
 \end{frame}
 
-% Slide 4: The Sigmoid Function
+% ============================================
+% SLIDE 5: From Prediction to Classification
+% ============================================
+\begin{frame}[t]{From Prediction to Classification}
+\textbf{What Changes When the Output is Yes/No?}
+\begin{itemize}
+  \item In regression, we predicted a continuous number (house price, stock return)
+  \item In classification, the target is a \textbf{category}: default vs.\ no default, fraud vs.\ legitimate
+  \item The model must output a \textbf{probability} between 0 and 1
+\end{itemize}
+
+\vspace{0.8em}
+\textbf{The Problem with Linear Regression for Classification}
+\begin{itemize}
+  \item A straight line can predict values below 0 or above 1 -- nonsensical as probabilities
+  \item It treats the gap between 0.01 and 0.02 the same as between 0.49 and 0.50
+  \item We need a function that \textbf{bends} the line to stay within valid bounds
+\end{itemize}
+\bottomnote{Linear regression is unbounded -- classification requires outputs in [0,1]}
+\end{frame}
+
+% ============================================
+% SLIDE 6: What Banks Need -- Probabilities
+% ============================================
+\begin{frame}[t]{What Banks Need: Probabilities}
+\textbf{Why a Simple Yes/No Is Not Enough}
+\begin{itemize}
+  \item Regulators (Basel framework) require banks to estimate the \textbf{Probability of Default} for every borrower
+  \item These probabilities feed into capital calculations -- how much reserve the bank must hold
+  \item A model that only says ``default'' or ``no default'' cannot do this
+\end{itemize}
+
+\vspace{0.8em}
+\textbf{From Probability to Scorecard}
+\begin{itemize}
+  \item Banks convert model probabilities into credit scores (e.g., 300--850 range)
+  \item Higher score means lower probability of default means better lending terms
+  \item Every coefficient must be \textbf{explainable} to auditors and regulators
+\end{itemize}
+\bottomnote{Basel II/III: banks must produce PD estimates for all credit exposures}
+\end{frame}
+
+% ============================================
+% SLIDE 7: Learning Objectives
+% ============================================
+\begin{frame}[t]{Learning Objectives}
+\textbf{By the end of this lecture, you will be able to:}
+\begin{enumerate}
+  \item \textbf{Derive} the MLE for logistic regression via gradient of the log-likelihood
+  \item \textbf{Analyze} model fit using deviance, LRT, AIC/BIC, and Hosmer-Lemeshow
+  \item \textbf{Evaluate} classification performance using ROC, calibration, and cost-sensitive metrics
+  \item \textbf{Apply} logistic regression to credit scoring with regulatory interpretation (Basel PD)
+\end{enumerate}
+\vspace{1em}
+\textbf{Finance Application:} Credit scoring and probability of default (PD)
+\bottomnote{Bloom's Levels 4--5: Analyze, Evaluate, Apply}
+\end{frame}
+
+% ============================================================
+% ZONE 2: CORE CONTENT (PMSP -- formulas allowed)
+% ============================================================
+
+% ============================================
+% SECTION: PROBLEM
+% ============================================
+\section{Problem}
+
+% ============================================
+% SLIDE 8: Why Not Linear Regression?
+% ============================================
+\begin{frame}[t]{Why Not Linear Regression?}
+\textbf{The Fundamental Issue}
+\begin{itemize}
+  \item Linear regression predicts $\hat{y} = \mathbf{x}^\top \boldsymbol{\beta}$, which is unbounded
+  \item For binary classification, we need $P(y=1|\mathbf{x}) \in (0,1)$
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{The Logistic Solution}
+\begin{itemize}
+  \item Wrap the linear predictor in a \highlight{sigmoid function}:
+\end{itemize}
+\begin{equation}
+P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad z = \beta_0 + \boldsymbol{\beta}^\top \mathbf{x}
+\end{equation}
+\begin{itemize}
+  \item Output is always a valid probability -- bounded, smooth, differentiable
+\end{itemize}
+\bottomnote{The sigmoid ``squashes'' any real number into $(0,1)$}
+\end{frame}
+
+% ============================================
+% SLIDE 9: The Sigmoid Function (chart)
+% ============================================
+\begin{frame}[t]{The Sigmoid Function}
+\begin{columns}[T]
+\column{0.42\textwidth}
+\textbf{Key Properties}
+\begin{itemize}
+  \item $\sigma(0) = 0.5$ (the decision point)
+  \item Symmetric: $\sigma(-z) = 1 - \sigma(z)$
+  \item Derivative: $\sigma'(z) = \sigma(z)(1-\sigma(z))$
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Interpretation}
+\begin{itemize}
+  \item Large positive $z$: probability near 1
+  \item Large negative $z$: probability near 0
+  \item Steepness controlled by coefficient magnitude
+\end{itemize}
+
+\column{0.55\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{01_sigmoid_function/chart.pdf}
+\end{center}
+\end{columns}
+\bottomnote{The sigmoid maps $(-\infty, +\infty) \to (0,1)$ -- the foundation of logistic regression}
+\end{frame}
+
+% ============================================
+% SLIDE 10: Decision Boundary (chart)
+% ============================================
+\begin{frame}[t]{Decision Boundary}
+\begin{columns}[T]
+\column{0.42\textwidth}
+\textbf{How Classification Works}
+\begin{itemize}
+  \item Predict class 1 if $P(y=1|\mathbf{x}) \geq 0.5$
+  \item Equivalently: predict 1 if $z \geq 0$
+  \item The boundary is a \textbf{hyperplane} in feature space
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Threshold Choice}
+\begin{itemize}
+  \item Default threshold = 0.5 is not always optimal
+  \item Adjust based on costs of false positives vs.\ false negatives
+\end{itemize}
+
+\column{0.55\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{02_decision_boundary/chart.pdf}
+\end{center}
+\end{columns}
+\bottomnote{Decision boundary: $\beta_0 + \boldsymbol{\beta}^\top \mathbf{x} = 0$ -- a linear separator in feature space}
+\end{frame}
+
+% ============================================
+% SECTION: METHOD
+% ============================================
 \section{Method}
 
-\begin{frame}[t]{The Sigmoid Function}
-\textbf{From Linear to Probability}
+% ============================================
+% SLIDE 11: Maximum Likelihood Estimation
+% ============================================
+\begin{frame}[t]{Maximum Likelihood Estimation}
+\textbf{The Likelihood Function}
+\begin{itemize}
+  \item Each observation contributes: $P(y_i|\mathbf{x}_i) = p_i^{y_i}(1-p_i)^{1-y_i}$
+  \item Full likelihood: $L(\boldsymbol{\beta}) = \prod_{i=1}^{N} p_i^{y_i}(1-p_i)^{1-y_i}$
+\end{itemize}
 
-\textbf{Logistic function (probability of class 1):}
+\vspace{0.5em}
+\textbf{Log-Likelihood (what we maximize)}
 \begin{equation}
-p(y=1|\mathbf{x}) = \frac{1}{1 + e^{-(\beta_0 + \boldsymbol{\beta}^\top \mathbf{x})}}
+\ell(\boldsymbol{\beta}) = \sum_{i=1}^{N}\bigl[y_i \log p_i + (1-y_i)\log(1-p_i)\bigr]
 \end{equation}
 
-\begin{center}
-\includegraphics[width=0.50\textwidth]{01_sigmoid_function/chart.pdf}
-\end{center}
-\bottomnote{Maps any real number to $(0,1)$; smooth, differentiable, invertible}
+\begin{itemize}
+  \item No closed-form solution -- must use \textbf{iterative optimization} (gradient ascent, Newton-Raphson)
+  \item The log-likelihood is \textbf{concave} -- guaranteed to find the global maximum
+\end{itemize}
+\bottomnote{MLE: find the parameters that make the observed data most probable}
 \end{frame}
 
-% Slide 5: Decision Boundary
-\begin{frame}[t]{Decision Boundary}
-\begin{center}
-\includegraphics[width=0.55\textwidth]{02_decision_boundary/chart.pdf}
-\end{center}
-\textbf{Log-odds (logit):}
-\begin{equation}
-\log\frac{p}{1-p} = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p
-\end{equation}
-
-\textbf{Decision boundary:} $P(y=1|\mathbf{x}) = 0.5 \iff \mathbf{w}'\mathbf{x} + b = 0$
-\bottomnote{The boundary is a hyperplane; points on one side predict class 1, the other class 0}
-\end{frame}
-
-% Slide 6: Loss Function
+% ============================================
+% SLIDE 12: Binary Cross-Entropy Loss
+% ============================================
 \begin{frame}[t]{Binary Cross-Entropy Loss}
-\textbf{Maximum Likelihood Estimation:}
+\textbf{From Likelihood to Loss}
+\begin{itemize}
+  \item Minimizing the \textbf{negative} log-likelihood is equivalent to maximizing the log-likelihood
+  \item The loss function for a single observation:
+\end{itemize}
 \begin{equation}
-\ell(\boldsymbol{\beta}) = \sum_{i=1}^{N} \bigl[y_i \log p_i + (1-y_i)\log(1-p_i)\bigr]
+\mathcal{L}(y_i, p_i) = -\bigl[y_i \log(p_i) + (1-y_i)\log(1-p_i)\bigr]
 \end{equation}
-where $p_i = p(y_i=1|\mathbf{x}_i)$.
 
-\begin{center}
-\includegraphics[width=0.48\textwidth]{03_log_loss/chart.pdf}
-\end{center}
-\bottomnote{Maximize log-likelihood = minimize cross-entropy loss (convex, guaranteed global optimum)}
+\vspace{0.3em}
+\textbf{Intuition}
+\begin{itemize}
+  \item If $y_i=1$ and $p_i \approx 0$: loss is very large (confident and wrong)
+  \item If $y_i=1$ and $p_i \approx 1$: loss is near zero (confident and correct)
+  \item The loss \textbf{penalizes confident mistakes} more heavily than uncertain ones
+\end{itemize}
+\bottomnote{Cross-entropy loss is convex in $\boldsymbol{\beta}$ -- optimization is well-behaved}
 \end{frame}
 
-% Slide 7: Model Evaluation
+% ============================================
+% SLIDE 13: Gradient Derivation
+% ============================================
+\begin{frame}[t]{Gradient Derivation}
+\textbf{Taking the Derivative}
+\begin{itemize}
+  \item The gradient of the log-likelihood with respect to $\boldsymbol{\beta}$:
+\end{itemize}
+\begin{equation}
+\frac{\partial \ell}{\partial \boldsymbol{\beta}} = \sum_{i=1}^{N}(y_i - p_i)\,\mathbf{x}_i = \mathbf{X}^\top(\mathbf{y} - \mathbf{p})
+\end{equation}
+
+\vspace{0.3em}
+\textbf{Key Insight}
+\begin{itemize}
+  \item The gradient has the same form as in linear regression: residual times feature
+  \item Each update pushes predictions closer to the true labels
+  \item Set to zero and solve iteratively (no closed-form solution)
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Hessian (for Newton-Raphson)}
+\begin{equation}
+\mathbf{H} = -\mathbf{X}^\top \mathbf{W} \mathbf{X}, \quad W_{ii} = p_i(1-p_i)
+\end{equation}
+\bottomnote{Newton-Raphson converges in 5--10 iterations for typical credit scoring data}
+\end{frame}
+
+% ============================================
+% SLIDE 14: Odds and Log-Odds
+% ============================================
+\begin{frame}[t]{Odds and Log-Odds Interpretation}
+\textbf{The Logit Link}
+\begin{equation}
+\log\frac{p}{1-p} = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k
+\end{equation}
+
+\vspace{0.3em}
+\textbf{Coefficient Interpretation}
+\begin{itemize}
+  \item $\beta_j$: a one-unit increase in $x_j$ changes the \textbf{log-odds} by $\beta_j$
+  \item $e^{\beta_j}$: the \textbf{odds ratio} -- multiplicative effect on the odds
+  \item Example: if $\beta_{\text{income}} = -0.3$, then $e^{-0.3} = 0.74$
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Credit Scoring Example}
+\begin{itemize}
+  \item ``Each additional 10K income \textbf{multiplies} the odds of repayment by 1.35''
+  \item This is exactly what regulators and auditors want: clear, directional, quantified effects
+\end{itemize}
+\bottomnote{Odds ratio interpretation is the reason logistic regression dominates credit scoring}
+\end{frame}
+
+% ============================================
+% SLIDE 15: Model Fit and Comparison
+% ============================================
+\begin{frame}[t]{Model Fit and Comparison}
+\textbf{Deviance and the Likelihood Ratio Test}
+\begin{itemize}
+  \item \textbf{Deviance}: $D = -2\,\ell(\boldsymbol{\hat\beta})$ -- analogous to residual sum of squares
+  \item \textbf{LRT}: compare nested models via $\Delta D = D_{\text{reduced}} - D_{\text{full}} \sim \chi^2_{df}$
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Information Criteria}
+\begin{itemize}
+  \item \textbf{AIC} $= -2\ell + 2k$ -- penalizes model complexity (prefer smaller)
+  \item \textbf{BIC} $= -2\ell + k\log N$ -- stronger penalty, favors simpler models
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Calibration: Hosmer-Lemeshow Test}
+\begin{itemize}
+  \item Groups observations into deciles of predicted probability
+  \item Compares predicted vs.\ observed event rates -- are the probabilities trustworthy?
+\end{itemize}
+\bottomnote{AIC for prediction, BIC for model selection, Hosmer-Lemeshow for calibration}
+\end{frame}
+
+% ============================================
+% SECTION: SOLUTION
+% ============================================
 \section{Solution}
 
-\begin{frame}[t]{ROC Curve and AUC}
-\vspace{-1.2em}
-\begin{center}
-\includegraphics[width=0.48\textwidth]{04_roc_curve/chart.pdf}
-\end{center}
-\vspace{-0.8em}
-\bottomnote{AUC = probability random positive ranks higher than random negative}
-\end{frame}
-
-% Slide 8: Precision-Recall
-\begin{frame}[t]{Precision-Recall Trade-off}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{05_precision_recall/chart.pdf}
-\end{center}
-\bottomnote{Use PR curve when classes are imbalanced (common in fraud detection)}
-\end{frame}
-
-% Slide 9: Confusion Matrix
+% ============================================
+% SLIDE 16: Confusion Matrix (chart)
+% ============================================
 \begin{frame}[t]{Confusion Matrix: Reading the Results}
+\begin{columns}[T]
+\column{0.42\textwidth}
+\textbf{The Four Outcomes}
+\begin{itemize}
+  \item \textbf{TP}: correctly predicted default
+  \item \textbf{TN}: correctly predicted repayment
+  \item \textbf{FP}: predicted default, actually repaid (lost business)
+  \item \textbf{FN}: predicted repayment, actually defaulted (lost money)
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Banking Asymmetry}
+\begin{itemize}
+  \item FN is far more costly than FP
+  \item A single default can wipe out profit from many good loans
+\end{itemize}
+
+\column{0.55\textwidth}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{06_confusion_matrix/chart.pdf}
+\includegraphics[width=\textwidth]{06_confusion_matrix/chart.pdf}
 \end{center}
+\end{columns}
 \bottomnote{FP = approve bad loans (costly), FN = reject good customers (lost revenue)}
 \end{frame}
 
-% Slide 10: Decision Framework
-\section{Practice}
+% ============================================
+% SLIDE 17: Classification Metrics
+% ============================================
+\begin{frame}[t]{Classification Metrics}
+\textbf{Core Metrics from the Confusion Matrix}
+\begin{itemize}
+  \item \textbf{Accuracy} $= \frac{TP + TN}{TP + TN + FP + FN}$ -- misleading with imbalanced classes
+  \item \textbf{Precision} $= \frac{TP}{TP + FP}$ -- of those flagged as default, how many truly defaulted?
+  \item \textbf{Recall} $= \frac{TP}{TP + FN}$ -- of all actual defaults, how many did we catch?
+\end{itemize}
 
-\begin{frame}[t]{Hands-on Exercise}
-  \textbf{Open the Colab Notebook}
-
-  \begin{itemize}
-    \item Exercise 1: Implement logistic regression from scratch
-    \item Exercise 2: Train model on credit scoring data
-    \item Exercise 3: Evaluate with ROC curve and confusion matrix
-  \end{itemize}
-
-  \vspace{1em}
-  \textbf{Link:} See course materials on GitHub
+\vspace{0.5em}
+\textbf{The F1 Score}
+\begin{equation}
+F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+\end{equation}
+\begin{itemize}
+  \item Harmonic mean -- penalizes models that sacrifice one metric for the other
+  \item Use when you care about \textbf{both} catching defaults and avoiding false alarms
+\end{itemize}
+\bottomnote{Always report multiple metrics -- no single number tells the whole story}
 \end{frame}
 
-\section{Decision Framework}
+% ============================================
+% SLIDE 18: ROC Curve and AUC
+% ============================================
+\begin{frame}[t]{ROC Curve and AUC}
+\textbf{Receiver Operating Characteristic}
+\begin{itemize}
+  \item Plots True Positive Rate vs.\ False Positive Rate at every threshold
+  \item \textbf{AUC} (Area Under the Curve): probability that a random positive ranks higher than a random negative
+  \item AUC = 0.5: random guessing; AUC = 1.0: perfect separation
+\end{itemize}
 
+\vspace{0.5em}
+\textbf{The Gini Coefficient}
+\begin{equation}
+\text{Gini} = 2 \cdot \text{AUC} - 1
+\end{equation}
+\begin{itemize}
+  \item Ranges from 0 (no discrimination) to 1 (perfect)
+  \item \textbf{Industry standard} for comparing credit scoring models
+  \item Typical production models: Gini 0.4--0.7 depending on portfolio
+\end{itemize}
+\bottomnote{ROC/AUC is threshold-independent -- it evaluates the model's ranking ability}
+\end{frame}
+
+% ============================================
+% SLIDE 19: Credit Scoring in Practice
+% ============================================
+\begin{frame}[t]{Credit Scoring in Practice}
+\textbf{From Model to Scorecard}
+\begin{itemize}
+  \item Logistic regression coefficients are converted to \textbf{scorecard points}
+  \item Each feature contributes points: higher total score = lower default risk
+  \item Basel framework requires PD estimates for regulatory capital calculation
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Regulatory Requirements (Basel II/III)}
+\begin{itemize}
+  \item \textbf{PD} (Probability of Default): direct output of logistic regression
+  \item Models must be validated annually with out-of-sample testing
+  \item \textbf{Discrimination} (Gini/AUC) and \textbf{calibration} (predicted vs.\ observed PD) both matter
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Why Logistic Regression Dominates}
+\begin{itemize}
+  \item Transparent coefficients satisfy explainability requirements
+  \item Well-calibrated probabilities without post-hoc adjustment
+\end{itemize}
+\bottomnote{Basel II IRB approach: banks must estimate PD, LGD, EAD for every exposure}
+\end{frame}
+
+% ============================================
+% SLIDE 20: Decision Framework (chart)
+% ============================================
 \begin{frame}[t]{When to Use Logistic Regression}
+\begin{columns}[T]
+\column{0.42\textwidth}
+\textbf{Best When}
+\begin{itemize}
+  \item Binary outcome with linear decision boundary
+  \item Interpretability is required
+  \item Calibrated probabilities are needed
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Consider Alternatives When}
+\begin{itemize}
+  \item Highly non-linear boundaries
+  \item Many feature interactions
+  \item Prediction accuracy matters more than interpretability
+\end{itemize}
+
+\column{0.55\textwidth}
 \begin{center}
-\includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
+\includegraphics[width=\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
+\end{columns}
 \bottomnote{Key strengths: interpretable coefficients, probability outputs, fast training}
 \end{frame}
 
+% ============================================
+% SECTION: PRACTICE
+% ============================================
+\section{Practice}
+
+% ============================================
+% SLIDE 21: Hands-on Exercise
+% ============================================
+\begin{frame}[t]{Hands-on Exercise}
+\textbf{Open the Colab Notebook}
+
+\begin{itemize}
+  \item \textbf{Exercise 1:} Implement logistic regression from scratch (sigmoid, log-likelihood, gradient)
+  \item \textbf{Exercise 2:} Train model on credit scoring data and interpret coefficients as odds ratios
+  \item \textbf{Exercise 3:} Evaluate with confusion matrix, ROC curve, and Gini coefficient
+\end{itemize}
+
+\vspace{1em}
+\textbf{What to Look For}
+\begin{itemize}
+  \item How do coefficients change when you add/remove features?
+  \item What threshold gives the best trade-off for a bank's cost structure?
+  \item Is the model well-calibrated (Hosmer-Lemeshow)?
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Link:} See course materials on GitHub
+\bottomnote{Estimated time: 45--60 minutes for all three exercises}
+\end{frame}
+
+% ============================================================
+% ZONE 3: WRAP-UP
+% ============================================================
+
+% ============================================
+% SECTION: SUMMARY
+% ============================================
 \section{Summary}
 
+% ============================================
+% SLIDE 22: Key Takeaways
+% ============================================
+\begin{frame}[t]{Key Takeaways}
+\textbf{Mathematical Foundation}
+\begin{itemize}
+  \item Sigmoid wraps a linear predictor to produce valid probabilities
+  \item MLE via gradient ascent -- concave log-likelihood guarantees convergence
+  \item Coefficients have direct odds-ratio interpretation
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Evaluation Toolkit}
+\begin{itemize}
+  \item Confusion matrix, precision, recall, F1 for threshold-specific performance
+  \item ROC/AUC and Gini for threshold-independent model comparison
+  \item Hosmer-Lemeshow for calibration quality
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Practical Impact}
+\begin{itemize}
+  \item Industry standard for credit scoring -- interpretable, auditable, calibrated
+  \item Basel PD estimation relies on logistic regression in most banks
+\end{itemize}
+\bottomnote{Logistic regression: simple enough to explain, powerful enough to deploy}
+\end{frame}
+
+% ============================================
+% SLIDE 23: Closing Comic -- XKCD callback
+% ============================================
+\begin{frame}[t]{Until Next Time...}
+\begin{center}
+\textit{``Is the sun going to explode?''}\\[0.5em]
+Now you have the tools to answer with a probability, not just yes/no.
+\end{center}
+\vspace{1em}
+\textbf{Next Session:} L03 -- KNN \& K-Means (from parametric to non-parametric)
+\bottomnote{XKCD \#1132: The answer depends on your prior... and your loss function}
+\end{frame}
+
+% ============================================
+% SLIDE 24: References
+% ============================================
 \begin{frame}[t]{References}
-  \footnotesize
-  \begin{itemize}
-    \item James et al. (2021). \textit{Introduction to Statistical Learning}. \url{https://www.statlearning.com/}
-    \item Hastie et al. (2009). \textit{Elements of Statistical Learning}. \url{https://hastie.su.domains/ElemStatLearn/}
-  \end{itemize}
+\footnotesize
+\begin{itemize}
+  \item James, G., Witten, D., Hastie, T., \& Tibshirani, R. (2021). \textit{An Introduction to Statistical Learning}, 2nd ed. Chapter 4. \url{https://www.statlearning.com/}
+  \item Hastie, T., Tibshirani, R., \& Friedman, J. (2009). \textit{The Elements of Statistical Learning}, 2nd ed. Chapter 4. \url{https://hastie.su.domains/ElemStatLearn/}
+  \item Hosmer, D.W., Lemeshow, S., \& Sturdivant, R.X. (2013). \textit{Applied Logistic Regression}, 3rd ed. Wiley.
+  \item Basel Committee on Banking Supervision (2006). \textit{International Convergence of Capital Measurement and Capital Standards} (Basel II).
+\end{itemize}
+\bottomnote{Primary textbook: ISLR Chapter 4 -- Logistic Regression}
 \end{frame}
 
 \end{document}
