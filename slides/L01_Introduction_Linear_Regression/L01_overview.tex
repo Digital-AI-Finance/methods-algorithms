@@ -86,6 +86,16 @@
 \textbf{#1}
 }
 
+% Compact list for dense slides
+\newenvironment{compactlist}{%
+  \begin{itemize}%
+    \setlength{\itemsep}{2pt}%
+    \setlength{\parskip}{0pt}%
+    \setlength{\parsep}{0pt}%
+}{%
+  \end{itemize}%
+}
+
 % Custom commands for course compatibility
 \newcommand{\highlight}[1]{\textcolor{mlorange}{\textbf{#1}}}
 \newcommand{\mathbold}[1]{\boldsymbol{#1}}
@@ -112,6 +122,7 @@
   \tableofcontents
 \end{frame}
 
+% === ZONE 1: INTRODUCTION (NO formulas, NO Greek letters) ===
 % ============================================
 % SECTION: INTRODUCTION
 % ============================================
@@ -120,16 +131,16 @@
 % ============================================
 % SLIDE 3: What is Machine Learning? (Layout 8 -- Mixed Media)
 % ============================================
-\begin{frame}[t]{What is Machine Learning?}
+\begin{frame}[t]{Can a Computer Learn to Predict Prices?}
 \begin{columns}[T]
 \column{0.48\textwidth}
-\textbf{The Big Idea}
+\textbf{Situation:} Banks approve millions of mortgage applications each year. Every one requires an accurate property valuation.
 
-\begin{itemize}
-  \item Teaching computers to learn from data, without being explicitly programmed
-  \item Everyday examples: email spam filters, Netflix recommendations, voice assistants
-  \item Key idea: the computer finds patterns in data, then uses those patterns to make predictions on new data
-\end{itemize}
+\vspace{0.3em}
+\textbf{Complication:} Manual appraisals are slow, expensive, and inconsistent. Two appraisers can disagree by 20\% on the same property.
+
+\vspace{0.3em}
+\textbf{Question:} Can we build a model that predicts property value from its characteristics---automatically and consistently?
 
 \column{0.48\textwidth}
 \begin{center}
@@ -137,13 +148,13 @@
 \end{center}
 \end{columns}
 
-\bottomnote{XKCD \#1725 by Randall Munroe (CC BY-NC 2.5) -- ML is already part of your daily life}
+\bottomnote{XKCD \#1725 by Randall Munroe (CC BY-NC 2.5) -- This is the problem we solve today}
 \end{frame}
 
 % ============================================
 % SLIDE 4: Supervised vs Unsupervised (Layout 10 -- Comparison)
 % ============================================
-\begin{frame}[t]{Supervised vs Unsupervised Learning}
+\begin{frame}[t]{What Are the Two Types of Learning?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Supervised Learning}
@@ -186,7 +197,7 @@
 % ============================================
 % SLIDE 6: The Simplest Model (Layout 4 -- Two columns math)
 % ============================================
-\begin{frame}[t]{The Simplest Model}
+\begin{frame}[t]{How Do We Model a Relationship?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{The Idea}
@@ -265,34 +276,34 @@ This process is called \textbf{optimization} -- the computer tries thousands of 
 % ============================================
 % SLIDE 9: Key Vocabulary (Layout 6 -- Three-way split)
 % ============================================
-\begin{frame}[t]{Key Vocabulary}
+\begin{frame}[t]{What Terms Do You Need to Know?}
 \begin{columns}[T]
 \column{0.31\textwidth}
 \textbf{Data}
 
-\begin{itemize}
+\begin{compactlist}
   \item Features (inputs): size, bedrooms, age
   \item Target (output): price
   \item Observation: one data point (one house)
-\end{itemize}
+\end{compactlist}
 
 \column{0.31\textwidth}
 \textbf{Learning}
 
-\begin{itemize}
+\begin{compactlist}
   \item Training: fitting the model to data
   \item Coefficients: the numbers the model learns
   \item Loss: how wrong the model is
-\end{itemize}
+\end{compactlist}
 
 \column{0.31\textwidth}
 \textbf{Evaluation}
 
-\begin{itemize}
+\begin{compactlist}
   \item Prediction: model output for new data
   \item Error: difference between prediction and truth
   \item Overfitting: memorizing instead of learning
-\end{itemize}
+\end{compactlist}
 \end{columns}
 
 \bottomnote{Master these terms -- they appear in every ML method we study}
@@ -314,6 +325,7 @@ Now that you know the basics, we go deeper:
 \bottomnote{Everything ahead builds on the intuition from this intro}
 \end{frame}
 
+% === ZONE 2: CORE CONTENT (PMSP framework -- formulas allowed) ===
 % ============================================
 % SECTION: PROBLEM
 % ============================================
@@ -322,7 +334,7 @@ Now that you know the basics, we go deeper:
 % ============================================
 % SLIDE 11: The Business Problem (Layout 3 -- Two columns text)
 % ============================================
-\begin{frame}[t]{The Business Problem}
+\begin{frame}[t]{Why Do Banks Need Predictions?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Finance Use Case}
@@ -354,7 +366,7 @@ Now that you know the basics, we go deeper:
 % ============================================
 % SLIDE 12: Linear Regression Formula (Layout 9 -- Definition-Example)
 % ============================================
-\begin{frame}[t]{Linear Regression Formula}
+\begin{frame}[t]{What Does the Model Look Like?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{The Model}
@@ -389,7 +401,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 % ============================================
 % SLIDE 13: The Optimization Problem
 % ============================================
-\begin{frame}[t]{The Optimization Problem}
+\begin{frame}[t]{How Do We Find the Best Coefficients?}
 \textbf{Objective:} Minimize the sum of squared errors (SSE)
 
 \begin{equation}
@@ -409,7 +421,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 % ============================================
 % SLIDE 14: Normal Equation vs Gradient Descent (Layout 10 -- Comparison)
 % ============================================
-\begin{frame}[t]{Normal Equation vs Gradient Descent}
+\begin{frame}[t]{Two Ways to Solve: Which is Better?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Normal Equation}
@@ -444,7 +456,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 % ============================================
 % SLIDE 15: Gradient Descent in Action (Layout 21 -- Full-size chart)
 % ============================================
-\begin{frame}[t]{Gradient Descent in Action}
+\begin{frame}[t]{How Does Gradient Descent Move?}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{04_gradient_descent/chart.pdf}
 \end{center}
@@ -460,7 +472,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 % ============================================
 % SLIDE 16: Interpreting Coefficients
 % ============================================
-\begin{frame}[t]{Interpreting Coefficients}
+\begin{frame}[t]{What Do the Numbers Mean?}
 \textbf{Example:} House price model
 
 \vspace{0.3em}
@@ -482,7 +494,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 % ============================================
 % SLIDE 17: Model Evaluation
 % ============================================
-\begin{frame}[t]{Model Evaluation}
+\begin{frame}[t]{How Good Is Our Model?}
 \textbf{Key Metrics:}
 
 \begin{itemize}
@@ -506,7 +518,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 % ============================================
 % SLIDE 18: Learning Curves (Layout 22 -- Chart + explanations)
 % ============================================
-\begin{frame}[t]{Learning Curves}
+\begin{frame}[t]{Is Our Model Learning or Memorizing?}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{05_learning_curves/chart.pdf}
 \end{center}
@@ -566,7 +578,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 % ============================================
 % SLIDE 21: Regularization Overview (Layout 10 + chart below)
 % ============================================
-\begin{frame}[t]{Regularization Overview}
+\begin{frame}[t]{How Do We Prevent Overfitting?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Ridge (L2)}
@@ -596,7 +608,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 % ============================================
 % SLIDE 22: Bias-Variance Tradeoff (Layout 22 -- Chart + explanations)
 % ============================================
-\begin{frame}[t]{Bias-Variance Tradeoff}
+\begin{frame}[t]{Why Can't We Minimize Both Errors?}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{07_bias_variance/chart.pdf}
 \end{center}
@@ -610,6 +622,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 \bottomnote{Model complexity controls the tradeoff between bias and variance}
 \end{frame}
 
+% === ZONE 3: WRAP-UP ===
 % ============================================
 % SECTION: PRACTICE
 % ============================================
@@ -647,7 +660,7 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 % ============================================
 % SLIDE 25: Decision Framework (Layout 21 -- Full-size chart)
 % ============================================
-\begin{frame}[t]{Decision Framework}
+\begin{frame}[t]{Which Method Should You Choose?}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{08_decision_flowchart/chart.pdf}
 \end{center}
@@ -667,19 +680,19 @@ $$\text{Price} = 50{,}000 + 200 \times \text{Size} + 15{,}000 \times \text{Bed} 
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Key Concepts}
-\begin{itemize}
+\begin{compactlist}
   \item Linear regression predicts continuous outcomes
   \item OLS minimizes sum of squared errors
   \item Solve via normal equation or gradient descent
-\end{itemize}
+\end{compactlist}
 
 \column{0.48\textwidth}
 \textbf{Practical Guidance}
-\begin{itemize}
+\begin{compactlist}
   \item Coefficients are directly interpretable
   \item Evaluate with $R^2$ and RMSE on test data
   \item Use regularization to prevent overfitting
-\end{itemize}
+\end{compactlist}
 \end{columns}
 
 \vspace{0.8em}

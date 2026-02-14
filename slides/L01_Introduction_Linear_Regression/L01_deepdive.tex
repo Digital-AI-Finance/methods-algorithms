@@ -86,6 +86,16 @@
 \textbf{#1}
 }
 
+% Compact list for dense slides
+\newenvironment{compactlist}{%
+  \begin{itemize}%
+    \setlength{\itemsep}{2pt}%
+    \setlength{\parskip}{0pt}%
+    \setlength{\parsep}{0pt}%
+}{%
+  \end{itemize}%
+}
+
 % Custom commands for course compatibility
 \newcommand{\highlight}[1]{\textcolor{mlorange}{\textbf{#1}}}
 \newcommand{\mathbold}[1]{\boldsymbol{#1}}
@@ -113,7 +123,34 @@
 \end{frame}
 
 % ============================================
-% SLIDE 3: LEARNING OBJECTIVES
+% SLIDE 3: Opening Comic (XKCD #1725)
+% ============================================
+\begin{frame}[t]{The Art of Fitting Lines}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\small
+\textbf{Today's Deep Dive}
+
+\vspace{0.3em}
+In the overview, we learned that linear regression fits the best line through data. Now we go deeper:
+
+\begin{compactlist}
+  \item How do we \textbf{derive} the solution mathematically?
+  \item How do we \textbf{optimize} when data is too large for a closed-form solution?
+  \item How do we \textbf{know} if our model is any good?
+\end{compactlist}
+
+\column{0.42\textwidth}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{images/1725_linear_regression.png}
+\end{center}
+\end{columns}
+
+\bottomnote{XKCD \#1725 by Randall Munroe (CC BY-NC 2.5) -- The math behind the ``best line''}
+\end{frame}
+
+% ============================================
+% SLIDE 4: LEARNING OBJECTIVES
 % ============================================
 \begin{frame}[t]{Learning Objectives}
   By the end of this session, you will be able to:
@@ -139,7 +176,7 @@
 % ============================================
 % SLIDE 4: Matrix Notation (Layout 9 -- Definition-Example)
 % ============================================
-\begin{frame}[t]{Matrix Notation}
+\begin{frame}[t]{How Do We Write This in Matrix Form?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Definition}
@@ -181,7 +218,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 5: OLS Assumptions
 % ============================================
-\begin{frame}[t]{OLS Assumptions}
+\begin{frame}[t]{What Must Be True for OLS to Work?}
   \textbf{Classical Assumptions for Valid Inference}
 
   \begin{enumerate}
@@ -198,7 +235,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 6: The Loss Function
 % ============================================
-\begin{frame}[t]{The Loss Function}
+\begin{frame}[t]{What Are We Minimizing?}
   \textbf{Sum of Squared Residuals (SSR)}
 
   \begin{equation}
@@ -216,7 +253,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 7: Deriving the Normal Equation
 % ============================================
-\begin{frame}[t]{Deriving the Normal Equation}
+\begin{frame}[t]{How Do We Solve for the Best Coefficients?}
   \textbf{Taking the Derivative}
 
   \begin{equation}
@@ -235,7 +272,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 8: Simple Regression Visualization (Layout 21)
 % ============================================
-\begin{frame}[t]{Simple Regression Visualization}
+\begin{frame}[t]{What Does the Best Fit Look Like?}
   \begin{center}
     \includegraphics[width=0.65\textwidth]{01_simple_regression/chart.pdf}
   \end{center}
@@ -246,7 +283,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 9: Multiple Regression Surface (Layout 21)
 % ============================================
-\begin{frame}[t]{Multiple Regression Surface}
+\begin{frame}[t]{What Happens with Two Features?}
   \vspace{-2mm}
   \begin{center}
     \includegraphics[width=0.60\textwidth]{02_multiple_regression_3d/chart.pdf}
@@ -288,7 +325,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 11: The Gradient + Update Rule (Layout 4 -- Two columns math)
 % ============================================
-\begin{frame}[t]{The Gradient and Update Rule}
+\begin{frame}[t]{How Does Each Step Work?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Gradient of the Loss}
@@ -324,7 +361,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 12: Learning Rate and SGD (Layout 3 -- Two columns text)
 % ============================================
-\begin{frame}[t]{Learning Rate and SGD}
+\begin{frame}[t]{How Do We Choose the Step Size?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Learning Rate $\alpha$}
@@ -351,7 +388,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 13: Feature Scaling
 % ============================================
-\begin{frame}[t]{Feature Scaling}
+\begin{frame}[t]{Why Must We Scale Features?}
   \textbf{Standardization: Zero Mean, Unit Variance}
 
   \begin{equation}
@@ -369,6 +406,22 @@ The linear model in matrix form:
 \end{frame}
 
 % ============================================
+% SLIDE: Gradient Descent Convergence (Layout 22 -- Chart + explanations)
+% ============================================
+\begin{frame}[t]{How Does Gradient Descent Converge?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{04_gradient_descent/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item The loss surface is a paraboloid for OLS -- gradient descent follows the steepest path
+  \item Learning rate controls step size; too large causes oscillation
+\end{compactlist}
+
+\bottomnote{For OLS, gradient descent always converges to the global minimum (convexity)}
+\end{frame}
+
+% ============================================
 % SECTION: EVALUATION AND INFERENCE (4 slides)
 % ============================================
 \section{Evaluation and Inference}
@@ -376,7 +429,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 14: R-squared and Adjusted R-squared (Layout 4 -- Two columns math)
 % ============================================
-\begin{frame}[t]{R-Squared and Adjusted R-Squared}
+\begin{frame}[t]{How Much Variance Does Our Model Explain?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{$R^2$: Coefficient of Determination}
@@ -412,7 +465,7 @@ The linear model in matrix form:
 % ============================================
 % SLIDE 15: RMSE and MAE
 % ============================================
-\begin{frame}[t]{RMSE and MAE}
+\begin{frame}[t]{How Far Off Are Our Predictions?}
   \textbf{Error Metrics in Original Units}
 
   \begin{align}
@@ -431,9 +484,43 @@ The linear model in matrix form:
 \end{frame}
 
 % ============================================
+% SLIDE: Residual Diagnostics (Layout 22 -- Chart + explanations)
+% ============================================
+\begin{frame}[t]{What Do the Residuals Tell Us?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{03_residual_plots/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item Random scatter = assumptions satisfied; patterns = model misspecification
+  \item Funnel shape = heteroscedasticity; use robust standard errors
+  \item Curvature = missing nonlinear terms; consider polynomial features
+\end{compactlist}
+
+\bottomnote{Residual plots are the single most important diagnostic -- always plot them first}
+\end{frame}
+
+% ============================================
+% SLIDE: Learning Curves (Layout 22 -- Chart + explanations)
+% ============================================
+\begin{frame}[t]{What Do Learning Curves Tell Us?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{05_learning_curves/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item Training error increases with more data (harder to memorize)
+  \item Test error decreases then plateaus (diminishing returns from more data)
+  \item The gap between curves reveals overfitting vs underfitting
+\end{compactlist}
+
+\bottomnote{Learning curves are a diagnostic tool -- they tell you whether to get more data or a better model}
+\end{frame}
+
+% ============================================
 % SLIDE 16: Hypothesis Testing and CIs (Layout 4 -- Two columns math)
 % ============================================
-\begin{frame}[t]{Hypothesis Testing and Confidence Intervals}
+\begin{frame}[t]{Which Coefficients Are Statistically Significant?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{t-Test for Coefficient $\beta_j$}
@@ -470,7 +557,7 @@ Reject $H_0\!: \beta_j = 0$ if p-value $< 0.05$
 % ============================================
 % SLIDE 17: F-Test for Overall Significance
 % ============================================
-\begin{frame}[t]{F-Test for Overall Significance}
+\begin{frame}[t]{Does the Model as a Whole Explain Anything?}
   \textbf{Null hypothesis}: $H_0: \beta_1 = \beta_2 = \cdots = \beta_p = 0$
 
   \begin{equation}
@@ -494,7 +581,7 @@ Reject $H_0\!: \beta_j = 0$ if p-value $< 0.05$
 % ============================================
 % SLIDE 18: The Overfitting Problem
 % ============================================
-\begin{frame}[t]{The Overfitting Problem}
+\begin{frame}[t]{What Happens When We Have Too Many Features?}
   \textbf{When Models Memorize Instead of Learn}
 
   \begin{itemize}
@@ -515,49 +602,66 @@ Reject $H_0\!: \beta_j = 0$ if p-value $< 0.05$
 % ============================================
 % SLIDE 19: Ridge, Lasso, and Elastic Net (Layout 6 -- Three-way split)
 % ============================================
-\begin{frame}[t]{Ridge, Lasso, and Elastic Net}
+\begin{frame}[t]{Which Penalty Should We Choose?}
 \begin{columns}[T]
 \column{0.30\textwidth}
 \textbf{Ridge (L2)}
 
 $$L + \lambda\|\boldsymbol{\beta}\|_2^2$$
 
-\begin{itemize}
+\begin{compactlist}
   \item Closed-form solution
   \item Shrinks all toward zero
   \item Never exactly zero
-\end{itemize}
+\end{compactlist}
 
 \column{0.30\textwidth}
 \textbf{Lasso (L1)}
 
 $$L + \lambda\|\boldsymbol{\beta}\|_1$$
 
-\begin{itemize}
+\begin{compactlist}
   \item No closed-form
   \item Sparse solutions
   \item Automatic feature selection
-\end{itemize}
+\end{compactlist}
 
 \column{0.30\textwidth}
 \textbf{Elastic Net}
 
 $$L + \lambda\bigl(\alpha\|\boldsymbol{\beta}\|_1 + \tfrac{1-\alpha}{2}\|\boldsymbol{\beta}\|_2^2\bigr)$$
 
-\begin{itemize}
+\begin{compactlist}
   \item Mixing parameter $\alpha$
   \item Handles correlated features
   \item Best of both worlds
-\end{itemize}
+\end{compactlist}
 \end{columns}
 
 \bottomnote{Ridge for many small effects, Lasso for feature selection, Elastic Net for correlated features}
 \end{frame}
 
 % ============================================
+% SLIDE: Regularization Paths (Layout 21 -- Full-size chart)
+% ============================================
+\begin{frame}[t]{How Does Regularization Shrink Coefficients?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{06_regularization_comparison/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item Ridge shrinks all coefficients toward zero but never reaches it
+  \item Lasso drives some coefficients exactly to zero (feature selection)
+  \item Larger $\lambda$ = more shrinkage = simpler model
+\end{compactlist}
+
+\bottomnote{The regularization path shows how coefficients change as $\lambda$ increases}
+\end{frame}
+
+% ============================================
 % SLIDE 20: Choosing Lambda (Layout 11 -- Step-by-step)
 % ============================================
-\begin{frame}[t]{Choosing Lambda}
+\begin{frame}[t]{How Do We Tune the Regularization Strength?}
   \textbf{Cross-Validation for Hyperparameter Tuning}
 
   \begin{enumerate}
@@ -580,7 +684,7 @@ $$L + \lambda\bigl(\alpha\|\boldsymbol{\beta}\|_1 + \tfrac{1-\alpha}{2}\|\boldsy
 % ============================================
 % SLIDE 21: Bias-Variance Decomposition
 % ============================================
-\begin{frame}[t]{Bias-Variance Decomposition}
+\begin{frame}[t]{Why Can't We Eliminate All Error?}
   \textbf{Expected Prediction Error}
 
   \begin{equation}
@@ -597,9 +701,26 @@ $$L + \lambda\bigl(\alpha\|\boldsymbol{\beta}\|_1 + \tfrac{1-\alpha}{2}\|\boldsy
 \end{frame}
 
 % ============================================
+% SLIDE: Bias-Variance Visualization (Layout 21 -- Full-size chart)
+% ============================================
+\begin{frame}[t]{Where Is the Sweet Spot?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{07_bias_variance/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item Total error = Bias$^2$ + Variance + Irreducible noise
+  \item The minimum total error occurs at intermediate model complexity
+  \item Regularization controls where we sit on this curve
+\end{compactlist}
+
+\bottomnote{The optimal model balances underfitting (high bias) and overfitting (high variance)}
+\end{frame}
+
+% ============================================
 % SLIDE 22: VIF and Multicollinearity (Layout 9 -- Definition-Example)
 % ============================================
-\begin{frame}[t]{VIF and Multicollinearity}
+\begin{frame}[t]{How Do We Detect Correlated Features?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Variance Inflation Factor}
@@ -610,28 +731,28 @@ $$L + \lambda\bigl(\alpha\|\boldsymbol{\beta}\|_1 + \tfrac{1-\alpha}{2}\|\boldsy
 
 where $R^2_j$ is from regressing $x_j$ on all other features.
 
-\begin{itemize}
+\begin{compactlist}
   \item VIF $= 1$: No correlation
   \item VIF $> 5$: Moderate concern
   \item VIF $> 10$: Serious multicollinearity
-\end{itemize}
+\end{compactlist}
 
 \column{0.48\textwidth}
 \textbf{Remedies}
 
-\begin{itemize}
+\begin{compactlist}
   \item Remove highly correlated features
   \item Use Ridge regression ($\lambda > 0$ stabilizes)
   \item Apply PCA before regression
-\end{itemize}
+\end{compactlist}
 
 \vspace{0.5em}
 \textbf{Why it matters:}
-\begin{itemize}
+\begin{compactlist}
   \item Inflated standard errors
   \item Unstable coefficient estimates
   \item Misleading significance tests
-\end{itemize}
+\end{compactlist}
 \end{columns}
 
 \bottomnote{Always check VIF before trusting coefficient estimates}
@@ -645,7 +766,7 @@ where $R^2_j$ is from regressing $x_j$ on all other features.
 % ============================================
 % SLIDE 23: Train-Test Split and CV (Layout 10 -- Comparison)
 % ============================================
-\begin{frame}[t]{Train-Test Split and Cross-Validation}
+\begin{frame}[t]{How Do We Know the Model Generalizes?}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{Simple Split}
@@ -665,6 +786,23 @@ where $R^2_j$ is from regressing $x_j$ on all other features.
 \end{columns}
 
 \bottomnote{Always evaluate on data the model has never seen}
+\end{frame}
+
+% ============================================
+% SLIDE: Decision Flowchart (Layout 21 -- Full-size chart)
+% ============================================
+\begin{frame}[t]{When Should You Use Linear Regression?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{08_decision_flowchart/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item Start with linear regression as baseline before trying complex models
+  \item If assumptions hold and relationships are approximately linear, OLS is hard to beat
+  \item If $p > n$, use regularization; if nonlinear patterns, consider tree-based methods
+\end{compactlist}
+
+\bottomnote{The simplest model that meets your accuracy threshold is usually the best choice}
 \end{frame}
 
 % ============================================
@@ -716,6 +854,28 @@ $$R^2 = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}$$
   \textbf{Next Session:} Logistic Regression for Classification
 
   \bottomnote{Foundation for all supervised learning -- next: Logistic Regression}
+\end{frame}
+
+% ============================================
+% SLIDE 26: Closing Comic Callback
+% ============================================
+\begin{frame}[t]{Until Next Time...}
+\begin{center}
+\large
+\textit{``I used to think fitting a line was trivial.}
+
+\vspace{0.5em}
+\textit{Then I learned about heteroscedasticity, multicollinearity, regularization, and the bias-variance tradeoff.}
+
+\vspace{0.5em}
+\textit{Now I think fitting a line is an art.''}
+
+\vspace{0.8em}
+\normalsize
+--- Adapted from XKCD \#1725
+\end{center}
+
+\bottomnote{XKCD \#1725 callback -- Next session: Logistic Regression turns this line into a curve}
 \end{frame}
 
 % ============================================
@@ -931,6 +1091,8 @@ Functional form & Ramsey RESET & No omitted nonlinearities \\
   \item Stanford CS229: \url{https://cs229.stanford.edu/}
 \end{itemize}
 \end{columns}
+
+\bottomnote{See also Andrew Ng's CS229 lectures for implementation-focused treatment}
 \end{frame}
 
 \end{document}
