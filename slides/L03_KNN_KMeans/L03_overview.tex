@@ -86,6 +86,16 @@
 \textbf{#1}
 }
 
+% Compact list for dense slides
+\newenvironment{compactlist}{%
+  \begin{itemize}%
+    \setlength{\itemsep}{2pt}%
+    \setlength{\parskip}{0pt}%
+    \setlength{\parsep}{0pt}%
+}{%
+  \end{itemize}%
+}
+
 % Custom commands for course compatibility
 \newcommand{\highlight}[1]{\textcolor{mlorange}{\textbf{#1}}}
 \newcommand{\mathbold}[1]{\boldsymbol{#1}}
@@ -113,18 +123,30 @@
 \tableofcontents
 \end{frame}
 
-% ============================================================================
-% SLIDE 3: Opening Comic -- XKCD #1838
-\begin{frame}[t]{How Machine Learning Works}
+% SLIDE 3: SCQ Opening
+\begin{frame}[t]{Can a Machine Learn by Looking at Its Neighbors?}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\textbf{Situation:} A bank has millions of past transactions labeled as fraud or legitimate, and millions of customers with no predefined segments.
+
+\vspace{0.2em}
+\textbf{Complication:} Traditional rule-based systems miss novel fraud patterns, and marketing teams lack data-driven customer segments.
+
+\vspace{0.2em}
+\textbf{Question:} Can we classify new transactions by similarity to past ones, and discover natural customer groups without labels?
+
+\column{0.48\textwidth}
+\vspace{-0.5em}
 \begin{center}
-\includegraphics[height=0.65\textheight]{images/1838_machine_learning.png}
+\includegraphics[width=0.80\textwidth]{images/1838_machine_learning.png}
 \end{center}
-\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5) -- ``Pour the data into this pile of linear algebra''}
+\end{columns}
+\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5) -- Today: KNN for classification, K-Means for clustering}
 \end{frame}
 
 % ============================================================================
 % SLIDE 4: Classification vs Clustering
-\begin{frame}[t]{Classification vs Clustering}
+\begin{frame}[t]{What Is the Difference Between Classification and Clustering?}
 \textbf{Two distinct problems banks face every day}
 \vspace{0.5em}
 
@@ -146,7 +168,7 @@
 
 % ============================================================================
 % SLIDE 5: The Nearest Neighbor Idea
-\begin{frame}[t]{The Nearest Neighbor Idea}
+\begin{frame}[t]{Why Do Similar Things Behave Similarly?}
 \textbf{Human intuition: ``similar things behave similarly''}
 \vspace{0.5em}
 
@@ -164,7 +186,7 @@ KNN formalizes this reasoning: to predict an outcome, find the most similar past
 
 % ============================================================================
 % SLIDE 6: Why Banks Segment Customers
-\begin{frame}[t]{Why Banks Segment Customers}
+\begin{frame}[t]{Why Do Banks Need Customer Segments?}
 \textbf{Business motivation for clustering}
 \vspace{0.5em}
 
@@ -203,7 +225,7 @@ Segmentation transforms raw customer data into actionable business strategy.
 
 % ============================================================================
 % SLIDE 8: The Business Problem
-\begin{frame}[t]{The Business Problem}
+\begin{frame}[t]{What Problem Are We Solving?}
 \textbf{Classification vs Clustering in Practice}
 \vspace{0.5em}
 
@@ -224,7 +246,7 @@ No labels, seek structure $\rightarrow$ K-Means (or other clustering)
 
 % ============================================================================
 % SLIDE 9: KNN Decision Boundaries
-\begin{frame}[t]{KNN Decision Boundaries}
+\begin{frame}[t]{How Does KNN Draw Boundaries?}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{01_knn_boundaries/chart.pdf}
 \end{center}
@@ -232,11 +254,26 @@ No labels, seek structure $\rightarrow$ K-Means (or other clustering)
 \end{frame}
 
 % ============================================================================
+% SLIDE: Distance Metrics Visualization
+\begin{frame}[t]{What Do Different Distance Metrics Look Like?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{02_distance_metrics/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item Euclidean (circle), Manhattan (diamond), and Chebyshev (square) define different neighborhoods
+  \item The choice of distance metric directly shapes which points are considered nearest neighbors
+\end{compactlist}
+
+\bottomnote{Different metrics create different decision boundaries -- choose based on your data structure}
+\end{frame}
+
+% ============================================================================
 \section{Method}
 
 % ============================================================================
 % SLIDE 10: Distance -- How to Measure Similarity
-\begin{frame}[t]{Distance: How to Measure Similarity}
+\begin{frame}[t]{How Do We Measure Similarity?}
 \textbf{Euclidean distance} (most common):
 \[
 d(\mathbf{x}, \mathbf{x}') = \sqrt{\sum_{j=1}^p (x_j - x'_j)^2}
@@ -256,7 +293,7 @@ d(\mathbf{x}, \mathbf{x}') = \sqrt{\sum_{j=1}^p (x_j - x'_j)^2}
 
 % ============================================================================
 % SLIDE 11: KNN Classification
-\begin{frame}[t]{KNN Classification}
+\begin{frame}[t]{How Does KNN Classify New Points?}
 \textbf{Majority vote} among $K$ nearest neighbors:
 \[
 \hat{y}(\mathbf{x}) = \arg\max_{c} \sum_{i \in \mathcal{N}_K(\mathbf{x})} \mathbf{1}(y_i = c)
@@ -276,7 +313,7 @@ d(\mathbf{x}, \mathbf{x}') = \sqrt{\sum_{j=1}^p (x_j - x'_j)^2}
 
 % ============================================================================
 % SLIDE 12: K-Means -- The Objective
-\begin{frame}[t]{K-Means: The Objective}
+\begin{frame}[t]{What Does K-Means Optimize?}
 \textbf{Minimize within-cluster sum of squares (WCSS):}
 \[
 \min_{\boldsymbol{\mu}_1, \ldots, \boldsymbol{\mu}_K} \sum_{k=1}^{K} \sum_{\mathbf{x}_i \in C_k} \|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2
@@ -293,7 +330,7 @@ d(\mathbf{x}, \mathbf{x}') = \sqrt{\sum_{j=1}^p (x_j - x'_j)^2}
 
 % ============================================================================
 % SLIDE 13: K-Means -- The Algorithm
-\begin{frame}[t]{K-Means: The Algorithm}
+\begin{frame}[t]{How Does K-Means Work Step by Step?}
 \textbf{Lloyd's Algorithm (3 Steps):}
 \vspace{0.5em}
 
@@ -315,7 +352,7 @@ WCSS decreases (or stays equal) at every step $\Rightarrow$ guaranteed to conver
 
 % ============================================================================
 % SLIDE 14: K-Means Iteration
-\begin{frame}[t]{K-Means Iteration}
+\begin{frame}[t]{What Does One K-Means Iteration Look Like?}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{03_kmeans_iteration/chart.pdf}
 \end{center}
@@ -324,7 +361,7 @@ WCSS decreases (or stays equal) at every step $\Rightarrow$ guaranteed to conver
 
 % ============================================================================
 % SLIDE 15: Choosing K -- Elbow Method
-\begin{frame}[t]{Choosing K: Elbow Method}
+\begin{frame}[t]{How Do We Choose the Right K?}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{04_elbow_method/chart.pdf}
 \end{center}
@@ -333,7 +370,7 @@ WCSS decreases (or stays equal) at every step $\Rightarrow$ guaranteed to conver
 
 % ============================================================================
 % SLIDE 16: K-Means++ Smart Initialization
-\begin{frame}[t]{K-Means++: Smart Initialization}
+\begin{frame}[t]{Why Does Initialization Matter?}
 \textbf{Problem:} random initialization can lead to poor local minima.
 \vspace{0.5em}
 
@@ -358,7 +395,7 @@ WCSS decreases (or stays equal) at every step $\Rightarrow$ guaranteed to conver
 
 % ============================================================================
 % SLIDE 17: KNN vs K-Means Comparison
-\begin{frame}[t]{KNN vs K-Means: Side-by-Side}
+\begin{frame}[t]{How Do KNN and K-Means Compare?}
 \begin{center}
 \begin{tabular}{lll}
 \toprule
@@ -380,7 +417,7 @@ Complexity & Scales with data & Scales with $K$ \\
 
 % ============================================================================
 % SLIDE 18: Finance Application -- Customer Segmentation
-\begin{frame}[t]{Finance: Customer Segmentation}
+\begin{frame}[t]{How Do Banks Segment Customers?}
 \textbf{RFM Analysis with K-Means}
 \vspace{0.5em}
 
@@ -400,7 +437,7 @@ Each segment receives tailored products, pricing, and communication strategies.
 
 % ============================================================================
 % SLIDE 19: Finance Application -- Fraud Detection
-\begin{frame}[t]{Finance: Fraud Detection with KNN}
+\begin{frame}[t]{Can KNN Detect Fraud?}
 \textbf{The class imbalance challenge:} fraud is rare ($<$1\% of transactions).
 \vspace{0.5em}
 
@@ -420,7 +457,7 @@ Fraudulent transactions cluster in feature space -- KNN detects them by proximit
 
 % ============================================================================
 % SLIDE 20: Decision Framework
-\begin{frame}[t]{Decision Framework}
+\begin{frame}[t]{Which Method Should You Choose?}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{07_decision_flowchart/chart.pdf}
 \end{center}
@@ -455,26 +492,26 @@ Fraudulent transactions cluster in feature space -- KNN detects them by proximit
 
 % ============================================================================
 % SLIDE 22: Key Takeaways
-\begin{frame}[t]{Key Takeaways}
+\begin{frame}[t]{What Should You Remember?}
 \textbf{KNN (Classification)}
-\begin{itemize}
+\begin{compactlist}
 \item Non-parametric, lazy learner -- no training phase
 \item Small $K$: flexible but noisy; large $K$: smooth but biased
-\end{itemize}
+\end{compactlist}
 \vspace{0.3em}
 
 \textbf{K-Means (Clustering)}
-\begin{itemize}
+\begin{compactlist}
 \item Iterative algorithm with guaranteed convergence (to local minimum)
 \item K-Means++ initialization avoids poor starting points
-\end{itemize}
+\end{compactlist}
 \vspace{0.3em}
 
 \textbf{Common Considerations}
-\begin{itemize}
+\begin{compactlist}
 \item Feature scaling is essential for both algorithms
 \item Choosing $K$ requires validation (cross-validation or elbow/silhouette)
-\end{itemize}
+\end{compactlist}
 
 \bottomnote{Both algorithms depend critically on distance -- get the distance right, get the result right}
 \end{frame}
@@ -495,17 +532,17 @@ With KNN and K-Means, you can now classify the known and discover the unknown.
 % SLIDE 24: References
 \begin{frame}[t]{References}
 \textbf{Core Textbooks}
-\begin{itemize}
+\begin{compactlist}
 \item James et al., \textit{ISLR} (2021), Chapters 2 \& 12
 \item Hastie et al., \textit{Elements of Statistical Learning} (2009), Chapters 13 \& 14
-\end{itemize}
+\end{compactlist}
 \vspace{0.5em}
 
 \textbf{Key Papers}
-\begin{itemize}
+\begin{compactlist}
 \item Arthur \& Vassilvitskii (2007), ``K-Means++: The Advantages of Careful Seeding''
 \item Cover \& Hart (1967), ``Nearest Neighbor Pattern Classification''
-\end{itemize}
+\end{compactlist}
 \vspace{0.5em}
 
 \textbf{Next Lecture:} L04 -- Random Forests: ensemble methods and tree-based learning

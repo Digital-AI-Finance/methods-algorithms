@@ -86,6 +86,16 @@
 \textbf{#1}
 }
 
+% Compact list for dense slides
+\newenvironment{compactlist}{%
+  \begin{itemize}%
+    \setlength{\itemsep}{2pt}%
+    \setlength{\parskip}{0pt}%
+    \setlength{\parsep}{0pt}%
+}{%
+  \end{itemize}%
+}
+
 % Custom commands for course compatibility
 \newcommand{\highlight}[1]{\textcolor{mlorange}{\textbf{#1}}}
 \newcommand{\mathbold}[1]{\boldsymbol{#1}}
@@ -115,11 +125,28 @@
 % ============================================================
 % SLIDE 3: Opening Comic -- XKCD #1838
 % ============================================================
-\begin{frame}[t]{How Machine Learning Really Works}
+\begin{frame}[t]{The Math Behind ``Similar Things Behave Similarly''}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\small
+\textbf{Today's Deep Dive}
+
+\vspace{0.3em}
+In the overview, we saw that KNN classifies by neighbors and K-Means discovers clusters. Now we go deeper:
+
+\begin{compactlist}
+  \item How do we \textbf{formalize} distance and prove KNN's theoretical guarantees?
+  \item How do we \textbf{prove} K-Means convergence and understand its connection to EM?
+  \item How do we \textbf{validate} clusters statistically before trusting them?
+\end{compactlist}
+
+\column{0.42\textwidth}
 \begin{center}
-\includegraphics[height=0.65\textheight]{images/1838_machine_learning.png}
+\includegraphics[width=0.85\textwidth]{images/1838_machine_learning.png}
 \end{center}
-\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5)}
+\end{columns}
+
+\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5) -- The math behind the ``pile of linear algebra''}
 \end{frame}
 
 % ============================================================
@@ -146,13 +173,13 @@
 % ============================================================
 % SLIDE 5: KNN: The Lazy Learner
 % ============================================================
-\begin{frame}[t]{KNN: The Lazy Learner}
+\begin{frame}[t]{Why Is KNN Called a Lazy Learner?}
 \textbf{Key Insight}
-\begin{itemize}
+\begin{compactlist}
 \item No explicit model training -- store all training data
 \item Classification by majority vote of $K$ nearest neighbors
 \item ``Lazy'' because all computation happens at prediction time
-\end{itemize}
+\end{compactlist}
 \vspace{0.5em}
 \textbf{The Algorithm in Words}
 \begin{enumerate}
@@ -166,7 +193,7 @@
 % ============================================================
 % SLIDE 6: KNN Algorithm (Pseudocode)
 % ============================================================
-\begin{frame}[t]{KNN Algorithm}
+\begin{frame}[t]{How Does the KNN Algorithm Work?}
 \begin{algorithmic}[1]
 \STATE \textbf{Input}: Training set $\mathcal{D}$, query point $\mathbf{x}$, number of neighbors $K$
 \STATE Compute $d(\mathbf{x}, \mathbf{x}_i)$ for all $\mathbf{x}_i \in \mathcal{D}$
@@ -184,10 +211,25 @@
 \bottomnote{Tie-breaking via distance-weighted vote prevents non-determinism on decision boundaries}
 \end{frame}
 
+% SLIDE: KNN Boundaries Visualization
+\begin{frame}[t]{How Do KNN Boundaries Change with K?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{01_knn_boundaries/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item Small K creates jagged, complex boundaries that follow noise
+  \item Large K creates smooth boundaries that may miss local patterns
+  \item The optimal K balances flexibility with stability
+\end{compactlist}
+
+\bottomnote{Decision boundaries are non-parametric -- they adapt to the local data structure}
+\end{frame}
+
 % ============================================================
 % SLIDE 7: Distance Metrics Visualization
 % ============================================================
-\begin{frame}[t]{Distance Metrics: Visualization}
+\begin{frame}[t]{What Do Different Distance Metrics Look Like?}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{02_distance_metrics/chart.pdf}
 \end{center}
@@ -199,7 +241,7 @@
 % ============================================================
 % SLIDE 8: Distance Metrics: Minkowski Family
 % ============================================================
-\begin{frame}[t]{Distance Metrics: Minkowski Family}
+\begin{frame}[t]{How Do We Generalize Distance?}
 \textbf{Minkowski Distance}
 $$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{d}|x_i - y_i|^p\right)^{1/p}$$
 \vspace{0.3em}
@@ -220,7 +262,7 @@ $$d_p(\mathbf{x}, \mathbf{y}) = \left(\sum_{i=1}^{d}|x_i - y_i|^p\right)^{1/p}$$
 % ============================================================
 % SLIDE 9: Beyond Minkowski: Cosine and Mahalanobis
 % ============================================================
-\begin{frame}[t]{Beyond Minkowski: Cosine \& Mahalanobis}
+\begin{frame}[t]{When Do We Need Non-Euclidean Distance?}
 \textbf{Cosine Similarity} (for text and embeddings)
 $$\cos(\mathbf{x}, \mathbf{y}) = \frac{\mathbf{x} \cdot \mathbf{y}}{\|\mathbf{x}\| \|\mathbf{y}\|}, \quad \text{range: } [-1, 1]$$
 \begin{itemize}
@@ -240,7 +282,7 @@ $$d_M(\mathbf{x}, \mathbf{y}) = \sqrt{(\mathbf{x}-\mathbf{y})^T \Sigma^{-1} (\ma
 % ============================================================
 % SLIDE 10: Choosing K: Bias-Variance Tradeoff
 % ============================================================
-\begin{frame}[t]{Choosing K: Bias-Variance Tradeoff}
+\begin{frame}[t]{How Does K Control the Bias-Variance Tradeoff?}
 \textbf{The Fundamental Tradeoff}
 \begin{itemize}
 \item $K=1$: High variance, low bias -- very flexible, memorizes noise
@@ -258,10 +300,25 @@ $$d_M(\mathbf{x}, \mathbf{y}) = \sqrt{(\mathbf{x}-\mathbf{y})^T \Sigma^{-1} (\ma
 \bottomnote{Small K for complex patterns with clean data; larger K for noisy data requiring smoothing}
 \end{frame}
 
+% SLIDE: K-Means Iteration Visualization
+\begin{frame}[t]{How Do Centroids Move During Iteration?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{03_kmeans_iteration/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item Each iteration: assign points to nearest centroid, then recompute centroids
+  \item Centroids migrate toward cluster centers until stable
+  \item Convergence typically occurs within 10--50 iterations
+\end{compactlist}
+
+\bottomnote{Visualizing iterations helps verify that K-Means is finding meaningful clusters}
+\end{frame}
+
 % ============================================================
 % SLIDE 11: Weighted KNN
 % ============================================================
-\begin{frame}[t]{Weighted KNN}
+\begin{frame}[t]{Why Weight Neighbors by Distance?}
 \textbf{Problem}: All $K$ neighbors have equal influence -- a distant neighbor counts as much as the closest one.
 \vspace{0.5em}
 
@@ -280,7 +337,7 @@ $$\hat{y} = \arg\max_c \sum_{i \in N_K(\mathbf{x})} w_i \cdot \mathbf{1}[y_i = c
 % ============================================================
 % SLIDE 12: K Selection via Cross-Validation
 % ============================================================
-\begin{frame}[t]{K Selection via Cross-Validation}
+\begin{frame}[t]{How Do We Select K Objectively?}
 \textbf{GridSearchCV for Optimal K}
 \begin{itemize}
 \item \texttt{param\_grid = \{'n\_neighbors': range(1, 21, 2)\}}
@@ -306,7 +363,7 @@ $$\hat{y} = \arg\max_c \sum_{i \in N_K(\mathbf{x})} w_i \cdot \mathbf{1}[y_i = c
 % ============================================================
 % SLIDE 13: Feature Scaling for KNN
 % ============================================================
-\begin{frame}[t]{Feature Scaling for KNN}
+\begin{frame}[t]{Why Must We Scale Features for KNN?}
 \textbf{Why Scaling Matters} -- Without scaling:
 \begin{itemize}
 \item Income: ranges 20,000--200,000
@@ -315,10 +372,10 @@ $$\hat{y} = \arg\max_c \sum_{i \in N_K(\mathbf{x})} w_i \cdot \mathbf{1}[y_i = c
 \end{itemize}
 \vspace{0.5em}
 \textbf{Scaling Methods}
-\begin{itemize}
+\begin{compactlist}
 \item \textbf{Standardization}: $z = \frac{x - \mu}{\sigma}$ \quad (mean=0, std=1)
 \item \textbf{Min-Max}: $x' = \frac{x - x_{\min}}{x_{\max} - x_{\min}}$ \quad (range [0,1])
-\end{itemize}
+\end{compactlist}
 \vspace{0.3em}
 \textbf{Edge Cases}
 \begin{itemize}
@@ -330,7 +387,7 @@ $$\hat{y} = \arg\max_c \sum_{i \in N_K(\mathbf{x})} w_i \cdot \mathbf{1}[y_i = c
 % ============================================================
 % SLIDE 14: Curse of Dimensionality
 % ============================================================
-\begin{frame}[t]{Curse of Dimensionality}
+\begin{frame}[t]{Why Does KNN Struggle in High Dimensions?}
 \textbf{The Problem} (Beyer et al., 1999)
 
 In high dimensions, for any query point $\mathbf{x}$:
@@ -353,7 +410,7 @@ $$\lim_{d \to \infty} \frac{d_{\max} - d_{\min}}{d_{\min}} \to 0$$
 % ============================================================
 % SLIDE 15: Cover & Hart (1967) Consistency Theorem
 % ============================================================
-\begin{frame}[t]{Cover \& Hart (1967): Consistency Theorem}
+\begin{frame}[t]{How Good Can KNN Theoretically Be?}
 \textbf{Theorem}: As $n \to \infty$, the 1-NN error rate satisfies:
 $$R^* \leq R_{1\text{-NN}} \leq 2R^*(1 - R^*)$$
 where $R^*$ is the Bayes optimal error rate.
@@ -373,7 +430,7 @@ where $R^*$ is the Bayes optimal error rate.
 % ============================================================
 % SLIDE 16: Cover & Hart: Proof Sketch
 % ============================================================
-\begin{frame}[t]{Cover \& Hart: Proof Sketch}
+\begin{frame}[t]{How Do We Prove the 1-NN Error Bound?}
 \textbf{Proof idea} (1-NN case, binary classification):
 
 \begin{enumerate}
@@ -392,7 +449,7 @@ For $K$-NN with $K \to \infty$, $K/n \to 0$: majority vote over $K$ neighbors co
 % ============================================================
 % SLIDE 17: Bias-Variance Decomposition
 % ============================================================
-\begin{frame}[t]{Bias-Variance Decomposition for KNN}
+\begin{frame}[t]{How Does K Affect Bias and Variance?}
 For KNN regression, $\hat{f}_K(\mathbf{x}) = \frac{1}{K}\sum_{i \in N_K(\mathbf{x})} y_i$, the expected error decomposes as:
 
 $$E[(\hat{f}_K(\mathbf{x}) - Y)^2] = \underbrace{\text{Bias}^2(\hat{f}_K(\mathbf{x}))}_{\text{increases with } K} + \underbrace{\text{Var}(\hat{f}_K(\mathbf{x}))}_{\text{decreases with } K} + \sigma^2$$
@@ -413,7 +470,7 @@ $$E[(\hat{f}_K(\mathbf{x}) - Y)^2] = \underbrace{\text{Bias}^2(\hat{f}_K(\mathbf
 % ============================================================
 % SLIDE 18: K-Means: The Idea
 % ============================================================
-\begin{frame}[t]{K-Means: The Idea}
+\begin{frame}[t]{What Is K-Means Trying to Optimize?}
 \textbf{Goal}: Partition $n$ points into $K$ clusters by minimizing within-cluster sum of squares (WCSS):
 $$J = \sum_{k=1}^{K}\sum_{\mathbf{x}_i \in C_k}\|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2$$
 where $\boldsymbol{\mu}_k = \frac{1}{|C_k|}\sum_{\mathbf{x}_i \in C_k} \mathbf{x}_i$ is the centroid of cluster $C_k$.
@@ -431,7 +488,7 @@ where $\boldsymbol{\mu}_k = \frac{1}{|C_k|}\sum_{\mathbf{x}_i \in C_k} \mathbf{x
 % ============================================================
 % SLIDE 19: K-Means Algorithm (Pseudocode)
 % ============================================================
-\begin{frame}[t]{K-Means Algorithm}
+\begin{frame}[t]{How Does Lloyd's Algorithm Work?}
 \begin{algorithmic}[1]
 \STATE \textbf{Input}: Data $\mathbf{X}$, number of clusters $K$
 \STATE Initialize $K$ centroids (K-Means++ or random)
@@ -450,7 +507,7 @@ where $\boldsymbol{\mu}_k = \frac{1}{|C_k|}\sum_{\mathbf{x}_i \in C_k} \mathbf{x
 % ============================================================
 % SLIDE 20: K-Means++: Smart Initialization
 % ============================================================
-\begin{frame}[t]{K-Means++: Smart Initialization}
+\begin{frame}[t]{Why Does Smart Initialization Matter?}
 \textbf{Problem}: Random initialization is sensitive to starting positions and often converges to poor local optima.
 \vspace{0.5em}
 
@@ -468,7 +525,7 @@ where $\boldsymbol{\mu}_k = \frac{1}{|C_k|}\sum_{\mathbf{x}_i \in C_k} \mathbf{x
 % ============================================================
 % SLIDE 21: Silhouette Score
 % ============================================================
-\begin{frame}[t]{Silhouette Score}
+\begin{frame}[t]{How Do We Measure Cluster Quality?}
 \textbf{For each point $i$}:
 \begin{itemize}
 \item $a(i)$: average distance to all other points in \textbf{same} cluster (cohesion)
@@ -490,7 +547,7 @@ $$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}, \quad s(i) \in [-1, 1]$$
 % ============================================================
 % SLIDE 22: Silhouette Plot
 % ============================================================
-\begin{frame}[t]{Silhouette Plot}
+\begin{frame}[t]{What Does a Silhouette Plot Reveal?}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{05_silhouette/chart.pdf}
 \end{center}
@@ -501,7 +558,7 @@ $$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}, \quad s(i) \in [-1, 1]$$
 % ============================================================
 % SLIDE 23: K-Means Decision Regions
 % ============================================================
-\begin{frame}[t]{K-Means Decision Regions}
+\begin{frame}[t]{What Shape Are K-Means Clusters?}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{06_voronoi/chart.pdf}
 \end{center}
@@ -512,7 +569,7 @@ $$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}, \quad s(i) \in [-1, 1]$$
 % ============================================================
 % SLIDE 24: K-Means Assumptions
 % ============================================================
-\begin{frame}[t]{K-Means Assumptions and Failure Cases}
+\begin{frame}[t]{When Does K-Means Fail?}
 \textbf{What K-Means Assumes}
 \begin{itemize}
 \item Clusters are \textbf{spherical} (isotropic variance in all directions)
@@ -537,7 +594,7 @@ $$s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))}, \quad s(i) \in [-1, 1]$$
 % ============================================================
 % SLIDE 25: K-Means Convergence Proof
 % ============================================================
-\begin{frame}[t]{K-Means Convergence Proof}
+\begin{frame}[t]{Why Must K-Means Converge?}
 \textbf{Theorem}: Lloyd's algorithm converges in a finite number of iterations.
 \vspace{0.3em}
 
@@ -559,7 +616,7 @@ Since $J \geq 0$ and non-increasing, and there are finitely many partitions of $
 % ============================================================
 % SLIDE 26: K-Means as EM Special Case
 % ============================================================
-\begin{frame}[t]{K-Means as EM Special Case}
+\begin{frame}[t]{How Does K-Means Relate to EM?}
 \textbf{Connection to Expectation-Maximization}
 \begin{itemize}
 \item K-Means = ``Hard EM'' for Gaussian Mixture Models (GMM)
@@ -580,7 +637,7 @@ Since $J \geq 0$ and non-increasing, and there are finitely many partitions of $
 % ============================================================
 % SLIDE 27: K-Means Variants
 % ============================================================
-\begin{frame}[t]{K-Means Variants}
+\begin{frame}[t]{What Alternatives Exist to Standard K-Means?}
 \textbf{Mini-Batch K-Means}
 \begin{itemize}
 \item Uses random subsets (mini-batches) for centroid updates
@@ -604,7 +661,7 @@ Since $J \geq 0$ and non-increasing, and there are finitely many partitions of $
 % ============================================================
 % SLIDE 28: Computational Considerations
 % ============================================================
-\begin{frame}[t]{Computational Considerations}
+\begin{frame}[t]{How Fast Are These Algorithms?}
 \begin{center}
 \begin{tabular}{lcc}
 \toprule
@@ -635,7 +692,7 @@ $n$ = samples, $d$ = features, $K$ = neighbors/clusters, $T$ = iterations, $b$ =
 % ============================================================
 % SLIDE 29: Hopkins Statistic
 % ============================================================
-\begin{frame}[t]{Hopkins Statistic: Should We Cluster?}
+\begin{frame}[t]{Should We Cluster This Data at All?}
 \textbf{Before Clustering}: Test whether data has cluster tendency at all.
 \vspace{0.3em}
 
@@ -656,7 +713,7 @@ $$H = \frac{\sum_{i=1}^m u_i^d}{\sum_{i=1}^m u_i^d + \sum_{i=1}^m w_i^d}$$
 % ============================================================
 % SLIDE 30: Gap Statistic
 % ============================================================
-\begin{frame}[t]{Gap Statistic for K Selection}
+\begin{frame}[t]{How Does the Gap Statistic Choose K?}
 \textbf{Gap Statistic} (Tibshirani et al., 2001)
 $$\text{Gap}_n(k) = E_n^*[\log W_k] - \log W_k$$
 where $W_k = \sum_{r=1}^k \frac{1}{2|C_r|}\sum_{i,j \in C_r} \|x_i - x_j\|^2$ and $E_n^*$ is the expectation under a reference (uniform) distribution.
@@ -674,7 +731,7 @@ where $s_{k+1}$ is the standard error from $B$ bootstrap reference samples.
 % ============================================================
 % SLIDE 31: Comparison of K Selection Methods
 % ============================================================
-\begin{frame}[t]{Comparison of K Selection Methods}
+\begin{frame}[t]{Which K Selection Method Should We Use?}
 \begin{center}
 \begin{tabular}{lccc}
 \toprule
@@ -696,6 +753,21 @@ Gap Statistic & High (statistical) & Slow & Rigorous analysis \\
 \bottomnote{No single method is perfect -- use multiple methods and check if they agree}
 \end{frame}
 
+% SLIDE: Elbow Method Visualization
+\begin{frame}[t]{Where Is the Elbow in the WCSS Curve?}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{04_elbow_method/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item WCSS always decreases with more clusters -- the question is \textit{how fast}
+  \item The ``elbow'' marks the point of diminishing returns
+  \item Combine with silhouette analysis for a more objective decision
+\end{compactlist}
+
+\bottomnote{The elbow is often ambiguous -- that is why we also use silhouette and Gap statistics}
+\end{frame}
+
 % ============================================================
 % SECTION 6: COMPARISON AND APPLICATIONS (Slides 32-36)
 % ============================================================
@@ -704,7 +776,7 @@ Gap Statistic & High (statistical) & Slow & Rigorous analysis \\
 % ============================================================
 % SLIDE 32: KNN vs K-Means: Key Differences
 % ============================================================
-\begin{frame}[t]{KNN vs K-Means: Key Differences}
+\begin{frame}[t]{How Do KNN and K-Means Differ Fundamentally?}
 \begin{center}
 \begin{tabular}{lll}
 \toprule
@@ -726,7 +798,7 @@ Scalability & $O(nd)$ per query & $O(nKdT)$ total \\
 % ============================================================
 % SLIDE 33: Finance: RFM Customer Segmentation
 % ============================================================
-\begin{frame}[t]{Finance: RFM Customer Segmentation}
+\begin{frame}[t]{How Do Banks Segment Customers with RFM?}
 \textbf{RFM Analysis} (Industry Standard)
 \begin{itemize}
 \item \textbf{R}ecency: Days since last transaction
@@ -750,7 +822,7 @@ Scalability & $O(nd)$ per query & $O(nKdT)$ total \\
 % ============================================================
 % SLIDE 34: Finance: Fraud Detection
 % ============================================================
-\begin{frame}[t]{Finance: Fraud Detection with KNN}
+\begin{frame}[t]{How Does KNN Detect Financial Fraud?}
 \textbf{CRITICAL: Class Imbalance Problem}
 \begin{itemize}
 \item Fraud is typically $<$1\% of transactions (100:1 ratio)
@@ -771,7 +843,7 @@ Scalability & $O(nd)$ per query & $O(nKdT)$ total \\
 % ============================================================
 % SLIDE 35: Alternative Clustering: DBSCAN and Hierarchical
 % ============================================================
-\begin{frame}[t]{Alternative Clustering: DBSCAN and Hierarchical}
+\begin{frame}[t]{What If Clusters Aren't Spherical?}
 \textbf{DBSCAN} (Density-Based Spatial Clustering):
 \begin{itemize}
 \item \textbf{Core point}: $\geq$ minPts neighbors within radius $\varepsilon$
@@ -792,7 +864,7 @@ Scalability & $O(nd)$ per query & $O(nKdT)$ total \\
 % ============================================================
 % SLIDE 36: When to Use What
 % ============================================================
-\begin{frame}[t]{When to Use What}
+\begin{frame}[t]{Which Algorithm Should You Choose?}
 \textbf{Use KNN When}
 \begin{itemize}
 \item You have labeled training data (supervised)
@@ -816,6 +888,21 @@ Scalability & $O(nd)$ per query & $O(nKdT)$ total \\
 \bottomnote{K-Means is often used as preprocessing (cluster features) before supervised learning}
 \end{frame}
 
+% SLIDE: Decision Flowchart
+\begin{frame}[t]{Decision Flowchart: KNN vs K-Means vs Alternatives}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{07_decision_flowchart/chart.pdf}
+\end{center}
+
+\begin{compactlist}
+  \item Labels available $\to$ supervised methods (KNN, logistic regression, random forests)
+  \item No labels, spherical clusters $\to$ K-Means with K-Means++ initialization
+  \item Non-spherical or unknown K $\to$ DBSCAN or hierarchical clustering
+\end{compactlist}
+
+\bottomnote{Start simple (K-Means) and add complexity only when validation metrics demand it}
+\end{frame}
+
 % ============================================================
 % SECTION 7: IMPLEMENTATION (Slides 37-39)
 % ============================================================
@@ -824,7 +911,7 @@ Scalability & $O(nd)$ per query & $O(nKdT)$ total \\
 % ============================================================
 % SLIDE 37: KNN in scikit-learn
 % ============================================================
-\begin{frame}[t]{KNN in scikit-learn}
+\begin{frame}[t]{How Do We Implement KNN in Python?}
 \textbf{Classification}
 \begin{itemize}
 \item \texttt{from sklearn.neighbors import KNeighborsClassifier}
@@ -846,7 +933,7 @@ Scalability & $O(nd)$ per query & $O(nKdT)$ total \\
 % ============================================================
 % SLIDE 38: K-Means in scikit-learn
 % ============================================================
-\begin{frame}[t]{K-Means in scikit-learn}
+\begin{frame}[t]{How Do We Implement K-Means in Python?}
 \textbf{Basic Usage}
 \begin{itemize}
 \item \texttt{from sklearn.cluster import KMeans}
@@ -868,7 +955,7 @@ Scalability & $O(nd)$ per query & $O(nKdT)$ total \\
 % ============================================================
 % SLIDE 39: Pipeline: Scaling + Algorithm
 % ============================================================
-\begin{frame}[t]{Pipeline: Scaling + Algorithm}
+\begin{frame}[t]{Why Must Scaling Be Inside the Pipeline?}
 \textbf{Why Pipelines?} Prevent data leakage -- scaling must be fit on training data only.
 \vspace{0.3em}
 \begin{itemize}
@@ -913,7 +1000,7 @@ Scalability & $O(nd)$ per query & $O(nKdT)$ total \\
 % ============================================================
 % SLIDE 41: Key Takeaways
 % ============================================================
-\begin{frame}[t]{Key Takeaways}
+\begin{frame}[t]{What Should You Remember?}
 \textbf{K-Nearest Neighbors}
 \begin{itemize}
 \item Instance-based lazy learner; Cover \& Hart bound: $R_{1\text{-NN}} \leq 2R^*$
