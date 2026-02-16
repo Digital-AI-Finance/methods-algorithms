@@ -1,14 +1,17 @@
 {
-  "active": false,
+  "active": true,
   "mode": "ralplan",
   "iteration": 1,
   "max_iterations": 5,
-  "plan_path": ".omc/plans/knn-mini-lecture.md",
-  "current_phase": "completed",
-  "started_at": "2026-02-14T10:00:00Z",
-  "task_description": "Create a 10-slide standalone mini-lecture on KNN using the mini-lecture-generator.md skill (10-slide interleaved arc) combined with the beamer-slide-creator.md skill.",
-  "iteration_1_verdict": "OKAY",
-  "verdict": "APPROVED",
-  "architect_verdict": "CONDITIONAL APPROVE -> APPROVED (32/33 -> 33/33 after title fixes)",
-  "deliverable": "slides/L03_KNN_KMeans/L03_knn_mini.tex (595 lines, 10 pages, 0 errors, 0 Overfull)"
+  "plan_path": ".omc/plans/kmeans-mini-lecture.md",
+  "current_phase": "executing",
+  "started_at": "2026-02-16T10:00:00Z",
+  "task_description": "Create a 10-slide standalone mini-lecture on K-Means using the mini-lecture-generator.md skill (10-slide interleaved arc) combined with the beamer-slide-creator.md skill. Deploy to GitHub Pages.",
+  "iteration_1_verdict": "REJECT (32/33 - slide 10 title not a question)",
+  "critic_fixes_applied": [
+    "Changed slide 10 title to question form: Can You Evaluate This Real Clustering Problem?",
+    "Clarified preamble line range (lines 1-99 + new title block)",
+    "Fixed feedback loop origin: from decision diamond, not node 4"
+  ],
+  "verdict": "APPROVED (fixes applied, proceeding to execution)"
 }
