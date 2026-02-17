@@ -1,0 +1,434 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage[colorlinks=true,linkcolor=mlblue,urlcolor=mlblue]{hyperref}
+
+% Color definitions (course palette)
+\definecolor{mlpurple}{RGB}{51,51,178}
+\definecolor{mlblue}{RGB}{0,102,204}
+\definecolor{mlorange}{RGB}{255,127,14}
+\definecolor{mlgreen}{RGB}{44,160,44}
+\definecolor{mlred}{RGB}{214,39,40}
+
+% Section styling
+\titleformat{\section}{\large\bfseries\color{mlpurple}}{}{0em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{mlblue}}{}{0em}{}
+\titlespacing{\section}{0pt}{1.0em}{0.4em}
+\titlespacing{\subsection}{0pt}{0.7em}{0.3em}
+
+% Paragraph spacing
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0em}
+
+% Compact lists
+\setlist{nosep}
+
+% Highlight command
+\newcommand{\highlight}[1]{{\color{mlorange}\textbf{#1}}}
+
+\begin{document}
+
+%% ============================================================
+%% TITLE BLOCK
+%% ============================================================
+\begin{center}
+{\LARGE\bfseries\color{mlpurple} Logistic Regression: An Intuitive Guide}\\[0.3em]
+{\large Methods and Algorithms -- MSc Data Science}\\[0.2em]
+{\normalsize L02 Introductory Reading}\\[0.5em]
+\rule{0.6\textwidth}{0.4pt}
+\end{center}
+
+Every day, banks decide who gets a loan and who doesn't. Doctors decide whether a
+patient needs further testing. Email systems decide what is spam. Behind all of these
+decisions is the same question: \emph{``What is the chance that something is true?''}
+This guide explains one of the most widely used tools for answering that question ---
+\highlight{logistic regression}. No background in statistics or mathematics is assumed;
+every idea is built from scratch using plain language and concrete examples.
+
+%% ============================================================
+%% SECTION 1: YES-OR-NO QUESTIONS NEED PROBABILITIES
+%% ============================================================
+\section{Yes-or-No Questions Need Probabilities}
+
+Imagine Maria applies for a credit card. The bank needs to decide: will she pay back
+what she borrows, or won't she? A flat ``yes'' or ``no'' is not very useful. The bank
+really wants to know \emph{how likely} she is to pay back. In other words, it wants a
+number that captures Maria's risk.
+
+\textbf{The ideal answer is a probability} --- a number between 0 and 1.
+A probability of 0 means ``she will definitely not repay.''
+A probability of 1 means ``she will definitely repay.''
+Anything in between expresses the bank's level of confidence.
+
+\textbf{The problem.}
+Suppose we gather information about Maria --- her income, how long she has been
+employed, how much debt she already has --- and assign points for each piece of
+information. We might add up all the points and get a score like $2.5$ or $-0.3$.
+These numbers are perfectly fine as scores, but they are \emph{not} probabilities
+because they can be larger than 1 or smaller than 0.
+
+\textbf{The solution: the S-shaped curve.}
+
+\begin{wrapfigure}{r}{0.45\textwidth}
+  \centering
+  \vspace{-1.0em}
+  \includegraphics[width=0.43\textwidth]{01_sigmoid_function/chart.pdf}
+  \vspace{-1.5em}
+\end{wrapfigure}
+
+We need a mathematical ``translator'' that takes \emph{any} score and squishes it into
+the range from 0 to 1. That translator is the \highlight{sigmoid function}, and its
+shape is a gentle S-curve (see the figure to the right). The formula is:
+%
+\begin{equation*}
+  \sigma(z) = \frac{1}{1 + e^{-z}}
+\end{equation*}
+%
+In plain English: take your score~$z$, flip its sign, raise the number $e$ (approximately
+$2.718$) to that power, add~1, then divide~1 by the result. No matter what score you
+start with, the output is always between 0 and~1.
+
+\textbf{A quick numerical check.}
+If the score is exactly~0, the sigmoid gives $0.5$ --- a 50/50 chance, right on the
+fence. If the score is a large positive number like~3, the sigmoid gives about $0.95$
+--- very likely. If the score is a large negative number like $-3$, the sigmoid gives
+about $0.05$ --- very unlikely. The curve smoothly connects these extremes.
+
+%% ============================================================
+%% SECTION 2: TURNING FEATURES INTO A SCORE
+%% ============================================================
+\section{How Does the Model Make Predictions?}
+
+\subsection{Features and Weights}
+
+The pieces of information we know about a person --- income, age, years of employment,
+existing debts --- are called \highlight{features}. Think of features as the columns in a
+spreadsheet where each row is one applicant.
+
+The model assigns a \highlight{weight} to each feature. A weight is just a number that
+says how important that feature is and in which direction it pushes the prediction:
+%
+\begin{itemize}
+  \item A \emph{positive} weight means this feature increases the chance of repayment.
+  \item A \emph{negative} weight means this feature decreases the chance of repayment.
+  \item A weight near zero means the feature has little influence.
+\end{itemize}
+
+Think of it like a scorecard: each feature earns you points (positive or negative), and
+the total determines your final score.
+
+\subsection{A Step-by-Step Example}
+
+Let us walk through Maria's application. The bank's model has already learned the
+following weights from thousands of past applicants:
+
+\vspace{0.3em}
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Feature} & \textbf{Maria's Value} & \textbf{Weight} \\
+\midrule
+Starting value (intercept) & -- & $-2.10$ \\
+Monthly income (\$, in thousands) & 4.5 & $+0.42$ per thousand \\
+Debt-to-income ratio & 0.35 & $-1.15$ \\
+Years employed & 6 & $+0.35$ per year \\
+Years of credit history & 8 & $+0.18$ per year \\
+Past missed payments & 1 & $-0.90$ per event \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.3em}
+
+\textbf{Step 1 --- Compute the score.}
+Multiply each of Maria's values by the corresponding weight and add everything up:
+%
+\begin{align*}
+  \text{Score} &= -2.10 + (0.42 \times 4.5) + (-1.15 \times 0.35) \\
+               &\quad + (0.35 \times 6) + (0.18 \times 8) + (-0.90 \times 1) \\
+               &= -2.10 + 1.89 - 0.40 + 2.10 + 1.44 - 0.90 = 2.03.
+\end{align*}
+
+\textbf{Step 2 --- Pass through the S-curve.}
+Feed the score of $2.03$ into the sigmoid:
+$\sigma(2.03) = 1 / (1 + e^{-2.03}) \approx 0.883$.
+Maria's estimated probability of repayment is about \highlight{88.3\%}.
+
+\subsection{How Does the Model Learn the Weights?}
+
+Think of adjusting the dials on a radio to get the clearest signal. The model starts with
+random weights and then keeps adjusting them based on past data.
+
+\begin{wrapfigure}{r}{0.45\textwidth}
+  \centering
+  \vspace{-1.0em}
+  \includegraphics[width=0.43\textwidth]{03_log_loss/chart.pdf}
+  \vspace{-1.5em}
+\end{wrapfigure}
+
+The tool that measures how wrong the model is at any moment is called the
+\highlight{loss function}. The chart to the right shows how it works:
+%
+\begin{itemize}
+  \item When the model says ``90\% chance of repayment'' and the person \emph{did}
+        repay, the loss is small (the model was right --- good!).
+  \item When the model says ``90\% chance of repayment'' but the person
+        \emph{did not} repay, the loss is very large (the model was confidently
+        wrong --- bad!).
+\end{itemize}
+
+The model's goal during \emph{training} is to adjust the weights until the total loss
+across all past applicants is as small as possible. In practice the computer repeats a
+simple cycle thousands of times: compute the loss, nudge each weight a tiny amount in
+the direction that reduces the loss, and repeat.
+
+\fcolorbox{mlpurple}{mlpurple!8}{%
+\begin{minipage}{0.93\textwidth}
+\textbf{\color{mlpurple}Check your understanding.}
+If a model predicts a 70\% chance of repayment and the person does repay, is the loss
+large or small? \emph{(Answer: small --- the model was mostly right, though not perfectly
+confident.)}
+\end{minipage}}
+
+%% ============================================================
+%% SECTION 3: MEASURING MODEL PERFORMANCE
+%% ============================================================
+\section{How Do We Know If the Model Is Any Good?}
+
+\subsection{The Confusion Matrix}
+
+After training, we test the model on data it has never seen before. For each applicant in
+the test set, the model predicts ``repay'' or ``default,'' and we compare with what
+actually happened. The results are summarised in a simple $2 \times 2$ table called the
+\highlight{confusion matrix}.
+
+\begin{wrapfigure}{r}{0.42\textwidth}
+  \centering
+  \vspace{-1.0em}
+  \includegraphics[width=0.40\textwidth]{06_confusion_matrix/chart.pdf}
+  \vspace{-1.5em}
+\end{wrapfigure}
+
+Each cell has a name:
+\begin{itemize}
+  \item \textbf{True Positive (TP):} model said ``will repay'' and they \emph{did}
+        repay. Correct!
+  \item \textbf{False Positive (FP):} model said ``will repay'' but they did
+        \emph{not}. The bank loses money.
+  \item \textbf{True Negative (TN):} model said ``won't repay'' and they indeed did
+        not. Correctly rejected.
+  \item \textbf{False Negative (FN):} model said ``won't repay'' but they \emph{would}
+        have repaid. The bank lost a good customer.
+\end{itemize}
+
+\subsection{Precision and Recall}
+
+From these four counts we can compute two particularly useful numbers:
+
+\textbf{Precision} answers: ``Of everyone we \emph{approved}, what fraction actually
+repaid?'' The formula is $\text{Precision} = \text{TP} / (\text{TP} + \text{FP})$.
+
+\textbf{Recall} answers: ``Of everyone who \emph{would} have repaid, what fraction did
+we approve?'' The formula is $\text{Recall} = \text{TP} / (\text{TP} + \text{FN})$.
+
+\textbf{The trade-off.} If you approve almost everyone, recall is very high (you miss
+few good customers) but precision drops (you approve many bad ones too). If you are
+extremely strict, precision is high but you turn away many good customers. There is no
+free lunch --- improving one usually hurts the other.
+
+\fcolorbox{mlpurple}{mlpurple!8}{%
+\begin{minipage}{0.93\textwidth}
+\textbf{\color{mlpurple}Check your understanding.}
+A model approves 100 applicants. Of those, 85 repay and 15 do not.
+What is the precision? \emph{(Answer: $85 / 100 = 85\%$.)}
+\end{minipage}}
+
+%% ============================================================
+%% SECTION 4: THE ROC CURVE
+%% ============================================================
+\section{The ROC Curve and Choosing a Threshold}
+
+\subsection{One Picture That Tells the Whole Story}
+
+\begin{wrapfigure}{r}{0.42\textwidth}
+  \centering
+  \vspace{-1.0em}
+  \includegraphics[width=0.40\textwidth]{04_roc_curve/chart.pdf}
+  \vspace{-1.5em}
+\end{wrapfigure}
+
+Remember that the model gives each applicant a probability score. To make an actual
+decision we need a \highlight{threshold}: if the probability of repayment is above the
+threshold, approve; if below, reject.
+
+Different thresholds lead to different trade-offs:
+\begin{itemize}
+  \item \textbf{Low threshold} (approve almost everyone): we catch nearly all good
+        borrowers but also approve many risky ones.
+  \item \textbf{High threshold} (approve almost no one): we reject most risky
+        borrowers but also turn away many good ones.
+\end{itemize}
+
+The \highlight{ROC curve} draws \emph{all} possible trade-offs in a single picture. Each
+point on the curve corresponds to one threshold. A perfect model hugs the top-left corner
+of the chart; a model that guesses randomly follows the diagonal line.
+
+\subsection{AUC and Gini --- Summarising Quality in One Number}
+
+The \highlight{AUC} (Area Under the Curve) measures the total area under the ROC curve.
+It is a single number between 0.5 and 1.0 that summarises how well the model separates
+good borrowers from bad ones:
+\begin{itemize}
+  \item AUC $= 1.0$ means the model is perfect.
+  \item AUC $= 0.5$ means the model is no better than flipping a coin.
+\end{itemize}
+
+In banking, the same information is often reported as the \textbf{Gini coefficient},
+which is simply $\text{Gini} = 2 \times \text{AUC} - 1$. Industry rules of thumb:
+a Gini above $0.40$ is acceptable; above $0.60$ is good.
+
+\subsection{Common Pitfalls}
+
+\textbf{The accuracy trap.}
+Suppose only 1\% of borrowers default. A lazy model that always says ``will repay'' is
+correct 99\% of the time --- impressive accuracy! But it is completely useless because it
+never identifies anyone who might default. \emph{Always} look at precision, recall, and
+AUC rather than accuracy alone.
+
+\textbf{The threshold is a business decision.}
+Choosing the threshold is not a purely mathematical exercise. A bank might accept more
+risk on small personal loans (lower threshold) and demand much more confidence for large
+mortgages (higher threshold). The model provides the probabilities; the business decides
+where to draw the line.
+
+\fcolorbox{mlpurple}{mlpurple!8}{%
+\begin{minipage}{0.93\textwidth}
+\textbf{\color{mlpurple}Check your understanding.}
+A model has an AUC of $0.80$. What is its Gini coefficient?
+\emph{(Answer: $2 \times 0.80 - 1 = 0.60$ --- this would be considered a good model
+in banking.)}
+\end{minipage}}
+
+%% ============================================================
+%% SECTION 5: COMPLETE EXAMPLE AND WRAP-UP
+%% ============================================================
+\section{Putting It All Together}
+
+\subsection{Maria's Loan Application --- The Full Pipeline}
+
+Let us recap every step of Maria's journey through the model:
+\begin{enumerate}
+  \item \textbf{Collect features}: income \$4{,}500/month, debt ratio 0.35,
+        employed 6 years, credit history 8 years, 1 past missed payment.
+  \item \textbf{Compute the score}: multiply each feature by its weight and add up.
+        Maria's score is $2.03$.
+  \item \textbf{Apply the S-curve}: $\sigma(2.03) \approx 0.883$.
+        Probability of repayment $= 88.3\%$.
+  \item \textbf{Probability of default}: $1 - 0.883 = 0.117$, or $11.7\%$.
+  \item \textbf{Apply the bank's threshold}: the bank's cutoff is a 15\% default
+        rate. Maria's $11.7\%$ is below the cutoff $\rightarrow$ \highlight{APPROVED}.
+\end{enumerate}
+
+\textbf{What if Maria had more missed payments?}
+Suppose she had 3 past missed payments instead of 1. Each one carries a weight of
+$-0.90$, so the score drops by $0.90 \times 2 = 1.80$ (two extra missed payments).
+The new score is $2.03 - 1.80 = 0.23$, and the sigmoid gives
+$\sigma(0.23) \approx 0.557$. The probability of default is now $44.3\%$ --- far above
+the 15\% cutoff $\rightarrow$ \highlight{DENIED}. This illustrates how the model weighs
+\emph{all} features together, not just one in isolation.
+
+\subsection{When Should You Use Logistic Regression?}
+
+\textbf{Use logistic regression when:}
+\begin{itemize}
+  \item The outcome is yes/no (repay or default, spam or not spam, disease or healthy).
+  \item You need to \emph{explain} the decision --- each weight tells you exactly how
+        important a feature is and in which direction it pushes the prediction.
+  \item You need a \emph{probability}, not just a label.
+\end{itemize}
+
+\textbf{Consider alternatives when:}
+\begin{itemize}
+  \item The patterns in the data are very complex and non-linear (tree-based models or
+        neural networks may perform better).
+  \item The input is unstructured --- images, free text, audio.
+  \item Explainability is not required.
+\end{itemize}
+
+In banking, logistic regression is the standard tool because regulators \emph{require}
+that every lending decision can be explained to the applicant.
+
+\subsection{Five Things to Remember}
+
+\begin{enumerate}
+  \item Logistic regression predicts the \textbf{probability} of a yes-or-no outcome.
+  \item It works by assigning weights to features and passing the total through an
+        S-shaped curve (the sigmoid).
+  \item The model learns by minimising how often it is confidently wrong (the loss
+        function).
+  \item We measure quality using the confusion matrix, precision, recall, and the ROC
+        curve (AUC / Gini).
+  \item It is the standard tool in banking and healthcare because every prediction can be
+        traced back to specific features and their weights.
+\end{enumerate}
+
+%% ============================================================
+%% GLOSSARY
+%% ============================================================
+\subsection{Glossary of Key Terms}
+
+\begin{center}
+\begin{tabular}{@{}p{3.4cm}p{10.5cm}@{}}
+\toprule
+\textbf{Term} & \textbf{Plain-English Meaning} \\
+\midrule
+Feature & A single piece of information about an applicant (e.g.\ income, age). \\
+Weight & A number that tells the model how important a feature is and in which direction it pushes the prediction. \\
+Sigmoid & The S-shaped curve that converts any score into a probability between 0 and 1. \\
+Loss function & A measure of how wrong the model's predictions are; the model tries to make this as small as possible. \\
+Training & The process of adjusting weights so that the model's predictions match the real outcomes as closely as possible. \\
+Confusion matrix & A $2 \times 2$ table that counts the model's correct and incorrect predictions. \\
+Precision & The fraction of approved applicants who actually repaid. \\
+Recall & The fraction of all good applicants who were correctly approved. \\
+Threshold & The cutoff probability above which the model approves an applicant. \\
+ROC curve & A chart that shows all possible trade-offs between catching good borrowers and accidentally approving bad ones. \\
+AUC & Area Under the ROC Curve --- a single number (0.5 to 1.0) summarising model quality. \\
+Gini & $2 \times \text{AUC} - 1$; the banking industry's preferred way of reporting AUC. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+%% WHAT TO READ NEXT
+%% ============================================================
+\subsection{What to Read Next}
+
+This guide has given you the core intuition behind logistic regression. When you are
+ready to go further, the L02 Self-Study Document covers the same topic at a more
+technical level, including the mathematical derivation of the learning algorithm,
+regularization techniques, and formal statistical tests for evaluating whether individual
+features matter. The references below are also excellent starting points.
+
+%% ============================================================
+%% REFERENCES
+%% ============================================================
+\section{References}
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item James, G., Witten, D., Hastie, T., Tibshirani, R.\ (2021).
+        \emph{An Introduction to Statistical Learning}, 2nd ed.\ Springer. Chapter~4.
+  \item Molnar, C.\ (2022).
+        \emph{Interpretable Machine Learning}.\\
+        \url{https://christophm.github.io/interpretable-ml-book/}
+  \item scikit-learn User Guide: Logistic Regression.
+        \url{https://scikit-learn.org/stable/modules/linear_model.html}
+  \item Khan Academy: Introduction to Probability.\\
+        \url{https://www.khanacademy.org/math/statistics-probability/probability-library}
+\end{enumerate}
+
+\end{document}
