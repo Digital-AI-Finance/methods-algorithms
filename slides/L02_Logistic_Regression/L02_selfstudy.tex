@@ -1,0 +1,402 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage[colorlinks=true,linkcolor=mlblue,urlcolor=mlblue]{hyperref}
+
+% Color definitions (course palette)
+\definecolor{mlpurple}{RGB}{51,51,178}
+\definecolor{mlblue}{RGB}{0,102,204}
+\definecolor{mlorange}{RGB}{255,127,14}
+\definecolor{mlgreen}{RGB}{44,160,44}
+\definecolor{mlred}{RGB}{214,39,40}
+
+% Section styling
+\titleformat{\section}{\large\bfseries\color{mlpurple}}{}{0em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{mlblue}}{}{0em}{}
+\titlespacing{\section}{0pt}{1.0em}{0.4em}
+\titlespacing{\subsection}{0pt}{0.7em}{0.3em}
+
+% Paragraph spacing
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0em}
+
+% Compact lists
+\setlist{nosep}
+
+% Highlight command
+\newcommand{\highlight}[1]{{\color{mlorange}\textbf{#1}}}
+
+\begin{document}
+
+%% ============================================================
+%% TITLE BLOCK
+%% ============================================================
+\begin{center}
+{\LARGE\bfseries\color{mlpurple} Logistic Regression: A Self-Study Guide}\\[0.3em]
+{\large Methods and Algorithms -- MSc Data Science}\\[0.2em]
+{\normalsize L02 Self-Study Document}\\[0.5em]
+\rule{0.6\textwidth}{0.4pt}
+\end{center}
+
+Logistic regression is the workhorse of binary classification in finance, healthcare, and
+marketing. This document covers the mathematical foundations, estimation, inference, and a
+credit scoring application---everything you need for independent study.
+
+%% ============================================================
+%% SECTION 1: THE LOGISTIC MODEL
+%% ============================================================
+\section{The Logistic Model}
+
+\textbf{The classification problem.}
+In binary classification the response $Y \in \{0,1\}$ is categorical, so we need a model that
+maps features $\mathbf{x}$ to a probability $P(Y{=}1 \mid \mathbf{x}) \in [0,1]$.
+A na\"ive approach would be to use the linear function $\mathbf{w}^\top\mathbf{x}+b$ directly,
+but this can produce values outside $[0,1]$. Instead, we pass the linear predictor through
+the \highlight{sigmoid function}:
+
+\begin{wrapfigure}{r}{0.45\textwidth}
+  \centering
+  \vspace{-1.0em}
+  \includegraphics[width=0.43\textwidth]{01_sigmoid_function/chart.pdf}
+  \vspace{-1.5em}
+\end{wrapfigure}
+
+\begin{equation*}
+  \sigma(z) = \frac{1}{1 + e^{-z}}
+\end{equation*}
+
+\textbf{Key properties} of the sigmoid:
+\begin{itemize}
+  \item Range: $\sigma(z)\in(0,1)$ for all $z\in\mathbb{R}$.
+  \item Centre: $\sigma(0) = 0.5$.
+  \item Symmetry: $\sigma(-z) = 1 - \sigma(z)$.
+  \item Derivative: $\sigma'(z) = \sigma(z)\bigl(1-\sigma(z)\bigr)$.
+\end{itemize}
+
+The derivative property is remarkably elegant: the gradient at any point is determined entirely
+by the function value itself. This makes back-propagation efficient and is one reason logistic
+units appear throughout neural networks.
+
+\textbf{Odds and log-odds.}
+Define the \emph{odds} of the positive class as $\text{odds} = p/(1-p)$.
+Odds of 3 mean the event is three times more likely to occur than not.
+The \emph{logit} (log-odds) links the probability to a linear predictor:
+%
+\begin{equation*}
+  \text{logit}(p) = \ln\!\frac{p}{1-p} = \mathbf{w}^\top \mathbf{x} + b.
+\end{equation*}
+
+This equation is the core of logistic regression: the log-odds are a \emph{linear function}
+of the features. Inverting the logit via the sigmoid recovers the probability.
+
+\textbf{Coefficient interpretation.}
+Each coefficient acts multiplicatively on the odds:
+$e^{w_j}$ is the factor by which the odds change when $x_j$ increases by one unit,
+holding all other features constant.
+For example, $w_j = 0.42$ implies $e^{0.42}\approx 1.52$, i.e.\ the odds increase by 52\%.
+If $w_j < 0$, the odds \emph{decrease}; if $w_j = 0$, feature $x_j$ has no effect.
+
+\textbf{Decision boundary.}
+The model predicts $\hat{Y}=1$ when $P(Y{=}1\mid\mathbf{x}) > 0.5$, which occurs when
+$\mathbf{w}^\top\mathbf{x}+b > 0$.
+In two dimensions, this boundary is a straight line; in higher dimensions, a hyperplane.
+The threshold 0.5 can be adjusted depending on the cost of false positives vs.\ false negatives.
+
+%% ============================================================
+%% SECTION 2: PARAMETER ESTIMATION
+%% ============================================================
+\section{Parameter Estimation}
+
+Unlike linear regression, there is no closed-form solution for the logistic regression
+parameters. We estimate $\mathbf{w}$ via \highlight{maximum likelihood estimation} (MLE).
+
+\begin{wrapfigure}{r}{0.45\textwidth}
+  \centering
+  \vspace{-1.0em}
+  \includegraphics[width=0.43\textwidth]{03_log_loss/chart.pdf}
+  \vspace{-1.5em}
+\end{wrapfigure}
+
+\textbf{Likelihood function.}
+Let $p_i = \sigma(\mathbf{w}^\top\mathbf{x}_i)$.
+Assuming observations are independent, the likelihood of the observed labels is:
+%
+\begin{equation*}
+  L(\mathbf{w}) = \prod_{i=1}^{n} p_i^{\,y_i}(1-p_i)^{1-y_i}.
+\end{equation*}
+
+\textbf{Log-likelihood.}
+Taking logarithms converts the product to a sum, which is easier to optimise:
+%
+\begin{equation*}
+  \ell(\mathbf{w}) = \sum_{i=1}^{n}\bigl[y_i \ln p_i + (1-y_i)\ln(1-p_i)\bigr].
+\end{equation*}
+
+\textbf{Binary cross-entropy.}
+The binary cross-entropy loss is $\mathrm{BCE} = -\frac{1}{n}\,\ell(\mathbf{w})$,
+so minimising BCE is equivalent to maximising the log-likelihood.
+The figure to the right shows how the loss penalises confident wrong predictions much more
+heavily than slightly uncertain correct ones.
+
+\textbf{Gradient derivation.}
+Applying the chain rule to a single sample yields a remarkably clean expression:
+$\partial\ell / \partial w_j = (y_i - p_i)\,x_{ij}$.
+The gradient is proportional to the \emph{residual} $(y_i - p_i)$, just like in linear regression.
+In matrix form:
+%
+\begin{equation*}
+  \nabla_{\mathbf{w}}\,\ell = \mathbf{X}^\top(\mathbf{y}-\mathbf{p}).
+\end{equation*}
+
+\textbf{Gradient descent update:}
+$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} + \eta \cdot \frac{1}{n}\,\mathbf{X}^\top(\mathbf{y}-\mathbf{p})$,
+where $\eta$ is the learning rate. Convergence is linear (first-order).
+
+\textbf{Newton--Raphson / IRLS.}
+For faster convergence, we use second-order information.
+The Hessian of the log-likelihood is:
+%
+\begin{equation*}
+  \mathbf{H} = -\mathbf{X}^\top\mathbf{S}\mathbf{X}, \quad
+  \text{where } \mathbf{S}=\mathrm{diag}\!\bigl(p_i(1-p_i)\bigr).
+\end{equation*}
+
+The Newton update is $\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \mathbf{H}^{-1}\nabla\ell$.
+Because $\mathbf{H}$ is negative semi-definite, the log-likelihood is \emph{concave} and
+Newton--Raphson converges \emph{quadratically}---typically in 5--10 iterations, versus
+hundreds for gradient descent. This algorithm is also known as
+\emph{Iteratively Reweighted Least Squares} (IRLS) because each Newton step solves a
+weighted least-squares problem with weights $p_i(1-p_i)$.
+
+%% ============================================================
+%% SECTION 3: INFERENCE AND MODEL SELECTION
+%% ============================================================
+\section{Inference and Model Selection}
+
+A key advantage of logistic regression over black-box classifiers is its rich statistical
+inference framework. After fitting, we can test hypotheses about individual coefficients,
+compare nested models, and construct confidence intervals.
+
+\textbf{Standard errors.}
+The inverse of the observed information matrix gives approximate variances:
+$\mathrm{SE}(\hat{w}_j) = \sqrt{[\mathbf{H}^{-1}]_{jj}}$.
+These standard errors are \emph{asymptotic}---they rely on large-sample theory.
+
+\textbf{Wald test.}
+To test $H_0\!: w_j = 0$ (i.e., feature $x_j$ is irrelevant), compute:
+%
+\begin{equation*}
+  z_j = \frac{\hat{w}_j}{\mathrm{SE}(\hat{w}_j)}.
+\end{equation*}
+%
+Reject at the 5\% level if $|z_j| > 1.96$.
+Confidence intervals: $\hat{w}_j \pm 1.96 \cdot \mathrm{SE}(\hat{w}_j)$.
+
+\textbf{Likelihood Ratio Test (LRT).}
+For testing $q$ restrictions jointly (e.g., removing a group of features):
+%
+\begin{equation*}
+  \Lambda = -2\bigl[\ell(\text{reduced}) - \ell(\text{full})\bigr] \;\sim\; \chi^2_q.
+\end{equation*}
+%
+The LRT is generally more powerful than the Wald test for small samples and is preferred
+when comparing nested models.
+
+\textbf{Model selection criteria.}
+\begin{itemize}
+  \item AIC $= -2\ell + 2k$, where $k$ is the number of parameters.
+  \item BIC $= -2\ell + k\ln n$, which penalises complexity more heavily.
+\end{itemize}
+BIC is preferred for regulatory models in banking because it favours parsimony, leading to
+more interpretable and stable scorecards.
+
+%% ============================================================
+%% SECTION 4: REGULARIZATION
+%% ============================================================
+\section{Regularization}
+
+When the number of features is large relative to the sample size, or when features are
+correlated, the MLE can overfit. Regularization adds a penalty to the negative log-likelihood:
+
+\begin{itemize}
+  \item \textbf{L2 (Ridge):}
+    $\min_{\mathbf{w}} -\ell(\mathbf{w}) + \lambda\|\mathbf{w}\|_2^2$
+    --- shrinks all coefficients towards zero but retains all features.
+  \item \textbf{L1 (Lasso):}
+    $\min_{\mathbf{w}} -\ell(\mathbf{w}) + \lambda\|\mathbf{w}\|_1$
+    --- induces sparsity, effectively performing automatic feature selection.
+  \item \textbf{Elastic Net:}
+    $\min_{\mathbf{w}} -\ell(\mathbf{w}) + \lambda\bigl[\alpha\|\mathbf{w}\|_1 + (1{-}\alpha)\|\mathbf{w}\|_2^2\bigr]$
+    --- combines both penalties; useful when features are grouped.
+\end{itemize}
+
+The hyperparameter $\lambda$ (or $C = 1/\lambda$ in scikit-learn) is chosen via
+$k$-fold cross-validation. Larger $\lambda$ means stronger regularization.
+A practical rule: use the ``one-SE rule'' to select the most parsimonious model within one
+standard error of the minimum CV loss. L1 regularization is particularly popular in
+credit scoring for producing sparse, interpretable models.
+
+%% ============================================================
+%% SECTION 5: EVALUATION METRICS
+%% ============================================================
+\section{Evaluation Metrics}
+
+\begin{wrapfigure}{r}{0.40\textwidth}
+  \centering
+  \vspace{-1.0em}
+  \includegraphics[width=0.38\textwidth]{06_confusion_matrix/chart.pdf}
+  \vspace{-1.8em}
+\end{wrapfigure}
+
+\textbf{Confusion matrix.}
+A $2\times 2$ table of True Positives (TP), False Positives (FP),
+True Negatives (TN), and False Negatives (FN) at a given classification threshold.
+
+\textbf{Derived metrics:}
+\begin{itemize}
+  \item Precision $= \mathrm{TP}/(\mathrm{TP}+\mathrm{FP})$ --- of predicted positives, how many correct?
+  \item Recall $= \mathrm{TP}/(\mathrm{TP}+\mathrm{FN})$ --- of actual positives, how many found?
+  \item $F_1 = 2 \cdot \text{Prec} \cdot \text{Rec}\,/\,(\text{Prec}+\text{Rec})$ --- harmonic mean balancing both.
+  \item Accuracy $= (\mathrm{TP}+\mathrm{TN})/n$ --- overall fraction correct.
+\end{itemize}
+
+\vspace{1.5em}
+
+\begin{wrapfigure}{r}{0.40\textwidth}
+  \centering
+  \vspace{-0.5em}
+  \includegraphics[width=0.38\textwidth]{04_roc_curve/chart.pdf}
+  \vspace{-1.8em}
+\end{wrapfigure}
+
+\textbf{ROC curve and AUC.}
+The Receiver Operating Characteristic (ROC) curve plots the True Positive Rate (recall)
+against the False Positive Rate at varying classification thresholds. A perfect classifier
+hugs the top-left corner; a random classifier follows the diagonal.
+The \highlight{AUC} (area under the ROC curve) summarises discriminatory power in a single
+number. It equals the probability that a randomly chosen positive example ranks higher than
+a randomly chosen negative example.
+
+\textbf{Gini coefficient.}
+In banking, the Gini coefficient is defined as $\text{Gini} = 2\cdot\text{AUC} - 1$.
+Industry benchmarks: Gini $> 0.40$ is acceptable; Gini $> 0.60$ is good for retail credit.
+
+\textbf{Warning about imbalanced data.}
+With severely imbalanced data (e.g., a 1\% default rate), raw accuracy is meaningless---a model
+predicting ``no default'' for everyone achieves 99\% accuracy but is useless. Always evaluate
+using AUC, Gini, or precision--recall metrics in such settings.
+
+%% ============================================================
+%% SECTION 6: APPLICATION -- CREDIT SCORING
+%% ============================================================
+\section{Application: Credit Scoring}
+
+Consider a bank building a scorecard to predict credit card default.
+The model is trained on historical data with five features.
+We frame the model as $P(\text{repayment}\mid\mathbf{x})$, so that positive coefficients
+indicate \emph{better} creditworthiness.
+
+\vspace{0.3em}
+\begin{center}
+\begin{tabular}{@{}llccc@{}}
+\toprule
+\textbf{Feature} & \textbf{Variable} & \textbf{Example} & $\hat{w}_j$ & \textbf{Odds Ratio} $e^{\hat{w}_j}$ \\
+\midrule
+Intercept              & --     & --   & $-2.10$ & --   \\
+Monthly Income (k\$)   & $x_1$  & 4.5  & $\phantom{-}0.42$  & 1.52 \\
+Debt-to-Income Ratio   & $x_2$  & 0.35 & $-1.15$ & 0.32 \\
+Employment Years       & $x_3$  & 6    & $\phantom{-}0.35$  & 1.42 \\
+Credit History (yrs)   & $x_4$  & 8    & $\phantom{-}0.18$  & 1.20 \\
+Past Delinquencies     & $x_5$  & 1    & $-0.90$ & 0.41 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Worked example.}
+For the sample applicant above, we compute the linear predictor:
+%
+\begin{align*}
+  z &= -2.10 + 0.42(4.5) + (-1.15)(0.35) + 0.35(6)\\
+    &\quad + 0.18(8) + (-0.90)(1)\\
+    &= -2.10 + 1.89 - 0.4025 + 2.10 + 1.44 - 0.90\\
+    &= 2.0275.
+\end{align*}
+%
+The predicted probability of repayment is:
+%
+\begin{equation*}
+  P(\text{repay}) = \sigma(2.0275) = \frac{1}{1+e^{-2.0275}} \approx 0.883.
+\end{equation*}
+%
+Therefore, the \highlight{probability of default} is
+$\text{PD} = 1 - 0.883 = 0.117$ (11.7\%).
+
+\textbf{Odds ratio interpretation.}
+Each additional year of employment multiplies the odds of repayment by
+$e^{0.35} = 1.42$, i.e.\ a 42\% increase in odds, all else equal.
+Conversely, each past delinquency multiplies the odds by $e^{-0.90}=0.41$,
+roughly halving them.
+The debt-to-income ratio has the strongest negative effect: a 0.1 increase in DTI
+multiplies the odds by $e^{-1.15 \times 0.1}=e^{-0.115}\approx 0.89$, an 11\% reduction.
+
+\textbf{Basel regulatory context.}
+Under the Basel framework, the \emph{expected loss} for a credit exposure is:
+%
+\begin{equation*}
+  \text{EL} = \text{PD} \times \text{LGD} \times \text{EAD}.
+\end{equation*}
+%
+For our applicant with LGD~$= 0.45$ and EAD~$= \$25{,}000$:
+$\text{EL} = 0.117 \times 0.45 \times 25{,}000 = \$1{,}316$.
+This expected loss feeds into the bank's loan-loss provisions and regulatory capital calculations.
+
+\textbf{Why logistic regression for scorecards?}
+Logistic regression remains the \emph{regulatory gold standard} for credit scoring because:
+(i) coefficients are directly interpretable as log-odds ratios;
+(ii) the model produces well-calibrated probabilities;
+(iii) regulators require that banks can explain every decision;
+(iv) the model is stable and easy to monitor over time.
+
+Gini benchmarks for retail credit: Gini $> 0.40$ is acceptable, Gini $> 0.60$ is good.
+More complex models (gradient boosting, neural networks) may achieve higher Gini, but they
+face significant regulatory hurdles around explainability.
+
+%% ============================================================
+%% SECTION 7: SUMMARY
+%% ============================================================
+\section{Summary}
+
+\begin{itemize}
+  \item Logistic regression maps features to calibrated probabilities via the sigmoid function.
+  \item MLE with cross-entropy loss yields a convex problem---guaranteed global optimum.
+  \item Newton--Raphson converges quadratically; gradient descent is simpler but slower.
+  \item The Wald test and LRT assess individual and joint significance of features.
+  \item Regularization (L1/L2/Elastic Net) controls overfitting and performs feature selection.
+  \item In credit scoring, logistic regression remains the regulatory gold standard
+        due to its interpretability and well-understood statistical properties.
+\end{itemize}
+
+%% ============================================================
+%% REFERENCES
+%% ============================================================
+\section{References}
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item James, G., Witten, D., Hastie, T., Tibshirani, R.\ (2021).
+        \emph{An Introduction to Statistical Learning}, 2nd ed.\ Springer. Chapter~4.
+  \item Hastie, T., Tibshirani, R., Friedman, J.\ (2009).
+        \emph{The Elements of Statistical Learning}, 2nd ed.\ Springer. Chapter~4.
+  \item Molnar, C.\ (2022).
+        \emph{Interpretable Machine Learning}.\\
+        \url{https://christophm.github.io/interpretable-ml-book/}
+  \item scikit-learn User Guide: Logistic Regression.
+        \url{https://scikit-learn.org/stable/modules/linear_model.html}
+\end{enumerate}
+
+\end{document}
