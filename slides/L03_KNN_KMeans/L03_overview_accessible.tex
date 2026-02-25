@@ -1,0 +1,645 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% Color definitions
+\definecolor{mlblue}{RGB}{0,102,204}
+\definecolor{mlpurple}{RGB}{51,51,178}
+\definecolor{mllavender}{RGB}{173,173,224}
+\definecolor{mllavender2}{RGB}{193,193,232}
+\definecolor{mllavender3}{RGB}{204,204,235}
+\definecolor{mllavender4}{RGB}{214,214,239}
+\definecolor{mlorange}{RGB}{255, 127, 14}
+\definecolor{mlgreen}{RGB}{44, 160, 44}
+\definecolor{mlred}{RGB}{214, 39, 40}
+\definecolor{mlgray}{RGB}{127, 127, 127}
+
+% Additional colors for template compatibility
+\definecolor{lightgray}{RGB}{240, 240, 240}
+\definecolor{midgray}{RGB}{180, 180, 180}
+
+% Backward compatibility: uppercase color names
+\colorlet{MLPurple}{mlpurple}
+\colorlet{MLBlue}{mlblue}
+\colorlet{MLOrange}{mlorange}
+\colorlet{MLGreen}{mlgreen}
+\colorlet{MLRed}{mlred}
+\colorlet{MLLavender}{mllavender}
+\colorlet{MLGray}{mlgray}
+
+% Apply custom colors to Madrid theme
+\setbeamercolor{palette primary}{bg=mllavender3,fg=mlpurple}
+\setbeamercolor{palette secondary}{bg=mllavender2,fg=mlpurple}
+\setbeamercolor{palette tertiary}{bg=mllavender,fg=white}
+\setbeamercolor{palette quaternary}{bg=mlpurple,fg=white}
+
+\setbeamercolor{structure}{fg=mlpurple}
+\setbeamercolor{section in toc}{fg=mlpurple}
+\setbeamercolor{subsection in toc}{fg=mlblue}
+\setbeamercolor{title}{fg=mlpurple}
+\setbeamercolor{frametitle}{fg=mlpurple,bg=mllavender3}
+\setbeamercolor{block title}{bg=mllavender2,fg=mlpurple}
+\setbeamercolor{block body}{bg=mllavender4,fg=black}
+
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Clean itemize/enumerate
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+% Reduce margins for more content space
+\setbeamersize{text margin left=5mm,text margin right=5mm}
+
+% Custom course footer
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}Methods and Algorithms
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}MSc Data Science
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Command for bottom annotation (Madrid-style)
+\newcommand{\bottomnote}[1]{%
+\vfill
+\vspace{-2mm}
+\textcolor{mllavender2}{\rule{\textwidth}{0.4pt}}
+\vspace{1mm}
+\footnotesize
+\textbf{#1}
+}
+
+% Compact list for dense slides
+\newenvironment{compactlist}{%
+  \begin{itemize}%
+    \setlength{\itemsep}{2pt}%
+    \setlength{\parskip}{0pt}%
+    \setlength{\parsep}{0pt}%
+}{%
+  \end{itemize}%
+}
+
+% Custom commands for course compatibility
+\newcommand{\highlight}[1]{\textcolor{mlorange}{\textbf{#1}}}
+\newcommand{\mathbold}[1]{\boldsymbol{#1}}
+
+\title[L03: KNN \& K-Means]{L03: K-Nearest Neighbors \& K-Means}
+\subtitle{Overview}
+\author{Methods and Algorithms}
+\institute{MSc Data Science}
+\date{Spring 2026}
+
+\begin{document}
+
+% ============================================================================
+% INTRO ZONE (slides 1-9) — Zero Greek letters, Zero Formulas
+% ============================================================================
+
+% SLIDE 1: Title Page
+\begin{frame}
+\titlepage
+\end{frame}
+
+% SLIDE 2: Outline
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+% SLIDE 3: Can a Machine Learn from Its Neighbors? (L8 mixed media)
+\begin{frame}[t]{Can a Machine Learn from Its Neighbors?}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\includegraphics[width=0.75\textwidth]{images/1838_machine_learning.png}
+
+\column{0.48\textwidth}
+\begin{itemize}
+  \item Banks have millions of past transactions --- some fraudulent, most legitimate
+  \item How do we classify a brand-new transaction as fraud or not?
+  \item How do we find natural customer groups when nobody has labeled them?
+\end{itemize}
+\end{columns}
+\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5) --- Today: learning from neighbors and discovering groups}
+\end{frame}
+
+% SLIDE 4: What Is Classification? (L7 full width)
+\begin{frame}[t]{What Is Classification?}
+Classification is like \textbf{sorting email into spam or not-spam}: we learn from labeled examples, then predict labels for new ones.
+
+\vspace{3mm}
+\textbf{Everyday examples:}
+\begin{itemize}
+  \item \textbf{Spam detection:} past emails labeled spam/not-spam train a filter for new emails
+  \item \textbf{Medical diagnosis:} patient records with known conditions help diagnose new patients
+  \item \textbf{Fraud flagging:} historical transactions labeled fraud/legit guide future alerts
+\end{itemize}
+
+\bottomnote{Classification = supervised learning: we learn from labeled examples}
+\end{frame}
+
+% SLIDE 5: What Is Clustering? (L7 full width)
+\begin{frame}[t]{What Is Clustering?}
+Clustering is like \textbf{organizing a messy bookshelf by topic} --- there are no labels, you just find natural groups based on similarity.
+
+\vspace{3mm}
+\textbf{Everyday examples:}
+\begin{itemize}
+  \item \textbf{Customer segments:} group shoppers by purchasing behavior without predefined categories
+  \item \textbf{News article grouping:} bundle related stories together automatically
+  \item \textbf{Song playlists:} streaming services group songs by style and mood
+\end{itemize}
+
+\bottomnote{Clustering = unsupervised learning: discover structure without labels}
+\end{frame}
+
+% SLIDE 6: Classification vs Clustering Side by Side (L10 comparison)
+\begin{frame}[t]{Classification vs Clustering Side by Side}
+\begin{columns}[T]
+\column{0.46\textwidth}
+\textbf{\textcolor{mlblue}{Classification}}
+\begin{itemize}
+  \item Has labeled training data
+  \item Goal: \textbf{predict} a label for new data
+  \item Supervised learning --- a teacher provides answers
+\end{itemize}
+
+\column{0.46\textwidth}
+\textbf{\textcolor{mlorange}{Clustering}}
+\begin{itemize}
+  \item No labels at all
+  \item Goal: \textbf{discover} natural groups
+  \item Unsupervised learning --- no teacher, just patterns
+\end{itemize}
+\end{columns}
+
+\bottomnote{KNN solves classification; K-Means solves clustering --- same letter K, different meanings}
+\end{frame}
+
+% SLIDE 7: Why Do Similar Things Behave Similarly? (L7 full width)
+\begin{frame}[t]{Why Do Similar Things Behave Similarly?}
+This is an intuition we use every day:
+
+\vspace{3mm}
+\begin{itemize}
+  \item \textbf{Medicine:} patients with similar symptoms tend to have similar diagnoses
+  \item \textbf{Real estate:} houses in similar neighborhoods tend to have similar prices
+  \item \textbf{Banking:} borrowers with similar financial profiles tend to have similar default rates
+\end{itemize}
+
+\vspace{3mm}
+The core idea: \textbf{nearness in data space implies similarity in outcome.}
+
+\bottomnote{KNN turns this everyday intuition into a precise algorithm}
+\end{frame}
+
+% SLIDE 8: Why Do Banks Need Customer Segments? (L7 full width)
+\begin{frame}[t]{Why Do Banks Need Customer Segments?}
+\begin{itemize}
+  \item \textbf{Targeted products:} premium cards for high-value customers, starter accounts for new ones
+  \item \textbf{Risk management:} group loans by risk profile to set appropriate interest rates
+  \item \textbf{Marketing:} design retention campaigns for at-risk customers before they leave
+\end{itemize}
+
+\vspace{3mm}
+\textbf{Real-world impact:} A major UK bank identified 6 customer segments, increasing product cross-sell by 15\%.
+
+\bottomnote{Segmentation transforms raw data into actionable business strategy}
+\end{frame}
+
+% SLIDE 9: What Will You Learn Today? (L7 full width)
+\begin{frame}[t]{What Will You Learn Today?}
+By the end of this lecture, you will be able to answer:
+
+\vspace{3mm}
+\begin{enumerate}
+  \item How does KNN use neighbors to classify new data?
+  \item How does K-Means find clusters step by step?
+  \item How do you choose the right value of K for either method?
+  \item When should you use KNN vs K-Means?
+\end{enumerate}
+
+\vspace{4mm}
+\textbf{Road Map:} Problem $\rightarrow$ Method $\rightarrow$ Solution $\rightarrow$ Practice
+
+\bottomnote{By end of lecture: classify with KNN, cluster with K-Means, choose K}
+\end{frame}
+
+% ============================================================================
+% CORE ZONE
+% ============================================================================
+
+\section{Problem}
+
+% SLIDE 10: The Two Problems We Solve Today (L10 comparison)
+\begin{frame}[t]{The Two Problems We Solve Today}
+\begin{columns}[T]
+\column{0.46\textwidth}
+\textbf{\textcolor{mlblue}{Fraud Detection}}
+\begin{itemize}
+  \item Labeled transactions (fraud / legitimate)
+  \item Goal: predict whether a new transaction is fraud
+  \item This is \textbf{classification}
+\end{itemize}
+
+\column{0.46\textwidth}
+\textbf{\textcolor{mlorange}{Customer Segmentation}}
+\begin{itemize}
+  \item No labels --- just raw customer data
+  \item Goal: discover natural groups of customers
+  \item This is \textbf{clustering}
+\end{itemize}
+\end{columns}
+
+\vspace{4mm}
+\textbf{\textcolor{mlred}{Important:} K in KNN = number of neighbors; K in K-Means = number of clusters --- completely different!}
+
+\bottomnote{Same letter K, fundamentally different meanings --- watch for this!}
+\end{frame}
+
+% SLIDE 11: A Concrete Example: 5 Customers (L9 definition-example)
+\begin{frame}[t]{A Concrete Example: 5 Customers}
+\begin{columns}[T]
+\column{0.46\textwidth}
+\textbf{Training Data}
+
+\vspace{2mm}
+\begin{tabular}{ccl}
+\toprule
+Age & Income & Label \\
+\midrule
+25 & 30k & Legit \\
+30 & 50k & Legit \\
+45 & 80k & Fraud \\
+50 & 90k & Fraud \\
+35 & 40k & Legit \\
+\bottomrule
+\end{tabular}
+
+\column{0.46\textwidth}
+\textbf{The Question}
+
+\vspace{2mm}
+A new Customer \#6 arrives: Age = 42, Income = 75k.
+
+\vspace{3mm}
+\textbf{Which group does Customer \#6 belong to?}
+
+\vspace{3mm}
+Imagine plotting these 5 points on a scatter plot --- Customer \#6 sits near the fraud cases. KNN formalizes this intuition.
+\end{columns}
+
+\bottomnote{This small example is the starting point --- KNN scales this to millions}
+\end{frame}
+
+% ============================================================================
+
+\section{Method}
+
+% --- KNN (5 slides) ---
+
+% SLIDE 12: How Does KNN Work? Three Simple Steps (L11 step-by-step)
+\begin{frame}[t]{How Does KNN Work? Three Simple Steps}
+\begin{enumerate}
+  \item \textbf{Measure distance} to every past example in the training data
+  \item \textbf{Find the $K{=}3$ closest neighbors} --- the 3 most similar past cases
+  \item \textbf{Take a majority vote} among those neighbors
+\end{enumerate}
+
+\vspace{4mm}
+\textbf{Worked example:} Customer \#6 has 3 nearest neighbors: 2 fraud, 1 legit $\rightarrow$ \textbf{predict fraud} (majority wins).
+
+\vspace{3mm}
+KNN is called a ``lazy learner'' (delays all computation until prediction time) --- it stores all training data and only computes distances when asked.
+
+\bottomnote{KNN is ``lazy'': it stores all data and only computes at prediction time}
+\end{frame}
+
+% SLIDE 13: KNN Step by Step: A Worked Example (L22 chart + explanations)
+\begin{frame}[t]{KNN Step by Step: A Worked Example}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\includegraphics[width=\textwidth]{09_knn_step_by_step/chart.pdf}
+
+\column{0.42\textwidth}
+\begin{itemize}
+  \item We measure distance from the new point (star) to all training points
+  \item The 3 closest neighbors are 2 blue, 1 orange $\rightarrow$ majority vote = blue
+  \item If we used $K{=}5$ neighbors, the vote might change --- K matters!
+\end{itemize}
+\end{columns}
+
+\bottomnote{The choice of K directly controls how many neighbors vote}
+\end{frame}
+
+% SLIDE 14: What Happens When K Changes? (L22 chart + explanations)
+\begin{frame}[t]{What Happens When K Changes?}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\includegraphics[width=\textwidth]{01_knn_boundaries/chart.pdf}
+
+\column{0.42\textwidth}
+\begin{itemize}
+  \item $K{=}1$: jagged boundary follows every point --- may memorize noise (overfitting)
+  \item $K{=}15$: smooth boundary --- may miss important patterns (underfitting)
+  \item Sweet spot: use cross-validation (testing on held-out data) to find the best K
+\end{itemize}
+\end{columns}
+
+\bottomnote{Small K = flexible but noisy; large K = smooth but may miss detail}
+\end{frame}
+
+% SLIDE 15: How Do We Measure Distance? (L9 definition-example)
+\begin{frame}[t]{How Do We Measure Distance?}
+\begin{columns}[T]
+\column{0.46\textwidth}
+\textbf{Euclidean Distance}
+
+\vspace{2mm}
+The straight-line distance between two points:
+$$d = \sqrt{\sum_{i=1}^{p} (a_i - b_i)^2}$$
+
+\vspace{1mm}
+where $a$ and $b$ are two data points with $p$ features.
+
+\column{0.46\textwidth}
+\textbf{Worked Example}
+
+\vspace{2mm}
+Customer A: age = 30, income = 50k \\
+Customer B: age = 25, income = 55k
+
+\vspace{2mm}
+$d = \sqrt{(30{-}25)^2 + (50{-}55)^2}$
+
+$d = \sqrt{25 + 25} = \sqrt{50} \approx 7.07$
+\end{columns}
+
+\vspace{3mm}
+\textbf{\textcolor{mlred}{Warning:}} Always standardize features (rescale to similar ranges) first --- otherwise income (thousands) dominates age (decades)!
+
+\bottomnote{Always standardize features first --- otherwise income (thousands) dominates age (decades)}
+\end{frame}
+
+% SLIDE 16: What Do Different Distance Measures Look Like? (L22 chart + explanations)
+\begin{frame}[t]{What Do Different Distance Measures Look Like?}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\includegraphics[width=\textwidth]{02_distance_metrics/chart.pdf}
+
+\column{0.42\textwidth}
+\begin{itemize}
+  \item Euclidean draws circular neighborhoods --- straight-line distance
+  \item Manhattan draws diamond neighborhoods --- block-by-block distance
+  \item The choice of distance metric (way of measuring) changes which points count as ``nearest''
+\end{itemize}
+\end{columns}
+
+\bottomnote{Different metrics = different neighborhoods = different predictions}
+\end{frame}
+
+% --- K-Means (5 slides) ---
+
+% SLIDE 17: How Does K-Means Find Clusters? (L11 step-by-step)
+\begin{frame}[t]{How Does K-Means Find Clusters?}
+Three steps, repeated until nothing changes:
+
+\vspace{3mm}
+\begin{enumerate}
+  \item \textbf{Pick $K{=}3$ starting points} called centroids (cluster centers)
+  \item \textbf{Assign each data point} to its nearest centroid
+  \item \textbf{Move each centroid} to the center (average position) of its group
+\end{enumerate}
+
+\vspace{3mm}
+Repeat steps 2--3 until centroids stop moving.
+
+\vspace{3mm}
+\textbf{Analogy:} Like rearranging seats at a party until everyone is closest to their table center.
+
+\bottomnote{K-Means is like rearranging seats at a party until everyone is closest to their table center}
+\end{frame}
+
+% SLIDE 18: Watching K-Means Iterate (L22 chart + explanations)
+\begin{frame}[t]{Watching K-Means Iterate}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\includegraphics[width=\textwidth]{03_kmeans_iteration/chart.pdf}
+
+\column{0.42\textwidth}
+\begin{itemize}
+  \item Stars show centroids (cluster centers) moving toward their groups
+  \item Colors show which centroid each point is assigned to
+  \item After a few rounds, centroids stop moving --- we have found our clusters
+\end{itemize}
+\end{columns}
+
+\bottomnote{Convergence (stopping) is guaranteed --- the algorithm always finishes}
+\end{frame}
+
+% SLIDE 19: How Do We Choose K Clusters? The Elbow Method (L22 chart + explanations)
+\begin{frame}[t]{How Do We Choose K Clusters? The Elbow Method}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\includegraphics[width=\textwidth]{04_elbow_method/chart.pdf}
+
+\column{0.42\textwidth}
+\begin{itemize}
+  \item WCSS (total distance from points to their centroids) always decreases with more clusters
+  \item The ``elbow'' is where adding more clusters stops helping much
+  \item Here $K{=}3$ clusters looks like the best choice --- diminishing returns after that
+\end{itemize}
+\end{columns}
+
+\bottomnote{The elbow is sometimes hard to see --- that is why we also use silhouette analysis}
+\end{frame}
+
+% SLIDE 20: Why Does Starting Position Matter? (L7 full width)
+\begin{frame}[t]{Why Does Starting Position Matter?}
+\textbf{K-Means++ in plain English:} Instead of picking random starting centroids, spread them out --- pick each new centroid far from existing ones.
+
+\vspace{3mm}
+\textbf{Why it matters:} Random starts can lead to bad results because centroids may clump together in one region of the data.
+
+\vspace{3mm}
+\textbf{Analogy:} Imagine choosing 3 meeting points in a city --- you would spread them out, not put all 3 on the same street.
+
+\vspace{3mm}
+K-Means++ is the default in Python's scikit-learn library --- you get it automatically.
+
+\bottomnote{K-Means++ is the default in scikit-learn --- always use it}
+\end{frame}
+
+% SLIDE 21: K-Means Has Limitations --- Know Them! (L18 pros/cons)
+\begin{frame}[t]{K-Means Has Limitations --- Know Them!}
+\textbf{\textcolor{mlgreen}{Strengths}}
+\begin{itemize}
+  \item[\textcolor{mlgreen}{[+]}] Fast, simple, and easy to interpret
+  \item[\textcolor{mlgreen}{[+]}] Works well on round (spherical) clusters of similar size
+  \item[\textcolor{mlgreen}{[+]}] Scales to large datasets
+\end{itemize}
+
+\vspace{3mm}
+\textbf{\textcolor{mlred}{Limitations}}
+\begin{itemize}
+  \item[\textcolor{mlred}{[-]}] Assumes round clusters of similar size --- struggles with elongated shapes
+  \item[\textcolor{mlred}{[-]}] Sensitive to outliers (extreme values) --- one extreme point shifts the centroid
+  \item[\textcolor{mlred}{[-]}] Must specify K clusters in advance (unlike DBSCAN, a density-based method)
+\end{itemize}
+
+\bottomnote{If clusters look elongated or have very different sizes, K-Means may not be the right tool}
+\end{frame}
+
+% ============================================================================
+
+\section{Solution}
+
+% SLIDE 22: How Do KNN and K-Means Compare? (L3 comparison table)
+\begin{frame}[t]{How Do KNN and K-Means Compare?}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Property} & \textbf{KNN} & \textbf{K-Means} \\
+\midrule
+Task & Classification & Clustering \\
+Learning & Supervised (has labels) & Unsupervised (no labels) \\
+K means & Number of neighbors & Number of clusters \\
+Training & None --- lazy learner & Iterative centroid updates \\
+Output & Class label & Cluster ID \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\bottomnote{Despite sharing K, these solve fundamentally different problems}
+\end{frame}
+
+% SLIDE 23: Finance: Customer Segmentation with K-Means (L22 chart + explanations)
+\begin{frame}[t]{Finance: Customer Segmentation with K-Means}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\includegraphics[width=\textwidth]{11_rfm_scatter/chart.pdf}
+
+\column{0.42\textwidth}
+\begin{itemize}
+  \item RFM = Recency (days since last purchase), Frequency (number of purchases), Monetary (total spend)
+  \item K-Means groups customers: Champions (high R,F,M) get loyalty rewards; At-Risk (low R) get retention campaigns
+  \item \textbf{Example:} Customer A: R=5, F=20, M=\$5000 $\rightarrow$ Champion. Customer B: R=180, F=2, M=\$50 $\rightarrow$ At-risk
+\end{itemize}
+\end{columns}
+
+\bottomnote{Each segment gets tailored products and communication --- segments drive strategy}
+\end{frame}
+
+% SLIDE 24: Finance: Can KNN Detect Fraud? (L7 full width)
+\begin{frame}[t]{Finance: Can KNN Detect Fraud?}
+\textbf{The class imbalance (unequal groups) problem:} Fraud is less than 1\% of transactions.
+
+\vspace{3mm}
+If KNN predicts ``no fraud'' for everything $\rightarrow$ 99\% accuracy but catches \textbf{zero} fraud cases!
+
+\vspace{3mm}
+\textbf{Solutions:}
+\begin{itemize}
+  \item \textbf{Oversample} fraud cases --- duplicate rare examples to balance the training data
+  \item \textbf{Weight fraud neighbors} more heavily --- give more influence to minority class votes
+  \item \textbf{Measure with Precision-Recall} instead of accuracy --- reward catching actual fraud
+\end{itemize}
+
+\bottomnote{In fraud detection, missing a fraud case is far more costly than a false alarm}
+\end{frame}
+
+% SLIDE 25: Which Method Should You Choose? (L22 chart + explanations)
+\begin{frame}[t]{Which Method Should You Choose?}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\includegraphics[width=\textwidth]{07_decision_flowchart/chart.pdf}
+
+\column{0.42\textwidth}
+\begin{itemize}
+  \item Have labels? $\rightarrow$ supervised methods like KNN
+  \item No labels, round clusters? $\rightarrow$ K-Means
+  \item Weird-shaped clusters? $\rightarrow$ DBSCAN (density-based) or hierarchical clustering
+\end{itemize}
+\end{columns}
+
+\bottomnote{Start simple (K-Means or KNN), add complexity only if results are poor}
+\end{frame}
+
+% ============================================================================
+
+\section{Practice}
+
+% SLIDE 26: Hands-on Exercise (L7 full width)
+\begin{frame}[t]{Hands-on Exercise}
+\begin{enumerate}
+  \item \textbf{KNN Classification:} Apply KNN to classify customers --- vary K neighbors and see how predictions change
+  \item \textbf{K-Means Segmentation:} Segment customers with K-Means --- interpret what each group means in business terms
+  \item \textbf{Choosing K:} Compare the elbow method and silhouette analysis to choose K clusters
+\end{enumerate}
+
+\bottomnote{Exercises progress from guided implementation to open-ended analysis}
+\end{frame}
+
+% ============================================================================
+
+\section{Summary}
+
+% SLIDE 27: Key Takeaways (L13 summary)
+\begin{frame}[t]{Key Takeaways}
+\begin{columns}[T]
+\column{0.46\textwidth}
+\textbf{\textcolor{mlblue}{KNN}}
+\begin{itemize}
+  \item Non-parametric (no fixed model), lazy learner
+  \item Small K = flexible but noisy; large K = smooth but may miss detail
+  \item \textbf{Scale your features!}
+\end{itemize}
+
+\column{0.46\textwidth}
+\textbf{\textcolor{mlorange}{K-Means}}
+\begin{itemize}
+  \item Iterative assign-and-update, always converges (stops)
+  \item Use K-Means++ for smart starting
+  \item Check K with elbow and silhouette methods
+\end{itemize}
+\end{columns}
+
+\vspace{3mm}
+\textbf{Both methods:} Feature scaling is critical, and K means different things in each algorithm.
+
+\bottomnote{Get the distance right, get the result right --- both methods depend on distance}
+\end{frame}
+
+% SLIDE 28: Until Next Time... (L8 mixed media)
+\begin{frame}[t]{Until Next Time...}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\includegraphics[width=0.75\textwidth]{images/2731_kmeans_clustering.png}
+
+\column{0.48\textwidth}
+\vspace{2mm}
+\textit{``Even K-Means would struggle to cluster the ways students misuse K-Means.''}
+
+\vspace{4mm}
+\textbf{Next session:} L04 --- Random Forests
+\end{columns}
+
+\bottomnote{XKCD \#2731 by Randall Munroe (CC BY-NC 2.5) --- Clustering is easy; knowing when to cluster is hard}
+\end{frame}
+
+\end{document}

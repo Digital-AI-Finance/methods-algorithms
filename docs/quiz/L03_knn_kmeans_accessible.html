@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 3: KNN &amp; K-Means (Accessible) | Methods &amp; Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVuj4nkfMTmM/M/7EKJVGr6aSozTWXMEoxlNVlTqOgKHMJCnGZJ73Lpr/7Vdw" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Ber8i1e2fQs9/h7qJC/H6MXGLS8/3k0JzqfGJhZ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxUvBOCaIpzhqKdQZnIJu5B6/HYJv9CrNR6xFZveLXHPmGIFV9O1e5sXD0J1c" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quiz 3: KNN &amp; K-Means (Accessible)</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 3: KNN &amp; K-Means (Accessible)</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "KNN is called a 'lazy learner.' What does this actually mean in practice?",
+                    "options": {
+                        "A": "It stores all training data and only computes distances when a prediction is requested",
+                        "B": "It trains very slowly because it uses gradient descent internally",
+                        "C": "It discards most training data to save memory",
+                        "D": "It randomly guesses the class label without looking at neighbors"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview slide states: KNN 'stores all training data and only computes distances when asked.' There is no training phase --- the data IS the model. This makes training instant but prediction slow."
+                },
+                {
+                    "id": 2,
+                    "question": "In the worked example, Customer #6 (age 42, income 75k) has 3 nearest neighbors: 2 fraud, 1 legit. What does KNN predict and why?",
+                    "options": {
+                        "A": "Fraud, because the majority of the 3 neighbors are fraud",
+                        "B": "Legit, because there are more legit customers overall in the training set",
+                        "C": "Fraud, because Customer #6 has high income",
+                        "D": "Undecided, because K=3 is too small to make a reliable vote"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview explains: 'Customer #6 has 3 nearest neighbors: 2 fraud, 1 legit --- predict fraud (majority wins).' KNN uses majority vote among the K closest neighbors, regardless of the overall class distribution."
+                },
+                {
+                    "id": 3,
+                    "question": "What would happen to the KNN decision boundary if you changed K from 1 to 15?",
+                    "options": {
+                        "A": "It would become much smoother, potentially missing important local patterns",
+                        "B": "It would become more jagged, fitting every training point exactly",
+                        "C": "It would not change because the data stays the same",
+                        "D": "It would split into 15 separate boundaries, one per neighbor"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview slide shows: 'K=1: jagged boundary follows every point (overfitting). K=15: smooth boundary --- may miss important patterns (underfitting).' Larger K averages over more neighbors, producing smoother but potentially less detailed boundaries."
+                },
+                {
+                    "id": 4,
+                    "question": "A dataset has two features: annual income (20,000--200,000) and age (20--80). Without feature scaling, what goes wrong with KNN?",
+                    "options": {
+                        "A": "Income dominates the distance calculation because its range is thousands of times larger than age",
+                        "B": "Age dominates because it has fewer unique values",
+                        "C": "KNN refuses to run on unscaled data",
+                        "D": "The algorithm converges more slowly but gives the same result"
+                    },
+                    "correct": "A",
+                    "explanation": "The deep dive slide states: 'Before scaling: income (20k--200k) dominates age (20--80) --- KNN picks neighbors based almost entirely on income.' The Euclidean distance is swamped by the feature with the largest numeric range."
+                },
+                {
+                    "id": 5,
+                    "question": "What is the Euclidean distance between Customer A (age=30, income=50k) and Customer B (age=25, income=55k)?",
+                    "options": {
+                        "A": "$\\sqrt{50} \\approx 7.07$",
+                        "B": "$\\sqrt{25} = 5$",
+                        "C": "$\\sqrt{100} = 10$",
+                        "D": "$\\sqrt{30} \\approx 5.48$"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview works this out: $d = \\sqrt{(30-25)^2 + (50-55)^2} = \\sqrt{25 + 25} = \\sqrt{50} \\approx 7.07$. Each feature difference is squared, summed, then square-rooted."
+                },
+                {
+                    "id": 6,
+                    "question": "In distance-weighted KNN, three neighbors are at distances 1, 2, and 10. How do their votes compare to uniform voting?",
+                    "options": {
+                        "A": "The closest neighbor (distance 1) dominates with weight 1.0, while the farthest (distance 10) has weight only 0.1",
+                        "B": "All three get equal weight regardless of distance",
+                        "C": "The farthest neighbor gets the highest weight because it covers more of the feature space",
+                        "D": "Weights are proportional to distance, so the neighbor at distance 10 has 10 times the influence"
+                    },
+                    "correct": "A",
+                    "explanation": "The deep dive slide shows weights = 1/distance: 'weights = 1.0, 0.5, 0.1 --- closest neighbor dominates.' This means nearby points, which are more similar, have far more say in the prediction than distant ones."
+                },
+                {
+                    "id": 7,
+                    "question": "How does cross-validation help choose the best K for KNN?",
+                    "options": {
+                        "A": "It tests multiple K values on held-out data folds and picks the K where validation accuracy peaks",
+                        "B": "It automatically sets K equal to the square root of the number of data points",
+                        "C": "It removes outliers from the dataset so that any K value works well",
+                        "D": "It increases K until training accuracy reaches 100%"
+                    },
+                    "correct": "A",
+                    "explanation": "The deep dive slide explains: 'Try K = 1, 3, 5, ..., 19. For each: split data into 5 folds, average accuracy. Optimal: where validation peaks.' Cross-validation prevents overfitting to one particular train-test split."
+                },
+                {
+                    "id": 8,
+                    "question": "Why does KNN struggle when the dataset has many features (e.g., 100+ columns)?",
+                    "options": {
+                        "A": "In high dimensions, all points become approximately equidistant, so 'nearest neighbor' loses meaning",
+                        "B": "KNN can only handle exactly 2 features because it needs a 2D scatter plot",
+                        "C": "More features always improve accuracy because more information is available",
+                        "D": "The algorithm switches from Euclidean to Manhattan distance automatically"
+                    },
+                    "correct": "A",
+                    "explanation": "The deep dive slide on the curse of dimensionality states: 'In high dimensions, distances become meaningless --- all points are approximately equidistant.' The rule of thumb is that KNN works best with fewer than 15--20 features."
+                },
+                {
+                    "id": 9,
+                    "question": "A student claims 'KNN and K-Means are the same algorithm because both use the letter K.' What is wrong with this claim?",
+                    "options": {
+                        "A": "KNN is supervised classification (K = number of neighbors); K-Means is unsupervised clustering (K = number of clusters)",
+                        "B": "They are indeed the same algorithm applied to different datasets",
+                        "C": "KNN clusters data while K-Means classifies data",
+                        "D": "The only difference is that KNN uses Euclidean distance while K-Means uses Manhattan distance"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview comparison table shows: KNN does classification with labeled data (K = neighbors), while K-Means does clustering with no labels (K = clusters). The overview emphasizes: 'K in KNN = number of neighbors; K in K-Means = number of clusters --- completely different!'"
+                },
+                {
+                    "id": 10,
+                    "question": "A fraud detection model using KNN achieves 99% accuracy. Why might this be misleading?",
+                    "options": {
+                        "A": "If fraud is less than 1% of transactions, predicting 'no fraud' for everything gives 99% accuracy while catching zero fraud cases",
+                        "B": "99% accuracy is always excellent regardless of the class distribution",
+                        "C": "KNN cannot be used for fraud detection at all",
+                        "D": "The model is overfitting because accuracy should never exceed 95%"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview slide states: 'If KNN predicts no fraud for everything --- 99% accuracy but catches zero fraud cases!' Solutions include oversampling fraud cases, weighting fraud neighbors more heavily, and measuring with precision-recall instead of accuracy."
+                },
+                {
+                    "id": 11,
+                    "question": "What are the three repeating steps of the K-Means algorithm?",
+                    "options": {
+                        "A": "Pick starting centroids, assign each point to its nearest centroid, move centroids to cluster averages --- repeat until stable",
+                        "B": "Randomly label points, count labels per group, remove the smallest group --- repeat",
+                        "C": "Split data in half, merge similar halves, relabel points --- repeat",
+                        "D": "Compute all pairwise distances, sort by distance, delete the farthest pairs --- repeat"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview describes: '(1) Pick K starting points called centroids, (2) Assign each data point to its nearest centroid, (3) Move each centroid to the center (average) of its group. Repeat steps 2--3 until centroids stop moving.'"
+                },
+                {
+                    "id": 12,
+                    "question": "K-Means minimizes an objective called WCSS. What does this measure?",
+                    "options": {
+                        "A": "The total squared distance from each data point to its assigned cluster centroid",
+                        "B": "The distance between every pair of cluster centroids",
+                        "C": "The number of iterations needed for the algorithm to converge",
+                        "D": "The ratio of between-cluster distance to within-cluster distance"
+                    },
+                    "correct": "A",
+                    "explanation": "The deep dive defines WCSS: $J = \\sum_{k=1}^{K} \\sum_{x_i \\in C_k} \\| x_i - \\mu_k \\|^2$. It states: 'WCSS measures how tightly packed points are within each cluster --- lower is better.'"
+                },
+                {
+                    "id": 13,
+                    "question": "When using the elbow method to choose K clusters, what pattern should you look for in the WCSS plot?",
+                    "options": {
+                        "A": "The point where adding more clusters stops reducing WCSS much --- the curve bends like an elbow",
+                        "B": "The K value where WCSS reaches exactly zero",
+                        "C": "The K value where WCSS is highest, indicating well-separated clusters",
+                        "D": "The steepest part of the curve, where WCSS is dropping fastest"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview states: 'The elbow is where adding more clusters stops helping much. Here K=3 clusters looks like the best choice --- diminishing returns after that.' WCSS always decreases with more clusters, so you look for where the rate of decrease sharply slows."
+                },
+                {
+                    "id": 14,
+                    "question": "A silhouette score of $+0.8$ for a data point means:",
+                    "options": {
+                        "A": "The point is well-matched to its own cluster and far from neighboring clusters",
+                        "B": "The point is on the boundary between two clusters",
+                        "C": "The point is likely assigned to the wrong cluster",
+                        "D": "The point is an outlier that should be removed"
+                    },
+                    "correct": "A",
+                    "explanation": "The deep dive explains silhouette scores: 'Near +1: well-clustered. Near 0: on boundary. Below 0: possibly in wrong cluster.' A score of +0.8 is close to +1, indicating the point clearly belongs in its assigned cluster."
+                },
+                {
+                    "id": 15,
+                    "question": "Why does K-Means++ spread out the initial centroids instead of placing them randomly?",
+                    "options": {
+                        "A": "Random placement can clump centroids in one region, leading to poor clusters that the algorithm cannot recover from",
+                        "B": "Spreading centroids guarantees finding the global optimum",
+                        "C": "K-Means++ eliminates the need for the iterative assign-update loop",
+                        "D": "It ensures every cluster has exactly the same number of points"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview explains: 'Random starts can lead to bad results because centroids may clump together in one region.' The analogy given: 'choosing 3 meeting points in a city --- you would spread them out, not put all 3 on the same street.' K-Means++ is the default in scikit-learn."
+                },
+                {
+                    "id": 16,
+                    "question": "K-Means divides the feature space into Voronoi regions. Why does this prevent it from finding crescent-shaped clusters?",
+                    "options": {
+                        "A": "Voronoi regions are always convex polygons, so K-Means can only discover round or blob-like cluster shapes",
+                        "B": "Voronoi regions require at least 10 dimensions to represent curved shapes",
+                        "C": "K-Means can find any cluster shape if you run enough iterations",
+                        "D": "Voronoi regions are only a visualization tool and do not affect the algorithm"
+                    },
+                    "correct": "A",
+                    "explanation": "The deep dive states: 'K-Means divides space into Voronoi regions (polygons) --- each region contains points closest to one centroid. These regions are always convex (no C-shapes, no donuts). K-Means cannot discover elongated, ring-shaped, or irregular clusters.'"
+                },
+                {
+                    "id": 17,
+                    "question": "A bank uses K-Means with RFM features to segment customers. Customer A has R=5, F=20, M=$5000. Customer B has R=180, F=2, M=$50. Which segment does each likely belong to?",
+                    "options": {
+                        "A": "Customer A is a 'Champion' (recent, frequent, high spend); Customer B is 'At-Risk' (inactive, rare purchases)",
+                        "B": "Both are Champions because they both have purchase history",
+                        "C": "Customer A is At-Risk because the high spend could indicate fraud",
+                        "D": "Neither can be segmented because RFM requires at least 5 features"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview slide gives this exact example: 'Customer A: R=5, F=20, M=$5000 --- Champion. Customer B: R=180, F=2, M=$50 --- At-risk.' RFM stands for Recency, Frequency, Monetary. Champions get loyalty rewards; at-risk customers get retention campaigns."
+                },
+                {
+                    "id": 18,
+                    "question": "K-Means is guaranteed to converge (stop). Why?",
+                    "options": {
+                        "A": "Each iteration can only decrease or maintain the WCSS --- it never increases, so the algorithm must eventually stop",
+                        "B": "The algorithm is hardcoded to stop after exactly 100 iterations",
+                        "C": "Centroids always move to the exact center of the dataset after one step",
+                        "D": "It converges because it uses gradient descent with a fixed learning rate"
+                    },
+                    "correct": "A",
+                    "explanation": "The deep dive states: 'WCSS can only decrease at each step --- algorithm must stop.' The overview adds: 'Convergence is guaranteed --- the algorithm always finishes.' However, it may find a local optimum rather than the global best."
+                },
+                {
+                    "id": 19,
+                    "question": "How do Mini-Batch K-Means and K-Medoids differ from standard K-Means?",
+                    "options": {
+                        "A": "Mini-Batch uses random subsets for speed (10--100x faster); K-Medoids uses actual data points as centers for robustness to outliers",
+                        "B": "Mini-Batch increases accuracy; K-Medoids decreases the number of clusters needed",
+                        "C": "Both are identical to standard K-Means but with different names",
+                        "D": "Mini-Batch works only on images; K-Medoids works only on text data"
+                    },
+                    "correct": "A",
+                    "explanation": "The deep dive explains: 'Mini-Batch K-Means uses random subsets for faster centroid updates, 10--100x faster, slightly less precise.' And: 'K-Medoids --- centroids must be actual data points (medoids), more robust to outliers, works with any distance metric.'"
+                },
+                {
+                    "id": 20,
+                    "question": "Your K-Means clusters look elongated and crescent-shaped. The silhouette scores are low. What should you try instead?",
+                    "options": {
+                        "A": "DBSCAN, which is density-based and can discover arbitrary cluster shapes without specifying K",
+                        "B": "Run K-Means again with more clusters to force the crescents into smaller round pieces",
+                        "C": "Switch to KNN, which handles non-round clusters naturally",
+                        "D": "Increase the number of iterations so K-Means can eventually find the crescent shapes"
+                    },
+                    "correct": "A",
+                    "explanation": "The overview states: 'Weird-shaped clusters? --- DBSCAN (density-based) or hierarchical clustering.' The deep dive adds that DBSCAN 'finds arbitrary shapes, handles outliers naturally, no need to specify K clusters.' K-Means is limited to spherical, convex clusters."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                const opts = {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
+                });
+            }
+        }
+
+        function waitForKaTeX(callback, maxAttempts = 50) {
+    let attempts = 0;
+    function check() {
+        if (typeof renderMathInElement !== 'undefined') {
+            callback();
+        } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(check, 50);
+        }
+    }
+    check();
+}
+
+// Initialize with error handling
+        try {
+            initQuiz();
+            waitForKaTeX(renderMath);
+        } catch (e) {
+            console.error('Quiz initialization error:', e);
+            const container = document.getElementById('questionsRow') || document.querySelector('.main');
+            if (container) {
+                container.innerHTML =
+                    '<div style="padding:2rem;text-align:center;color:#991b1b;">' +
+                    '<h3>Quiz failed to load</h3><p>Error: ' + e.message + '</p>' +
+                    '<p>Please refresh the page or try a different browser.</p></div>';
+            }
+        }
+    </script>
+</body>
+</html>

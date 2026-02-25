@@ -1,0 +1,730 @@
+\documentclass[8pt,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% Color definitions
+\definecolor{mlblue}{RGB}{0,102,204}
+\definecolor{mlpurple}{RGB}{51,51,178}
+\definecolor{mllavender}{RGB}{173,173,224}
+\definecolor{mllavender2}{RGB}{193,193,232}
+\definecolor{mllavender3}{RGB}{204,204,235}
+\definecolor{mllavender4}{RGB}{214,214,239}
+\definecolor{mlorange}{RGB}{255, 127, 14}
+\definecolor{mlgreen}{RGB}{44, 160, 44}
+\definecolor{mlred}{RGB}{214, 39, 40}
+\definecolor{mlgray}{RGB}{127, 127, 127}
+
+% Additional colors for template compatibility
+\definecolor{lightgray}{RGB}{240, 240, 240}
+\definecolor{midgray}{RGB}{180, 180, 180}
+
+% Backward compatibility: uppercase color names
+\colorlet{MLPurple}{mlpurple}
+\colorlet{MLBlue}{mlblue}
+\colorlet{MLOrange}{mlorange}
+\colorlet{MLGreen}{mlgreen}
+\colorlet{MLRed}{mlred}
+\colorlet{MLLavender}{mllavender}
+\colorlet{MLGray}{mlgray}
+
+% Apply custom colors to Madrid theme
+\setbeamercolor{palette primary}{bg=mllavender3,fg=mlpurple}
+\setbeamercolor{palette secondary}{bg=mllavender2,fg=mlpurple}
+\setbeamercolor{palette tertiary}{bg=mllavender,fg=white}
+\setbeamercolor{palette quaternary}{bg=mlpurple,fg=white}
+
+\setbeamercolor{structure}{fg=mlpurple}
+\setbeamercolor{section in toc}{fg=mlpurple}
+\setbeamercolor{subsection in toc}{fg=mlblue}
+\setbeamercolor{title}{fg=mlpurple}
+\setbeamercolor{frametitle}{fg=mlpurple,bg=mllavender3}
+\setbeamercolor{block title}{bg=mllavender2,fg=mlpurple}
+\setbeamercolor{block body}{bg=mllavender4,fg=black}
+
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Clean itemize/enumerate
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+% Reduce margins for more content space
+\setbeamersize{text margin left=5mm,text margin right=5mm}
+
+% Custom course footer
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}Methods and Algorithms
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \usebeamerfont{title in head/foot}MSc Data Science
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+      \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Command for bottom annotation (Madrid-style)
+\newcommand{\bottomnote}[1]{%
+\vfill
+\vspace{-2mm}
+\textcolor{mllavender2}{\rule{\textwidth}{0.4pt}}
+\vspace{1mm}
+\footnotesize
+\textbf{#1}
+}
+
+% Compact list for dense slides
+\newenvironment{compactlist}{%
+  \begin{itemize}%
+    \setlength{\itemsep}{2pt}%
+    \setlength{\parskip}{0pt}%
+    \setlength{\parsep}{0pt}%
+}{%
+  \end{itemize}%
+}
+
+% Custom commands for course compatibility
+\newcommand{\highlight}[1]{\textcolor{mlorange}{\textbf{#1}}}
+\newcommand{\mathbold}[1]{\boldsymbol{#1}}
+
+\title[L03: KNN \& K-Means Deep Dive]{L03: KNN \& K-Means}
+\subtitle{Deep Dive: Implementation and Evaluation}
+\author{Methods and Algorithms}
+\institute{MSc Data Science}
+\date{Spring 2026}
+
+\begin{document}
+
+% ============================================================================
+% OPENING (slides 1-4, before first \section)
+% ============================================================================
+
+% SLIDE 1: Title Page
+\begin{frame}
+\titlepage
+\end{frame}
+
+% SLIDE 2: Outline
+\begin{frame}{Outline}
+\tableofcontents
+\bottomnote{Deep dive: implementation, evaluation, and Python pipelines}
+\end{frame}
+
+% SLIDE 3: The Math Behind Learning from Neighbors (L8 mixed media)
+\begin{frame}{The Math Behind Learning from Neighbors}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\begin{compactlist}
+\item Overview: we saw the \textbf{intuition}. Now we go deeper
+\item How do we \highlight{measure similarity} precisely?
+\item How do we \highlight{implement} these in Python?
+\item How do we \highlight{validate} our results?
+\end{compactlist}
+\end{column}
+\begin{column}{0.40\textwidth}
+\includegraphics[width=\textwidth]{images/1838_machine_learning.png}
+\end{column}
+\end{columns}
+\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5) --- Let's look inside the pile of linear algebra}
+\end{frame}
+
+% SLIDE 4: Learning Objectives (L7 full width)
+\begin{frame}{Learning Objectives}
+By the end of this deep dive, you will be able to:
+\begin{enumerate}
+\item \textbf{Implement KNN} step by step and explain every line of code
+\item \textbf{Implement K-Means} and trace through each iteration
+\item \textbf{Evaluate cluster quality} using silhouette analysis
+\item \textbf{Build a complete pipeline} for classification and clustering in Python
+\end{enumerate}
+\bottomnote{Focus: implementation, evaluation, and practical pipeline building}
+\end{frame}
+
+% ============================================================================
+\section{KNN In Depth}
+% ============================================================================
+
+% SLIDE 5: Why Is KNN Called a "Lazy Learner"? (L10 comparison)
+\begin{frame}{Why Is KNN Called a ``Lazy Learner''?}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{\textcolor{mlblue}{Eager Learners}}
+\begin{itemize}
+\item Logistic regression, neural networks
+\item Build a model \textbf{during training}
+\item Training is slow, prediction is fast
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\textbf{\textcolor{mlorange}{KNN --- Lazy Learner}}
+\begin{itemize}
+\item Stores \textbf{ALL} training data
+\item Does all computation at \textbf{prediction time}
+\item Training is instant, prediction is slow
+\end{itemize}
+\end{column}
+\end{columns}
+\vspace{4mm}
+\centering
+\textit{``Lazy because it postpones everything to the last moment.''}
+\bottomnote{No parameters to estimate --- the training data IS the model}
+\end{frame}
+
+% SLIDE 6: The KNN Algorithm Step by Step (L11 step-by-step)
+\begin{frame}{The KNN Algorithm Step by Step}
+\textbf{Plain-English pseudocode:}
+\begin{enumerate}
+\item \textbf{Store} all training data (that's the entire ``training'' phase)
+\item For a new query point: \textbf{compute distance} to every stored point
+\item \textbf{Sort} by distance, pick the $K{=}5$ closest neighbors
+\item \textbf{Count votes} per class among those neighbors
+\item \textbf{Tie?} Weight by $1/\text{distance}$ --- closer neighbors get more say
+\item \textbf{Return} the majority class
+\end{enumerate}
+\vspace{3mm}
+\textbf{Worked example:} 5 neighbors found --- 3 vote Class~A, 2 vote Class~B $\rightarrow$ \highlight{Predict~A}
+\bottomnote{Complexity: $O(n \times p)$ per prediction --- must scan ALL data every time}
+\end{frame}
+
+% SLIDE 7: Why Feature Scaling Is Non-Negotiable (L22 chart + explanations)
+\begin{frame}{Why Feature Scaling Is Non-Negotiable}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{08_feature_scaling_effect/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{itemize}
+\item \textbf{Before scaling:} income (20k--200k) dominates age (20--80) --- KNN picks neighbors based almost entirely on income
+\item \textbf{After scaling:} both features contribute equally --- neighbors are truly ``similar''
+\item \textbf{Example:} Without scaling, $d = 180{,}000$. After StandardScaler: $d = 2.1$
+\end{itemize}
+\end{column}
+\end{columns}
+\bottomnote{StandardScaler: subtract mean, divide by standard deviation --- do this BEFORE fitting KNN}
+\end{frame}
+
+% SLIDE 8: Bias vs Variance (L22 chart + explanations)
+\begin{frame}{What Happens as K Changes? Bias vs Variance}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{10_bias_variance_visual/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{itemize}
+\item $K{=}1$ neighbors: perfectly fits training data but memorizes noise (\highlight{overfitting})
+\item $K{=}15$ neighbors: very smooth boundary, may miss real patterns (\highlight{underfitting})
+\item Best $K$ balances these --- find it with cross-validation
+\end{itemize}
+\vspace{2mm}
+\textit{``$K{=}1$ is asking ONE friend; $K{=}100$ is polling the whole school.''}
+\end{column}
+\end{columns}
+\bottomnote{Start with $K{=}\sqrt{n}$, then tune with cross-validation on held-out data}
+\end{frame}
+
+% SLIDE 9: Weighted KNN (L9 definition-example)
+\begin{frame}{Weighted KNN: Give Closer Neighbors More Say}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{Problem:} All $K$ neighbors vote equally, even a distant one.
+
+\vspace{2mm}
+\textbf{Solution:} Weight each neighbor by $1/\text{distance}$:
+$$\hat{y} = \text{class with highest } \sum_{i=1}^{K} w_i, \quad w_i = \frac{1}{d(\mathbf{x}, \mathbf{x}_i)}$$
+\end{column}
+\begin{column}{0.47\textwidth}
+\textbf{Worked example:}
+
+3 neighbors at distances 1, 2, 10:
+\begin{itemize}
+\item \textbf{Uniform:} each gets weight 1
+\item \textbf{Distance-weighted:}\\
+weights = 1.0, 0.5, 0.1\\
+$\rightarrow$ closest neighbor dominates
+\end{itemize}
+\end{column}
+\end{columns}
+\bottomnote{In scikit-learn: \texttt{weights='distance'} instead of \texttt{'uniform'} --- often improves performance}
+\end{frame}
+
+% SLIDE 10: Cross-Validation (L22 chart + explanations)
+\begin{frame}{How Do We Pick the Best K? Cross-Validation}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{13_cv_accuracy_curve/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{itemize}
+\item Try $K$ neighbors = 1, 3, 5, \ldots, 19. For each: split data into 5 folds, average accuracy
+\item Training accuracy (gray) decreases; validation accuracy (blue) peaks then drops
+\item \textbf{Optimal:} where validation peaks (green star) --- here $K{=}5$ neighbors
+\end{itemize}
+\vspace{1mm}
+{\small
+\begin{tabular}{cc}
+\toprule
+$K$ & Val.\ Acc. \\
+\midrule
+1 & 82\% \\
+3 & 87\% \\
+\textbf{5} & \textbf{89\%} \\
+7 & 88\% \\
+9 & 85\% \\
+\bottomrule
+\end{tabular}
+}
+\end{column}
+\end{columns}
+\bottomnote{Cross-validation prevents overfitting to one particular train-test split}
+\end{frame}
+
+% SLIDE 11: Curse of Dimensionality (L7 full width)
+\begin{frame}{When Does KNN Struggle? The Curse of Dimensionality}
+In \textbf{high dimensions} (many features), distances become meaningless --- all points are approximately equidistant.
+
+\vspace{3mm}
+\textbf{Analogy:} \textit{``In a 1D line, nearby houses are easy to find. In a 1000-dimension space, `nearby' loses meaning because there are too many directions.''}
+
+\vspace{3mm}
+\textbf{Solutions:}
+\begin{itemize}
+\item Reduce dimensions first (PCA --- see L05)
+\item Select only the most relevant features
+\item Use domain knowledge to drop irrelevant columns
+\end{itemize}
+
+\vspace{2mm}
+\highlight{Rule of thumb:} KNN works best with fewer than 15--20 features.
+\bottomnote{If KNN performs poorly, suspect too many features before blaming the algorithm}
+\end{frame}
+
+% ============================================================================
+\section{K-Means In Depth}
+% ============================================================================
+
+% SLIDE 12: What Is K-Means Really Optimizing? (L9 definition-example)
+\begin{frame}{What Is K-Means Really Optimizing?}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{Objective:} Minimize total distance from each point to its centroid (cluster center):
+$$J = \sum_{k=1}^{K} \sum_{\mathbf{x}_i \in C_k} \| \mathbf{x}_i - \boldsymbol{\mu}_k \|^2$$
+
+$C_k$ = set of points in cluster $k$\\
+$\boldsymbol{\mu}_k$ = centroid of cluster $k$\\
+$J$ = WCSS (Within-Cluster Sum of Squares)
+\end{column}
+\begin{column}{0.47\textwidth}
+\textbf{Worked example:} 6 points, $K{=}2$ clusters
+
+Cluster A: $(1,1), (2,2), (1,3)$\\
+$\rightarrow$ centroid $(1.33, 2.0)$\\
+$\rightarrow$ WCSS$_A = 1.33$
+
+\vspace{2mm}
+Cluster B: $(5,5), (6,6), (5,7)$\\
+$\rightarrow$ centroid $(5.33, 6.0)$\\
+$\rightarrow$ WCSS$_B = 1.33$
+
+\vspace{2mm}
+\textbf{Total $J = 2.67$}
+\end{column}
+\end{columns}
+\bottomnote{WCSS measures how tightly packed points are within each cluster --- lower is better}
+\end{frame}
+
+% SLIDE 13: K-Means Worked Visual Example (L22 chart + explanations)
+\begin{frame}{K-Means Algorithm: A Worked Visual Example}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{12_kmeans_worked_example/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{itemize}
+\item Diamonds = initial centroids placed by K-Means++; colored circles = assigned data points
+\item Dashed arrows show centroids \textbf{moving toward} cluster centers after one iteration
+\item After 3--4 iterations: centroids stabilize, assignments stop changing --- \highlight{converged!}
+\end{itemize}
+\vspace{2mm}
+\textbf{Guarantee:} WCSS can only decrease at each step $\rightarrow$ algorithm must stop.
+\end{column}
+\end{columns}
+\bottomnote{K-Means always converges --- but may find a local optimum, not the global best}
+\end{frame}
+
+% SLIDE 14: K-Means++ (L9 definition-example)
+\begin{frame}{K-Means++: Why Smart Starting Matters}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{Problem:} Random starting centroids can lead to poor clusters.
+
+\vspace{2mm}
+\textbf{K-Means++ solution:}\\
+Pick each new centroid \textbf{far from} existing ones.
+
+\vspace{2mm}
+This spreads out the initial centroids, giving the algorithm a much better starting point.
+\end{column}
+\begin{column}{0.47\textwidth}
+\textbf{Worked example:} $K{=}3$ clusters needed
+
+\begin{enumerate}
+\item Pick point $(2,3)$ randomly
+\item Farthest point is $(9,8)$ $\rightarrow$ pick it
+\item Farthest from both is $(2,9)$ $\rightarrow$ pick it
+\end{enumerate}
+
+\vspace{2mm}
+$\rightarrow$ Centroids are \highlight{spread out}, not clumped on the same street!
+\end{column}
+\end{columns}
+\bottomnote{K-Means++ is the default in scikit-learn --- no extra code needed}
+\end{frame}
+
+% SLIDE 15: Silhouette Score (L22 chart + explanations)
+\begin{frame}{How Do We Measure Cluster Quality? Silhouette Score}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{05_silhouette/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{itemize}
+\item Each horizontal bar = one data point. Score ranges from $-1$ to $+1$
+\item \textbf{Near $+1$:} well-clustered. \textbf{Near 0:} on boundary. \textbf{Below 0:} possibly in wrong cluster
+\item All clusters should have similar width and stay above the average line
+\end{itemize}
+\vspace{2mm}
+\textbf{Example:} Point at 0.8 $\rightarrow$ clearly right cluster. Point at $-0.2$ $\rightarrow$ might belong next door.
+\end{column}
+\end{columns}
+\bottomnote{Compare silhouette plots for $K{=}2, 3, 4, 5$ clusters --- pick $K$ with highest average silhouette}
+\end{frame}
+
+% SLIDE 16: Voronoi Regions (L22 chart + explanations)
+\begin{frame}{Why Are K-Means Clusters Always ``Round''?}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{06_voronoi/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\begin{itemize}
+\item K-Means divides space into \textbf{Voronoi regions} (polygons) --- each region contains points closest to one centroid
+\item These regions are always \textbf{convex} (no C-shapes, no donuts)
+\item K-Means \highlight{cannot} discover elongated, ring-shaped, or irregular clusters
+\end{itemize}
+\end{column}
+\end{columns}
+\bottomnote{If your data has non-round clusters, use DBSCAN or hierarchical clustering instead}
+\end{frame}
+
+% SLIDE 17: Alternatives to K-Means (L18 pros/cons)
+\begin{frame}{What If Clusters Aren't Round? Alternatives}
+\begin{columns}[T]
+\begin{column}{0.30\textwidth}
+\textbf{\textcolor{mlblue}{DBSCAN}}\\[2mm]
+\begin{itemize}
+\item Density-based: finds \textbf{arbitrary shapes}
+\item Handles outliers naturally
+\item No need to specify $K$ clusters
+\end{itemize}
+\end{column}
+\begin{column}{0.30\textwidth}
+\textbf{\textcolor{mlorange}{Hierarchical}}\\[2mm]
+\begin{itemize}
+\item Bottom-up merging of points
+\item Produces a dendrogram (tree diagram)
+\item Cut at desired level for clusters
+\end{itemize}
+\end{column}
+\begin{column}{0.30\textwidth}
+\textbf{\textcolor{mlgreen}{Gaussian Mixtures}}\\[2mm]
+\begin{itemize}
+\item Soft assignments (probabilities, not hard labels)
+\item Handles elliptical clusters
+\item More flexible than K-Means
+\end{itemize}
+\end{column}
+\end{columns}
+\bottomnote{K-Means is the starting point --- switch to alternatives when validation metrics are poor}
+\end{frame}
+
+% SLIDE 18: K-Means Variants (L3 two cols text)
+\begin{frame}{K-Means Variants for Special Cases}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{\textcolor{mlblue}{Mini-Batch K-Means}}
+\begin{itemize}
+\item Uses random subsets for faster centroid updates
+\item 10--100$\times$ faster for large data
+\item Slightly less precise than standard K-Means
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\textbf{\textcolor{mlorange}{K-Medoids (PAM)}}
+\begin{itemize}
+\item Centroids must be \textbf{actual data points} (medoids)
+\item More robust to outliers
+\item Works with any distance metric
+\end{itemize}
+\end{column}
+\end{columns}
+\bottomnote{Mini-Batch for speed on large datasets; K-Medoids for robustness to outliers}
+\end{frame}
+
+% ============================================================================
+\section{Implementation}
+% ============================================================================
+
+% SLIDE 19: KNN in Python (L17 code example)
+\begin{frame}[fragile]{KNN in Python: Complete Example}
+\small
+\begin{verbatim}
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report
+
+# Build pipeline: scale first, then classify
+pipe = Pipeline([
+    ('scaler', StandardScaler()),
+    ('knn', KNeighborsClassifier(n_neighbors=5,
+                                  weights='distance'))
+])
+pipe.fit(X_train, y_train)
+y_pred = pipe.predict(X_test)
+print(classification_report(y_test, y_pred))
+\end{verbatim}
+\normalsize
+Key params: \texttt{n\_neighbors}, \texttt{weights}, \texttt{metric}
+\bottomnote{Always put StandardScaler in the pipeline --- never scale outside cross-validation}
+\end{frame}
+
+% SLIDE 20: K-Means in Python (L17 code example)
+\begin{frame}[fragile]{K-Means in Python: Complete Example}
+\small
+\begin{verbatim}
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+
+# Scale features
+X_scaled = StandardScaler().fit_transform(X)
+
+# Cluster with K-Means++
+kmeans = KMeans(n_clusters=3, init='k-means++',
+                n_init=10, random_state=42)
+labels = kmeans.fit_predict(X_scaled)
+centers = kmeans.cluster_centers_
+
+print(f"Cluster sizes: {np.bincount(labels)}")
+print(f"Inertia (WCSS): {kmeans.inertia_:.1f}")
+\end{verbatim}
+\normalsize
+Key params: \texttt{n\_clusters}, \texttt{init}, \texttt{n\_init}
+\bottomnote{\texttt{n\_init=10} means 10 restarts with different seeds --- keeps the best result}
+\end{frame}
+
+% SLIDE 21: Building a Complete Pipeline (L17 code example)
+\begin{frame}[fragile]{Building a Complete Pipeline}
+\small
+\begin{verbatim}
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
+
+pipe = Pipeline([
+    ('scaler', StandardScaler()),
+    ('knn', KNeighborsClassifier())
+])
+param_grid = {
+    'knn__n_neighbors': [3, 5, 7, 11],
+    'knn__weights': ['uniform', 'distance']
+}
+grid = GridSearchCV(pipe, param_grid,
+                    cv=5, scoring='f1')
+grid.fit(X_train, y_train)
+print(f"Best params: {grid.best_params_}")
+print(f"Best F1: {grid.best_score_:.3f}")
+\end{verbatim}
+\bottomnote{GridSearchCV automates $K$ selection --- no manual trial and error needed}
+\end{frame}
+
+% SLIDE 22: Evaluating K-Means (L17 code example)
+\begin{frame}[fragile]{Evaluating K-Means: Elbow + Silhouette in Code}
+\small
+\begin{verbatim}
+from sklearn.metrics import silhouette_score
+
+scores, inertias = [], []
+K_range = range(2, 9)
+for k in K_range:
+    km = KMeans(n_clusters=k, n_init=10,
+                random_state=42)
+    labels = km.fit_predict(X_scaled)
+    scores.append(silhouette_score(X_scaled, labels))
+    inertias.append(km.inertia_)
+
+best_k = K_range[np.argmax(scores)]
+print(f"Best K clusters: {best_k}")
+print(f"Silhouette: {max(scores):.3f}")
+\end{verbatim}
+\normalsize
+Plot both curves; pick $K$ clusters where both agree.
+\bottomnote{Combine elbow and silhouette --- if they agree, you have strong evidence for $K$ clusters}
+\end{frame}
+
+% ============================================================================
+\section{Practice}
+% ============================================================================
+
+% SLIDE 23: Hands-On Exercise (L7 full width)
+\begin{frame}{Hands-On Exercise}
+\begin{enumerate}
+\item \textbf{Implement weighted KNN:} Compare uniform vs.\ distance-weighted voting on a fraud dataset --- does weighting improve recall?
+\item \textbf{Run K-Means on customer data:} Interpret cluster profiles using RFM features (Recency, Frequency, Monetary value)
+\item \textbf{Compare elbow and silhouette} for $K$ cluster selection --- do they agree on the best number of clusters?
+\end{enumerate}
+\bottomnote{All exercises use real-world-inspired financial datasets}
+\end{frame}
+
+% ============================================================================
+\section{Summary}
+% ============================================================================
+
+% SLIDE 24: Key Takeaways (L13 summary two columns)
+\begin{frame}{Key Takeaways}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{\textcolor{mlblue}{KNN}}
+\begin{itemize}
+\item Lazy learner --- no training phase
+\item \highlight{Scale features} (StandardScaler)
+\item Choose $K$ neighbors with cross-validation
+\item Beware high dimensions ($>$15 features)
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\textbf{\textcolor{mlorange}{K-Means}}
+\begin{itemize}
+\item Iterative assign-update loop
+\item Guaranteed convergence (to local optimum)
+\item Validate with silhouette analysis
+\item Spherical clusters only
+\end{itemize}
+\end{column}
+\end{columns}
+\vspace{4mm}
+\centering
+\textbf{Both:} Feature scaling is mandatory. ``$K$'' means different things in each algorithm!
+\bottomnote{Both are foundational --- understand them before moving to forests and ensembles}
+\end{frame}
+
+% SLIDE 25: Closing XKCD (L8 mixed media)
+\begin{frame}{Until Next Time\ldots}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\textit{``Now you know why `just cluster it' is never that simple.''}
+
+\vspace{4mm}
+\textbf{Next:} L04 --- Random Forests: from distance to trees.
+\end{column}
+\begin{column}{0.40\textwidth}
+\includegraphics[width=\textwidth]{images/2731_kmeans_clustering.png}
+\end{column}
+\end{columns}
+\bottomnote{XKCD \#2731 by Randall Munroe (CC BY-NC 2.5) --- Next lecture: ensemble methods}
+\end{frame}
+
+% ============================================================================
+\appendix
+\section*{Extra Topics}
+% ============================================================================
+
+% SLIDE A1: Appendix Divider
+\begin{frame}
+\centering
+\vspace{15mm}
+{\Huge\textcolor{mlpurple}{Appendix}}\\[8mm]
+{\Large Extra Topics and Details}
+\bottomnote{Reference material for further study}
+\end{frame}
+
+% SLIDE A2: Distance Metrics (L9 definition-example)
+\begin{frame}{Distance Metrics: The Minkowski Family}
+\begin{columns}[T]
+\begin{column}{0.47\textwidth}
+\textbf{Generalized Minkowski distance:}
+$$d_p(\mathbf{x}, \mathbf{x}') = \left( \sum_{j=1}^{p} |x_j - x'_j|^p \right)^{1/p}$$
+
+\begin{itemize}
+\item $p{=}1$: Manhattan (robust to outliers)
+\item $p{=}2$: Euclidean (default)
+\item $p{=}\infty$: Chebyshev (max difference)
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\textbf{Worked example:}\\
+Points $(1,3)$ and $(4,7)$:
+
+\vspace{2mm}
+\textbf{Manhattan:} $|1{-}4|+|3{-}7|=7$
+
+\textbf{Euclidean:} $\sqrt{9+16}=5$
+
+\textbf{Chebyshev:} $\max(3,4)=4$
+\end{column}
+\end{columns}
+\bottomnote{Higher $p$ amplifies large single-feature differences}
+\end{frame}
+
+% SLIDE A3: Why K-Means Always Stops (L7 full width)
+\begin{frame}{Why Does K-Means Always Stop? (Intuition)}
+\textbf{Intuitive convergence argument} (not a formal proof):
+
+\vspace{3mm}
+\begin{enumerate}
+\item Each step can only \textbf{improve or maintain} the WCSS score --- it never gets worse
+\item There are only \textbf{finitely many ways} to group $n$ points into $K$ clusters
+\item We never revisit a grouping we have already seen $\rightarrow$ \highlight{must stop}
+\end{enumerate}
+
+\vspace{4mm}
+\textbf{Analogy:} \textit{``Like rolling a ball downhill --- it can only go down or stay put, never roll back up.''}
+\bottomnote{Formal proof uses coordinate descent --- see ESL Ch.\ 14 for details}
+\end{frame}
+
+% SLIDE A4: Computational Complexity (L3 comparison table)
+\begin{frame}{Computational Complexity: How Fast?}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Method} & \textbf{Training} & \textbf{Prediction} \\
+\midrule
+KNN (brute force) & $O(1)$ & $O(nd)$ \\
+KNN (KD-Tree) & $O(nd \log n)$ & $O(d \log n)$ \\
+\midrule
+K-Means (Lloyd's) & $O(nKdT)$ & $O(Kd)$ \\
+Mini-Batch K-Means & $O(bKdT)$ & $O(Kd)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{3mm}
+$n$ = data points, $d$ = features, $K$ = neighbors or clusters, $T$ = iterations, $b$ = batch size
+
+\vspace{2mm}
+\textbf{Note:} KD-Tree degrades above 15--20 features (reverts to brute force speed).
+\bottomnote{For very large data: approximate nearest neighbors (FAISS, Annoy)}
+\end{frame}
+
+\end{document}
