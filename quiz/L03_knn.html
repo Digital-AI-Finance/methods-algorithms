@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 3: K-Nearest Neighbors | Methods &amp; Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVuj4nkfMTmM/M/7EKJVGr6aSozTWXMEoxlNVlTqOgKHMJCnGZJ73Lpr/7Vdw" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Ber8i1e2fQs9/h7qJC/H6MXGLS8/3k0JzqfGJhZ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxUvBOCaIpzhqKdQZnIJu5B6/HYJv9CrNR6xFZveLXHPmGIFV9O1e5sXD0J1c" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quiz 3: K-Nearest Neighbors</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 3: K-Nearest Neighbors</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "KNN is called a 'non-parametric' model. What does this mean in practice?",
+                    "options": {
+                        "A": "It does not assume a fixed functional form for the decision boundary; complexity grows with data",
+                        "B": "It has no hyperparameters to tune",
+                        "C": "It cannot be used with numerical features",
+                        "D": "It always produces the same predictions regardless of training data"
+                    },
+                    "correct": "A",
+                    "explanation": "Non-parametric means KNN does not learn a fixed set of parameters (like weights in regression). Instead, the model IS the training data itself, and the decision boundary adapts as $n$ grows. It still has hyperparameters like $K$."
+                },
+                {
+                    "id": 2,
+                    "question": "Euclidean distance is sensitive to outliers, while Manhattan distance is more robust. Why?",
+                    "options": {
+                        "A": "Euclidean squares the differences, amplifying large deviations; Manhattan uses absolute values which grow linearly",
+                        "B": "Manhattan distance ignores dimensions with large values",
+                        "C": "Euclidean distance cannot handle negative coordinates",
+                        "D": "Manhattan distance automatically normalizes features"
+                    },
+                    "correct": "A",
+                    "explanation": "In Euclidean distance $\\sqrt{\\sum(x_i - y_i)^2}$, squaring amplifies large differences disproportionately. Manhattan $\\sum|x_i - y_i|$ treats all deviations linearly, making it more robust when some dimensions have outlier values."
+                },
+                {
+                    "id": 3,
+                    "question": "The Chebyshev distance ($p = \\infty$ in Minkowski) between two points equals:",
+                    "options": {
+                        "A": "The maximum absolute difference across all dimensions: $\\max_i |x_i - y_i|$",
+                        "B": "The minimum absolute difference across all dimensions",
+                        "C": "The sum of all absolute differences",
+                        "D": "The product of absolute differences"
+                    },
+                    "correct": "A",
+                    "explanation": "As $p \\to \\infty$ in the Minkowski formula $(\\sum|x_i - y_i|^p)^{1/p}$, only the largest component survives: $d_{\\infty} = \\max_i |x_i - y_i|$. This is also called the chessboard distance because a king moves in max(row, col) steps."
+                },
+                {
+                    "id": 4,
+                    "question": "KD-Trees use the triangle inequality to prune search branches. What does the triangle inequality guarantee?",
+                    "options": {
+                        "A": "$d(A, C) \\leq d(A, B) + d(B, C)$, so if B is far from the query, the entire subtree rooted at B can be skipped",
+                        "B": "All distances in a KD-Tree are equal",
+                        "C": "The nearest neighbor is always in the left subtree",
+                        "D": "Distance computation takes $O(1)$ time"
+                    },
+                    "correct": "A",
+                    "explanation": "The triangle inequality $d(A,C) \\leq d(A,B) + d(B,C)$ lets the KD-Tree establish lower bounds on distances to unsearched regions. If the lower bound exceeds the current best distance, that entire branch is pruned, reducing search from $O(n)$ to $O(\\log n)$."
+                },
+                {
+                    "id": 5,
+                    "question": "A dataset has income (0--200,000) and age (20--80). Without scaling, KNN classifies a customer. What dominates the distance?",
+                    "options": {
+                        "A": "Income dominates because its range is ~3,300x larger than age, so age differences are negligible",
+                        "B": "Age dominates because it has fewer distinct values",
+                        "C": "Both contribute equally to Euclidean distance",
+                        "D": "Neither dominates; KNN automatically adjusts for scale"
+                    },
+                    "correct": "A",
+                    "explanation": "Euclidean distance sums squared differences per dimension. Income differences of thousands dwarf age differences of tens: $(200000-0)^2 \\gg (80-20)^2$. The age feature becomes effectively invisible. Standardization ensures each feature contributes proportionally."
+                },
+                {
+                    "id": 6,
+                    "question": "The standardization formula is $z = (x - \\mu) / \\sigma$. When should you prefer standardization over Min-Max scaling $x' = (x - x_{\\min})/(x_{\\max} - x_{\\min})$?",
+                    "options": {
+                        "A": "When the data contains outliers, because $\\sigma$ is less affected by extreme values than $x_{\\max} - x_{\\min}$",
+                        "B": "When all features must be in the range [0, 1]",
+                        "C": "When the dataset is very small (fewer than 10 samples)",
+                        "D": "When features are categorical"
+                    },
+                    "correct": "A",
+                    "explanation": "Min-Max scaling maps to $[0,1]$ using extreme values, so a single outlier compresses all other data into a narrow band. Standardization uses $\\mu$ and $\\sigma$, which are more robust to outliers. Use Min-Max when you need bounded outputs (e.g., pixel values)."
+                },
+                {
+                    "id": 7,
+                    "question": "In binary classification with $K=4$, two neighbors vote class A and two vote class B (a tie). What is the standard resolution strategy?",
+                    "options": {
+                        "A": "Break the tie using the distance to the nearest neighbor among the tied classes",
+                        "B": "Always predict class A (alphabetical order)",
+                        "C": "Randomly assign a class with 50/50 probability",
+                        "D": "The algorithm raises an error and refuses to predict"
+                    },
+                    "correct": "A",
+                    "explanation": "The standard tie-breaking strategy uses distance-weighted voting or checks which tied class has the single nearest neighbor. In sklearn, ties are broken by the class that appears first among the $K$ nearest neighbors (i.e., the closest one). This is why odd $K$ is recommended for binary problems."
+                },
+                {
+                    "id": 8,
+                    "question": "Three neighbors vote on a query point with distances $d_1=1$, $d_2=2$, $d_3=4$ and classes A, B, A respectively. Using inverse-distance weighting $w_i = 1/d_i$, what is the predicted class?",
+                    "options": {
+                        "A": "Class A, because $w_A = 1/1 + 1/4 = 1.25$ vs $w_B = 1/2 = 0.5$",
+                        "B": "Class B, because the middle neighbor breaks the tie",
+                        "C": "Class A, because it has more raw votes (2 vs 1)",
+                        "D": "Class B, because $w_B = 1/2 + 1/4 = 0.75 > w_A$"
+                    },
+                    "correct": "A",
+                    "explanation": "With inverse-distance weighting: $w_A = 1/1 + 1/4 = 1.25$ and $w_B = 1/2 = 0.5$. Class A wins with weighted score 1.25 vs 0.5. The closest neighbor (distance 1, class A) contributes the most weight, which is the key advantage of distance weighting."
+                },
+                {
+                    "id": 9,
+                    "question": "The variance of the KNN estimator is $\\text{Var}(\\hat{f}_K) = \\sigma^2 / K$. What does this tell us about increasing $K$?",
+                    "options": {
+                        "A": "Larger $K$ reduces variance (smoother predictions) but increases bias, since distant points may belong to different regions",
+                        "B": "Larger $K$ always improves accuracy because variance drops to zero",
+                        "C": "Variance is independent of $K$ and only depends on $\\sigma^2$",
+                        "D": "Larger $K$ increases both bias and variance simultaneously"
+                    },
+                    "correct": "A",
+                    "explanation": "Averaging over $K$ neighbors reduces variance by factor $K$, but includes more distant (possibly dissimilar) points, increasing bias. This is the classic bias-variance tradeoff: small $K$ = low bias, high variance (overfitting); large $K$ = high bias, low variance (underfitting)."
+                },
+                {
+                    "id": 10,
+                    "question": "Why can't you simply pick the $K$ that maximizes training accuracy to select the optimal $K$?",
+                    "options": {
+                        "A": "$K=1$ always achieves 100% training accuracy (each point is its own nearest neighbor), so training accuracy is a biased estimate",
+                        "B": "Training accuracy is always 0% for KNN regardless of $K$",
+                        "C": "Cross-validation is slower than using training accuracy",
+                        "D": "The optimal $K$ is always $\\sqrt{n}$ and doesn't need tuning"
+                    },
+                    "correct": "A",
+                    "explanation": "With $K=1$, every training point classifies itself correctly (distance 0 to itself), giving 100% training accuracy. This massively overfits. Cross-validation uses held-out folds to estimate generalization performance, giving an unbiased measure of how well $K$ will perform on unseen data."
+                },
+                {
+                    "id": 11,
+                    "question": "For binary classification, using an odd value of $K$ is recommended. Why?",
+                    "options": {
+                        "A": "Odd $K$ guarantees no ties in majority voting, since votes cannot split evenly between two classes",
+                        "B": "Odd $K$ produces lower variance than even $K$",
+                        "C": "Even $K$ values are not supported by most implementations",
+                        "D": "Odd $K$ ensures the decision boundary is linear"
+                    },
+                    "correct": "A",
+                    "explanation": "With two classes and odd $K$, votes always produce a strict majority (e.g., $K=5$: at least 3 vs at most 2). Even $K$ can produce ties (e.g., $K=4$: 2 vs 2), requiring tie-breaking rules. For multi-class problems, ties can still occur with odd $K$."
+                },
+                {
+                    "id": 12,
+                    "question": "As $K \\to n$ (the total number of training points), what happens to the KNN decision boundary?",
+                    "options": {
+                        "A": "It converges to always predicting the majority class, ignoring local structure entirely",
+                        "B": "It becomes maximally complex with jagged boundaries",
+                        "C": "It perfectly separates all classes",
+                        "D": "It becomes undefined because distances become infinite"
+                    },
+                    "correct": "A",
+                    "explanation": "When $K=n$, every query point uses ALL training points to vote. The prediction is simply the overall majority class regardless of where the query point lies. All local structure is smoothed away, producing maximum bias and the simplest possible model."
+                },
+                {
+                    "id": 13,
+                    "question": "In the curse of dimensionality, the ratio $(d_{\\max} - d_{\\min})/d_{\\min} \\to 0$ as dimensions increase. What does this imply for KNN?",
+                    "options": {
+                        "A": "All points become approximately equidistant, making the concept of 'nearest' neighbor meaningless",
+                        "B": "The nearest neighbor becomes exponentially closer",
+                        "C": "KNN becomes faster because distances converge",
+                        "D": "The algorithm automatically selects the optimal $K$"
+                    },
+                    "correct": "A",
+                    "explanation": "When $d_{\\max} \\approx d_{\\min}$, the nearest and farthest neighbors are roughly the same distance from the query. Neighbor selection becomes essentially random, and the KNN prediction carries no more information than a random guess. This is why dimensionality reduction (PCA, feature selection) is critical before applying KNN in high dimensions."
+                },
+                {
+                    "id": 14,
+                    "question": "The Cover & Hart (1967) bound states $R^* \\leq R_{1\\text{-NN}} \\leq 2R^*(1 - R^*)$. If the Bayes-optimal error rate is $R^* = 0.1$, what is the upper bound on 1-NN error?",
+                    "options": {
+                        "A": "$2 \\times 0.1 \\times 0.9 = 0.18$, so 1-NN is at most 1.8 times the optimal error rate",
+                        "B": "$0.1^2 = 0.01$, so 1-NN is better than Bayes-optimal",
+                        "C": "$2 \\times 0.1 = 0.20$ exactly",
+                        "D": "The bound is undefined for $R^* < 0.5$"
+                    },
+                    "correct": "A",
+                    "explanation": "The Cover-Hart bound gives $R_{1\\text{-NN}} \\leq 2 \\times 0.1 \\times (1-0.1) = 0.18$. This is a remarkable result: with infinite data, 1-NN achieves error at most twice the Bayes rate. As $R^* \\to 0$, the bound tightens to $R_{1\\text{-NN}} \\to 0$, meaning 1-NN is asymptotically consistent."
+                },
+                {
+                    "id": 15,
+                    "question": "For text classification or embeddings, cosine similarity is preferred over Euclidean distance. Why?",
+                    "options": {
+                        "A": "Cosine similarity measures the angle between vectors, ignoring magnitude; documents of different lengths but same topic have high cosine similarity",
+                        "B": "Cosine similarity is always faster to compute than Euclidean distance",
+                        "C": "Euclidean distance cannot be computed on vectors with more than 3 dimensions",
+                        "D": "Cosine similarity works only with binary features"
+                    },
+                    "correct": "A",
+                    "explanation": "Cosine similarity $= \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{||\\mathbf{a}|| \\, ||\\mathbf{b}||}$ measures orientation, not magnitude. A long document and a short document about the same topic have similar direction in word-frequency space but very different magnitudes. Euclidean distance would consider them far apart; cosine similarity correctly identifies them as similar."
+                },
+                {
+                    "id": 16,
+                    "question": "The Mahalanobis distance uses the inverse covariance matrix $\\Sigma^{-1}$: $d_M = \\sqrt{(\\mathbf{x}-\\mathbf{y})^T \\Sigma^{-1} (\\mathbf{x}-\\mathbf{y})}$. What does $\\Sigma^{-1}$ account for?",
+                    "options": {
+                        "A": "Feature correlations and different variances, so correlated or high-variance dimensions are down-weighted",
+                        "B": "Only the mean of each feature",
+                        "C": "The number of neighbors $K$",
+                        "D": "The class labels of training points"
+                    },
+                    "correct": "A",
+                    "explanation": "Mahalanobis distance decorrelates the features and scales by variance. If two features are highly correlated, a difference along their shared direction is less informative and gets down-weighted. It reduces to Euclidean distance when $\\Sigma = I$ (identity), i.e., features are uncorrelated with unit variance."
+                },
+                {
+                    "id": 17,
+                    "question": "In KNN regression, how does prediction differ from KNN classification?",
+                    "options": {
+                        "A": "Instead of majority vote, it returns the mean (or weighted mean) of the $K$ neighbors' target values",
+                        "B": "It uses a different distance metric than classification",
+                        "C": "It requires $K=1$ and cannot use larger $K$ values",
+                        "D": "It converts continuous targets to categories before predicting"
+                    },
+                    "correct": "A",
+                    "explanation": "KNN regression replaces the majority-vote aggregation with averaging: $\\hat{y} = \\frac{1}{K}\\sum_{i \\in N_K} y_i$. With distance weighting: $\\hat{y} = \\frac{\\sum w_i y_i}{\\sum w_i}$. The neighbor search mechanism (distance computation, KD-Trees) remains identical to classification."
+                },
+                {
+                    "id": 18,
+                    "question": "A fraud detection dataset has 99% legitimate and 1% fraud transactions. A KNN classifier achieves 99% accuracy. Why is this misleading?",
+                    "options": {
+                        "A": "A model predicting 'legitimate' for every transaction also achieves 99% accuracy while detecting zero fraud",
+                        "B": "99% accuracy means the model detects all fraud cases perfectly",
+                        "C": "KNN cannot be applied to imbalanced datasets",
+                        "D": "Accuracy above 95% always indicates a good model"
+                    },
+                    "correct": "A",
+                    "explanation": "With 99:1 class imbalance, the trivial classifier 'always predict legitimate' achieves 99% accuracy. It catches 0% of fraud (recall = 0). Metrics like precision, recall, F1-score, and AUC-PR are essential for imbalanced datasets. KNN with uniform voting is biased toward the majority class because most neighbors are legitimate."
+                },
+                {
+                    "id": 19,
+                    "question": "SMOTE (Synthetic Minority Over-sampling Technique) addresses class imbalance by:",
+                    "options": {
+                        "A": "Creating synthetic minority samples by interpolating between existing minority points and their nearest minority neighbors",
+                        "B": "Duplicating existing minority samples exactly",
+                        "C": "Removing majority class samples until classes are balanced",
+                        "D": "Changing the distance metric to favor the minority class"
+                    },
+                    "correct": "A",
+                    "explanation": "SMOTE selects a minority sample, finds its $k$ nearest minority neighbors, and creates a synthetic sample along the line segment connecting them: $x_{\\text{new}} = x_i + \\lambda(x_{\\text{neighbor}} - x_i)$ where $\\lambda \\in [0,1]$. This enriches the minority region without exact duplication, improving KNN's ability to learn the minority boundary."
+                },
+                {
+                    "id": 20,
+                    "question": "In a sklearn Pipeline, StandardScaler must be placed INSIDE the pipeline rather than applied before train/test splitting. Why?",
+                    "options": {
+                        "A": "Scaling before splitting lets test-set statistics ($\\mu$, $\\sigma$) leak into training, giving an optimistic and biased evaluation",
+                        "B": "StandardScaler only works inside pipelines, not standalone",
+                        "C": "Pipelines run faster when the scaler is included",
+                        "D": "The order of operations does not matter for KNN"
+                    },
+                    "correct": "A",
+                    "explanation": "If you fit StandardScaler on the entire dataset before splitting, the training data's $\\mu$ and $\\sigma$ include information from the test set. During cross-validation, each fold's scaler must be fit ONLY on training folds and applied to the held-out fold. Pipelines automate this correctly, preventing data leakage that would make results unrealistically optimistic."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                const opts = {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
+                });
+            }
+        }
+
+        function waitForKaTeX(callback, maxAttempts = 50) {
+    let attempts = 0;
+    function check() {
+        if (typeof renderMathInElement !== 'undefined') {
+            callback();
+        } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(check, 50);
+        }
+    }
+    check();
+}
+
+// Initialize with error handling
+        try {
+            initQuiz();
+            waitForKaTeX(renderMath);
+        } catch (e) {
+            console.error('Quiz initialization error:', e);
+            const container = document.getElementById('questionsRow') || document.querySelector('.main');
+            if (container) {
+                container.innerHTML =
+                    '<div style="padding:2rem;text-align:center;color:#991b1b;">' +
+                    '<h3>Quiz failed to load</h3><p>Error: ' + e.message + '</p>' +
+                    '<p>Please refresh the page or try a different browser.</p></div>';
+            }
+        }
+    </script>
+</body>
+</html>

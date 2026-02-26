@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 3: K-Means Clustering | Methods &amp; Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVuj4nkfMTmM/M/7EKJVGr6aSozTWXMEoxlNVlTqOgKHMJCnGZJ73Lpr/7Vdw" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Ber8i1e2fQs9/h7qJC/H6MXGLS8/3k0JzqfGJhZ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxUvBOCaIpzhqKdQZnIJu5B6/HYJv9CrNR6xFZveLXHPmGIFV9O1e5sXD0J1c" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quiz 3: K-Means Clustering</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 3: K-Means Clustering</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "As $K$ increases toward $n$ (the number of data points), WCSS approaches zero. Why is $K = n$ useless despite achieving $\\text{WCSS} = 0$?",
+                    "options": {
+                        "A": "Each point becomes its own cluster, so there is zero compression and no generalization to new data",
+                        "B": "The algorithm cannot converge when $K = n$",
+                        "C": "$K = n$ requires exponential computation time",
+                        "D": "WCSS actually increases when $K = n$"
+                    },
+                    "correct": "A",
+                    "explanation": "With $K = n$ clusters, each point is its own centroid and WCSS $= 0$ trivially. But this 'clusters' nothing: no patterns are discovered, no compression occurs, and the result doesn't generalize. This is why the elbow method looks for the $K$ where WCSS stops decreasing meaningfully, not where it reaches zero."
+                },
+                {
+                    "id": 2,
+                    "question": "In the assignment step, each point is assigned to the nearest centroid. Why does this step guarantee that WCSS does not increase?",
+                    "options": {
+                        "A": "Reassigning a point to a closer centroid replaces a larger squared distance with a smaller one, so the sum can only decrease or stay the same",
+                        "B": "The centroids move closer together during assignment",
+                        "C": "Points are only reassigned if doing so decreases the number of clusters",
+                        "D": "The assignment step does not affect WCSS; only the update step does"
+                    },
+                    "correct": "A",
+                    "explanation": "WCSS $= \\sum_k \\sum_{x_i \\in C_k} ||x_i - \\mu_k||^2$. When point $x_i$ switches from centroid $\\mu_a$ to $\\mu_b$ because $||x_i - \\mu_b||^2 < ||x_i - \\mu_a||^2$, the sum decreases by exactly that difference. Points that don't switch contribute the same. So WCSS is monotonically non-increasing through each assignment step."
+                },
+                {
+                    "id": 3,
+                    "question": "In the update step, the centroid is recalculated as the mean of assigned points. Why does the mean (not the median or mode) minimize within-cluster SSE?",
+                    "options": {
+                        "A": "The mean minimizes $\\sum ||x_i - c||^2$ because setting the derivative to zero yields $c = \\frac{1}{|C|} \\sum x_i$",
+                        "B": "The mean is computationally faster than other centrality measures",
+                        "C": "The median would produce the same result as the mean",
+                        "D": "The mean minimizes absolute distances, not squared distances"
+                    },
+                    "correct": "A",
+                    "explanation": "Taking the derivative of $f(c) = \\sum_{x_i \\in C_k} ||x_i - c||^2$ with respect to $c$ and setting it to zero: $\\frac{\\partial f}{\\partial c} = -2 \\sum (x_i - c) = 0$, which gives $c = \\frac{1}{|C_k|} \\sum x_i$ (the mean). The median minimizes $\\sum|x_i - c|$ (absolute deviations), which is the K-Medians objective."
+                },
+                {
+                    "id": 4,
+                    "question": "K-Means++ selects each new centroid with probability proportional to $d(x)^2$ (squared distance to nearest existing centroid). Why squared distance rather than linear?",
+                    "options": {
+                        "A": "Squaring gives exponentially higher probability to distant points, ensuring centroids are well-spread and reducing the chance of redundant nearby centroids",
+                        "B": "Linear distance is not computable for high-dimensional data",
+                        "C": "Squared distance makes the algorithm deterministic",
+                        "D": "Linear distance would always select the farthest point"
+                    },
+                    "correct": "A",
+                    "explanation": "Using $d^2$ weighting strongly favors points far from all existing centroids. A point twice as far is four times more likely to be selected. This provides the $O(\\log K)$-competitive guarantee: the expected WCSS of K-Means++ initialization is at most $O(\\log K)$ times the optimal WCSS. Linear weighting provides weaker spread guarantees."
+                },
+                {
+                    "id": 5,
+                    "question": "K-Means++ provides an $O(\\log K)$-competitive guarantee. What does this mean in practice?",
+                    "options": {
+                        "A": "The expected WCSS after initialization (before any Lloyd iterations) is at most $O(\\log K)$ times the globally optimal WCSS",
+                        "B": "The algorithm runs in $O(\\log K)$ time",
+                        "C": "At most $\\log K$ iterations are needed for convergence",
+                        "D": "The number of clusters found is within $\\log K$ of the true $K$"
+                    },
+                    "correct": "A",
+                    "explanation": "Arthur & Vassilvitskii (2007) proved that K-Means++ initialization alone achieves $\\mathbb{E}[\\text{WCSS}] \\leq 8(\\ln K + 2) \\cdot \\text{OPT}$. This means even BEFORE running Lloyd's algorithm, the initial centroids produce a solution within a logarithmic factor of optimal. After Lloyd iterations, the solution typically improves further."
+                },
+                {
+                    "id": 6,
+                    "question": "The elbow method plots WCSS vs $K$. In practice, the 'elbow' is often ambiguous. Why?",
+                    "options": {
+                        "A": "Real data rarely has perfectly separated clusters, so WCSS decreases gradually without a sharp bend",
+                        "B": "WCSS always decreases linearly regardless of data structure",
+                        "C": "The elbow is only ambiguous when $K > 10$",
+                        "D": "Plotting WCSS vs $K$ always produces a clear elbow for any dataset"
+                    },
+                    "correct": "A",
+                    "explanation": "The elbow is sharp only when clusters are well-separated with clear gaps in the data. Real-world datasets (especially high-dimensional ones) often have overlapping, fuzzy cluster boundaries. WCSS decreases smoothly without a distinct kink, making it hard to identify the 'correct' $K$. Silhouette scores and gap statistics provide more objective alternatives."
+                },
+                {
+                    "id": 7,
+                    "question": "The silhouette score for point $i$ is $s(i) = \\frac{b(i) - a(i)}{\\max(a(i), b(i))}$. If $s(i) \\approx 0$, what does this indicate?",
+                    "options": {
+                        "A": "The point lies on the boundary between two clusters ($a(i) \\approx b(i)$), so its assignment is ambiguous",
+                        "B": "The point is perfectly centered in its cluster",
+                        "C": "The point is an outlier far from all clusters",
+                        "D": "The clustering has failed completely"
+                    },
+                    "correct": "A",
+                    "explanation": "$s(i) \\approx 0$ means $a(i) \\approx b(i)$: the average distance to its own cluster members equals the average distance to the nearest other cluster. The point sits right on the decision boundary and could plausibly belong to either cluster. Values near $+1$ indicate strong membership; values near $-1$ indicate likely misassignment."
+                },
+                {
+                    "id": 8,
+                    "question": "In a silhouette plot, one cluster shows a very thin profile (most points have low $s(i)$) while others are wide. What does this indicate?",
+                    "options": {
+                        "A": "That cluster is poorly defined — its points are not well-separated from neighboring clusters and may need to be merged or $K$ reduced",
+                        "B": "That cluster contains the most important data points",
+                        "C": "The thin cluster is the most compact and well-defined",
+                        "D": "Silhouette plot thickness is unrelated to cluster quality"
+                    },
+                    "correct": "A",
+                    "explanation": "A thin silhouette profile means most points in that cluster have $s(i)$ close to 0 or negative, indicating weak cohesion or poor separation. A wide profile extending toward $+1$ indicates well-assigned points. Comparing widths across clusters helps identify which clusters are meaningful and which are artifacts of an incorrect $K$."
+                },
+                {
+                    "id": 9,
+                    "question": "K-Means partitions space into Voronoi cells (each cell = all points closest to one centroid). Why can't this representation discover crescent-shaped or ring-shaped clusters?",
+                    "options": {
+                        "A": "Voronoi cells are always convex polygons, so non-convex shapes like crescents are split across multiple cells",
+                        "B": "Voronoi cells can only be square-shaped",
+                        "C": "K-Means cannot compute distances for curved shapes",
+                        "D": "Crescent shapes violate the triangle inequality"
+                    },
+                    "correct": "A",
+                    "explanation": "The set of points closest to a single centroid always forms a convex region (a Voronoi cell). A crescent is non-convex: there exist two points in the crescent whose connecting line segment passes outside it. K-Means would split the crescent into multiple convex pieces assigned to different centroids. DBSCAN or spectral clustering handles non-convex shapes by using density or graph connectivity instead."
+                },
+                {
+                    "id": 10,
+                    "question": "When clusters have very different densities (e.g., one tight cluster of 1000 points and one sparse cluster of 50 points), K-Means often fails. Why?",
+                    "options": {
+                        "A": "K-Means splits the dense cluster to equalize WCSS across clusters, because reducing SSE in the dense region yields more total gain",
+                        "B": "K-Means ignores clusters with fewer than 100 points",
+                        "C": "Sparse clusters always have lower WCSS than dense clusters",
+                        "D": "K-Means assigns all points to the dense cluster"
+                    },
+                    "correct": "A",
+                    "explanation": "K-Means minimizes total WCSS. Splitting a dense cluster of 1000 points in half reduces WCSS significantly (many points become closer to their centroid), while the sparse cluster contributes little to total WCSS. So the algorithm 'wastes' a centroid splitting the dense cluster rather than keeping it intact. Cluster sizes, not just shapes, must be similar for K-Means to work well."
+                },
+                {
+                    "id": 11,
+                    "question": "For data with ring-shaped or crescent-shaped clusters, which algorithm can discover these non-convex structures?",
+                    "options": {
+                        "A": "DBSCAN, because it defines clusters by density connectivity rather than distance to centroids",
+                        "B": "K-Means with $K = 100$",
+                        "C": "Linear regression on the cluster labels",
+                        "D": "PCA followed by K-Means"
+                    },
+                    "correct": "A",
+                    "explanation": "DBSCAN (Density-Based Spatial Clustering of Applications with Noise) groups points by density reachability: two points are in the same cluster if connected by a chain of dense neighborhoods. This can trace along curves, rings, and arbitrary shapes. K-Means with any $K$ cannot, because its Voronoi partitioning is inherently convex."
+                },
+                {
+                    "id": 12,
+                    "question": "The Hopkins statistic tests for clustering tendency. If $H \\approx 0.5$ for a dataset, what does this tell you before running K-Means?",
+                    "options": {
+                        "A": "The data is approximately uniformly distributed with no meaningful cluster structure; K-Means will find arbitrary groupings",
+                        "B": "The data has exactly 2 clusters",
+                        "C": "The data is perfectly clustered and K-Means will succeed",
+                        "D": "The Hopkins statistic is undefined for $H = 0.5$"
+                    },
+                    "correct": "A",
+                    "explanation": "Hopkins $H \\approx 0.5$ means the data looks indistinguishable from a uniform random distribution. K-Means will always produce $K$ clusters (it's forced to), but they will be meaningless artifacts. $H$ close to 0 indicates strong clustering tendency. Always test clustering tendency before interpreting K-Means results, especially for exploratory analysis."
+                },
+                {
+                    "id": 13,
+                    "question": "The gap statistic selects $K$ using the rule: choose the smallest $K$ such that $\\text{Gap}(K) \\geq \\text{Gap}(K+1) - s_{K+1}$. What is the purpose of the $s_{K+1}$ term?",
+                    "options": {
+                        "A": "It is a standard error correction that accounts for simulation noise, preventing selection of overly complex models due to random fluctuation",
+                        "B": "It ensures $K$ is always odd",
+                        "C": "It doubles the gap score for larger $K$ values",
+                        "D": "It represents the silhouette score at $K+1$"
+                    },
+                    "correct": "A",
+                    "explanation": "The gap statistic compares actual WCSS to WCSS expected under a null reference distribution (uniform). $s_{K+1}$ is the standard deviation of the reference simulations at $K+1$. The rule $\\text{Gap}(K) \\geq \\text{Gap}(K+1) - s_{K+1}$ applies a one-standard-error rule: only increase $K$ if the improvement exceeds the noise level. This is the principle of parsimony — prefer simpler models unless the evidence strongly favors complexity."
+                },
+                {
+                    "id": 14,
+                    "question": "K-Means can be viewed as a special case of the EM algorithm for Gaussian Mixture Models (GMMs). What assumption makes K-Means equivalent to 'hard EM'?",
+                    "options": {
+                        "A": "All clusters have equal, fixed, spherical covariance ($\\Sigma_k = \\sigma^2 I$ for all $k$) and each point is assigned to exactly one cluster (hard assignment)",
+                        "B": "Each cluster has a different covariance matrix",
+                        "C": "Points can belong to multiple clusters with soft probabilities",
+                        "D": "The number of clusters is learned automatically"
+                    },
+                    "correct": "A",
+                    "explanation": "GMM-EM computes soft posterior probabilities $P(z_k | x_i)$ for each point belonging to each cluster, with per-cluster covariance $\\Sigma_k$. When you constrain all $\\Sigma_k = \\sigma^2 I$ (spherical, equal) and take hard assignments (probability 1 for nearest, 0 otherwise), the E-step becomes the K-Means assignment step and the M-step becomes the centroid update. K-Means is thus the limiting case of GMM."
+                },
+                {
+                    "id": 15,
+                    "question": "Mini-Batch K-Means randomly samples a subset of points for each iteration instead of using the entire dataset. What is the tradeoff?",
+                    "options": {
+                        "A": "It converges much faster (sublinear in $n$) but produces slightly worse WCSS than full-batch K-Means",
+                        "B": "It produces identical results to full K-Means but takes longer",
+                        "C": "It can only be used for $K \\leq 5$",
+                        "D": "It eliminates the need to choose $K$"
+                    },
+                    "correct": "A",
+                    "explanation": "Mini-Batch K-Means (Sculley, 2010) updates centroids using a random sample of size $b \\ll n$ per iteration. Each iteration is $O(bKd)$ instead of $O(nKd)$, making it feasible for millions of points. The cost is a slightly higher WCSS (typically 1-3% worse) due to noisier gradient estimates. For large-scale applications, the speed gain far outweighs the quality loss."
+                },
+                {
+                    "id": 16,
+                    "question": "K-Medoids (PAM) uses actual data points as cluster centers instead of means. Why is it more robust to outliers than K-Means?",
+                    "options": {
+                        "A": "The mean can be pulled far from the cluster by extreme outliers, while the medoid (an actual data point) must lie within the data distribution",
+                        "B": "K-Medoids ignores all outliers automatically",
+                        "C": "K-Medoids always produces fewer clusters than K-Means",
+                        "D": "The medoid minimizes squared distances, which is more robust than the mean"
+                    },
+                    "correct": "A",
+                    "explanation": "The mean of $\\{1, 2, 3, 100\\}$ is $26.5$ — far from the bulk of data. The medoid would be $2$ or $3$ — an actual data point that represents the cluster. K-Medoids minimizes $\\sum ||x_i - m_k||$ (sum of distances to medoids) rather than squared distances, and the medoid cannot be 'dragged' to an empty region by outliers. The tradeoff is $O(n^2)$ complexity vs K-Means' $O(n)$."
+                },
+                {
+                    "id": 17,
+                    "question": "Hierarchical (agglomerative) clustering produces a dendrogram. What is its main advantage over K-Means?",
+                    "options": {
+                        "A": "You can cut the dendrogram at any height to get different numbers of clusters, without re-running the algorithm for each $K$",
+                        "B": "It always produces better WCSS than K-Means",
+                        "C": "It runs in $O(n)$ time",
+                        "D": "It can only handle two-dimensional data"
+                    },
+                    "correct": "A",
+                    "explanation": "The dendrogram shows the full merge hierarchy. Cutting at a high level gives few large clusters; cutting low gives many small clusters. This avoids the K-Means problem of committing to a single $K$ upfront. However, hierarchical clustering is $O(n^2)$ in memory and $O(n^3)$ in time (or $O(n^2 \\log n)$ with efficient linkage), making it impractical for large datasets where K-Means' $O(nKd)$ is preferred."
+                },
+                {
+                    "id": 18,
+                    "question": "RFM segmentation uses Recency, Frequency, and Monetary value. Why must these three features be standardized before applying K-Means?",
+                    "options": {
+                        "A": "Monetary values (e.g., $0-$50,000) have a much larger scale than Recency (days) and Frequency (counts), so unstandardized K-Means would cluster almost entirely on spending amount",
+                        "B": "Standardization converts features to categorical variables",
+                        "C": "K-Means cannot accept non-negative features",
+                        "D": "Standardization reduces the number of required clusters"
+                    },
+                    "correct": "A",
+                    "explanation": "If Monetary ranges $0-50000$, Recency $0-365$, and Frequency $0-50$, Euclidean distance is dominated by Monetary: $\\Delta M^2 \\gg \\Delta R^2 + \\Delta F^2$. Standardization $(z = (x-\\mu)/\\sigma)$ gives each feature zero mean and unit variance, ensuring equal contribution. Without this, K-Means effectively segments by spending alone, ignoring valuable recency and frequency patterns."
+                },
+                {
+                    "id": 19,
+                    "question": "During K-Means execution, a cluster loses all assigned points (becomes empty). What is the 'farthest point reinitialization' strategy?",
+                    "options": {
+                        "A": "Replace the empty cluster's centroid with the point that has the maximum distance to its assigned centroid, effectively splitting the worst-fit region",
+                        "B": "Remove the empty cluster and reduce $K$ by one",
+                        "C": "Assign all points to the empty cluster",
+                        "D": "Restart the entire algorithm from scratch"
+                    },
+                    "correct": "A",
+                    "explanation": "An empty cluster wastes a centroid. The farthest-point strategy finds the point with the largest $||x_i - \\mu_{C(i)}||^2$ (worst-fit point) and reassigns the empty centroid to that location. This effectively splits the cluster with the highest internal variance, reducing total WCSS. sklearn uses a similar strategy, re-seeding empty clusters from the points farthest from their current centroids."
+                },
+                {
+                    "id": 20,
+                    "question": "K-Means has complexity $O(nKdT)$ where $n$ = points, $K$ = clusters, $d$ = dimensions, $T$ = iterations. For a dataset with $n = 10^6$, which factor dominates?",
+                    "options": {
+                        "A": "$n$ dominates because it is typically orders of magnitude larger than $K$, $d$, or $T$; the algorithm is linear in the number of data points",
+                        "B": "$K$ dominates because the number of clusters is the computational bottleneck",
+                        "C": "$T$ dominates because convergence is always slow",
+                        "D": "$d$ dominates because distance computation is exponential in dimensions"
+                    },
+                    "correct": "A",
+                    "explanation": "With $n = 10^6$, typical values might be $K = 10$, $d = 50$, $T = 20$. Total operations: $10^6 \\times 10 \\times 50 \\times 20 = 10^{10}$. Doubling $n$ doubles the cost, making it the dominant factor. This linear scaling in $n$ is why K-Means is practical for large datasets, unlike hierarchical clustering ($O(n^2)$ memory) or DBSCAN ($O(n \\log n)$ with spatial indexing)."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                const opts = {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
+                });
+            }
+        }
+
+        function waitForKaTeX(callback, maxAttempts = 50) {
+    let attempts = 0;
+    function check() {
+        if (typeof renderMathInElement !== 'undefined') {
+            callback();
+        } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(check, 50);
+        }
+    }
+    check();
+}
+
+// Initialize with error handling
+        try {
+            initQuiz();
+            waitForKaTeX(renderMath);
+        } catch (e) {
+            console.error('Quiz initialization error:', e);
+            const container = document.getElementById('questionsRow') || document.querySelector('.main');
+            if (container) {
+                container.innerHTML =
+                    '<div style="padding:2rem;text-align:center;color:#991b1b;">' +
+                    '<h3>Quiz failed to load</h3><p>Error: ' + e.message + '</p>' +
+                    '<p>Please refresh the page or try a different browser.</p></div>';
+            }
+        }
+    </script>
+</body>
+</html>
