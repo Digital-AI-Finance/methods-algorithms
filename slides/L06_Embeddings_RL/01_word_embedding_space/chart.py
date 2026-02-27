@@ -1,4 +1,4 @@
-"""Word Embedding Space - 2D visualization of word vectors"""
+"""Word Embedding Space - 2D visualization of real GloVe word vectors"""
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
@@ -7,8 +7,7 @@ plt.rcParams.update({
     'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
     'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
     'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False,
-    'axes.spines.right': False
+    'axes.spines.top': False, 'axes.spines.right': False
 })
 
 MLPURPLE = '#3333B2'
@@ -19,70 +18,64 @@ MLORANGE = '#FF7F0E'
 
 CHART_METADATA = {
     "title": "Word Embedding Space",
-    "description": "2D visualization of word embeddings showing semantic relationships",
+    "description": "2D PCA projection of real GloVe-50d word embeddings",
     "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L06_Embeddings_RL/01_word_embedding_space"
 }
 
 np.random.seed(42)
+cache_path = Path(__file__).parent / 'embedding_cache.npz'
+
+# Load real GloVe embeddings via gensim (with offline fallback)
+words = ['stock', 'equity', 'share', 'bond', 'dividend',
+         'risk', 'volatility', 'hedge', 'loss', 'exposure',
+         'buy', 'sell', 'trade', 'invest', 'hold',
+         'bullish', 'bearish', 'positive', 'negative', 'neutral']
+
+word_clusters = {
+    'Financial': (['stock', 'equity', 'share', 'bond', 'dividend'], MLBLUE),
+    'Risk': (['risk', 'volatility', 'hedge', 'loss', 'exposure'], MLRED),
+    'Action': (['buy', 'sell', 'trade', 'invest', 'hold'], MLGREEN),
+    'Sentiment': (['bullish', 'bearish', 'positive', 'negative', 'neutral'], MLORANGE),
+}
+
+try:
+    import gensim.downloader as api
+    from sklearn.decomposition import PCA
+    model = api.load('glove-wiki-gigaword-50')
+    vectors = np.array([model[w] for w in words])
+    pca = PCA(n_components=2, random_state=42)
+    coords = pca.fit_transform(vectors)
+    np.savez(cache_path, coords=coords, words=words)
+    print("Loaded GloVe embeddings via gensim")
+except Exception as e:
+    print(f"gensim unavailable ({e}), using cached embeddings")
+    data = np.load(cache_path, allow_pickle=True)
+    coords = data['coords']
+
+word_to_coord = {w: coords[i] for i, w in enumerate(words)}
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Simulated 2D word embeddings (after dimensionality reduction)
-# Finance-related words clustered by concept
-words = {
-    # Financial terms (cluster 1)
-    'stock': (2.1, 1.8), 'equity': (2.5, 2.0), 'share': (2.3, 1.5),
-    'bond': (1.8, 2.2), 'dividend': (2.0, 2.5),
-    # Risk terms (cluster 2)
-    'risk': (-1.5, 1.2), 'volatility': (-1.8, 0.8), 'hedge': (-1.2, 1.5),
-    'exposure': (-1.6, 1.8), 'loss': (-2.0, 1.0),
-    # Action terms (cluster 3)
-    'buy': (0.5, -1.5), 'sell': (0.8, -1.8), 'trade': (0.2, -1.2),
-    'invest': (1.0, -1.4), 'hold': (0.6, -2.0),
-    # Sentiment (cluster 4)
-    'bullish': (-0.5, -1.0), 'bearish': (-0.8, -0.7), 'positive': (-0.3, -0.5),
-    'negative': (-1.0, -0.3), 'neutral': (-0.6, -1.5)
-}
-
-# Colors by cluster
-cluster_colors = {
-    'Financial': MLBLUE,
-    'Risk': MLRED,
-    'Action': MLGREEN,
-    'Sentiment': MLORANGE
-}
-
-word_clusters = {
-    'Financial': ['stock', 'equity', 'share', 'bond', 'dividend'],
-    'Risk': ['risk', 'volatility', 'hedge', 'exposure', 'loss'],
-    'Action': ['buy', 'sell', 'trade', 'invest', 'hold'],
-    'Sentiment': ['bullish', 'bearish', 'positive', 'negative', 'neutral']
-}
-
-# Plot each cluster
-for cluster, word_list in word_clusters.items():
-    xs = [words[w][0] for w in word_list]
-    ys = [words[w][1] for w in word_list]
-    ax.scatter(xs, ys, c=cluster_colors[cluster], s=100, label=cluster, alpha=0.7)
+for cluster, (word_list, color) in word_clusters.items():
+    xs = [word_to_coord[w][0] for w in word_list]
+    ys = [word_to_coord[w][1] for w in word_list]
+    ax.scatter(xs, ys, c=color, s=100, label=cluster, alpha=0.7)
     for word in word_list:
-        ax.annotate(word, words[word], fontsize=10,
+        ax.annotate(word, word_to_coord[word], fontsize=10,
                     xytext=(5, 5), textcoords='offset points')
 
-# Draw some relationships
-ax.annotate('', xy=words['sell'], xytext=words['buy'],
+# Draw semantic relationships
+ax.annotate('', xy=word_to_coord['sell'], xytext=word_to_coord['buy'],
             arrowprops=dict(arrowstyle='->', color='gray', lw=1.5))
-ax.annotate('', xy=words['bearish'], xytext=words['bullish'],
+ax.annotate('', xy=word_to_coord['bearish'], xytext=word_to_coord['bullish'],
             arrowprops=dict(arrowstyle='->', color='gray', lw=1.5))
 
-ax.set_xlabel('Embedding Dimension 1')
-ax.set_ylabel('Embedding Dimension 2')
-ax.set_title('Word Embedding Space (Finance Domain)')
-ax.legend(loc='upper left')
+ax.set_xlabel('PCA Dimension 1')
+ax.set_ylabel('PCA Dimension 2')
+ax.set_title('Word Embedding Space (GloVe-50d, Finance Domain)')
+ax.legend(loc='best')
 ax.grid(True, alpha=0.3)
-ax.axhline(y=0, color='gray', linewidth=0.5)
-ax.axvline(x=0, color='gray', linewidth=0.5)
 
-# Add URL annotation
 plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 

@@ -1,6 +1,7 @@
 """Simple Linear Regression - Scatter plot with fitted line"""
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import LinearRegression
 from pathlib import Path
 
 # QuantLet branding metadata
@@ -33,11 +34,11 @@ true_intercept = 50000
 noise = np.random.normal(0, 30000, n)
 y = true_intercept + true_slope * X + noise  # House price
 
-# Fit linear regression
-X_mean = X.mean()
-y_mean = y.mean()
-slope = np.sum((X - X_mean) * (y - y_mean)) / np.sum((X - X_mean)**2)
-intercept = y_mean - slope * X_mean
+# Fit linear regression with sklearn
+model = LinearRegression()
+model.fit(X.reshape(-1, 1), y)
+slope = model.coef_[0]
+intercept = model.intercept_
 
 # Create figure
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -47,7 +48,7 @@ ax.scatter(X, y/1000, c=MLBLUE, alpha=0.7, s=60, label='Data points')
 
 # Regression line
 X_line = np.linspace(40, 210, 100)
-y_line = (intercept + slope * X_line) / 1000
+y_line = model.predict(X_line.reshape(-1, 1)) / 1000
 ax.plot(X_line, y_line, c=MLORANGE, linewidth=3, label=f'Fit: y = {intercept/1000:.0f}k + {slope:.0f}x')
 
 # Labels

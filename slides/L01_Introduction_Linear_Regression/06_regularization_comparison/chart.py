@@ -1,11 +1,7 @@
-"""Regularization Comparison - Ridge vs Lasso Coefficient Paths
-
-Note: The Lasso coefficient path uses a simplified soft-thresholding formula
-for visualization purposes. The actual Lasso solution involves coordinate
-descent optimization, but the visual behavior is qualitatively similar.
-"""
+"""Regularization Comparison - Ridge vs Lasso Coefficient Paths"""
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import Ridge, Lasso
 from pathlib import Path
 
 # QuantLet branding metadata
@@ -31,45 +27,36 @@ MLORANGE = '#FF7F0E'
 MLGREEN = '#2CA02C'
 MLRED = '#D62728'
 
-# Generate coefficient paths for different lambda values
+# Generate multi-feature data and compute coefficient paths with sklearn
 np.random.seed(42)
-lambdas = np.logspace(-3, 2, 50)
+X_multi = np.random.randn(100, 6)
+y_multi = X_multi @ np.array([3, -2, 0, 0, 1, -1]) + np.random.normal(0, 1, 100)
+alphas = np.logspace(-2, 3, 50)
 
-# True coefficients (some large, some small)
-true_coefs = np.array([3.0, 2.0, 0.5, 0.1, -1.5])
-n_coefs = len(true_coefs)
+ridge_coefs = np.array([Ridge(alpha=a).fit(X_multi, y_multi).coef_ for a in alphas])
+lasso_coefs = np.array([Lasso(alpha=a, max_iter=10000).fit(X_multi, y_multi).coef_ for a in alphas])
 
-# Ridge: coefficients shrink smoothly toward zero
-ridge_paths = np.zeros((len(lambdas), n_coefs))
-for i, lam in enumerate(lambdas):
-    shrinkage = 1 / (1 + lam)
-    ridge_paths[i] = true_coefs * shrinkage
-
-# Lasso: some coefficients go to exactly zero
-lasso_paths = np.zeros((len(lambdas), n_coefs))
-for i, lam in enumerate(lambdas):
-    soft_threshold = np.sign(true_coefs) * np.maximum(np.abs(true_coefs) - lam * 0.3, 0)
-    lasso_paths[i] = soft_threshold
+n_coefs = X_multi.shape[1]
 
 # Create figure
 fig, ax = plt.subplots(figsize=(10, 6))
 
 # Plot Ridge paths (solid lines)
-colors = [MLBLUE, MLORANGE, MLGREEN, MLRED, MLPURPLE]
+colors = [MLBLUE, MLORANGE, MLGREEN, MLRED, MLPURPLE, '#888888']
 for j in range(n_coefs):
-    ax.plot(np.log10(lambdas), ridge_paths[:, j], '-', color=colors[j], linewidth=2,
+    ax.plot(np.log10(alphas), ridge_coefs[:, j], '-', color=colors[j], linewidth=2,
             label=f'Feature {j+1} (Ridge)' if j < 2 else None, alpha=0.8)
 
 # Plot Lasso paths (dashed lines)
 for j in range(n_coefs):
-    ax.plot(np.log10(lambdas), lasso_paths[:, j], '--', color=colors[j], linewidth=2,
+    ax.plot(np.log10(alphas), lasso_coefs[:, j], '--', color=colors[j], linewidth=2,
             label=f'Feature {j+1} (Lasso)' if j < 2 else None, alpha=0.8)
 
 # Zero line
 ax.axhline(y=0, color='gray', linestyle='-', linewidth=1, alpha=0.5)
 
 # Labels
-ax.set_xlabel(r'$\log_{10}(\lambda)$ (Regularization Strength)')
+ax.set_xlabel(r'$\log_{10}(\alpha)$ (Regularization Strength)')
 ax.set_ylabel('Coefficient Value')
 ax.set_title('Ridge vs Lasso: Coefficient Shrinkage')
 ax.legend(loc='upper right', fontsize=11)

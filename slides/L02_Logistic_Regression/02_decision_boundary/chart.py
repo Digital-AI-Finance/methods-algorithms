@@ -1,6 +1,8 @@
 """Decision Boundary - 2D classification visualization"""
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.datasets import make_classification
 from pathlib import Path
 
 CHART_METADATA = {
@@ -25,38 +27,41 @@ MLRED = '#D62728'
 
 np.random.seed(42)
 
-# Generate two-class data
-n_samples = 100
-class0_x = np.random.randn(n_samples, 2) * 0.8 + np.array([-1.5, -1])
-class1_x = np.random.randn(n_samples, 2) * 0.8 + np.array([1.5, 1])
+# Generate two-class data and fit LogisticRegression with sklearn
+X, y = make_classification(n_samples=200, n_features=2, n_redundant=0,
+                           n_clusters_per_class=1, random_state=42)
+clf = LogisticRegression(random_state=42).fit(X, y)
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
 # Plot data points
-ax.scatter(class0_x[:, 0], class0_x[:, 1], c=MLRED, s=60, alpha=0.7,
+mask0 = y == 0
+mask1 = y == 1
+ax.scatter(X[mask0, 0], X[mask0, 1], c=MLRED, s=60, alpha=0.7,
            label='Class 0 (No Default)', edgecolors='white', linewidth=0.5)
-ax.scatter(class1_x[:, 0], class1_x[:, 1], c=MLGREEN, s=60, alpha=0.7,
+ax.scatter(X[mask1, 0], X[mask1, 1], c=MLGREEN, s=60, alpha=0.7,
            label='Class 1 (Default)', edgecolors='white', linewidth=0.5)
 
-# Decision boundary (learned weights simulation)
-x_line = np.linspace(-4, 4, 100)
-# w0 + w1*x1 + w2*x2 = 0 -> x2 = -(w0 + w1*x1)/w2
-w0, w1, w2 = -0.2, 1, 1  # simulated weights
-y_line = -(w0 + w1 * x_line) / w2
+# Decision boundary from fitted model
+x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200), np.linspace(y_min, y_max, 200))
+Z = clf.predict_proba(np.c_[xx.ravel(), yy.ravel()])[:, 1].reshape(xx.shape)
+ax.contourf(xx, yy, Z, levels=[0, 0.5, 1], colors=[MLRED, MLGREEN], alpha=0.1)
 
+# Plot the decision boundary line
+w = clf.coef_[0]
+b = clf.intercept_[0]
+x_line = np.linspace(x_min, x_max, 100)
+y_line = -(b + w[0] * x_line) / w[1]
 ax.plot(x_line, y_line, color=MLPURPLE, linewidth=3, linestyle='--',
         label='Decision Boundary')
-
-# Shade regions
-xx, yy = np.meshgrid(np.linspace(-4, 4, 100), np.linspace(-4, 4, 100))
-Z = 1 / (1 + np.exp(-(w0 + w1*xx + w2*yy)))
-ax.contourf(xx, yy, Z, levels=[0, 0.5, 1], colors=[MLRED, MLGREEN], alpha=0.1)
 
 ax.set_xlabel('Feature 1 (e.g., Income)')
 ax.set_ylabel('Feature 2 (e.g., Debt Ratio)')
 ax.set_title('Logistic Regression Decision Boundary')
-ax.set_xlim(-4, 4)
-ax.set_ylim(-4, 4)
+ax.set_xlim(x_min, x_max)
+ax.set_ylim(y_min, y_max)
 ax.legend(loc='upper left')
 ax.grid(True, alpha=0.3)
 

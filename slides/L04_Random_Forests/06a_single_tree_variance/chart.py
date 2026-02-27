@@ -1,7 +1,7 @@
 """Single Tree Variance - High variance in single decision tree predictions"""
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.interpolate import interp1d
+from sklearn.tree import DecisionTreeRegressor
 from pathlib import Path
 
 # Chart metadata for QR code generation
@@ -42,18 +42,12 @@ fig, ax = plt.subplots(figsize=(10, 6))
 ax.scatter(x_train, y_train, c=MLBLUE, s=60, alpha=0.7, label='Training data', zorder=5)
 ax.plot(x, y_true, 'k--', linewidth=2.5, label='True function', alpha=0.6)
 
-# Simulate multiple single tree predictions (high variance)
+# Fit multiple single decision trees on bootstrap samples (high variance)
 for i in range(7):
-    # Each tree fits differently to bootstrap sample
     idx = np.random.choice(n_train, n_train, replace=True)
-    x_boot = x_train[idx]
-    y_boot = y_train[idx]
-
-    # Simple piecewise approximation (simulating tree)
-    sort_idx = np.argsort(x_boot)
-    f = interp1d(x_boot[sort_idx], y_boot[sort_idx], kind='nearest',
-                 fill_value='extrapolate')
-    y_pred = f(x)
+    tree = DecisionTreeRegressor(max_depth=5, random_state=i)
+    tree.fit(x_train[idx].reshape(-1, 1), y_train[idx])
+    y_pred = tree.predict(x.reshape(-1, 1))
     ax.plot(x, y_pred, color=MLRED, alpha=0.4, linewidth=1.5)
 
 ax.plot([], [], color=MLRED, alpha=0.6, linewidth=2, label='Individual trees')

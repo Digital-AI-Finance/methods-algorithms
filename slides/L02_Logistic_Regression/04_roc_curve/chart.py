@@ -1,6 +1,10 @@
 """ROC Curve - Receiver Operating Characteristic"""
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_curve, auc
 from pathlib import Path
 
 CHART_METADATA = {
@@ -25,30 +29,32 @@ MLRED = '#D62728'
 
 np.random.seed(42)
 
-# Simulate ROC curves for different models
-def generate_roc(auc_target, n_points=100):
-    """Generate ROC curve with approximately target AUC."""
-    fpr = np.linspace(0, 1, n_points)
-    # Use power function to create curve shape
-    power = np.log(1 - auc_target + 0.5) / np.log(0.5)
-    tpr = 1 - (1 - fpr) ** (1/max(power, 0.1))
-    tpr = np.clip(tpr + np.random.normal(0, 0.02, n_points), 0, 1)
-    tpr = np.sort(tpr)
-    return fpr, tpr
+# Generate data and fit logistic regression with sklearn
+X, y = make_classification(n_samples=500, n_features=10, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+clf = LogisticRegression(random_state=42, max_iter=1000).fit(X_train, y_train)
+fpr_good, tpr_good, _ = roc_curve(y_test, clf.predict_proba(X_test)[:, 1])
+auc_good = auc(fpr_good, tpr_good)
 
-fpr_good, tpr_good = generate_roc(0.92)
-fpr_medium, tpr_medium = generate_roc(0.78)
-fpr_poor, tpr_poor = generate_roc(0.62)
+# Medium model: use fewer features
+clf_med = LogisticRegression(random_state=42, max_iter=1000).fit(X_train[:, :3], y_train)
+fpr_medium, tpr_medium, _ = roc_curve(y_test, clf_med.predict_proba(X_test[:, :3])[:, 1])
+auc_medium = auc(fpr_medium, tpr_medium)
+
+# Poor model: use single noisy feature
+clf_poor = LogisticRegression(random_state=42, max_iter=1000).fit(X_train[:, 5:6], y_train)
+fpr_poor, tpr_poor, _ = roc_curve(y_test, clf_poor.predict_proba(X_test[:, 5:6])[:, 1])
+auc_poor = auc(fpr_poor, tpr_poor)
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
 # Plot ROC curves
 ax.plot(fpr_good, tpr_good, color=MLGREEN, linewidth=3,
-        label='Good Model (AUC = 0.92)')
+        label=f'Good Model (AUC = {auc_good:.2f})')
 ax.plot(fpr_medium, tpr_medium, color=MLORANGE, linewidth=3,
-        label='Medium Model (AUC = 0.78)')
+        label=f'Medium Model (AUC = {auc_medium:.2f})')
 ax.plot(fpr_poor, tpr_poor, color=MLRED, linewidth=3,
-        label='Poor Model (AUC = 0.62)')
+        label=f'Poor Model (AUC = {auc_poor:.2f})')
 
 # Random classifier line
 ax.plot([0, 1], [0, 1], color='gray', linewidth=2, linestyle='--',

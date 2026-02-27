@@ -1,6 +1,8 @@
 """Learning Curves - Training vs Validation Error"""
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import learning_curve
 from pathlib import Path
 
 # QuantLet branding metadata
@@ -24,40 +26,46 @@ MLBLUE = '#0066CC'
 MLORANGE = '#FF7F0E'
 MLGREEN = '#2CA02C'
 
-# Generate learning curve data
+# Generate regression data and compute learning curves with sklearn
 np.random.seed(42)
-train_sizes = np.array([10, 20, 40, 60, 80, 100, 150, 200, 300, 400, 500])
+X_data = np.random.uniform(50, 200, 500).reshape(-1, 1)
+y_data = 50000 + 2000 * X_data.ravel() + np.random.normal(0, 30000, 500)
 
-# Training error decreases then plateaus
-train_error = 0.1 + 0.4 * np.exp(-train_sizes / 50) + np.random.normal(0, 0.01, len(train_sizes))
+train_sizes_abs, train_scores, val_scores = learning_curve(
+    LinearRegression(), X_data, y_data,
+    train_sizes=np.linspace(0.1, 1.0, 10),
+    cv=5, scoring='neg_mean_squared_error', random_state=42)
 
-# Validation error starts high, decreases, then plateaus (slightly higher than train)
-val_error = 0.15 + 0.5 * np.exp(-train_sizes / 80) + np.random.normal(0, 0.015, len(train_sizes))
+# Convert neg MSE to positive and scale for readability
+train_mse = -train_scores.mean(axis=1) / 1e9
+train_std = train_scores.std(axis=1) / 1e9
+val_mse = -val_scores.mean(axis=1) / 1e9
+val_std = val_scores.std(axis=1) / 1e9
 
 # Create figure
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Plot curves
-ax.plot(train_sizes, train_error, 'o-', color=MLBLUE, markersize=8, linewidth=2, label='Training error')
-ax.plot(train_sizes, val_error, 's-', color=MLORANGE, markersize=8, linewidth=2, label='Validation error')
+# Plot curves with std bands
+ax.plot(train_sizes_abs, train_mse, 'o-', color=MLBLUE, markersize=8, linewidth=2, label='Training error')
+ax.fill_between(train_sizes_abs, train_mse - train_std, train_mse + train_std,
+                alpha=0.15, color=MLBLUE)
+ax.plot(train_sizes_abs, val_mse, 's-', color=MLORANGE, markersize=8, linewidth=2, label='Validation error')
+ax.fill_between(train_sizes_abs, val_mse - val_std, val_mse + val_std,
+                alpha=0.15, color=MLORANGE)
 
 # Fill between (generalization gap)
-ax.fill_between(train_sizes, train_error, val_error, alpha=0.2, color='gray', label='Generalization gap')
+ax.fill_between(train_sizes_abs, train_mse, val_mse, alpha=0.1, color='gray', label='Generalization gap')
 
 # Add annotations
-ax.annotate('More data helps', xy=(150, 0.22), fontsize=11, color='gray',
+ax.annotate('More data helps', xy=(train_sizes_abs[4], val_mse[4] * 1.05), fontsize=11, color='gray',
             bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
 
 # Labels
 ax.set_xlabel('Training Set Size')
-ax.set_ylabel('Mean Squared Error')
+ax.set_ylabel(r'Mean Squared Error ($\times 10^9$)')
 ax.set_title('Learning Curves: How Much Data Do We Need?')
 ax.legend(loc='upper right')
 ax.grid(True, alpha=0.3)
-
-# Axis limits
-ax.set_xlim(0, 520)
-ax.set_ylim(0, 0.65)
 
 # Add URL annotation
 plt.figtext(0.99, 0.01, CHART_METADATA['url'],

@@ -25,4 +25,4 @@ requests>=2.26.0
 
 # Optional: Deep learning (for L06)
 # torch>=1.10.0
-# gensim>=4.0.0  # For Word2Vec
+gensim>=4.0.0  # For Word2Vec

@@ -1,5 +1,9 @@
 """Feature Importance - Random Forest for fraud detection"""
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import make_classification
+from pathlib import Path
 
 # Chart metadata for QR code generation
 CHART_METADATA = {
@@ -7,8 +11,6 @@ CHART_METADATA = {
     'description': 'Random Forest feature importance ranking',
     'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L04_Random_Forests/02_feature_importance'
 }
-import numpy as np
-from pathlib import Path
 
 plt.rcParams.update({
     'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
@@ -26,20 +28,13 @@ MLORANGE = '#FF7F0E'
 
 np.random.seed(42)
 
-# Feature importance data (simulated)
-features = [
-    'Transaction Amount',
-    'Time of Day',
-    'Foreign IP',
-    'Previous Fraud',
-    'Account Age',
-    'Transaction Frequency',
-    'Device Change',
-    'Location Distance'
-]
-
-importances = np.array([0.28, 0.18, 0.15, 0.12, 0.10, 0.08, 0.05, 0.04])
-std = np.array([0.03, 0.02, 0.02, 0.015, 0.012, 0.01, 0.008, 0.006])
+# Generate classification data and fit RandomForest with sklearn
+X, y = make_classification(n_samples=500, n_features=8, n_informative=4, random_state=42)
+features = ['Amount', 'Time', 'IP_Risk', 'Velocity', 'Country', 'Device', 'History', 'Age']
+rf = RandomForestClassifier(n_estimators=100, random_state=42).fit(X, y)
+importances = rf.feature_importances_
+# Compute std from individual tree importances
+std = np.std([tree.feature_importances_ for tree in rf.estimators_], axis=0)
 
 # Sort by importance
 indices = np.argsort(importances)
