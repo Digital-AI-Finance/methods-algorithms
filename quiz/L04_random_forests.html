@@ -387,51 +387,51 @@
                 },
                 {
                     "id": 5,
-                    "question": "Which is NOT a valid stopping criterion for decision tree growth?",
+                    "question": "A tree-based ensemble model shows very low training error but much higher test error. Which diagnosis is most likely?",
                     "options": {
-                        "A": "Maximum depth reached",
-                        "B": "Minimum samples per leaf",
-                        "C": "Maximum number of features",
-                        "D": "No improvement in impurity"
+                        "A": "The Random Forest has too many trees, causing high bias",
+                        "B": "A boosted model is overfitting because sequential error correction memorized noise",
+                        "C": "Bagging has increased the bias by averaging too many decorrelated trees",
+                        "D": "Feature randomization eliminated all informative features from splits"
                     },
-                    "correct": "C",
-                    "explanation": "Maximum features is a parameter for Random Forests (features per split), not a stopping criterion. Valid stopping criteria include max depth, min samples per split/leaf, and minimum impurity decrease."
+                    "correct": "B",
+                    "explanation": "Low training error with high test error indicates overfitting. Boosting is more prone to overfitting than RF because each sequential tree is trained on previous errors, which can memorize noise. RF's parallel training and averaging naturally resists overfitting."
                 },
                 {
                     "id": 6,
-                    "question": "In bootstrap sampling, each sample is drawn:",
+                    "question": "Your fraud detection model trained on data with 0.1% fraud rate achieves 99.9% accuracy but catches zero fraud. Which strategy best addresses this problem?",
                     "options": {
-                        "A": "Without replacement from the original data",
-                        "B": "With replacement from the original data",
-                        "C": "From a different dataset each time",
-                        "D": "Using stratified sampling only"
+                        "A": "Increase the number of trees to improve accuracy further",
+                        "B": "Use class_weight='balanced' to upweight the minority class during training",
+                        "C": "Remove all non-fraud samples to balance the dataset completely",
+                        "D": "Switch from Random Forest to linear regression"
                     },
                     "correct": "B",
-                    "explanation": "Bootstrap sampling draws n samples WITH replacement from the original n observations, allowing the same observation to appear multiple times in a bootstrap sample."
+                    "explanation": "With 0.1% fraud rate, predicting 'not fraud' for everything gives 99.9% accuracy but catches zero fraud. Setting class_weight='balanced' increases the penalty for misclassifying fraud, forcing the model to learn the minority class. Removing all majority samples (C) loses valuable information about legitimate transactions."
                 },
                 {
                     "id": 7,
-                    "question": "Approximately what percentage of original samples are NOT included in a bootstrap sample (OOB)?",
+                    "question": "A bank uses a Random Forest for credit scoring and must provide specific reasons when denying loan applications (ECOA adverse action requirement). Which feature importance method best satisfies this regulatory need?",
                     "options": {
-                        "A": "25%",
-                        "B": "37%",
-                        "C": "50%",
-                        "D": "63%"
+                        "A": "MDI (Mean Decrease in Impurity) because it is fastest to compute",
+                        "B": "Permutation importance because it is model-agnostic",
+                        "C": "SHAP values because they explain each individual prediction, not just global rankings",
+                        "D": "Simply listing the top 5 globally important features is sufficient"
                     },
-                    "correct": "B",
-                    "explanation": "The probability of NOT being selected in n draws is $(1 - 1/n)^n \\approx e^{-1} \\approx 0.368$. So about 37% of samples are out-of-bag for each tree."
+                    "correct": "C",
+                    "explanation": "ECOA requires adverse action notices explaining why a specific applicant was denied. SHAP values provide per-prediction explanations (e.g., 'your debt-to-income ratio contributed most to denial'), while MDI and permutation importance only show global feature rankings. Individual, per-applicant explanations are necessary for regulatory compliance."
                 },
                 {
                     "id": 8,
-                    "question": "What is the main purpose of bootstrap aggregating (bagging)?",
+                    "question": "A loan application is denied by an RF model. SHAP values: debt-to-income = +0.35, credit score = +0.20, employment length = -0.15, income = -0.10. Which interpretation is correct?",
                     "options": {
-                        "A": "Increase model bias",
-                        "B": "Reduce model variance",
-                        "C": "Speed up training",
-                        "D": "Simplify the model"
+                        "A": "Credit score was the most important factor driving the denial",
+                        "B": "Debt-to-income ratio contributed most to denial, while employment length pushed toward approval",
+                        "C": "Employment length and income had the strongest influence on the decision",
+                        "D": "Negative SHAP values mean those features were not used by the model"
                     },
                     "correct": "B",
-                    "explanation": "Bagging reduces variance by training multiple models on bootstrap samples and averaging predictions. For B independent predictions with variance $\\sigma^2$, the variance of the average is $\\sigma^2/B$."
+                    "explanation": "SHAP values show each feature's contribution. Positive values push toward denial: debt-to-income (+0.35) had the largest effect. Negative values push toward approval: employment length (-0.15) partially offset the denial. Magnitude determines strength: $|0.35| > |0.20| > |{-0.15}| > |{-0.10}|$."
                 },
                 {
                     "id": 9,
@@ -459,15 +459,15 @@
                 },
                 {
                     "id": 11,
-                    "question": "In Random Forest classification, how is the final prediction made?",
+                    "question": "In a Random Forest, MDI ranks 'customer_id' as the most important feature, but permutation importance ranks it near zero. What does this discrepancy indicate?",
                     "options": {
-                        "A": "Using the prediction of the deepest tree",
-                        "B": "Averaging the probability outputs",
-                        "C": "Majority vote across all trees",
-                        "D": "Using only the first tree's prediction"
+                        "A": "The model is underfitting and cannot use customer_id effectively",
+                        "B": "customer_id is a high-cardinality feature that inflates MDI but has no true predictive power",
+                        "C": "Permutation importance is unreliable and should always be ignored",
+                        "D": "The forest needs more trees to resolve the disagreement"
                     },
-                    "correct": "C",
-                    "explanation": "For classification, Random Forest uses majority voting - each tree votes for a class, and the class with the most votes wins. For regression, predictions are averaged."
+                    "correct": "B",
+                    "explanation": "MDI is biased toward high-cardinality features (like IDs with many unique values) because they offer many potential split points, inflating their apparent importance. Permutation importance measures actual predictive value. When MDI is high but permutation importance is low, the feature provides many splits but no real predictive information."
                 },
                 {
                     "id": 12,
@@ -495,15 +495,15 @@
                 },
                 {
                     "id": 14,
-                    "question": "Why is OOB error considered 'free cross-validation'?",
+                    "question": "You plan to use SMOTE to address class imbalance in your fraud detection model. When should SMOTE be applied relative to the train-test split?",
                     "options": {
-                        "A": "It requires no additional computation after training",
-                        "B": "It uses samples not seen during training for each tree",
-                        "C": "It doesn't require a separate validation set",
-                        "D": "All of the above"
+                        "A": "Before the split, so both train and test sets are balanced",
+                        "B": "After the split, applied only to the training set",
+                        "C": "Only to the test set to ensure fair evaluation",
+                        "D": "It does not matter when SMOTE is applied"
                     },
-                    "correct": "D",
-                    "explanation": "OOB error comes 'free' because: (1) it uses existing OOB samples, (2) requires no extra computation beyond training, and (3) provides an unbiased estimate without needing a held-out validation set."
+                    "correct": "B",
+                    "explanation": "SMOTE must be applied AFTER the train-test split, only to training data. Applying it before the split causes data leakage: synthetic samples generated from training observations may be nearly identical to real test samples, producing overly optimistic performance estimates. The test set must reflect the true class distribution."
                 },
                 {
                     "id": 15,
@@ -519,15 +519,15 @@
                 },
                 {
                     "id": 16,
-                    "question": "What is the typical recommended range for the number of trees (n_estimators)?",
+                    "question": "A Random Forest has tree correlation $\\rho = 0.9$ and $B = 500$ trees. Using the variance formula $\\text{Var}(\\bar{f}) = \\rho\\sigma^2 + \\frac{1-\\rho}{B}\\sigma^2$, what is the ensemble variance and what should you change first?",
                     "options": {
-                        "A": "10-50",
-                        "B": "100-500",
-                        "C": "1000-5000",
-                        "D": "5-10"
+                        "A": "Variance $\\approx 0.002\\sigma^2$; add more trees to reduce it further",
+                        "B": "Variance $\\approx 0.9\\sigma^2$; reduce tree correlation by decreasing max_features",
+                        "C": "Variance $\\approx 0.5\\sigma^2$; increase the number of trees to 1000",
+                        "D": "Variance $\\approx 0.1\\sigma^2$; the current setup is already near-optimal"
                     },
                     "correct": "B",
-                    "explanation": "100-500 trees typically provide good performance with diminishing returns beyond that. More trees never hurt accuracy (just increase computation), but gains plateau after a few hundred."
+                    "explanation": "With $\\rho = 0.9$ and $B = 500$: Var $= 0.9\\sigma^2 + \\frac{0.1}{500}\\sigma^2 = 0.9\\sigma^2 + 0.0002\\sigma^2 \\approx 0.9\\sigma^2$. The variance is dominated by the $\\rho\\sigma^2$ floor. Adding more trees barely helps. The priority is reducing tree correlation $\\rho$ by decreasing max_features."
                 },
                 {
                     "id": 17,
@@ -555,15 +555,15 @@
                 },
                 {
                     "id": 19,
-                    "question": "Which is a limitation of Random Forests?",
+                    "question": "An RF model with max_depth=None and 50 trees shows low training error but high test error. Which hyperparameter change would most effectively reduce overfitting?",
                     "options": {
-                        "A": "Cannot handle non-linear relationships",
-                        "B": "Less interpretable than single decision trees",
-                        "C": "Cannot compute feature importance",
-                        "D": "Requires feature scaling"
+                        "A": "Increase max_depth to allow even deeper trees",
+                        "B": "Set max_depth to a moderate value (e.g., 10-20) to regularize individual trees",
+                        "C": "Increase max_features to let each split consider all features",
+                        "D": "Remove bootstrap sampling (set bootstrap=False)"
                     },
                     "correct": "B",
-                    "explanation": "Random Forests sacrifice interpretability for accuracy - understanding why the ensemble made a prediction is harder than tracing a single tree's path. They handle non-linear relationships well and don't require scaling."
+                    "explanation": "With max_depth=None, individual trees grow fully and memorize training data. Limiting max_depth regularizes each tree (higher bias, lower variance), and the ensemble benefits overall. Increasing max_depth (A) or max_features (C) would worsen overfitting. Removing bootstrap (D) eliminates diversity that helps decorrelate trees."
                 },
                 {
                     "id": 20,
