@@ -166,7 +166,9 @@ where $p_k$ is the proportion of class $k$ samples at the node.
 \item General maximum: $G_{\max} = 1 - 1/K$ for $K$ classes
 \item \textbf{Lower Gini = better split}
 \end{itemize}
-\bottomnote{Gini impurity: the probability of misclassifying a randomly chosen sample}
+\vspace{0.3em}
+\textbf{Worked example:} Node with 800 legit, 200 fraud: $p_{\text{fraud}} = 0.2$. $G = 1 - (0.8^2 + 0.2^2) = 1 - 0.68 = 0.32$.
+\bottomnote{Gini impurity: the probability of misclassifying a randomly chosen sample | Full derivation in Appendix A2}
 \end{frame}
 
 % SLIDE 7: Splitting Criteria: Information Gain
@@ -332,7 +334,7 @@ For $B$ predictions, each with variance $\sigma^2$ and pairwise correlation $\rh
 \item If perfectly correlated ($\rho = 1$): $\text{Var} = \sigma^2$ --- no benefit at all
 \item \highlight{Reduce $\rho$ between trees to maximize ensemble benefit}
 \end{itemize}
-\bottomnote{This formula is the theoretical foundation for why Random Forests add feature randomization}
+\bottomnote{This formula is the theoretical foundation for why Random Forests add feature randomization | Full proof in Appendix A3}
 \end{frame}
 
 % SLIDE 14: Why Bagging Reduces Variance (Proof Sketch)
@@ -356,6 +358,8 @@ For $B$ predictions, each with variance $\sigma^2$ and pairwise correlation $\rh
 \]
 
 \textbf{Conclusion}: Correlation $\rho$ is the \textbf{limiting factor}---even infinite trees cannot reduce variance below $\rho\sigma^2$.
+\vspace{0.3em}
+\textbf{Practical meaning:} even with 10,000 trees, if all trees split on the same dominant feature ($\rho \approx 1$), the forest gains almost nothing. Feature randomization is the breakthrough that makes Random Forests work.
 \bottomnote{This motivates feature randomization: the key innovation from bagging to Random Forests}
 \end{frame}
 
@@ -577,7 +581,7 @@ where $p(v) = $ fraction of samples reaching node $v$, $T = $ number of trees.
 
 \medskip
 \textbf{Finance}: SHAP provides the \textit{reason codes} required by ECOA/GDPR for adverse action notices in automated lending decisions.
-\bottomnote{Lundberg \& Lee (2017). A unified approach to interpreting model predictions. \textit{NeurIPS}, 4765--4774.}
+\bottomnote{Lundberg \& Lee (2017). A unified approach to interpreting model predictions. \textit{NeurIPS}, 4765--4774. | Formal axioms in Appendix A8}
 \end{frame}
 
 %% ================================================================
@@ -732,6 +736,8 @@ Overfit risk & Low & Higher (tune carefully) \\
 
 % SLIDE 33: XGBoost Objective
 \begin{frame}{XGBoost, LightGBM, CatBoost: Industrial Boosting}
+\textbf{Why a Taylor expansion?} Instead of minimizing the exact loss (computationally expensive), XGBoost approximates it with a quadratic using the first derivative (gradient $g_i$) and second derivative (curvature $h_i$). This turns optimal leaf values into a closed-form problem.
+\vspace{0.3em}
 \textbf{XGBoost} (Chen \& Guestrin, 2016)---regularized objective with Taylor expansion:
 \[
 \mathcal{L}^{(t)} = \sum_{i=1}^{N}\left[g_i f_t(x_i) + \tfrac{1}{2}h_i f_t^2(x_i)\right] + \Omega(f_t)
@@ -751,7 +757,7 @@ Regularization: $\Omega(f) = \gamma T + \tfrac{1}{2}\lambda \sum_{j=1}^{T} w_j^2
 \textbf{LightGBM}: & Leaf-wise growth, histogram binning & (Ke et al., 2017) \\
 \textbf{CatBoost}: & Ordered boosting, native categoricals & (Prokhorenkova et al., 2018)
 \end{tabular}
-\bottomnote{Chen \& Guestrin (2016). XGBoost: A scalable tree boosting system. \textit{KDD}, 785--794.}
+\bottomnote{Chen \& Guestrin (2016). XGBoost: A scalable tree boosting system. \textit{KDD}, 785--794. | Full derivation in Appendix A6}
 \end{frame}
 
 % SLIDE 34: Boosting in Finance

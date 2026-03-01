@@ -287,6 +287,7 @@ H = -\sum_{k=1}^{K} p_k \log_2 p_k
 \item Entropy is zero for pure nodes, maximal at uniform distribution
 \item IG selects the feature that reduces uncertainty the most
 \item C4.5 and ID3 algorithms use entropy; CART uses Gini
+\item \highlight{Regression trees:} use MSE reduction (variance reduction) as the splitting criterion instead of Gini/Entropy
 \end{compactlist}
 \end{column}
 \begin{column}{0.42\textwidth}
@@ -868,14 +869,15 @@ where $\epsilon_t$ = weighted error rate of $h_t$.
 
 \vspace{0.3em}
 \footnotesize
-\textbf{Sample weight update:}
+\textbf{Sample weight update} (Freund \& Schapire notation):
 \[
-w_i \leftarrow w_i \cdot \exp\!\bigl(\alpha_t \cdot \mathbb{1}[\text{misclassified}_i]\bigr)
+w_i \leftarrow w_i \cdot \exp\!\bigl(-\alpha_t \, y_i \, h_t(x_i)\bigr)
 \]
+where $y_i \in \{-1, +1\}$ and $h_t(x_i)$ is the weak learner prediction.
 
 \begin{compactlist}
-\item Correctly classified: weight unchanged
-\item Misclassified: weight \highlight{increased} by $e^{\alpha_t}$
+\item When $y_i \neq h_t(x_i)$, the exponent is positive, increasing the weight
+\item Correctly classified: weight \highlight{decreased}; misclassified: weight \highlight{increased}
 \item Next learner focuses on hard examples
 \item Normalize weights to sum to 1
 \end{compactlist}

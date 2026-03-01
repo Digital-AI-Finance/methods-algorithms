@@ -115,6 +115,7 @@
 \small
 \textbf{The Dilemma}
 \begin{compactlist}
+\item A \highlight{decision tree} makes predictions by asking yes/no questions about features (e.g., ``Is amount > \$500?'' $\to$ ``Is location foreign?'')
 \item \footnotesize A single decision tree overfits to training noise
 \item \footnotesize High variance: different samples produce wildly different trees
 \item \footnotesize Two trees can disagree completely on the same transaction
@@ -225,8 +226,6 @@ Parallel & Yes & Yes & No & N/A \\
 \begin{block}{Insight}
 \footnotesize RF adds feature randomization \textbf{on top of} bagging to decorrelate trees.
 \end{block}
-\vspace{0.3em}
-\scriptsize \textbf{Default split criterion:} $G(p) = 1 - \sum_{k=1}^{K} p_k^2$ \quad (Gini impurity)
 
 \column{0.42\textwidth}
 \vspace{2mm}

@@ -147,6 +147,7 @@
 \begin{frame}[t]{From One Tree to a Forest}
 \textbf{One person's opinion vs.\ the wisdom of the crowd}
 \begin{itemize}
+  \item \highlight{What is a decision tree?} A flowchart-like model that makes predictions by asking a sequence of yes/no questions about features (e.g., ``Is income > \$50k?'' $\to$ ``Is debt ratio > 0.4?''). Each question splits the data; the final answer is at the leaf.
   \item A single decision tree is like asking one analyst for a recommendation
   \item Small changes in data can completely change that analyst's conclusion
   \item The result: unstable, high-variance predictions you cannot rely on
@@ -203,11 +204,24 @@
 
 % SLIDE 8: Decision Tree Structure
 \begin{frame}[t]{Decision Tree Structure}
-\vspace{-0.8em}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{01_decision_tree/chart.pdf}
-\end{center}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\vspace{0.3em}
+\textbf{Reading the tree:}
+\begin{itemize}
+  \item \highlight{Internal node} = test one feature against a threshold
+  \item \highlight{Branch} = outcome of the test (yes/no)
+  \item \highlight{Leaf} = final prediction (class label or value)
+  \item \highlight{Path} from root to leaf = one decision rule
+\end{itemize}
+\vspace{0.3em}
+Each split aims to create purer child nodes (lower Gini impurity or entropy).
+\end{column}
+\begin{column}{0.45\textwidth}
 \vspace{-0.5em}
+\includegraphics[width=\textwidth]{01_decision_tree/chart.pdf}
+\end{column}
+\end{columns}
 \bottomnote{Decision trees are the building blocks of Random Forests -- each tree partitions the feature space recursively}
 \end{frame}
 
@@ -256,6 +270,8 @@
   \item $B$ = number of trees in the ensemble
 \end{itemize}
 \vspace{0.5em}
+\textbf{In plain language:} the ensemble variance has two parts -- a \highlight{floor} set by how correlated the trees are ($\rho$), and a \highlight{shrinking part} that vanishes as we add more trees ($B$).
+\vspace{0.3em}
 \textbf{Two levers for variance reduction:}
 \begin{itemize}
   \item \highlight{Increase $B$:} more trees shrink the second term toward zero
@@ -301,6 +317,7 @@ H = -\sum_{k=1}^{K} p_k \log_2(p_k)
 \begin{itemize}
   \item Gini and Entropy produce nearly identical splits in practice
   \item The tree greedily picks the feature and threshold that maximizes IG at each node
+  \item \highlight{Worked example:} node with 70 fraud, 30 legit: $G = 1 - (0.7^2 + 0.3^2) = 1 - 0.58 = 0.42$
 \end{itemize}
 \bottomnote{Both criteria measure impurity -- the tree splits to create purer child nodes at each step}
 \end{frame}
@@ -422,6 +439,7 @@ Interpretability & Feature importance built-in & SHAP required \\
 \vspace{0.5em}
 \textbf{Boosting (XGBoost, LightGBM):}
 \begin{itemize}
+  \item \highlight{Weak learner:} a model barely better than random guessing (e.g., a tree stump with just one split)
   \item Train trees \highlight{sequentially} -- each new tree focuses on previous errors
   \item Core idea: fit the next tree to the residuals of the current ensemble
   \item Later trees get lower weight to prevent overfitting (learning rate)
@@ -480,17 +498,16 @@ Interpretability & Feature importance built-in & SHAP required \\
 
 % SLIDE 24: Closing Comic
 \begin{frame}[t]{Closing Thought}
-\vspace{1.5em}
+\vspace{0.2em}
 \begin{center}
-\Large\textit{``Pour the data into this pile of decision trees}\\[0.3em]
-\textit{and see what comes out.''}
+\includegraphics[width=0.30\textwidth]{images/1838_machine_learning.png}
 \end{center}
-\vspace{1.0em}
+\vspace{0.1em}
 \begin{center}
-\normalsize The beauty of Random Forests: sometimes the simplest ensemble\\
+\small The beauty of Random Forests: sometimes the simplest ensemble\\
 approach is exactly what you need.
 \end{center}
-\bottomnote{Adapted from XKCD \#1838 ``Machine Learning'' by Randall Munroe (CC BY-NC 2.5)}
+\bottomnote{XKCD \#1838 ``Machine Learning'' by Randall Munroe (CC BY-NC 2.5)}
 \end{frame}
 
 % SLIDE 25: References
