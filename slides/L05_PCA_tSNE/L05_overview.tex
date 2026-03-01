@@ -219,6 +219,8 @@ C\, \mathbf{v}_k = \lambda_k\, \mathbf{v}_k
 \[
 \text{EVR}_k = \frac{\lambda_k}{\displaystyle\sum_{j=1}^{p} \lambda_j}
 \]
+
+\textbf{Example:} If the first eigenvalue explains 70\% and the second 20\%, then 2 components capture 90\% of the variance.
 \bottomnote{PCA reduces to an eigenvalue problem on the covariance matrix}
 \end{frame}
 
@@ -396,16 +398,18 @@ Visualization & Limited & Excellent \\
 
 % SLIDE 23: Closing Comic
 \begin{frame}[t]{Closing Thought}
-\vspace{2em}
-\begin{center}
-\Large\textit{``We reduced our 100-dimensional portfolio to 3 principal components.\\[0.5em]
+\begin{columns}[T]
+\column{0.45\textwidth}
+\includegraphics[width=\textwidth,height=0.60\textheight,keepaspectratio]{images/2400_statistics.png}
+\column{0.50\textwidth}
+\vspace{0.5em}
+\textit{``We reduced our 100-dimensional portfolio to 3 principal components.\\[0.3em]
 The fourth component? That's just noise\ldots\ probably.''}
-\end{center}
-\vspace{1em}
-\begin{center}
-\normalsize --- Overheard in a quantitative risk team
-\end{center}
-\bottomnote{Adapted from XKCD \#2400 ``Statistics'' by Randall Munroe (CC BY-NC 2.5)}
+
+\vspace{0.5em}
+\textbf{Next Session:} L06 -- Embeddings \& RL
+\end{columns}
+\bottomnote{XKCD \#2400 ``Statistics'' by Randall Munroe (CC BY-NC 2.5)}
 \end{frame}
 
 % SLIDE 24: References

@@ -239,6 +239,8 @@ P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad z = \beta_0 + \bolds
 \begin{itemize}
   \item Output is always a valid probability -- bounded, smooth, differentiable
 \end{itemize}
+
+\textbf{Example:} If $z = 0$, then $\sigma(0) = 0.5$ (50-50 chance). If $z = 2$, then $\sigma(2) = 0.88$ (88\% likely).
 \bottomnote{The sigmoid ``squashes'' any real number into $(0,1)$}
 \end{frame}
 
@@ -639,13 +641,18 @@ F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \te
 % SLIDE 23: Closing Comic -- XKCD callback
 % ============================================
 \begin{frame}[t]{Until Next Time...}
-\begin{center}
+\begin{columns}[T]
+\column{0.45\textwidth}
+\includegraphics[width=\textwidth,height=0.55\textheight,keepaspectratio]{images/1132_frequentist_bayesian.png}
+\column{0.50\textwidth}
+\vspace{0.5em}
 \textit{``Is the sun going to explode?''}\\[0.5em]
 Now you have the tools to answer with a probability, not just yes/no.
-\end{center}
-\vspace{1em}
+
+\vspace{0.5em}
 \textbf{Next Session:} L03 -- KNN \& K-Means (from parametric to non-parametric)
-\bottomnote{XKCD \#1132: The answer depends on your prior... and your loss function}
+\end{columns}
+\bottomnote{XKCD \#1132 by Randall Munroe (CC BY-NC 2.5) -- classification is about probabilities, not certainties}
 \end{frame}
 
 % ============================================

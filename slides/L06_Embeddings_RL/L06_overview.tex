@@ -221,6 +221,8 @@ then collect the answers on the other side.''}
 \text{sim}(u, v) = \frac{u \cdot v}{\|u\| \, \|v\|}
 \]
 
+\textbf{Example:} $\text{cos}(\text{``king''}, \text{``queen''}) = 0.85$ (very similar) vs.\ $\text{cos}(\text{``king''}, \text{``car''}) = 0.12$ (unrelated).
+
 \textbf{Reinforcement Learning --- Bellman Equation:}
 \[
 Q^*(s,a) = \mathbb{E}\bigl[r + \gamma \max_{a'} Q^*(s', a') \mid s, a\bigr]
@@ -452,28 +454,17 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 
 % Slide 23: Closing Comic (text callback)
 \begin{frame}[t]{Closing Thought}
-\vspace{2em}
-\begin{center}
-\Large\textit{``We poured financial news into a pile of linear algebra}
-
-\textit{and got sentiment scores on the other side.}
+\begin{columns}[T]
+\column{0.40\textwidth}
+\includegraphics[width=\textwidth,height=0.60\textheight,keepaspectratio]{images/1838_machine_learning.png}
+\column{0.55\textwidth}
+\vspace{0.5em}
+\Large\textit{``We poured financial news into a pile of linear algebra and got sentiment scores on the other side.''}
 
 \vspace{0.5em}
-
-\textit{Then we poured the sentiment scores into a reinforcement learner}
-
-\textit{and got a trading strategy on the other side.}
-
-\vspace{0.5em}
-
-\textit{The strategy said: `Buy and hold.'\,''}
-\end{center}
-
-\vspace{1em}
-\begin{center}
-\normalsize --- Adapted from XKCD \#1838 ``Machine Learning'' by Randall Munroe
-\end{center}
-\bottomnote{Callback to XKCD \#1838 by Randall Munroe (CC BY-NC 2.5)}
+\normalsize You now have the toolkit: regression, classification, clustering, ensembles, dimensionality reduction, embeddings, and RL.
+\end{columns}
+\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5). Course complete!}
 \end{frame}
 
 % Slide 24: References

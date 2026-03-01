@@ -288,6 +288,8 @@ d(\mathbf{x}, \mathbf{x}') = \sqrt{\sum_{j=1}^p (x_j - x'_j)^2}
 \item Choice of metric affects which points are ``nearest''
 \end{itemize}
 
+\textbf{Example:} Points $(1,2)$ and $(4,6)$: distance $= \sqrt{(4{-}1)^2 + (6{-}2)^2} = \sqrt{9+16} = 5$.
+
 \bottomnote{Unscaled features let high-magnitude variables dominate the distance calculation}
 \end{frame}
 
@@ -519,13 +521,18 @@ Fraudulent transactions cluster in feature space -- KNN detects them by proximit
 % ============================================================================
 % SLIDE 23: Closing Comic
 \begin{frame}[t]{Until Next Time...}
-\begin{center}
+\begin{columns}[T]
+\column{0.45\textwidth}
+\includegraphics[width=\textwidth,height=0.60\textheight,keepaspectratio]{images/2731_kmeans_clustering.png}
+\column{0.50\textwidth}
+\vspace{0.5em}
 \textit{``Even K-Means would struggle to cluster the ways students misuse K-Means.''}\\[0.5em]
 With KNN and K-Means, you can now classify the known and discover the unknown.
-\end{center}
-\vspace{1em}
+
+\vspace{0.5em}
 \textbf{Next Session:} L04 -- Random Forests (from distance-based to tree-based methods)
-\bottomnote{XKCD \#2731 callback -- clustering is easy, knowing when to cluster is the hard part}
+\end{columns}
+\bottomnote{XKCD \#2731 by Randall Munroe (CC BY-NC 2.5) -- clustering is easy, knowing when to cluster is the hard part}
 \end{frame}
 
 % ============================================================================
