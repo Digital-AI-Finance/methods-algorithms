@@ -375,51 +375,51 @@
                 },
                 {
                     "id": 4,
-                    "question": "Random Forests use TWO sources of randomness. Which combination produces decorrelated trees?",
+                    "question": "A Random Forest uses bootstrap sampling AND random feature subsets. If you remove bootstrap but keep feature subsetting (i.e., use 'pasting'), what specific effect does this have on the ensemble?",
                     "options": {
-                        "A": "Feature scaling + random learning rate",
-                        "B": "Random tree depth + random split thresholds",
-                        "C": "Bootstrap sampling alone is sufficient for full decorrelation",
-                        "D": "Bootstrap sampling (row randomness) + random feature subset at each split (column randomness)"
+                        "A": "The ensemble becomes identical to a single deep tree since all trees see the same data",
+                        "B": "You lose the ability to compute OOB error, and trees become slightly more correlated since every tree trains on all $n$ samples",
+                        "C": "Individual tree accuracy drops because each tree sees fewer samples",
+                        "D": "The ensemble variance increases dramatically because feature subsetting no longer works without bootstrap"
                     },
-                    "correct": "D",
-                    "explanation": "Bootstrap sampling ensures each tree trains on a different data subset (row randomness). Feature subsetting at each split ensures trees use different features (column randomness). Both together create diverse, decorrelated trees. Bootstrap alone (D) is just bagging -- trees remain correlated because they all consider the same features and strong predictors dominate every tree."
+                    "correct": "B",
+                    "explanation": "Bootstrap provides two benefits: (1) OOB error estimation (the ~36.8% left-out samples per tree), and (2) data diversity between trees. Without bootstrap ('pasting'), every tree trains on the full dataset. Feature subsetting still decorrelates splits, but since all trees see identical rows, they become more correlated (higher $\\rho$). Critically, OOB error estimation is impossible because no samples are left out. Trees still differ due to feature randomisation, so (A) is wrong -- they are not identical."
                 },
                 {
                     "id": 5,
-                    "question": "A classification dataset has $p = 81$ features. Using the default Random Forest setting of $\\sqrt{p}$ features per split, how many features are considered at each node?",
+                    "question": "For a regression problem with 81 features, the default max_features is $p/3 = 27$. A colleague sets max_features$= 81$ (all features) arguing each tree will be more accurate. What happens to tree correlation and ensemble test error?",
                     "options": {
-                        "A": "27",
-                        "B": "41",
-                        "C": "9",
-                        "D": "81"
+                        "A": "Tree correlation drops and test error improves because each tree is stronger",
+                        "B": "Tree correlation is unchanged; only the number of trees $B$ affects correlation",
+                        "C": "Tree correlation $\\rho$ increases sharply because all trees pick the same dominant features at each split, and test error likely INCREASES despite each tree being individually more accurate",
+                        "D": "The ensemble becomes equivalent to a single tree, so test error equals single-tree error"
                     },
                     "correct": "C",
-                    "explanation": "For classification, sklearn's default is max_features $= \\sqrt{p}$. With $p = 81$: $\\sqrt{81} = 9$ features considered at each split. For regression, the default is $p/3 = 27$. This restriction forces trees to consider different feature subsets, reducing correlation."
+                    "explanation": "When every tree considers all 81 features, the same strong predictors dominate splits in every tree, making them highly correlated ($\\rho \\to 1$). From the variance formula $\\text{Var}(\\bar{f}) = \\rho\\sigma^2 + \\frac{1-\\rho}{B}\\sigma^2$, high $\\rho$ raises the irreducible variance floor. Each tree individually has lower bias, but the ensemble loses its variance-reduction benefit. This is the core RF tradeoff: slightly weaker individual trees (higher bias) but much lower correlation yield a better ensemble."
                 },
                 {
                     "id": 6,
-                    "question": "Using the RF variance formula $\\text{Var}(\\bar{f}) = \\rho\\sigma^2 + \\frac{1-\\rho}{B}\\sigma^2$, with $B = 100$ trees and average pairwise correlation $\\rho = 0.2$, what is the ensemble variance?",
+                    "question": "Using the variance formula $\\text{Var}(\\bar{f}) = \\rho\\sigma^2 + \\frac{1-\\rho}{B}\\sigma^2$, what is the MINIMUM number of trees $B$ so the second term contributes less than 1% of the first term? Assume $\\rho = 0.3$. (Solve: $\\frac{1-\\rho}{B} < 0.01 \\cdot \\rho$)",
                     "options": {
-                        "A": "$0.008\\sigma^2$",
-                        "B": "$0.208\\sigma^2$",
-                        "C": "$0.20\\sigma^2$",
-                        "D": "$0.50\\sigma^2$"
+                        "A": "$B > 70$, so $B = 71$ trees minimum",
+                        "B": "$B > 100$, so $B = 101$ trees minimum",
+                        "C": "$B > 150$, so $B = 151$ trees minimum",
+                        "D": "$B > 233$, so $B = 234$ trees minimum"
                     },
-                    "correct": "B",
-                    "explanation": "$\\text{Var} = \\rho\\sigma^2 + \\frac{1-\\rho}{B}\\sigma^2 = 0.2\\sigma^2 + \\frac{0.8}{100}\\sigma^2 = 0.2\\sigma^2 + 0.008\\sigma^2 = 0.208\\sigma^2$. The first term ($0.2\\sigma^2$) is the irreducible floor set by tree correlation. The second term ($0.008\\sigma^2$) shrinks with more trees but is already small at $B=100$."
+                    "correct": "D",
+                    "explanation": "We need $\\frac{1-\\rho}{B} < 0.01 \\cdot \\rho$, i.e., $\\frac{0.7}{B} < 0.01 \\times 0.3 = 0.003$. Rearranging: $B > \\frac{0.7}{0.003} = 233.\\overline{3}$. So $B \\geq 234$ trees. At this point the reducible term ($\\frac{0.7}{234}\\sigma^2 \\approx 0.003\\sigma^2$) is negligible compared to the correlation floor ($0.3\\sigma^2$). Adding trees beyond 234 yields virtually no improvement -- you must reduce $\\rho$ instead."
                 },
                 {
                     "id": 7,
-                    "question": "If you decrease max_features from $p$ (all features) to $\\sqrt{p}$, what happens to tree correlation $\\rho$ and individual tree bias?",
+                    "question": "You plot OOB error vs. max_features for values 1, 5, 10, 20, 50, 100 on a classification dataset with $p = 100$ features. Where does the OOB error curve typically reach its minimum, and why?",
                     "options": {
-                        "A": "$\\rho$ decreases (good) but individual tree bias increases (tradeoff)",
-                        "B": "Both $\\rho$ and bias decrease",
-                        "C": "$\\rho$ increases and bias decreases",
-                        "D": "Neither changes; only the number of trees matters"
+                        "A": "Around $\\sqrt{p} = 10$: below this, individual trees are too weak (high bias); above this, trees become too correlated (high ensemble variance)",
+                        "B": "At max_features $= 1$: maximum decorrelation always wins regardless of individual tree quality",
+                        "C": "At max_features $= 100$: each tree is as accurate as possible, so the ensemble must also be optimal",
+                        "D": "At max_features $= 50$: the midpoint always minimises OOB error for any dataset"
                     },
                     "correct": "A",
-                    "explanation": "Fewer features per split means trees make different choices (lower $\\rho$), but each tree has less information available and makes worse individual decisions (higher bias). The ensemble benefits because the variance reduction from lower $\\rho$ typically outweighs the slight increase in bias. This is the fundamental RF tradeoff."
+                    "explanation": "The OOB error curve is typically U-shaped. At very low max_features (e.g., 1), each tree is almost random (high bias) and the ensemble cannot compensate. At very high max_features (e.g., 100), all trees pick the same dominant splits (high $\\rho$), collapsing ensemble variance reduction. The minimum is usually near $\\sqrt{p}$ for classification (here, 10), balancing the bias-correlation tradeoff. This is why $\\sqrt{p}$ is sklearn's default."
                 },
                 {
                     "id": 8,
@@ -447,15 +447,15 @@
                 },
                 {
                     "id": 10,
-                    "question": "A Random Forest trained on census data ranks 'zip_code' (30,000 unique values) as the top feature by MDI, but permutation importance ranks it 15th. A second feature 'annual_income' (continuous) ranks 3rd by MDI but 1st by permutation. What explains this discrepancy?",
+                    "question": "Two features in your RF model are highly correlated ($r = 0.95$): 'total_debt' and 'monthly_payments'. Permutation importance shows both near zero, but removing either one makes the other's importance jump significantly. What explains this, and how should you measure their joint contribution?",
                     "options": {
-                        "A": "MDI is always more accurate than permutation importance",
-                        "B": "Permutation importance is biased toward continuous features",
-                        "C": "The forest needs more trees to produce consistent importance rankings",
-                        "D": "High-cardinality features like zip_code get inflated MDI because they offer many split points that overfit, while permutation importance measures true predictive contribution on unseen data"
+                        "A": "The features cancel each other out in the model; neither is actually useful and both should be removed",
+                        "B": "Correlated features dilute each other's permutation importance because shuffling one still leaves the correlated partner intact, preserving most predictive information. Use conditional permutation importance or drop-column importance to measure their joint effect.",
+                        "C": "Permutation importance is simply unreliable for continuous features; switch to MDI instead",
+                        "D": "The model needs more trees to stabilise the importance estimates for correlated features"
                     },
-                    "correct": "D",
-                    "explanation": "MDI sums impurity reductions across all splits. High-cardinality features (like zip_code with 30k values) can always find a split that reduces impurity on training data, even if it does not generalise. Permutation importance shuffles the feature and measures accuracy drop on OOB/test data, so it reflects true predictive value. annual_income genuinely predicts the target; zip_code mostly memorises training patterns."
+                    "correct": "B",
+                    "explanation": "When two features carry nearly identical information ($r = 0.95$), shuffling 'total_debt' barely hurts predictions because 'monthly_payments' still provides the same signal -- and vice versa. Both appear unimportant individually, but the pair is highly important jointly. Conditional permutation importance (shuffle one feature conditional on the other) or drop-column importance (retrain without the feature) correctly reveals their true contribution. This is a well-known limitation of standard permutation importance with correlated features."
                 },
                 {
                     "id": 11,
@@ -543,27 +543,27 @@
                 },
                 {
                     "id": 18,
-                    "question": "You have an RF with n_estimators=100, max_depth=None, max_features='sqrt', achieving 82% test accuracy. Which single change is most likely to improve performance?",
+                    "question": "Your RF has n_estimators=100, max_depth=None, min_samples_leaf=1. You switch to n_estimators=500 and max_depth=15. Training accuracy drops from 100% to 94% but test accuracy increases from 82% to 89%. Why did limiting individual tree accuracy IMPROVE the ensemble?",
                     "options": {
-                        "A": "Set max_depth=15 (limit tree depth to reduce overfitting)",
-                        "B": "Increase n_estimators to 500 (more trees)",
-                        "C": "Set max_features=0.5 (consider half the features per split)",
-                        "D": "Set min_samples_leaf=1 (allow smallest possible leaves)"
+                        "A": "More trees always improve accuracy regardless of other settings; max_depth had no effect",
+                        "B": "The improvement is random noise; 94% training accuracy means the model is now underfitting",
+                        "C": "Shallower trees are faster to train, and the speed improvement indirectly improves accuracy",
+                        "D": "Shallower trees have higher bias but lower variance; the ensemble averages out the bias while benefiting from lower variance, so regularised trees generalise better collectively"
                     },
-                    "correct": "A",
-                    "explanation": "max_depth=None means fully grown trees that likely overfit. Limiting depth to 15 regularises each tree, reducing variance. (A) More trees help but with diminishing returns past ~100. (C) Changing max_features might help but is less impactful than fixing overfitting. (D) min_samples_leaf=1 is already the default and allows maximum overfitting. The biggest gain comes from addressing the primary issue: unrestricted tree depth."
+                    "correct": "D",
+                    "explanation": "With max_depth=None, each tree memorises training data (100% train accuracy) but has high variance -- small data changes produce very different trees. Setting max_depth=15 introduces bias (94% train accuracy) but dramatically reduces each tree's variance. When the ensemble averages 500 such trees, the individual biases partially cancel while the low variance yields stable predictions. The net effect: test accuracy jumps from 82% to 89%. This is the bias-variance tradeoff at the ensemble level -- slightly biased trees make a much better forest."
                 },
                 {
                     "id": 19,
-                    "question": "A data scientist applies SMOTE BEFORE the train-test split, achieving 95% test accuracy. After correcting the pipeline to apply SMOTE only to training data, accuracy drops to 78%. Why did the original pipeline give inflated results?",
+                    "question": "A team applies class_weight='balanced' to their RF and achieves 78% recall on the fraud class, but precision is only 12%. A stakeholder asks why so many legitimate transactions are flagged. Explain the tradeoff and name two approaches to improve precision while maintaining reasonable recall.",
                     "options": {
-                        "A": "SMOTE before splitting is faster and produces better synthetic samples",
-                        "B": "Synthetic samples generated from training observations leaked into the test set -- test samples were nearly identical to SMOTE-generated training points, making the test trivially easy",
-                        "C": "SMOTE always reduces accuracy when applied correctly",
-                        "D": "The train-test split changed the class distribution"
+                        "A": "Threshold tuning (raise the probability threshold above 0.5) and cost-sensitive learning (set custom sample_weight reflecting business cost ratios) -- both shift the precision-recall tradeoff toward fewer false positives",
+                        "B": "Add more trees to the ensemble and increase max_depth -- larger models always improve both precision and recall simultaneously",
+                        "C": "Remove class_weight='balanced' entirely and rely on accuracy as the sole metric",
+                        "D": "Apply SMOTE to the test set so that precision is computed on balanced classes"
                     },
-                    "correct": "B",
-                    "explanation": "SMOTE generates synthetic points by interpolating between real minority samples. If done before splitting, a synthetic point created from training sample A and test sample B ends up in the training set while B is in the test set. The model essentially memorises B through its synthetic neighbour. This is data leakage: the 95% accuracy is an illusion. The correct 78% reflects real generalisation."
+                    "correct": "A",
+                    "explanation": "class_weight='balanced' upweights the minority class, boosting recall at the expense of precision (many false positives). Two principled fixes: (1) Threshold tuning: RF outputs probabilities; raising the decision threshold from 0.5 to, say, 0.7 requires stronger evidence before flagging fraud, reducing false positives. (2) Cost-sensitive sample_weight: instead of the automatic 'balanced' weighting, assign weights reflecting the actual business cost ratio (e.g., missing fraud costs 50x a false alarm). This gives finer control than the blanket 'balanced' setting. Removing class_weight entirely (C) reverts to ignoring the minority class. Applying SMOTE to the test set (D) is data leakage."
                 },
                 {
                     "id": 20,
