@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 4: Decision Trees | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVuj4nkfMTmM/M/7EKJVGr6aSozTWXMEoxlNVlTqOgKHMJCnGZJ73Lpr/7Vdw" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Ber8i1e2fQs9/h7qJC/H6MXGLS8/3k0JzqfGJhZ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxUvBOCaIpzhqKdQZnIJu5B6/HYJv9CrNR6xFZveLXHPmGIFV9O1e5sXD0J1c" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quiz 4: Decision Trees</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 4: Decision Trees</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "In a decision tree, what do internal nodes, branches, and leaf nodes represent respectively?",
+                    "options": {
+                        "A": "Internal nodes = predictions, branches = features, leaves = thresholds",
+                        "B": "Internal nodes = feature tests, branches = test outcomes, leaves = class labels or predictions",
+                        "C": "Internal nodes = data points, branches = distances, leaves = cluster centres",
+                        "D": "Internal nodes = weights, branches = activations, leaves = loss values"
+                    },
+                    "correct": "B",
+                    "explanation": "Each internal node tests a feature (e.g., 'income > 50k?'), each branch represents the outcome of that test (yes/no), and each leaf node holds the final prediction (class label for classification or value for regression)."
+                },
+                {
+                    "id": 2,
+                    "question": "Split A produces children with weighted Gini 0.32. Split B produces children with weighted Gini 0.27. If the parent Gini is 0.50, which split is better and what is its information gain?",
+                    "options": {
+                        "A": "Split A is better; IG = 0.18",
+                        "B": "Split B is better; IG = 0.23",
+                        "C": "Split A is better; IG = 0.32",
+                        "D": "Both are equivalent; IG = 0.25"
+                    },
+                    "correct": "B",
+                    "explanation": "The best split minimises weighted child impurity. Split B has lower weighted Gini (0.27 < 0.32). Information gain for Split B $= 0.50 - 0.27 = 0.23$. Split A gives $0.50 - 0.32 = 0.18$. Split B wins."
+                },
+                {
+                    "id": 3,
+                    "question": "A node contains 100 samples: 50 class X, 30 class Y, 20 class Z. What is the Gini impurity?",
+                    "options": {
+                        "A": "0.38",
+                        "B": "0.50",
+                        "C": "0.62",
+                        "D": "0.70"
+                    },
+                    "correct": "C",
+                    "explanation": "Gini $= 1 - (p_X^2 + p_Y^2 + p_Z^2) = 1 - (0.5^2 + 0.3^2 + 0.2^2) = 1 - (0.25 + 0.09 + 0.04) = 1 - 0.38 = 0.62$."
+                },
+                {
+                    "id": 4,
+                    "question": "Node P has distribution 80/20 (two classes). Node Q has distribution 60/40. Which node has HIGHER entropy and why?",
+                    "options": {
+                        "A": "Node P, because it has more samples in one class",
+                        "B": "They have the same entropy since both are binary",
+                        "C": "Node Q, because the class distribution is more balanced and therefore more uncertain",
+                        "D": "Node P, because 80% is closer to maximum entropy"
+                    },
+                    "correct": "C",
+                    "explanation": "Entropy measures uncertainty. Node Q (60/40): $H = -(0.6\\log_2 0.6 + 0.4\\log_2 0.4) \\approx 0.971$ bits. Node P (80/20): $H = -(0.8\\log_2 0.8 + 0.2\\log_2 0.2) \\approx 0.722$ bits. The more balanced distribution (Q) has higher entropy."
+                },
+                {
+                    "id": 5,
+                    "question": "A parent node (200 samples, entropy 0.95) can be split two ways. Split X: left child (120 samples, entropy 0.65), right child (80 samples, entropy 0.50). Split Y: left child (100 samples, entropy 0.40), right child (100 samples, entropy 0.70). Which split gives higher information gain?",
+                    "options": {
+                        "A": "Split X with IG = 0.36",
+                        "B": "Split X with IG = 0.45",
+                        "C": "Split Y with IG = 0.35",
+                        "D": "Split Y with IG = 0.40"
+                    },
+                    "correct": "D",
+                    "explanation": "Split X weighted entropy $= \\frac{120}{200}(0.65) + \\frac{80}{200}(0.50) = 0.39 + 0.20 = 0.59$, IG $= 0.95 - 0.59 = 0.36$. Split Y weighted entropy $= \\frac{100}{200}(0.40) + \\frac{100}{200}(0.70) = 0.20 + 0.35 = 0.55$, IG $= 0.95 - 0.55 = 0.40$. Split Y is better."
+                },
+                {
+                    "id": 6,
+                    "question": "Gini impurity and entropy are both concave functions of class probability $p$. In which scenario do they give the SAME optimal split?",
+                    "options": {
+                        "A": "Never -- they always rank splits differently",
+                        "B": "When a candidate split produces one pure child (Gini=0, entropy=0), both criteria prefer that split equally",
+                        "C": "Only when there are exactly 3 classes",
+                        "D": "Only when all candidate splits produce balanced children"
+                    },
+                    "correct": "B",
+                    "explanation": "Both Gini and entropy equal zero for a pure node and reach their maximum near $p = 0.5$ (binary case). When one split produces a pure child, both metrics assign it zero impurity. The two criteria agree on split rankings in the vast majority of cases (~98%). They may disagree slightly near $p = 0.5$ where their curvature differs, but any split that isolates a pure subset is optimal for both."
+                },
+                {
+                    "id": 7,
+                    "question": "A decision tree splits feature space using axis-aligned cuts. Why can it NOT draw a single diagonal boundary like $x_1 + x_2 = 5$?",
+                    "options": {
+                        "A": "Because trees can only handle categorical features",
+                        "B": "Because the Gini criterion does not support continuous features",
+                        "C": "Because each split tests ONE feature against a threshold, producing boundaries parallel to coordinate axes",
+                        "D": "Because trees always use random feature subsets"
+                    },
+                    "correct": "C",
+                    "explanation": "Each split in CART tests a single feature: 'Is $x_j \\le t$?' This produces a boundary perpendicular to the $x_j$ axis. A diagonal boundary requires testing a linear combination of features, which a single split cannot do. A tree can approximate a diagonal with many staircase-like axis-aligned splits, but never a single clean diagonal."
+                },
+                {
+                    "id": 8,
+                    "question": "Consider the XOR pattern: class 1 at (0,0) and (1,1), class 0 at (0,1) and (1,0). A logistic regression model fails on this. How does a decision tree succeed?",
+                    "options": {
+                        "A": "It uses a single split on $x_1$ at 0.5 to perfectly separate the classes",
+                        "B": "It applies kernel trick internally to project into higher dimensions",
+                        "C": "It cannot handle XOR; only neural networks can solve it",
+                        "D": "It needs two splits: first on $x_1$ at 0.5, then on $x_2$ at 0.5 within one branch, creating a piecewise partition"
+                    },
+                    "correct": "D",
+                    "explanation": "XOR is not linearly separable, so logistic regression fails. A decision tree splits on $x_1 \\le 0.5$ (left branch gets (0,0) and (0,1)), then splits the left branch on $x_2 \\le 0.5$. The right branch splits similarly. Two levels of axis-aligned splits partition the space into four quadrants, solving XOR perfectly."
+                },
+                {
+                    "id": 9,
+                    "question": "A node has 20 samples (12 class A, 8 class B). The CART algorithm considers feature 'age' at threshold 30, producing left child (10 samples: 9A, 1B) and right child (10 samples: 3A, 7B). What is the weighted Gini after this split?",
+                    "options": {
+                        "A": "0.18",
+                        "B": "0.30",
+                        "C": "0.42",
+                        "D": "0.48"
+                    },
+                    "correct": "B",
+                    "explanation": "Left Gini $= 1 - (0.9^2 + 0.1^2) = 1 - (0.81 + 0.01) = 0.18$. Right Gini $= 1 - (0.3^2 + 0.7^2) = 1 - (0.09 + 0.49) = 0.42$. Weighted Gini $= \\frac{10}{20}(0.18) + \\frac{10}{20}(0.42) = 0.09 + 0.21 = 0.30$. The parent Gini was $1 - (0.6^2 + 0.4^2) = 0.48$, so this split achieves IG $= 0.48 - 0.30 = 0.18$."
+                },
+                {
+                    "id": 10,
+                    "question": "A decision tree has hyperparameters max_depth=3 and min_samples_leaf=5. A node at depth 3 has 20 samples (12 class A, 8 class B). Should this node be split further?",
+                    "options": {
+                        "A": "Yes, because it has more than 5 samples and is not pure",
+                        "B": "Yes, because the Gini is greater than 0",
+                        "C": "It depends on the min_samples_split parameter only",
+                        "D": "No, because it has already reached max_depth=3 and no further splitting is allowed"
+                    },
+                    "correct": "D",
+                    "explanation": "max_depth=3 means nodes at depth 3 are the deepest allowed. Even though this node is impure (Gini $= 1 - (0.6^2 + 0.4^2) = 0.48$) and has enough samples, the depth constraint prevents any further splitting. It becomes a leaf predicting class A (the majority class)."
+                },
+                {
+                    "id": 11,
+                    "question": "A decision tree produces the path: root (income > 50k?) -> YES -> (debt_ratio > 0.4?) -> NO -> Leaf: APPROVE. What is the human-readable rule?",
+                    "options": {
+                        "A": "If income <= 50k and debt_ratio > 0.4, approve the application",
+                        "B": "If income > 50k or debt_ratio <= 0.4, approve the application",
+                        "C": "If income > 50k and debt_ratio <= 0.4, approve the application",
+                        "D": "If income > 50k and debt_ratio > 0.4, approve the application"
+                    },
+                    "correct": "C",
+                    "explanation": "Following the path: root asks 'income > 50k?' and we go YES (income > 50k). Then 'debt_ratio > 0.4?' and we go NO (debt_ratio <= 0.4). The conjunction of conditions along the path gives: IF income > 50k AND debt_ratio <= 0.4 THEN approve."
+                },
+                {
+                    "id": 12,
+                    "question": "In a single decision tree, feature X is used in 3 splits with Gini reductions of 0.15, 0.08, and 0.03. Feature Y is used in 2 splits with reductions 0.12 and 0.10. Which feature has higher MDI (Mean Decrease in Impurity)?",
+                    "options": {
+                        "A": "Feature X with MDI = 0.26",
+                        "B": "Feature Y with MDI = 0.22",
+                        "C": "They are equal at MDI = 0.24",
+                        "D": "Feature X with MDI = 0.15 (only the first split counts)"
+                    },
+                    "correct": "A",
+                    "explanation": "MDI sums all impurity reductions for each feature across the entire tree. Feature X: $0.15 + 0.08 + 0.03 = 0.26$. Feature Y: $0.12 + 0.10 = 0.22$. Feature X has higher MDI (0.26 > 0.22). In practice, these are often normalised so all feature importances sum to 1."
+                },
+                {
+                    "id": 13,
+                    "question": "A decision tree with max_depth=None achieves 100% training accuracy but only 65% test accuracy. What is the most likely diagnosis and appropriate fix?",
+                    "options": {
+                        "A": "Underfitting -- increase tree complexity by adding polynomial features",
+                        "B": "High bias -- the tree is too shallow; remove all stopping criteria",
+                        "C": "Data leakage -- the training set contains test samples",
+                        "D": "Overfitting -- the tree memorised training data; apply pre-pruning (e.g., set max_depth=8, min_samples_leaf=10)"
+                    },
+                    "correct": "D",
+                    "explanation": "100% training accuracy with 65% test accuracy is a textbook overfitting signal. An unrestricted tree (max_depth=None) grows until every leaf is pure, memorising noise. Pre-pruning via max_depth and min_samples_leaf limits tree complexity, trading a small increase in training error for much better generalisation."
+                },
+                {
+                    "id": 14,
+                    "question": "As max_depth increases from 1 to 20 for a decision tree, what is the typical behaviour of training accuracy and test accuracy?",
+                    "options": {
+                        "A": "Training accuracy increases monotonically; test accuracy increases then decreases after an optimal depth",
+                        "B": "Both increase monotonically toward 100%",
+                        "C": "Training accuracy stays constant; test accuracy decreases",
+                        "D": "Both decrease as the tree becomes more complex"
+                    },
+                    "correct": "A",
+                    "explanation": "Training accuracy always increases (or stays constant) with depth because a deeper tree can fit more training patterns. Test accuracy initially improves as the tree captures real structure, but eventually decreases when the tree begins fitting noise (overfitting). The gap between the two curves widens -- this is the classic bias-variance tradeoff visualisation."
+                },
+                {
+                    "id": 15,
+                    "question": "Compare pre-pruning (setting max_depth, min_samples_leaf before training) with post-pruning (growing full tree, then removing branches using cost-complexity parameter alpha). When is post-pruning preferred?",
+                    "options": {
+                        "A": "When the optimal tree structure is unknown in advance and you want to explore the full tree before simplifying",
+                        "B": "When training time is the primary concern, since post-pruning is always faster",
+                        "C": "When the dataset is very small (< 50 samples) and pre-pruning removes too much",
+                        "D": "Post-pruning is never preferred; pre-pruning is always sufficient"
+                    },
+                    "correct": "A",
+                    "explanation": "Pre-pruning may stop splitting too early (the 'horizon effect') -- a split that looks weak might lead to very strong subsequent splits. Post-pruning grows the full tree first, then uses cross-validated cost-complexity pruning ($\\alpha$ parameter) to find the best subtree. This explores the full structure and is preferred when computational cost is acceptable and the optimal depth is unknown."
+                },
+                {
+                    "id": 16,
+                    "question": "A regression tree node has values [100, 150, 200]. A candidate split produces left child [100, 150] and right child [200]. What is the MSE reduction?",
+                    "options": {
+                        "A": "833.3",
+                        "B": "1250.0",
+                        "C": "416.7",
+                        "D": "1666.7"
+                    },
+                    "correct": "B",
+                    "explanation": "Parent mean $= 150$, MSE $= \\frac{(100-150)^2 + (150-150)^2 + (200-150)^2}{3} = \\frac{2500+0+2500}{3} = 1666.7$. Left child: mean $= 125$, MSE $= \\frac{(100-125)^2 + (150-125)^2}{2} = \\frac{625+625}{2} = 625$. Right child: mean $= 200$, MSE $= 0$ (single value). Weighted child MSE $= \\frac{2}{3}(625) + \\frac{1}{3}(0) = 416.7$. Reduction $= 1666.7 - 416.7 = 1250.0$."
+                },
+                {
+                    "id": 17,
+                    "question": "Which of the following is NOT an advantage of decision trees?",
+                    "options": {
+                        "A": "They require no feature scaling or normalisation",
+                        "B": "They can extrapolate beyond the range of training data",
+                        "C": "They handle both numerical and categorical features naturally",
+                        "D": "They are inherently interpretable with if-then rules"
+                    },
+                    "correct": "B",
+                    "explanation": "Decision trees CANNOT extrapolate. Predictions are based on leaf values derived from training data, so a tree can only predict values it has seen (or averages thereof for regression). This is a real limitation compared to linear models. The other three (no scaling needed, mixed feature types, interpretability) are genuine DT advantages."
+                },
+                {
+                    "id": 18,
+                    "question": "Removing a single training sample can sometimes change a decision tree's structure dramatically. Why are decision trees so unstable?",
+                    "options": {
+                        "A": "Because they use stochastic gradient descent which is inherently random",
+                        "B": "Because decision trees always overfit to the smallest class",
+                        "C": "Because the greedy top-down split selection means a different root split cascades into an entirely different tree",
+                        "D": "Because removing a sample changes the number of features available"
+                    },
+                    "correct": "C",
+                    "explanation": "CART uses a greedy algorithm: the best split at the root depends on the entire dataset. Removing one sample can change which split is optimal at the root, and since all subsequent splits depend on the root partition, the entire tree structure can change. This high variance is a key motivation for Random Forests, which average many trees to stabilise predictions."
+                },
+                {
+                    "id": 19,
+                    "question": "A dataset has two features with strong non-linear interactions (e.g., high income + high debt = risky, but high income + low debt = safe). Which model handles this better and why?",
+                    "options": {
+                        "A": "Decision tree, because hierarchical splits naturally capture feature interactions without explicit interaction terms",
+                        "B": "Logistic regression, because it models probability directly via the sigmoid function",
+                        "C": "Both handle it equally well since both are supervised classifiers",
+                        "D": "Logistic regression, because it can use L2 regularisation to capture interactions"
+                    },
+                    "correct": "A",
+                    "explanation": "A decision tree naturally captures interactions: it might split on income first, then split on debt differently for the high-income vs low-income branches. Logistic regression only models $\\beta_1 x_1 + \\beta_2 x_2$ (additive, no interaction) unless you manually engineer $x_1 \\times x_2$ terms. The tree discovers these interactions automatically from the data."
+                },
+                {
+                    "id": 20,
+                    "question": "Under the Equal Credit Opportunity Act (ECOA), a bank must provide specific reasons when denying a loan. Why does a decision tree's inherent interpretability help with adverse action notices?",
+                    "options": {
+                        "A": "Because trees are always more accurate than black-box models for credit scoring",
+                        "B": "Because the path from root to leaf directly provides the conjunction of feature conditions that led to the denial, forming a natural explanation",
+                        "C": "Because regulators require all banks to use decision trees",
+                        "D": "Because trees automatically satisfy fairness constraints on protected attributes"
+                    },
+                    "correct": "B",
+                    "explanation": "The root-to-leaf path in a decision tree reads as an if-then rule: 'IF income < 30k AND employment_length < 2 years AND debt_ratio > 0.5 THEN deny.' This directly provides the specific reasons for denial that ECOA requires in adverse action notices. Black-box models need additional explainability tools (like SHAP) to produce comparable explanations."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                const opts = {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
+                });
+            }
+        }
+
+        function waitForKaTeX(callback, maxAttempts = 50) {
+    let attempts = 0;
+    function check() {
+        if (typeof renderMathInElement !== 'undefined') {
+            callback();
+        } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(check, 50);
+        }
+    }
+    check();
+}
+
+// Initialize with error handling
+        try {
+            initQuiz();
+            waitForKaTeX(renderMath);
+        } catch (e) {
+            console.error('Quiz initialization error:', e);
+            const container = document.getElementById('questionsRow') || document.querySelector('.main');
+            if (container) {
+                container.innerHTML =
+                    '<div style="padding:2rem;text-align:center;color:#991b1b;">' +
+                    '<h3>Quiz failed to load</h3><p>Error: ' + e.message + '</p>' +
+                    '<p>Please refresh the page or try a different browser.</p></div>';
+            }
+        }
+    </script>
+</body>
+</html>

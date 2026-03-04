@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 4: Ensemble Methods | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVuj4nkfMTmM/M/7EKJVGr6aSozTWXMEoxlNVlTqOgKHMJCnGZJ73Lpr/7Vdw" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Ber8i1e2fQs9/h7qJC/H6MXGLS8/3k0JzqfGJhZ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxUvBOCaIpzhqKdQZnIJu5B6/HYJv9CrNR6xFZveLXHPmGIFV9O1e5sXD0J1c" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quiz 4: Ensemble Methods</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quiz 4: Ensemble Methods</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "When drawing $n$ samples with replacement from $n$ datapoints, what fraction of unique datapoints appear in a bootstrap sample on average?",
+                    "options": {
+                        "A": "50.0%",
+                        "B": "63.2%",
+                        "C": "75.0%",
+                        "D": "100%"
+                    },
+                    "correct": "B",
+                    "explanation": "Each datapoint has probability $1 - 1/n$ of NOT being picked in one draw. Over $n$ draws: $P(\\text{not picked}) = (1 - 1/n)^n \\to e^{-1} \\approx 0.368$. So the fraction included is $1 - e^{-1} \\approx 0.632$ or 63.2%."
+                },
+                {
+                    "id": 2,
+                    "question": "Bagging averages $B$ independent estimators. If each tree has variance $\\sigma^2$, why does the ensemble variance decrease?",
+                    "options": {
+                        "A": "Averaging always reduces bias, not variance",
+                        "B": "Each tree sees the full dataset, so they all agree and variance is zero",
+                        "C": "By the law of large numbers, the average of $B$ independent estimators with variance $\\sigma^2$ has variance $\\sigma^2/B$, which shrinks as $B$ grows",
+                        "D": "Bagging increases variance but reduces bias, creating a net improvement"
+                    },
+                    "correct": "C",
+                    "explanation": "If trees were truly independent with equal variance $\\sigma^2$, the ensemble variance would be $\\sigma^2/B$. In practice, trees are not fully independent (they share the same training data), so the actual reduction is less. This is why Random Forests add feature randomisation -- to make trees more independent and push variance closer to $\\sigma^2/B$."
+                },
+                {
+                    "id": 3,
+                    "question": "Approximately 36.8% of training samples are excluded from each bootstrap sample. How does this create a 'free' validation set (OOB error)?",
+                    "options": {
+                        "A": "The excluded samples are used to retrain a separate validation model",
+                        "B": "The OOB samples are used to prune the trees after training",
+                        "C": "OOB error requires a separate holdout set and is not actually free",
+                        "D": "For each training sample, predictions are collected only from trees whose bootstrap did NOT include that sample, creating an unbiased estimate without a separate validation split"
+                    },
+                    "correct": "D",
+                    "explanation": "For each sample $x_i$, roughly $B/e$ trees did not include $x_i$ in their bootstrap. We aggregate predictions from only those trees for $x_i$, then compare with the true label. This gives an unbiased error estimate without needing a separate validation split -- hence 'free'. OOB error closely approximates leave-one-out cross-validation."
+                },
+                {
+                    "id": 4,
+                    "question": "Random Forests use TWO sources of randomness. Which combination produces decorrelated trees?",
+                    "options": {
+                        "A": "Feature scaling + random learning rate",
+                        "B": "Random tree depth + random split thresholds",
+                        "C": "Bootstrap sampling alone is sufficient for full decorrelation",
+                        "D": "Bootstrap sampling (row randomness) + random feature subset at each split (column randomness)"
+                    },
+                    "correct": "D",
+                    "explanation": "Bootstrap sampling ensures each tree trains on a different data subset (row randomness). Feature subsetting at each split ensures trees use different features (column randomness). Both together create diverse, decorrelated trees. Bootstrap alone (D) is just bagging -- trees remain correlated because they all consider the same features and strong predictors dominate every tree."
+                },
+                {
+                    "id": 5,
+                    "question": "A classification dataset has $p = 81$ features. Using the default Random Forest setting of $\\sqrt{p}$ features per split, how many features are considered at each node?",
+                    "options": {
+                        "A": "27",
+                        "B": "41",
+                        "C": "9",
+                        "D": "81"
+                    },
+                    "correct": "C",
+                    "explanation": "For classification, sklearn's default is max_features $= \\sqrt{p}$. With $p = 81$: $\\sqrt{81} = 9$ features considered at each split. For regression, the default is $p/3 = 27$. This restriction forces trees to consider different feature subsets, reducing correlation."
+                },
+                {
+                    "id": 6,
+                    "question": "Using the RF variance formula $\\text{Var}(\\bar{f}) = \\rho\\sigma^2 + \\frac{1-\\rho}{B}\\sigma^2$, with $B = 100$ trees and average pairwise correlation $\\rho = 0.2$, what is the ensemble variance?",
+                    "options": {
+                        "A": "$0.008\\sigma^2$",
+                        "B": "$0.208\\sigma^2$",
+                        "C": "$0.20\\sigma^2$",
+                        "D": "$0.50\\sigma^2$"
+                    },
+                    "correct": "B",
+                    "explanation": "$\\text{Var} = \\rho\\sigma^2 + \\frac{1-\\rho}{B}\\sigma^2 = 0.2\\sigma^2 + \\frac{0.8}{100}\\sigma^2 = 0.2\\sigma^2 + 0.008\\sigma^2 = 0.208\\sigma^2$. The first term ($0.2\\sigma^2$) is the irreducible floor set by tree correlation. The second term ($0.008\\sigma^2$) shrinks with more trees but is already small at $B=100$."
+                },
+                {
+                    "id": 7,
+                    "question": "If you decrease max_features from $p$ (all features) to $\\sqrt{p}$, what happens to tree correlation $\\rho$ and individual tree bias?",
+                    "options": {
+                        "A": "$\\rho$ decreases (good) but individual tree bias increases (tradeoff)",
+                        "B": "Both $\\rho$ and bias decrease",
+                        "C": "$\\rho$ increases and bias decreases",
+                        "D": "Neither changes; only the number of trees matters"
+                    },
+                    "correct": "A",
+                    "explanation": "Fewer features per split means trees make different choices (lower $\\rho$), but each tree has less information available and makes worse individual decisions (higher bias). The ensemble benefits because the variance reduction from lower $\\rho$ typically outweighs the slight increase in bias. This is the fundamental RF tradeoff."
+                },
+                {
+                    "id": 8,
+                    "question": "A Random Forest has $\\rho = 0.5$. Explain why increasing from $B=100$ to $B=1000$ trees barely improves performance.",
+                    "options": {
+                        "A": "Because more trees always cause overfitting",
+                        "B": "Because 100 trees is always the optimal number for any dataset",
+                        "C": "Because the variance floor $\\rho\\sigma^2 = 0.5\\sigma^2$ dominates; the reducible term drops from $0.005\\sigma^2$ to $0.0005\\sigma^2$, a negligible improvement",
+                        "D": "Because the OOB error increases with more trees"
+                    },
+                    "correct": "C",
+                    "explanation": "At $B=100$: Var $= 0.5\\sigma^2 + \\frac{0.5}{100}\\sigma^2 = 0.505\\sigma^2$. At $B=1000$: Var $= 0.5\\sigma^2 + \\frac{0.5}{1000}\\sigma^2 = 0.5005\\sigma^2$. The improvement is only $0.0045\\sigma^2$ -- negligible. The $\\rho\\sigma^2$ floor cannot be reduced by adding trees. To meaningfully improve, you must reduce $\\rho$ (lower max_features)."
+                },
+                {
+                    "id": 9,
+                    "question": "The RF algorithm has three key steps: (1) draw bootstrap sample, (2) grow tree with random feature subset at each split, (3) repeat B times and aggregate. Which step is primarily responsible for creating tree diversity?",
+                    "options": {
+                        "A": "Step 1 only -- bootstrap sampling creates all the diversity needed",
+                        "B": "Step 3 -- aggregation creates diversity by combining predictions",
+                        "C": "Steps 1 AND 2 together -- bootstrap varies the data, feature subsetting varies the structure, and both contribute to decorrelation",
+                        "D": "Step 2 only -- feature subsetting is the sole source of diversity"
+                    },
+                    "correct": "C",
+                    "explanation": "Both steps contribute: bootstrap sampling (step 1) ensures different training sets, and feature subsetting (step 2) ensures different split choices even on similar data. Breiman showed that feature randomisation is the more important source of decorrelation, but bootstrap also helps. Step 3 (aggregation) does not create diversity -- it exploits the diversity created by steps 1 and 2."
+                },
+                {
+                    "id": 10,
+                    "question": "A Random Forest trained on census data ranks 'zip_code' (30,000 unique values) as the top feature by MDI, but permutation importance ranks it 15th. A second feature 'annual_income' (continuous) ranks 3rd by MDI but 1st by permutation. What explains this discrepancy?",
+                    "options": {
+                        "A": "MDI is always more accurate than permutation importance",
+                        "B": "Permutation importance is biased toward continuous features",
+                        "C": "The forest needs more trees to produce consistent importance rankings",
+                        "D": "High-cardinality features like zip_code get inflated MDI because they offer many split points that overfit, while permutation importance measures true predictive contribution on unseen data"
+                    },
+                    "correct": "D",
+                    "explanation": "MDI sums impurity reductions across all splits. High-cardinality features (like zip_code with 30k values) can always find a split that reduces impurity on training data, even if it does not generalise. Permutation importance shuffles the feature and measures accuracy drop on OOB/test data, so it reflects true predictive value. annual_income genuinely predicts the target; zip_code mostly memorises training patterns."
+                },
+                {
+                    "id": 11,
+                    "question": "SHAP values satisfy the additivity property: they sum to $f(x) - E[f(x)]$. A model predicts $\\hat{y} = 0.85$ for a loan applicant and the base rate (average prediction) is $E[f(x)] = 0.40$. What must the SHAP values across all features sum to?",
+                    "options": {
+                        "A": "0.85",
+                        "B": "0.40",
+                        "C": "0.45",
+                        "D": "1.25"
+                    },
+                    "correct": "C",
+                    "explanation": "$\\sum_j \\phi_j = f(x) - E[f(x)] = 0.85 - 0.40 = 0.45$. This is the SHAP efficiency axiom: the feature contributions must fully account for the difference between the individual prediction and the average prediction. Each $\\phi_j$ shows how much feature $j$ pushed the prediction above or below the baseline."
+                },
+                {
+                    "id": 12,
+                    "question": "In AdaBoost, a weak learner achieves error rate $\\epsilon = 0.25$. What is the learner weight $\\alpha = \\frac{1}{2}\\ln\\frac{1-\\epsilon}{\\epsilon}$?",
+                    "options": {
+                        "A": "$\\frac{1}{2}\\ln 2 \\approx 0.347$",
+                        "B": "$\\frac{1}{2}\\ln 3 \\approx 0.549$",
+                        "C": "$\\ln 3 \\approx 1.099$",
+                        "D": "$\\frac{1}{2}\\ln 4 \\approx 0.693$"
+                    },
+                    "correct": "B",
+                    "explanation": "$\\alpha = \\frac{1}{2}\\ln\\frac{1 - 0.25}{0.25} = \\frac{1}{2}\\ln\\frac{0.75}{0.25} = \\frac{1}{2}\\ln 3 \\approx \\frac{1}{2}(1.0986) \\approx 0.549$. Higher $\\alpha$ means the learner gets more vote in the final ensemble. A learner with $\\epsilon = 0.5$ (random guessing) gets $\\alpha = 0$."
+                },
+                {
+                    "id": 13,
+                    "question": "In AdaBoost, a misclassified sample's weight is multiplied by $e^{\\alpha}$. With $\\alpha = 0.549$ from the previous question, by what factor does the weight increase?",
+                    "options": {
+                        "A": "$e^{0.549} \\approx 1.73$",
+                        "B": "$e^{0.549} \\approx 2.00$",
+                        "C": "$e^{0.549} \\approx 1.50$",
+                        "D": "$e^{0.549} \\approx 3.00$"
+                    },
+                    "correct": "A",
+                    "explanation": "$e^{0.549} = e^{\\frac{1}{2}\\ln 3} = (e^{\\ln 3})^{1/2} = 3^{1/2} = \\sqrt{3} \\approx 1.732$. Misclassified samples get their weights multiplied by $\\sqrt{3}$, making them roughly 73% more important in the next round. This forces the next weak learner to focus on the mistakes."
+                },
+                {
+                    "id": 14,
+                    "question": "In gradient boosting, trees are fit to 'pseudo-residuals.' What are these and why does this work?",
+                    "options": {
+                        "A": "Pseudo-residuals are the original target values; fitting to them reduces bias",
+                        "B": "Pseudo-residuals are random perturbations added to prevent overfitting",
+                        "C": "Pseudo-residuals are the negative gradients of the loss function; fitting trees to them performs gradient descent in function space, iteratively reducing the loss",
+                        "D": "Pseudo-residuals are the feature importances from the previous tree"
+                    },
+                    "correct": "C",
+                    "explanation": "For squared error loss, pseudo-residuals equal actual residuals ($y_i - \\hat{y}_i$). For general losses, they are $-\\frac{\\partial L}{\\partial \\hat{y}_i}$. Each new tree fits these gradients, moving the ensemble prediction in the direction that most reduces the loss. This is gradient descent where the 'parameter' being optimised is the function itself."
+                },
+                {
+                    "id": 15,
+                    "question": "XGBoost's objective includes a regularisation term $\\Omega(f) = \\gamma T + \\frac{1}{2}\\lambda\\sum_{j=1}^T w_j^2$. What do $\\gamma$ and $\\lambda$ control?",
+                    "options": {
+                        "A": "$\\gamma$ penalises the number of leaves $T$ (tree complexity), $\\lambda$ penalises the magnitude of leaf weights $w_j$ (prediction smoothness)",
+                        "B": "$\\gamma$ controls the learning rate, $\\lambda$ controls the number of trees",
+                        "C": "$\\gamma$ controls feature sampling, $\\lambda$ controls row sampling",
+                        "D": "Both $\\gamma$ and $\\lambda$ control the same thing: overall shrinkage"
+                    },
+                    "correct": "A",
+                    "explanation": "$\\gamma T$ adds a cost per leaf, discouraging trees with many leaves (simpler trees preferred). $\\frac{1}{2}\\lambda\\sum w_j^2$ is L2 regularisation on leaf weights, preventing extreme predictions. Together they control the bias-variance tradeoff: higher $\\gamma$ and $\\lambda$ produce simpler, more regularised trees."
+                },
+                {
+                    "id": 16,
+                    "question": "XGBoost evaluates splits using: $\\text{Gain} = \\frac{1}{2}\\left[\\frac{G_L^2}{H_L+\\lambda} + \\frac{G_R^2}{H_R+\\lambda} - \\frac{(G_L+G_R)^2}{H_L+H_R+\\lambda}\\right] - \\gamma$. If the computed Gain is negative, what should happen?",
+                    "options": {
+                        "A": "Split anyway; negative gain recovers in later iterations",
+                        "B": "Do not split -- the regularisation penalty ($\\gamma$) outweighs the impurity improvement, so the node should remain a leaf",
+                        "C": "Double the learning rate to compensate",
+                        "D": "Reverse the split direction (swap left and right children)"
+                    },
+                    "correct": "B",
+                    "explanation": "A negative Gain means the improvement from splitting ($\\frac{1}{2}[\\cdots]$) is less than the complexity penalty ($\\gamma$). XGBoost prunes this split, keeping the node as a leaf. This is built-in regularisation: $\\gamma$ acts as a minimum gain threshold. Higher $\\gamma$ means fewer splits and simpler trees."
+                },
+                {
+                    "id": 17,
+                    "question": "Bagging (Random Forest) primarily reduces variance while boosting (AdaBoost/GBM) primarily reduces bias. Which ensemble method is more prone to overfitting and why?",
+                    "options": {
+                        "A": "Bagging, because averaging many trees amplifies noise in the training data",
+                        "B": "Neither can overfit; both are inherently regularised",
+                        "C": "Both overfit equally; the distinction between bias and variance reduction is irrelevant",
+                        "D": "Boosting, because each iteration specifically targets previous mistakes, which can include fitting noise in the training data"
+                    },
+                    "correct": "D",
+                    "explanation": "Boosting builds trees sequentially, with each tree correcting errors of the previous ensemble. If training continues too long, the model starts correcting noise rather than signal, leading to overfitting. Bagging (RF) trains trees independently and averages them -- this inherently reduces variance and is much more resistant to overfitting. Adding more trees to an RF never hurts, but adding more boosting rounds can."
+                },
+                {
+                    "id": 18,
+                    "question": "You have an RF with n_estimators=100, max_depth=None, max_features='sqrt', achieving 82% test accuracy. Which single change is most likely to improve performance?",
+                    "options": {
+                        "A": "Set max_depth=15 (limit tree depth to reduce overfitting)",
+                        "B": "Increase n_estimators to 500 (more trees)",
+                        "C": "Set max_features=0.5 (consider half the features per split)",
+                        "D": "Set min_samples_leaf=1 (allow smallest possible leaves)"
+                    },
+                    "correct": "A",
+                    "explanation": "max_depth=None means fully grown trees that likely overfit. Limiting depth to 15 regularises each tree, reducing variance. (A) More trees help but with diminishing returns past ~100. (C) Changing max_features might help but is less impactful than fixing overfitting. (D) min_samples_leaf=1 is already the default and allows maximum overfitting. The biggest gain comes from addressing the primary issue: unrestricted tree depth."
+                },
+                {
+                    "id": 19,
+                    "question": "A data scientist applies SMOTE BEFORE the train-test split, achieving 95% test accuracy. After correcting the pipeline to apply SMOTE only to training data, accuracy drops to 78%. Why did the original pipeline give inflated results?",
+                    "options": {
+                        "A": "SMOTE before splitting is faster and produces better synthetic samples",
+                        "B": "Synthetic samples generated from training observations leaked into the test set -- test samples were nearly identical to SMOTE-generated training points, making the test trivially easy",
+                        "C": "SMOTE always reduces accuracy when applied correctly",
+                        "D": "The train-test split changed the class distribution"
+                    },
+                    "correct": "B",
+                    "explanation": "SMOTE generates synthetic points by interpolating between real minority samples. If done before splitting, a synthetic point created from training sample A and test sample B ends up in the training set while B is in the test set. The model essentially memorises B through its synthetic neighbour. This is data leakage: the 95% accuracy is an illusion. The correct 78% reflects real generalisation."
+                },
+                {
+                    "id": 20,
+                    "question": "A Random Forest is trained on house prices ranging from $100k to $500k. A new house with features unlike any training example is presented. Why can't the RF predict $600k even if the true price is $600k?",
+                    "options": {
+                        "A": "Random Forests can extrapolate if given enough trees",
+                        "B": "Predictions are averages of leaf node values from training data, so the maximum possible prediction is bounded by the highest training value ($500k)",
+                        "C": "The RF will automatically detect the out-of-range case and refuse to predict",
+                        "D": "Feature scaling would fix this extrapolation problem"
+                    },
+                    "correct": "B",
+                    "explanation": "Each tree routes the new house to a leaf containing training samples. The leaf prediction is the mean (regression) of those training values, all between $100k-$500k. Averaging across trees still gives a value within this range. No combination of averages of numbers in [$100k, $500k$] can produce $600k. This is a fundamental limitation of all tree-based methods compared to linear models which can extrapolate."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                const opts = {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
+                });
+            }
+        }
+
+        function waitForKaTeX(callback, maxAttempts = 50) {
+    let attempts = 0;
+    function check() {
+        if (typeof renderMathInElement !== 'undefined') {
+            callback();
+        } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(check, 50);
+        }
+    }
+    check();
+}
+
+// Initialize with error handling
+        try {
+            initQuiz();
+            waitForKaTeX(renderMath);
+        } catch (e) {
+            console.error('Quiz initialization error:', e);
+            const container = document.getElementById('questionsRow') || document.querySelector('.main');
+            if (container) {
+                container.innerHTML =
+                    '<div style="padding:2rem;text-align:center;color:#991b1b;">' +
+                    '<h3>Quiz failed to load</h3><p>Error: ' + e.message + '</p>' +
+                    '<p>Please refresh the page or try a different browser.</p></div>';
+            }
+        }
+    </script>
+</body>
+</html>
