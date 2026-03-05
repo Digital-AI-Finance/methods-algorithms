@@ -965,6 +965,30 @@
         "instructor_guide": {
           "file": "slides/L06_Embeddings_RL/L06_instructor_guide.md",
           "status": "complete"
+        },
+        "embeddings_mini_slides": {
+            "file": "slides/L06_Embeddings_RL/L06_embeddings_mini.tex",
+            "status": "complete"
+        },
+        "rl_mini_slides": {
+            "file": "slides/L06_Embeddings_RL/L06_rl_mini.tex",
+            "status": "complete"
+        },
+        "embeddings_full_slides": {
+            "file": "slides/L06_Embeddings_RL/L06_embeddings_full.tex",
+            "status": "complete"
+        },
+        "rl_full_slides": {
+            "file": "slides/L06_Embeddings_RL/L06_rl_full.tex",
+            "status": "complete"
+        },
+        "notebook_embeddings": {
+            "file": "notebooks/L06_embeddings.ipynb",
+            "status": "complete"
+        },
+        "notebook_rl": {
+            "file": "notebooks/L06_rl.ipynb",
+            "status": "complete"
         }
       },
       "related_topics": [
