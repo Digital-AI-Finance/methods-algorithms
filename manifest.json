@@ -357,6 +357,14 @@
           "file": "slides/L03_KNN_KMeans/L03_deepdive.tex",
           "status": "complete"
         },
+        "knn_full_slides": {
+          "file": "slides/L03_KNN_KMeans/L03_knn_full.tex",
+          "status": "complete"
+        },
+        "kmeans_full_slides": {
+          "file": "slides/L03_KNN_KMeans/L03_kmeans_full.tex",
+          "status": "complete"
+        },
         "charts": [
           {
             "id": "01_knn_boundaries",
