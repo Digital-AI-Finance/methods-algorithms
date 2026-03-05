@@ -567,6 +567,14 @@ RF ($\sqrt{p}$) & 0.1 & 1000 & $0.101\sigma^2$ \\
 \bottomnote{In practice, tune max\_features before n\_estimators.}
 \end{frame}
 
+% RF max_features OOB Error (chart)
+\begin{frame}[t]{Feature Randomization: OOB Error Curve}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{18_rf_hyperparameter_maxfeatures/chart.pdf}
+\end{center}
+\bottomnote{OOB error as a function of max\_features; dashed line marks $\sqrt{p}$, the typical default}
+\end{frame}
+
 % Frame 13: How Do 500 Trees Vote on a Single Prediction?
 \begin{frame}{How Do 500 Trees Vote on a Single Prediction?}
 \begin{columns}[T]
@@ -908,6 +916,14 @@ H(x) = \text{sign}\!\left(\sum_{t=1}^{T} \alpha_t \, h_t(x)\right)
 \bottomnote{Freund \& Schapire (1997): ``A Decision-Theoretic Generalization of On-Line Learning.'' JCSS.}
 \end{frame}
 
+% AdaBoost Staged Error (chart)
+\begin{frame}[t]{AdaBoost: Training vs Test Error}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{13_adaboost_staged_error/chart.pdf}
+\end{center}
+\bottomnote{AdaBoost reduces training error monotonically; test error plateaus as the ensemble converges}
+\end{frame}
+
 % Frame 21: How Does Gradient Boosting Minimize an Arbitrary Loss?
 \begin{frame}{How Does Gradient Boosting Minimize an Arbitrary Loss?}
 \begin{columns}[T]
@@ -962,6 +978,14 @@ Learning rate $\eta \in (0,1]$ shrinks each tree's contribution for regularizati
 \bottomnote{Friedman (2001): ``Greedy Function Approximation: A Gradient Boosting Machine.'' Annals of Statistics.}
 \end{frame}
 
+% Gradient Boosting Residuals (chart)
+\begin{frame}[t]{Gradient Boosting: First Residual Fit}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{14_gradient_boosting_residuals/chart.pdf}
+\end{center}
+\bottomnote{The first tree fits the residuals (data minus mean), moving predictions toward the true function}
+\end{frame}
+
 % Frame 22: What Makes XGBoost's Objective Function Special?
 \begin{frame}{What Makes XGBoost's Objective Function Special?}
 \begin{columns}[T]
@@ -1008,6 +1032,14 @@ w_j^* = -\frac{\sum_{i \in I_j} g_i}{\sum_{i \in I_j} h_i + \lambda}
 \scriptsize XGBoost's regularization prevents overfitting \emph{structurally} (fewer leaves) and \emph{numerically} (smaller weights) -- crucial for noisy financial data.
 \end{block}
 \bottomnote{Chen \& Guestrin (2016): ``XGBoost: A Scalable Tree Boosting System.'' KDD.}
+\end{frame}
+
+% Boosting Learning Rate (chart)
+\begin{frame}[t]{Gradient Boosting: Effect of Learning Rate}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{15_boosting_learning_rate/chart.pdf}
+\end{center}
+\bottomnote{Smaller learning rates need more iterations but achieve lower test error---the regularization effect}
 \end{frame}
 
 %% === SECTION 6: EVALUATION ===

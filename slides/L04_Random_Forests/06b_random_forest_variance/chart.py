@@ -1,7 +1,7 @@
 """Random Forest Variance - Reduced variance through ensemble averaging"""
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.interpolate import interp1d
+from sklearn.ensemble import RandomForestRegressor
 from pathlib import Path
 
 # Chart metadata for QR code generation
@@ -42,17 +42,13 @@ fig, ax = plt.subplots(figsize=(10, 6))
 ax.scatter(x_train, y_train, c=MLBLUE, s=60, alpha=0.7, label='Training data', zorder=5)
 ax.plot(x, y_true, 'k--', linewidth=2.5, label='True function', alpha=0.6)
 
-# Simulate Random Forest prediction (average of trees)
+# Train actual Random Forest with bootstrap samples
 all_preds = []
 for i in range(50):
     idx = np.random.choice(n_train, n_train, replace=True)
-    x_boot = x_train[idx]
-    y_boot = y_train[idx]
-
-    sort_idx = np.argsort(x_boot)
-    f = interp1d(x_boot[sort_idx], y_boot[sort_idx], kind='nearest',
-                 fill_value='extrapolate')
-    y_pred = f(x)
+    rf = RandomForestRegressor(n_estimators=1, max_depth=5, random_state=i)
+    rf.fit(x_train[idx].reshape(-1, 1), y_train[idx])
+    y_pred = rf.predict(x.reshape(-1, 1))
     all_preds.append(y_pred)
 
 # Average prediction

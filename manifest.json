@@ -489,6 +489,22 @@
           "file": "slides/L04_Random_Forests/L04_deepdive.tex",
           "status": "complete"
         },
+        "rf_mini_slides": {
+          "file": "slides/L04_Random_Forests/L04_rf_mini.tex",
+          "status": "complete"
+        },
+        "rf_full_slides": {
+          "file": "slides/L04_Random_Forests/L04_rf_full.tex",
+          "status": "complete"
+        },
+        "dt_mini_slides": {
+          "file": "slides/L04_Random_Forests/L04_dt_mini.tex",
+          "status": "complete"
+        },
+        "dt_full_slides": {
+          "file": "slides/L04_Random_Forests/L04_dt_full.tex",
+          "status": "complete"
+        },
         "charts": [
           {
             "id": "01_decision_tree",
@@ -528,6 +544,66 @@
           {
             "id": "07_decision_flowchart",
             "file": "slides/L04_Random_Forests/07_decision_flowchart/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "08_gini_split",
+            "file": "slides/L04_Random_Forests/08_gini_split/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "09_dt_overfitting",
+            "file": "slides/L04_Random_Forests/09_dt_overfitting/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "10_dt_decision_boundary",
+            "file": "slides/L04_Random_Forests/10_dt_decision_boundary/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "11_gini_vs_entropy",
+            "file": "slides/L04_Random_Forests/11_gini_vs_entropy/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "12_nonlinear_classes",
+            "file": "slides/L04_Random_Forests/12_nonlinear_classes/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "13_adaboost_staged_error",
+            "file": "slides/L04_Random_Forests/13_adaboost_staged_error/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "14_gradient_boosting_residuals",
+            "file": "slides/L04_Random_Forests/14_gradient_boosting_residuals/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "15_boosting_learning_rate",
+            "file": "slides/L04_Random_Forests/15_boosting_learning_rate/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "16_regression_tree_mse",
+            "file": "slides/L04_Random_Forests/16_regression_tree_mse/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "17_bias_variance_depth",
+            "file": "slides/L04_Random_Forests/17_bias_variance_depth/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "18_rf_hyperparameter_maxfeatures",
+            "file": "slides/L04_Random_Forests/18_rf_hyperparameter_maxfeatures/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "19_pruning_ccp",
+            "file": "slides/L04_Random_Forests/19_pruning_ccp/chart.py",
             "status": "complete"
           }
         ],

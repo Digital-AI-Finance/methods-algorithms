@@ -215,6 +215,14 @@ IG = H(\text{parent}) - \sum_{j} \frac{n_j}{n} H(\text{child}_j)
 \bottomnote{Trees handle both classification and regression via appropriate impurity measures}
 \end{frame}
 
+% Regression Tree MSE Split (chart)
+\begin{frame}[t]{Regression Trees: Split Visualization}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{16_regression_tree_mse/chart.pdf}
+\end{center}
+\bottomnote{A depth-1 regression tree finds the optimal split point that minimizes weighted MSE in child nodes}
+\end{frame}
+
 % SLIDE 9: CART Algorithm (Pseudocode)
 \begin{frame}{CART: Recursive Partitioning Algorithm}
 \textbf{Classification and Regression Trees} (Breiman et al., 1984):
@@ -262,6 +270,14 @@ Impurity measures: Gini $= 1 - \sum_k p_k^2$, \; Entropy $= -\sum_k p_k \log_2 p
 \item Select $\alpha$ via cross-validation
 \end{itemize}
 \bottomnote{Ensembles largely eliminate the need for careful pruning of individual trees}
+\end{frame}
+
+% Cost-Complexity Pruning (chart)
+\begin{frame}[t]{Cost-Complexity Pruning: Visualization}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{19_pruning_ccp/chart.pdf}
+\end{center}
+\bottomnote{Cross-validation identifies the optimal $\alpha$ that balances tree complexity and predictive accuracy}
 \end{frame}
 
 %% ================================================================
@@ -481,6 +497,14 @@ For $B$ predictions, each with variance $\sigma^2$ and pairwise correlation $\rh
 \bottomnote{Feature randomization is the key differentiator: it controls $\rho$ in the variance formula}
 \end{frame}
 
+% RF max_features OOB Error (chart)
+\begin{frame}[t]{Hyperparameters: max\_features Effect}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{18_rf_hyperparameter_maxfeatures/chart.pdf}
+\end{center}
+\bottomnote{OOB error as a function of max\_features; the dashed line marks $\sqrt{p}$, the typical default}
+\end{frame}
+
 %% ================================================================
 \section{Feature Importance and Interpretation}
 %% ================================================================
@@ -612,6 +636,14 @@ where $p(v) = $ fraction of samples reaching node $v$, $T = $ number of trees.
 \bottomnote{Ensembles exploit the bias-variance tradeoff: reduce variance without increasing bias}
 \end{frame}
 
+% Bias-Variance Depth Curve (chart)
+\begin{frame}[t]{Bias-Variance Tradeoff: Visualization}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{17_bias_variance_depth/chart.pdf}
+\end{center}
+\bottomnote{Training error decreases monotonically with depth; test error exhibits the classic U-shaped curve}
+\end{frame}
+
 % SLIDE 26: Single Trees: High Variance (chart)
 \begin{frame}[t]{Single Trees: High Variance}
 \begin{center}
@@ -711,6 +743,14 @@ Overfit risk & Low & Higher (tune carefully) \\
 \bottomnote{Freund \& Schapire (1997). A decision-theoretic generalization of on-line learning. \textit{JCSS}, 55(1), 119--139.}
 \end{frame}
 
+% AdaBoost Staged Error (chart)
+\begin{frame}[t]{AdaBoost: Training vs Test Error}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{13_adaboost_staged_error/chart.pdf}
+\end{center}
+\bottomnote{AdaBoost reduces training error monotonically; test error plateaus as the ensemble converges}
+\end{frame}
+
 % SLIDE 32: Gradient Boosting: Functional Gradient Descent
 \begin{frame}[t]{Gradient Boosting: Functional Gradient Descent}
 \textbf{Key insight}: Boosting as gradient descent in \textit{function space} (Friedman, 2001).
@@ -732,6 +772,14 @@ Overfit risk & Low & Higher (tune carefully) \\
 
 \textbf{For squared loss}: $r_{im} = y_i - F_{m-1}(x_i)$ (literal residuals!)
 \bottomnote{Friedman (2001). Greedy function approximation. \textit{Annals of Statistics}, 29(5), 1189--1232.}
+\end{frame}
+
+% Gradient Boosting Residuals (chart)
+\begin{frame}[t]{Gradient Boosting: First Residual Fit}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{14_gradient_boosting_residuals/chart.pdf}
+\end{center}
+\bottomnote{The first tree fits the residuals (data minus mean), moving predictions toward the true function}
 \end{frame}
 
 % SLIDE 33: XGBoost Objective
@@ -758,6 +806,14 @@ Regularization: $\Omega(f) = \gamma T + \tfrac{1}{2}\lambda \sum_{j=1}^{T} w_j^2
 \textbf{CatBoost}: & Ordered boosting, native categoricals & (Prokhorenkova et al., 2018)
 \end{tabular}
 \bottomnote{Chen \& Guestrin (2016). XGBoost: A scalable tree boosting system. \textit{KDD}, 785--794. | Full derivation in Appendix A6}
+\end{frame}
+
+% Boosting Learning Rate (chart)
+\begin{frame}[t]{Gradient Boosting: Effect of Learning Rate}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{15_boosting_learning_rate/chart.pdf}
+\end{center}
+\bottomnote{Smaller learning rates require more iterations but achieve lower test error---the regularization effect}
 \end{frame}
 
 % SLIDE 34: Boosting in Finance
