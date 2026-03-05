@@ -792,6 +792,30 @@
         "instructor_guide": {
           "file": "slides/L05_PCA_tSNE/L05_instructor_guide.md",
           "status": "complete"
+        },
+        "pca_mini_slides": {
+          "file": "slides/L05_PCA_tSNE/L05_pca_mini.tex",
+          "status": "complete"
+        },
+        "tsne_mini_slides": {
+          "file": "slides/L05_PCA_tSNE/L05_tsne_mini.tex",
+          "status": "complete"
+        },
+        "pca_full_slides": {
+          "file": "slides/L05_PCA_tSNE/L05_pca_full.tex",
+          "status": "complete"
+        },
+        "tsne_full_slides": {
+          "file": "slides/L05_PCA_tSNE/L05_tsne_full.tex",
+          "status": "complete"
+        },
+        "notebook_pca": {
+          "file": "notebooks/L05_pca.ipynb",
+          "status": "complete"
+        },
+        "notebook_tsne": {
+          "file": "notebooks/L05_tsne.ipynb",
+          "status": "complete"
         }
       },
       "related_topics": [
