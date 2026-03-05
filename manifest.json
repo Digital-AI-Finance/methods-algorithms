@@ -611,6 +611,14 @@
           "file": "notebooks/L04_random_forests.ipynb",
           "status": "complete"
         },
+        "notebook_dt": {
+          "file": "notebooks/L04_dt.ipynb",
+          "status": "complete"
+        },
+        "notebook_rf": {
+          "file": "notebooks/L04_rf.ipynb",
+          "status": "complete"
+        },
         "dataset": {
           "file": "datasets/transactions_synthetic.csv",
           "status": "complete"
