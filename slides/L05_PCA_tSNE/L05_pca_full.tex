@@ -809,13 +809,37 @@ print(f"Components for 90% variance: {k_90}")
 \bottomnote{Best practice: run PCA first to reduce to 30--50 dimensions, then apply t-SNE on the PCA output for faster and more stable visualization}
 \end{frame}
 
-%% SLIDE 25: Closing XKCD
-\begin{frame}[t]{Closing Thought}
+%% SLIDE 25: Closing Cartoon
+\begin{frame}[t]{The Dimensionality Reduction Dilemma}
 \begin{center}
-\includegraphics[width=0.6\textwidth,height=0.7\textheight,keepaspectratio]{images/2048_curve_fitting.png}
+\begin{tikzpicture}[scale=0.9]
+  % Stick figure looking at high-D data
+  \node[circle, draw, minimum size=6mm] (head) at (0,2.4) {};
+  \draw (0,2.1) -- (0,1.2);
+  \draw (0,1.8) -- (-0.5,1.4);
+  \draw (0,1.8) -- (0.5,1.4);
+  \draw (0,1.2) -- (-0.3,0.5);
+  \draw (0,1.2) -- (0.3,0.5);
+
+  % Speech bubble
+  \node[draw, rounded corners, fill=mllavender4, text width=3.5cm, font=\footnotesize, align=center]
+    at (3,2.4) {``I reduced 100 dimensions to 2 and the clusters look great!''};
+
+  % Another stick figure (skeptic)
+  \node[circle, draw, minimum size=6mm] (head2) at (7,2.4) {};
+  \draw (7,2.1) -- (7,1.2);
+  \draw (7,1.8) -- (6.5,1.4);
+  \draw (7,1.8) -- (7.5,1.4);
+  \draw (7,1.2) -- (6.7,0.5);
+  \draw (7,1.2) -- (7.3,0.5);
+
+  % Skeptic bubble
+  \node[draw, rounded corners, fill=mllavender4, text width=3.5cm, font=\footnotesize, align=center]
+    at (7,0) {``What about the 98 dimensions you threw away?''};
+\end{tikzpicture}
 \end{center}
 
-\bottomnote{XKCD \#2048 by Randall Munroe (CC BY-NC 2.5)}
+\bottomnote{Always validate: does low-D structure reflect high-D reality? Check reconstruction error and trustworthiness.}
 \end{frame}
 
 \end{document}

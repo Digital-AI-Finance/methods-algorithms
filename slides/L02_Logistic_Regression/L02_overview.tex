@@ -224,7 +224,7 @@
 \begin{frame}[t]{Why Not Linear Regression?}
 \textbf{The Fundamental Issue}
 \begin{itemize}
-  \item Linear regression predicts $\hat{y} = \mathbf{x}^\top \boldsymbol{\beta}$, which is unbounded
+  \item Linear regression predicts $\hat{y} = \mathbf{w}^\top \mathbf{x}$, which is unbounded
   \item For binary classification, we need $P(y=1|\mathbf{x}) \in (0,1)$
 \end{itemize}
 
@@ -234,7 +234,7 @@
   \item Wrap the linear predictor in a \highlight{sigmoid function}:
 \end{itemize}
 \begin{equation}
-P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad z = \beta_0 + \boldsymbol{\beta}^\top \mathbf{x}
+P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad z = b + \mathbf{w}^\top \mathbf{x}
 \end{equation}
 \begin{itemize}
   \item Output is always a valid probability -- bounded, smooth, differentiable
@@ -298,7 +298,7 @@ P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad z = \beta_0 + \bolds
 \includegraphics[width=\textwidth]{02_decision_boundary/chart.pdf}
 \end{center}
 \end{columns}
-\bottomnote{Decision boundary: $\beta_0 + \boldsymbol{\beta}^\top \mathbf{x} = 0$ -- a linear separator in feature space}
+\bottomnote{Decision boundary: $b + \mathbf{w}^\top \mathbf{x} = 0$ -- a linear separator in feature space}
 \end{frame}
 
 % ============================================
@@ -313,13 +313,13 @@ P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad z = \beta_0 + \bolds
 \textbf{The Likelihood Function}
 \begin{itemize}
   \item Each observation contributes: $P(y_i|\mathbf{x}_i) = p_i^{y_i}(1-p_i)^{1-y_i}$
-  \item Full likelihood: $L(\boldsymbol{\beta}) = \prod_{i=1}^{N} p_i^{y_i}(1-p_i)^{1-y_i}$
+  \item Full likelihood: $L(\mathbf{w}) = \prod_{i=1}^{n} p_i^{y_i}(1-p_i)^{1-y_i}$
 \end{itemize}
 
 \vspace{0.5em}
 \textbf{Log-Likelihood (what we maximize)}
 \begin{equation}
-\ell(\boldsymbol{\beta}) = \sum_{i=1}^{N}\bigl[y_i \log p_i + (1-y_i)\log(1-p_i)\bigr]
+\ell(\mathbf{w}) = \sum_{i=1}^{n}\bigl[y_i \log p_i + (1-y_i)\log(1-p_i)\bigr]
 \end{equation}
 
 \begin{itemize}
@@ -349,7 +349,7 @@ P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad z = \beta_0 + \bolds
   \item If $y_i=1$ and $p_i \approx 1$: loss is near zero (confident and correct)
   \item The loss \textbf{penalizes confident mistakes} more heavily than uncertain ones
 \end{itemize}
-\bottomnote{Cross-entropy loss is convex in $\boldsymbol{\beta}$ -- optimization is well-behaved}
+\bottomnote{Cross-entropy loss is convex in $\mathbf{w}$ -- optimization is well-behaved}
 \end{frame}
 
 % ============================================
@@ -358,10 +358,10 @@ P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad z = \beta_0 + \bolds
 \begin{frame}[t]{Gradient Derivation}
 \textbf{Taking the Derivative}
 \begin{itemize}
-  \item The gradient of the log-likelihood with respect to $\boldsymbol{\beta}$:
+  \item The gradient of the log-likelihood with respect to $\mathbf{w}$:
 \end{itemize}
 \begin{equation}
-\frac{\partial \ell}{\partial \boldsymbol{\beta}} = \sum_{i=1}^{N}(y_i - p_i)\,\mathbf{x}_i = \mathbf{X}^\top(\mathbf{y} - \mathbf{p})
+\frac{\partial \ell}{\partial \mathbf{w}} = \sum_{i=1}^{n}(y_i - p_i)\,\mathbf{x}_i = \mathbf{X}^\top(\mathbf{y} - \mathbf{p})
 \end{equation}
 
 \vspace{0.3em}
@@ -386,14 +386,14 @@ P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1 + e^{-z}}, \quad z = \beta_0 + \bolds
 \begin{frame}[t]{Odds and Log-Odds Interpretation}
 \textbf{The Logit Link}
 \begin{equation}
-\log\frac{p}{1-p} = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k
+\log\frac{p}{1-p} = b + w_1 x_1 + \cdots + w_k x_k
 \end{equation}
 
 \vspace{0.3em}
 \textbf{Coefficient Interpretation}
 \begin{itemize}
-  \item $\beta_j$: a one-unit increase in $x_j$ changes the \textbf{log-odds} by $\beta_j$
-  \item $e^{\beta_j}$: the \textbf{odds ratio} -- multiplicative effect on the odds
+  \item $w_j$: a one-unit increase in $x_j$ changes the \textbf{log-odds} by $w_j$
+  \item $e^{w_j}$: the \textbf{odds ratio} -- multiplicative effect on the odds
   \item Example: if $\beta_{\text{income}} = -0.3$, then $e^{-0.3} = 0.74$
 \end{itemize}
 

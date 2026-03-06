@@ -190,7 +190,7 @@ Replace full softmax with binary classification:
 \begin{itemize}
 \item Positive pair: (target, true context) $\rightarrow$ predict 1
 \item $k$ negative pairs: (target, random word) $\rightarrow$ predict 0
-\item Reduces $O(|V|)$ to $O(k)$ where $k = 5$--$20$
+\item Reduces $O(|V|)$ to $O(k)$ where $k = 5$--$20$ for small datasets; $2$--$5$ for large corpora
 \end{itemize}
 \bottomnote{Negative sampling: the key innovation that made Word2Vec practical}
 \end{frame}

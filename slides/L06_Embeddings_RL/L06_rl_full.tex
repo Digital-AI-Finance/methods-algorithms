@@ -278,12 +278,14 @@ The optimal action-value satisfies a \highlight{recursive} relationship:
 \[
   Q^*(s,a) = R(s,a) + \gamma \sum_{s'} P(s' \mid s,a)\,\max_{a'} Q^*(s',a')
 \]
+\scriptsize\textcolor{mlgray}{This expands the $\mathbb{E}[\cdot]$ form from the overview by substituting transition probabilities $P(s'|s,a)$.}
 
+\normalsize
 \textbf{Worked example} ($\gamma = 0.9$, deterministic transitions):
 
 \begin{compactlist}
   \item State A $\xrightarrow{\text{right}}$ State B, reward $= +1$
-  \item State B $\xrightarrow{\text{right}}$ State C (goal), reward $= +10$
+  \item State B $\xrightarrow{\text{right}}$ State C (terminal, $Q=0$ by definition), reward $= +10$
   \item $Q(B, \text{right}) = 10 + 0.9 \times 0 = 10$
   \item $Q(A, \text{right}) = 1 + 0.9 \times 10 = 10$
 \end{compactlist}

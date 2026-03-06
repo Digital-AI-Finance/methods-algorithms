@@ -453,18 +453,32 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \end{frame}
 
 % Slide 23: Closing Comic (text callback)
-\begin{frame}[t]{Closing Thought}
-\begin{columns}[T]
-\column{0.40\textwidth}
-\includegraphics[width=\textwidth,height=0.60\textheight,keepaspectratio]{images/1838_machine_learning.png}
-\column{0.55\textwidth}
-\vspace{0.5em}
-\Large\textit{``We poured financial news into a pile of linear algebra and got sentiment scores on the other side.''}
+\begin{frame}[t]{The Complete ML Toolkit}
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+  % Robot stick figure
+  \node[rectangle, draw, rounded corners, minimum size=8mm, fill=mllavender4] (head) at (0,2.8) {\footnotesize AI};
+  \draw[thick] (0,2.4) -- (0,1.4);
+  \draw[thick] (0,2.0) -- (-0.6,1.5);
+  \draw[thick] (0,2.0) -- (0.6,1.5);
+  \draw[thick] (0,1.4) -- (-0.4,0.6);
+  \draw[thick] (0,1.4) -- (0.4,0.6);
 
-\vspace{0.5em}
-\normalsize You now have the toolkit: regression, classification, clustering, ensembles, dimensionality reduction, embeddings, and RL.
-\end{columns}
-\bottomnote{XKCD \#1838 by Randall Munroe (CC BY-NC 2.5). Course complete!}
+  % Toolbelt items
+  \node[draw, rounded corners, fill=mllavender4, font=\tiny] at (-3,1.5) {L01: Regression};
+  \node[draw, rounded corners, fill=mllavender4, font=\tiny] at (-3,0.9) {L02: Classification};
+  \node[draw, rounded corners, fill=mllavender4, font=\tiny] at (-3,0.3) {L03: Clustering};
+  \node[draw, rounded corners, fill=mllavender4, font=\tiny] at (3,1.5) {L04: Ensembles};
+  \node[draw, rounded corners, fill=mllavender4, font=\tiny] at (3,0.9) {L05: Dim.\ Reduction};
+  \node[draw, rounded corners, fill=mllavender4, font=\tiny] at (3,0.3) {L06: Embeddings + RL};
+
+  % Speech bubble
+  \node[draw, rounded corners, fill=white, text width=5cm, font=\footnotesize, align=center]
+    at (0,-0.5) {\textit{``Six lectures, one toolkit. Now go build something.''\\[2pt] --- Your Methods \& Algorithms course}};
+\end{tikzpicture}
+\end{center}
+
+\bottomnote{Course complete! Apply these methods in your group assignment and capstone project.}
 \end{frame}
 
 % Slide 24: References

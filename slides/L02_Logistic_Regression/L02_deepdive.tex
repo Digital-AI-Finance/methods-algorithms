@@ -270,9 +270,9 @@ $$\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \eta \nabla_{\mathbf{w}} \mathcal{L} =
 \begin{frame}[t]{Standard Errors of Coefficients}
 \textbf{How Certain Are We About Each Coefficient?}
 
-Standard error measures uncertainty in $\hat{\beta}_j$:
+Standard error measures uncertainty in $\hat{w}_j$:
 \begin{equation}
-  \text{SE}(\hat{\beta}_j) = \sqrt{[\mathbf{H}^{-1}]_{jj}}
+  \text{SE}(\hat{w}_j) = \sqrt{[\mathbf{H}^{-1}]_{jj}}
 \end{equation}
 where $\mathbf{H} = -\mathbf{X}^T\text{diag}\bigl(\hat{p}_i(1-\hat{p}_i)\bigr)\mathbf{X}$ is the Hessian of the log-likelihood.
 
@@ -283,7 +283,7 @@ where $\mathbf{H} = -\mathbf{X}^T\text{diag}\bigl(\hat{p}_i(1-\hat{p}_i)\bigr)\m
   \item Large SE $\Rightarrow$ wide range of plausible values
   \item More data $\Rightarrow$ smaller SE $\Rightarrow$ more certainty
 \end{itemize}
-\bottomnote{SE answers: ``if we repeated this study, how much would $\hat{\beta}$ vary?''}
+\bottomnote{SE answers: ``if we repeated this study, how much would $\hat{w}$ vary?''}
 \end{frame}
 
 % ============================================
@@ -298,13 +298,13 @@ where $\mathbf{H} = -\mathbf{X}^T\text{diag}\bigl(\hat{p}_i(1-\hat{p}_i)\bigr)\m
 \textbf{The Question:} Does feature $j$ actually matter, or is its effect just noise?
 
 \begin{itemize}
-  \item $H_0$: $\beta_j = 0$ (feature has no effect)
-  \item $H_1$: $\beta_j \neq 0$ (feature matters)
+  \item $H_0$: $w_j = 0$ (feature has no effect)
+  \item $H_1$: $w_j \neq 0$ (feature matters)
 \end{itemize}
 
 \textbf{Wald Statistic (z-score):}
 \begin{equation}
-  z = \frac{\hat{\beta}_j}{\text{SE}(\hat{\beta}_j)} \;\;\xrightarrow{H_0}\;\; \mathcal{N}(0,1)
+  z = \frac{\hat{w}_j}{\text{SE}(\hat{w}_j)} \;\;\xrightarrow{H_0}\;\; \mathcal{N}(0,1)
 \end{equation}
 
 \textbf{Decision Rule:}
@@ -321,18 +321,18 @@ where $\mathbf{H} = -\mathbf{X}^T\text{diag}\bigl(\hat{p}_i(1-\hat{p}_i)\bigr)\m
 \begin{frame}[t]{Confidence Intervals for Odds Ratios}
 \textbf{95\% CI for Coefficient:}
 \begin{equation}
-  \hat{\beta}_j \pm 1.96 \times \text{SE}(\hat{\beta}_j)
+  \hat{w}_j \pm 1.96 \times \text{SE}(\hat{w}_j)
 \end{equation}
 
 \textbf{95\% CI for Odds Ratio} (exponentiate both bounds):
 \begin{equation}
-  \exp\!\left(\hat{\beta}_j \pm 1.96 \times \text{SE}(\hat{\beta}_j)\right)
+  \exp\!\left(\hat{w}_j \pm 1.96 \times \text{SE}(\hat{w}_j)\right)
 \end{equation}
 
 \vspace{0.3em}
-\textbf{Worked Example:} Income coefficient $\hat{\beta} = 0.5$, SE $= 0.1$
+\textbf{Worked Example:} Income coefficient $\hat{w} = 0.5$, SE $= 0.1$
 \begin{itemize}
-  \item CI for $\beta$: $[0.304,\; 0.696]$
+  \item CI for $w$: $[0.304,\; 0.696]$
   \item CI for OR: $[e^{0.304},\; e^{0.696}] = [1.36,\; 2.01]$
   \item Interpretation: income increases odds of approval by 36\% to 101\%
 \end{itemize}
@@ -345,7 +345,7 @@ where $\mathbf{H} = -\mathbf{X}^T\text{diag}\bigl(\hat{p}_i(1-\hat{p}_i)\bigr)\m
 \begin{frame}[t]{Model Fit: Deviance and Pseudo-$R^2$}
 \textbf{Deviance} (badness-of-fit measure):
 \begin{equation}
-  D = -2 \times \ell(\hat{\boldsymbol{\beta}})
+  D = -2 \times \ell(\hat{\mathbf{w}})
 \end{equation}
 
 \textbf{Two Key Benchmarks:}
@@ -734,7 +734,7 @@ Logistic regression is typically solved via \textbf{Iteratively Reweighted Least
 \textbf{Complete separation:}
 \begin{itemize}
 \item A linear combination perfectly predicts all outcomes
-\item $\hat{\beta}_j \to \pm\infty$; algorithm fails to converge
+\item $\hat{w}_j \to \pm\infty$; algorithm fails to converge
 \end{itemize}
 
 \textbf{Quasi-complete separation:}

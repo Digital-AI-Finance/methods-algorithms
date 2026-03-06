@@ -333,7 +333,9 @@ The linear model in matrix form:
 \begin{equation}
   \nabla L(\boldsymbol{\beta}) = -2\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})
 \end{equation}
+\scriptsize\textcolor{mlgray}{Note: gradient of SSE (not MSE). For MSE, divide by $n$: $\nabla_{\text{MSE}} = -\tfrac{2}{n}\mathbf{X}^\top(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})$.}
 
+\normalsize
 \begin{itemize}
   \item Gradient points in direction of steepest ascent
   \item We move \emph{opposite} to gradient
@@ -1056,17 +1058,17 @@ Functional form & Ramsey RESET & No omitted nonlinearities \\
   \vspace{0.5em}
   \textbf{Learning Rate Condition:}
   \begin{equation}
-    \eta < \frac{2}{L}
+    \alpha < \frac{2}{L}
   \end{equation}
   where $L$ is the Lipschitz constant of $\nabla L$.
 
   \vspace{0.3em}
   \textbf{For OLS specifically}, the optimal learning rate is:
   \begin{equation}
-    \eta^* = \frac{1}{\lambda_{\max}(\mathbf{X}^\top\mathbf{X})}
+    \alpha^* = \frac{1}{\lambda_{\max}(\mathbf{X}^\top\mathbf{X})}
   \end{equation}
 
-  \bottomnote{For OLS, optimal $\eta = 1/\lambda_{\max}(\mathbf{X}^\top\mathbf{X})$}
+  \bottomnote{For OLS, optimal $\alpha = 1/\lambda_{\max}(\mathbf{X}^\top\mathbf{X})$}
 \end{frame}
 
 % ============================================
