@@ -1,0 +1,1294 @@
+{
+  "$schema": "quiz_inventory_v1",
+  "version": "1.0.0",
+  "updated": "2026-03-06",
+  "quizzes": [
+    {
+      "id": "L01_canonical",
+      "lecture": "L01",
+      "title": "Linear Regression",
+      "type": "canonical",
+      "file": "docs/quiz/L01_linear_regression.html",
+      "questions_count": 20,
+      "duration_minutes": 25,
+      "bloom_distribution": {
+        "L1_remember": 3,
+        "L2_understand": 5,
+        "L3_apply": 5,
+        "L4_analyze": 5,
+        "L5_evaluate": 2
+      },
+      "finance_questions": 6,
+      "calculation_questions": 5,
+      "diagnose_failure_questions": 2,
+      "topics_covered": [
+        "normal_equation",
+        "gauss_markov",
+        "gradient_descent",
+        "design_matrix",
+        "R_squared",
+        "adjusted_R2",
+        "RMSE",
+        "MAE",
+        "residual_diagnostics",
+        "CAPM_beta",
+        "learning_rate",
+        "standardized_coefficients",
+        "ridge_regression",
+        "lasso_regression",
+        "VIF_multicollinearity",
+        "cross_validation",
+        "bias_variance_tradeoff"
+      ],
+      "learning_objectives_tested": [
+        "L01-O1",
+        "L01-O2",
+        "L01-O3",
+        "L01-O4"
+      ],
+      "quality_metrics": {
+        "l3_plus_percent": 60,
+        "finance_percent": 30,
+        "slide_reference_coverage": 100
+      },
+      "status": "complete",
+      "last_audit": "2026-03-06",
+      "questions": [
+        {
+          "qid": "L01-Q01",
+          "bloom_level": "L1_remember",
+          "topic": "normal_equation",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (OLS derivation)"
+        },
+        {
+          "qid": "L01-Q02",
+          "bloom_level": "L2_understand",
+          "topic": "gauss_markov_theorem",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (BLUE property)"
+        },
+        {
+          "qid": "L01-Q03",
+          "bloom_level": "L3_apply",
+          "topic": "prediction_calculation",
+          "finance_context": true,
+          "slide_reference": "L01 overview (multiple regression)"
+        },
+        {
+          "qid": "L01-Q04",
+          "bloom_level": "L1_remember",
+          "topic": "gradient_descent_update",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (gradient descent)"
+        },
+        {
+          "qid": "L01-Q05",
+          "bloom_level": "L2_understand",
+          "topic": "design_matrix",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (matrix formulation)"
+        },
+        {
+          "qid": "L01-Q06",
+          "bloom_level": "L4_analyze",
+          "topic": "normal_eq_vs_GD_complexity",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (computational complexity)"
+        },
+        {
+          "qid": "L01-Q07",
+          "bloom_level": "L4_analyze",
+          "topic": "adjusted_R2",
+          "finance_context": true,
+          "slide_reference": "L01 overview (model evaluation)"
+        },
+        {
+          "qid": "L01-Q08",
+          "bloom_level": "L2_understand",
+          "topic": "homoscedasticity",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (OLS assumptions)"
+        },
+        {
+          "qid": "L01-Q09",
+          "bloom_level": "L3_apply",
+          "topic": "CAPM_beta_interpretation",
+          "finance_context": true,
+          "slide_reference": "L01 overview (finance application)"
+        },
+        {
+          "qid": "L01-Q10",
+          "bloom_level": "L1_remember",
+          "topic": "RMSE_definition",
+          "finance_context": false,
+          "slide_reference": "L01 overview (metrics)"
+        },
+        {
+          "qid": "L01-Q11",
+          "bloom_level": "L4_analyze",
+          "topic": "RMSE_vs_MAE",
+          "finance_context": true,
+          "slide_reference": "L01 overview (metrics comparison)"
+        },
+        {
+          "qid": "L01-Q12",
+          "bloom_level": "L2_understand",
+          "topic": "learning_rate",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (gradient descent)"
+        },
+        {
+          "qid": "L01-Q13",
+          "bloom_level": "L3_apply",
+          "topic": "standardized_coefficients",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (feature importance)"
+        },
+        {
+          "qid": "L01-Q14",
+          "bloom_level": "L3_apply",
+          "topic": "ridge_closed_form",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (regularization)"
+        },
+        {
+          "qid": "L01-Q15",
+          "bloom_level": "L4_analyze",
+          "topic": "lasso_sparsity_geometry",
+          "finance_context": false,
+          "slide_reference": "L01 deepdive (L1 vs L2)"
+        },
+        {
+          "qid": "L01-Q16",
+          "bloom_level": "L4_analyze",
+          "topic": "VIF_multicollinearity",
+          "finance_context": true,
+          "slide_reference": "L01 deepdive (multicollinearity)"
+        },
+        {
+          "qid": "L01-Q17",
+          "bloom_level": "L3_apply",
+          "topic": "cross_validation",
+          "finance_context": false,
+          "slide_reference": "L01 overview (model selection)"
+        },
+        {
+          "qid": "L01-Q18",
+          "bloom_level": "L2_understand",
+          "topic": "bias_variance_tradeoff",
+          "finance_context": false,
+          "slide_reference": "L01 overview (bias-variance)"
+        },
+        {
+          "qid": "L01-Q19",
+          "bloom_level": "L5_evaluate",
+          "topic": "diagnose_overfit_nonlinear",
+          "finance_context": true,
+          "slide_reference": "L01 deepdive (diagnostics)"
+        },
+        {
+          "qid": "L01-Q20",
+          "bloom_level": "L5_evaluate",
+          "topic": "model_validation_evidence",
+          "finance_context": false,
+          "slide_reference": "L01 overview (model evaluation)"
+        }
+      ]
+    },
+    {
+      "id": "L02_canonical",
+      "lecture": "L02",
+      "title": "Logistic Regression",
+      "type": "canonical",
+      "file": "docs/quiz/L02_logistic_regression.html",
+      "questions_count": 20,
+      "duration_minutes": 25,
+      "bloom_distribution": {
+        "L1_remember": 2,
+        "L2_understand": 5,
+        "L3_apply": 6,
+        "L4_analyze": 5,
+        "L5_evaluate": 2
+      },
+      "finance_questions": 8,
+      "calculation_questions": 5,
+      "diagnose_failure_questions": 2,
+      "topics_covered": [
+        "sigmoid_function",
+        "logit_link",
+        "odds_ratio",
+        "cross_entropy_loss",
+        "gradient_derivation",
+        "confusion_matrix",
+        "precision",
+        "recall",
+        "F1_score",
+        "ROC_AUC",
+        "PR_curve",
+        "softmax",
+        "L1_regularization",
+        "Wald_test",
+        "class_imbalance",
+        "threshold_tuning"
+      ],
+      "learning_objectives_tested": [
+        "L02-O1",
+        "L02-O2",
+        "L02-O3",
+        "L02-O4"
+      ],
+      "quality_metrics": {
+        "l3_plus_percent": 65,
+        "finance_percent": 40,
+        "slide_reference_coverage": 100
+      },
+      "status": "complete",
+      "last_audit": "2026-03-06",
+      "questions": [
+        {
+          "qid": "L02-Q01",
+          "bloom_level": "L1_remember",
+          "topic": "sigmoid_function",
+          "finance_context": false,
+          "slide_reference": "L02 overview (sigmoid)"
+        },
+        {
+          "qid": "L02-Q02",
+          "bloom_level": "L2_understand",
+          "topic": "logit_link_GLM",
+          "finance_context": false,
+          "slide_reference": "L02 deepdive (GLM framework)"
+        },
+        {
+          "qid": "L02-Q03",
+          "bloom_level": "L3_apply",
+          "topic": "sigmoid_at_zero",
+          "finance_context": false,
+          "slide_reference": "L02 overview (decision boundary)"
+        },
+        {
+          "qid": "L02-Q04",
+          "bloom_level": "L3_apply",
+          "topic": "odds_ratio_interpretation",
+          "finance_context": true,
+          "slide_reference": "L02 overview (credit scoring)"
+        },
+        {
+          "qid": "L02-Q05",
+          "bloom_level": "L2_understand",
+          "topic": "cross_entropy_vs_MSE",
+          "finance_context": false,
+          "slide_reference": "L02 deepdive (loss function)"
+        },
+        {
+          "qid": "L02-Q06",
+          "bloom_level": "L3_apply",
+          "topic": "cross_entropy_calculation",
+          "finance_context": false,
+          "slide_reference": "L02 deepdive (loss computation)"
+        },
+        {
+          "qid": "L02-Q07",
+          "bloom_level": "L2_understand",
+          "topic": "gradient_elegance",
+          "finance_context": false,
+          "slide_reference": "L02 deepdive (gradient derivation)"
+        },
+        {
+          "qid": "L02-Q08",
+          "bloom_level": "L3_apply",
+          "topic": "precision_calculation",
+          "finance_context": true,
+          "slide_reference": "L02 overview (confusion matrix)"
+        },
+        {
+          "qid": "L02-Q09",
+          "bloom_level": "L4_analyze",
+          "topic": "recall_importance",
+          "finance_context": true,
+          "slide_reference": "L02 overview (fraud detection)"
+        },
+        {
+          "qid": "L02-Q10",
+          "bloom_level": "L3_apply",
+          "topic": "F1_score_calculation",
+          "finance_context": false,
+          "slide_reference": "L02 overview (F1 metric)"
+        },
+        {
+          "qid": "L02-Q11",
+          "bloom_level": "L2_understand",
+          "topic": "false_negative_banking",
+          "finance_context": true,
+          "slide_reference": "L02 overview (confusion matrix)"
+        },
+        {
+          "qid": "L02-Q12",
+          "bloom_level": "L1_remember",
+          "topic": "ROC_curve_AUC",
+          "finance_context": false,
+          "slide_reference": "L02 overview (ROC curve)"
+        },
+        {
+          "qid": "L02-Q13",
+          "bloom_level": "L4_analyze",
+          "topic": "threshold_tuning",
+          "finance_context": true,
+          "slide_reference": "L02 overview (threshold selection)"
+        },
+        {
+          "qid": "L02-Q14",
+          "bloom_level": "L4_analyze",
+          "topic": "PR_curve_imbalance",
+          "finance_context": true,
+          "slide_reference": "L02 deepdive (PR curve)"
+        },
+        {
+          "qid": "L02-Q15",
+          "bloom_level": "L2_understand",
+          "topic": "softmax_multiclass",
+          "finance_context": false,
+          "slide_reference": "L02 deepdive (multiclass)"
+        },
+        {
+          "qid": "L02-Q16",
+          "bloom_level": "L4_analyze",
+          "topic": "L1_feature_selection",
+          "finance_context": false,
+          "slide_reference": "L02 deepdive (regularization)"
+        },
+        {
+          "qid": "L02-Q17",
+          "bloom_level": "L4_analyze",
+          "topic": "Wald_test",
+          "finance_context": false,
+          "slide_reference": "L02 deepdive (hypothesis testing)"
+        },
+        {
+          "qid": "L02-Q18",
+          "bloom_level": "L5_evaluate",
+          "topic": "class_imbalance_accuracy",
+          "finance_context": false,
+          "slide_reference": "L02 overview (imbalanced data)"
+        },
+        {
+          "qid": "L02-Q19",
+          "bloom_level": "L3_apply",
+          "topic": "odds_ratio_multi_unit",
+          "finance_context": true,
+          "slide_reference": "L02 overview (odds ratio)"
+        },
+        {
+          "qid": "L02-Q20",
+          "bloom_level": "L5_evaluate",
+          "topic": "model_selection_interpretability",
+          "finance_context": true,
+          "slide_reference": "L02 overview (regulatory compliance)"
+        }
+      ]
+    },
+    {
+      "id": "L03_canonical",
+      "lecture": "L03",
+      "title": "KNN & K-Means",
+      "type": "canonical",
+      "file": "docs/quiz/L03_knn_kmeans.html",
+      "questions_count": 20,
+      "duration_minutes": 25,
+      "bloom_distribution": {
+        "L1_remember": 3,
+        "L2_understand": 5,
+        "L3_apply": 5,
+        "L4_analyze": 4,
+        "L5_evaluate": 3
+      },
+      "finance_questions": 4,
+      "calculation_questions": 4,
+      "diagnose_failure_questions": 1,
+      "topics_covered": [
+        "lazy_learning",
+        "euclidean_distance",
+        "manhattan_distance",
+        "minkowski_distance",
+        "feature_scaling",
+        "weighted_KNN",
+        "curse_of_dimensionality",
+        "KD_tree",
+        "K_heuristic",
+        "WCSS",
+        "K_means_algorithm",
+        "K_means_plus_plus",
+        "elbow_method",
+        "silhouette_score",
+        "spherical_clusters",
+        "KNN_vs_KMeans",
+        "customer_segmentation",
+        "Cover_Hart_theorem",
+        "DBSCAN"
+      ],
+      "learning_objectives_tested": [
+        "L03-O1",
+        "L03-O2",
+        "L03-O3",
+        "L03-O4"
+      ],
+      "quality_metrics": {
+        "l3_plus_percent": 60,
+        "finance_percent": 20,
+        "slide_reference_coverage": 100
+      },
+      "status": "complete",
+      "last_audit": "2026-03-06",
+      "questions": [
+        {
+          "qid": "L03-Q01",
+          "bloom_level": "L1_remember",
+          "topic": "lazy_learning",
+          "finance_context": false,
+          "slide_reference": "L03 overview (KNN intro)"
+        },
+        {
+          "qid": "L03-Q02",
+          "bloom_level": "L3_apply",
+          "topic": "euclidean_distance",
+          "finance_context": false,
+          "slide_reference": "L03 overview (distance metrics)"
+        },
+        {
+          "qid": "L03-Q03",
+          "bloom_level": "L3_apply",
+          "topic": "manhattan_distance",
+          "finance_context": false,
+          "slide_reference": "L03 overview (distance metrics)"
+        },
+        {
+          "qid": "L03-Q04",
+          "bloom_level": "L1_remember",
+          "topic": "minkowski_distance",
+          "finance_context": false,
+          "slide_reference": "L03 deepdive (Minkowski)"
+        },
+        {
+          "qid": "L03-Q05",
+          "bloom_level": "L4_analyze",
+          "topic": "feature_scaling_impact",
+          "finance_context": true,
+          "slide_reference": "L03 overview (feature scaling)"
+        },
+        {
+          "qid": "L03-Q06",
+          "bloom_level": "L2_understand",
+          "topic": "weighted_KNN",
+          "finance_context": false,
+          "slide_reference": "L03 deepdive (weighted voting)"
+        },
+        {
+          "qid": "L03-Q07",
+          "bloom_level": "L2_understand",
+          "topic": "curse_of_dimensionality",
+          "finance_context": false,
+          "slide_reference": "L03 deepdive (curse of dimensionality)"
+        },
+        {
+          "qid": "L03-Q08",
+          "bloom_level": "L1_remember",
+          "topic": "KD_tree_ball_tree",
+          "finance_context": false,
+          "slide_reference": "L03 deepdive (efficient search)"
+        },
+        {
+          "qid": "L03-Q09",
+          "bloom_level": "L3_apply",
+          "topic": "K_heuristic_sqrt_n",
+          "finance_context": false,
+          "slide_reference": "L03 overview (choosing K)"
+        },
+        {
+          "qid": "L03-Q10",
+          "bloom_level": "L2_understand",
+          "topic": "WCSS_objective",
+          "finance_context": false,
+          "slide_reference": "L03 overview (K-Means objective)"
+        },
+        {
+          "qid": "L03-Q11",
+          "bloom_level": "L2_understand",
+          "topic": "K_means_convergence",
+          "finance_context": false,
+          "slide_reference": "L03 overview (K-Means algorithm)"
+        },
+        {
+          "qid": "L03-Q12",
+          "bloom_level": "L2_understand",
+          "topic": "K_means_plus_plus",
+          "finance_context": false,
+          "slide_reference": "L03 deepdive (initialization)"
+        },
+        {
+          "qid": "L03-Q13",
+          "bloom_level": "L3_apply",
+          "topic": "elbow_method",
+          "finance_context": false,
+          "slide_reference": "L03 overview (elbow method)"
+        },
+        {
+          "qid": "L03-Q14",
+          "bloom_level": "L3_apply",
+          "topic": "silhouette_score",
+          "finance_context": false,
+          "slide_reference": "L03 overview (silhouette)"
+        },
+        {
+          "qid": "L03-Q15",
+          "bloom_level": "L4_analyze",
+          "topic": "spherical_cluster_assumption",
+          "finance_context": false,
+          "slide_reference": "L03 deepdive (K-Means limitations)"
+        },
+        {
+          "qid": "L03-Q16",
+          "bloom_level": "L4_analyze",
+          "topic": "KNN_vs_KMeans",
+          "finance_context": false,
+          "slide_reference": "L03 overview (comparison)"
+        },
+        {
+          "qid": "L03-Q17",
+          "bloom_level": "L5_evaluate",
+          "topic": "cluster_validation",
+          "finance_context": true,
+          "slide_reference": "L03 overview (customer segmentation)"
+        },
+        {
+          "qid": "L03-Q18",
+          "bloom_level": "L4_analyze",
+          "topic": "KNN_fraud_detection",
+          "finance_context": true,
+          "slide_reference": "L03 overview (fraud detection)"
+        },
+        {
+          "qid": "L03-Q19",
+          "bloom_level": "L5_evaluate",
+          "topic": "Cover_Hart_theorem",
+          "finance_context": false,
+          "slide_reference": "L03 deepdive (theoretical bound)"
+        },
+        {
+          "qid": "L03-Q20",
+          "bloom_level": "L5_evaluate",
+          "topic": "DBSCAN_vs_KMeans",
+          "finance_context": true,
+          "slide_reference": "L03 deepdive (alternative clustering)"
+        }
+      ]
+    },
+    {
+      "id": "L04_canonical",
+      "lecture": "L04",
+      "title": "Random Forests",
+      "type": "canonical",
+      "file": "docs/quiz/L04_random_forests.html",
+      "questions_count": 20,
+      "duration_minutes": 25,
+      "bloom_distribution": {
+        "L1_remember": 3,
+        "L2_understand": 4,
+        "L3_apply": 3,
+        "L4_analyze": 7,
+        "L5_evaluate": 3
+      },
+      "finance_questions": 5,
+      "calculation_questions": 3,
+      "diagnose_failure_questions": 2,
+      "topics_covered": [
+        "gini_impurity",
+        "entropy",
+        "information_gain",
+        "recursive_partitioning",
+        "random_forests",
+        "bagging",
+        "feature_randomization",
+        "MDI",
+        "permutation_importance",
+        "SHAP",
+        "bias_variance",
+        "tree_correlation",
+        "max_features",
+        "max_depth",
+        "class_imbalance",
+        "SMOTE",
+        "OOB_error",
+        "hyperparameter_tuning"
+      ],
+      "learning_objectives_tested": [
+        "L04-O1",
+        "L04-O2",
+        "L04-O3",
+        "L04-O4"
+      ],
+      "quality_metrics": {
+        "l3_plus_percent": 65,
+        "finance_percent": 25,
+        "slide_reference_coverage": 100
+      },
+      "status": "complete",
+      "last_audit": "2026-03-06",
+      "questions": [
+        {
+          "qid": "L04-Q01",
+          "bloom_level": "L3_apply",
+          "topic": "gini_impurity_calculation",
+          "finance_context": false,
+          "slide_reference": "L04 overview (Gini impurity)"
+        },
+        {
+          "qid": "L04-Q02",
+          "bloom_level": "L3_apply",
+          "topic": "entropy_calculation",
+          "finance_context": false,
+          "slide_reference": "L04 overview (entropy)"
+        },
+        {
+          "qid": "L04-Q03",
+          "bloom_level": "L3_apply",
+          "topic": "information_gain",
+          "finance_context": false,
+          "slide_reference": "L04 overview (information gain)"
+        },
+        {
+          "qid": "L04-Q04",
+          "bloom_level": "L1_remember",
+          "topic": "recursive_partitioning",
+          "finance_context": false,
+          "slide_reference": "L04 overview (tree construction)"
+        },
+        {
+          "qid": "L04-Q05",
+          "bloom_level": "L4_analyze",
+          "topic": "diagnose_overfitting_boosting",
+          "finance_context": false,
+          "slide_reference": "L04 deepdive (boosting overfitting)"
+        },
+        {
+          "qid": "L04-Q06",
+          "bloom_level": "L4_analyze",
+          "topic": "class_imbalance_strategy",
+          "finance_context": true,
+          "slide_reference": "L04 deepdive (class weights)"
+        },
+        {
+          "qid": "L04-Q07",
+          "bloom_level": "L5_evaluate",
+          "topic": "SHAP_regulatory",
+          "finance_context": true,
+          "slide_reference": "L04 deepdive (SHAP values)"
+        },
+        {
+          "qid": "L04-Q08",
+          "bloom_level": "L4_analyze",
+          "topic": "SHAP_interpretation",
+          "finance_context": true,
+          "slide_reference": "L04 deepdive (SHAP per-prediction)"
+        },
+        {
+          "qid": "L04-Q09",
+          "bloom_level": "L1_remember",
+          "topic": "RF_two_randomness_sources",
+          "finance_context": false,
+          "slide_reference": "L04 overview (bagging + feature subset)"
+        },
+        {
+          "qid": "L04-Q10",
+          "bloom_level": "L2_understand",
+          "topic": "max_features_sqrt_p",
+          "finance_context": false,
+          "slide_reference": "L04 overview (feature subset size)"
+        },
+        {
+          "qid": "L04-Q11",
+          "bloom_level": "L4_analyze",
+          "topic": "MDI_vs_permutation",
+          "finance_context": false,
+          "slide_reference": "L04 deepdive (importance comparison)"
+        },
+        {
+          "qid": "L04-Q12",
+          "bloom_level": "L2_understand",
+          "topic": "MDI_definition",
+          "finance_context": false,
+          "slide_reference": "L04 overview (feature importance)"
+        },
+        {
+          "qid": "L04-Q13",
+          "bloom_level": "L2_understand",
+          "topic": "permutation_importance",
+          "finance_context": false,
+          "slide_reference": "L04 overview (permutation importance)"
+        },
+        {
+          "qid": "L04-Q14",
+          "bloom_level": "L4_analyze",
+          "topic": "SMOTE_data_leakage",
+          "finance_context": true,
+          "slide_reference": "L04 deepdive (SMOTE pipeline)"
+        },
+        {
+          "qid": "L04-Q15",
+          "bloom_level": "L2_understand",
+          "topic": "RF_bias_variance",
+          "finance_context": false,
+          "slide_reference": "L04 overview (variance reduction)"
+        },
+        {
+          "qid": "L04-Q16",
+          "bloom_level": "L4_analyze",
+          "topic": "tree_correlation_formula",
+          "finance_context": false,
+          "slide_reference": "L04 deepdive (ensemble variance)"
+        },
+        {
+          "qid": "L04-Q17",
+          "bloom_level": "L4_analyze",
+          "topic": "max_features_tradeoff",
+          "finance_context": false,
+          "slide_reference": "L04 deepdive (hyperparameters)"
+        },
+        {
+          "qid": "L04-Q18",
+          "bloom_level": "L1_remember",
+          "topic": "RF_advantages",
+          "finance_context": false,
+          "slide_reference": "L04 overview (pros/cons)"
+        },
+        {
+          "qid": "L04-Q19",
+          "bloom_level": "L5_evaluate",
+          "topic": "hyperparameter_tuning_overfit",
+          "finance_context": false,
+          "slide_reference": "L04 deepdive (max_depth tuning)"
+        },
+        {
+          "qid": "L04-Q20",
+          "bloom_level": "L5_evaluate",
+          "topic": "RF_vs_logistic_fraud",
+          "finance_context": true,
+          "slide_reference": "L04 overview (fraud detection)"
+        }
+      ]
+    },
+    {
+      "id": "L05_canonical",
+      "lecture": "L05",
+      "title": "PCA & t-SNE",
+      "type": "canonical",
+      "file": "docs/quiz/L05_pca_tsne.html",
+      "questions_count": 20,
+      "duration_minutes": 25,
+      "bloom_distribution": {
+        "L1_remember": 2,
+        "L2_understand": 5,
+        "L3_apply": 4,
+        "L4_analyze": 5,
+        "L5_evaluate": 4
+      },
+      "finance_questions": 5,
+      "calculation_questions": 4,
+      "diagnose_failure_questions": 1,
+      "topics_covered": [
+        "PCA_variance_maximization",
+        "covariance_matrix",
+        "eigenvalues_eigenvectors",
+        "explained_variance_ratio",
+        "Kaiser_criterion",
+        "centering",
+        "reconstruction_error",
+        "PCA_linearity_limitation",
+        "portfolio_risk_PCA",
+        "yield_curve_PCA",
+        "tSNE_local_similarity",
+        "KL_divergence",
+        "perplexity",
+        "crowding_problem",
+        "tSNE_stochastic",
+        "tSNE_no_mapping",
+        "PCA_vs_tSNE",
+        "UMAP"
+      ],
+      "learning_objectives_tested": [
+        "L05-O1",
+        "L05-O2",
+        "L05-O3",
+        "L05-O4"
+      ],
+      "quality_metrics": {
+        "l3_plus_percent": 65,
+        "finance_percent": 25,
+        "slide_reference_coverage": 100
+      },
+      "status": "complete",
+      "last_audit": "2026-03-06",
+      "questions": [
+        {
+          "qid": "L05-Q01",
+          "bloom_level": "L1_remember",
+          "topic": "PCA_variance_maximization",
+          "finance_context": false,
+          "slide_reference": "L05 overview (PCA objective)"
+        },
+        {
+          "qid": "L05-Q02",
+          "bloom_level": "L1_remember",
+          "topic": "covariance_matrix",
+          "finance_context": false,
+          "slide_reference": "L05 deepdive (covariance matrix)"
+        },
+        {
+          "qid": "L05-Q03",
+          "bloom_level": "L2_understand",
+          "topic": "eigenvalue_decomposition",
+          "finance_context": false,
+          "slide_reference": "L05 deepdive (eigen decomposition)"
+        },
+        {
+          "qid": "L05-Q04",
+          "bloom_level": "L3_apply",
+          "topic": "explained_variance_ratio",
+          "finance_context": true,
+          "slide_reference": "L05 overview (scree plot)"
+        },
+        {
+          "qid": "L05-Q05",
+          "bloom_level": "L3_apply",
+          "topic": "cumulative_variance_threshold",
+          "finance_context": true,
+          "slide_reference": "L05 overview (component selection)"
+        },
+        {
+          "qid": "L05-Q06",
+          "bloom_level": "L2_understand",
+          "topic": "Kaiser_criterion",
+          "finance_context": false,
+          "slide_reference": "L05 deepdive (Kaiser rule)"
+        },
+        {
+          "qid": "L05-Q07",
+          "bloom_level": "L2_understand",
+          "topic": "centering_requirement",
+          "finance_context": false,
+          "slide_reference": "L05 deepdive (preprocessing)"
+        },
+        {
+          "qid": "L05-Q08",
+          "bloom_level": "L3_apply",
+          "topic": "reconstruction_error",
+          "finance_context": false,
+          "slide_reference": "L05 overview (reconstruction)"
+        },
+        {
+          "qid": "L05-Q09",
+          "bloom_level": "L4_analyze",
+          "topic": "PCA_linearity_limitation",
+          "finance_context": false,
+          "slide_reference": "L05 deepdive (Swiss roll)"
+        },
+        {
+          "qid": "L05-Q10",
+          "bloom_level": "L4_analyze",
+          "topic": "portfolio_PCA_market_factor",
+          "finance_context": true,
+          "slide_reference": "L05 overview (finance application)"
+        },
+        {
+          "qid": "L05-Q11",
+          "bloom_level": "L4_analyze",
+          "topic": "yield_curve_PCA",
+          "finance_context": true,
+          "slide_reference": "L05 deepdive (yield curve)"
+        },
+        {
+          "qid": "L05-Q12",
+          "bloom_level": "L2_understand",
+          "topic": "tSNE_local_similarity",
+          "finance_context": false,
+          "slide_reference": "L05 overview (t-SNE intro)"
+        },
+        {
+          "qid": "L05-Q13",
+          "bloom_level": "L2_understand",
+          "topic": "KL_divergence_P_Q",
+          "finance_context": false,
+          "slide_reference": "L05 deepdive (KL divergence)"
+        },
+        {
+          "qid": "L05-Q14",
+          "bloom_level": "L4_analyze",
+          "topic": "perplexity_parameter",
+          "finance_context": false,
+          "slide_reference": "L05 overview (perplexity)"
+        },
+        {
+          "qid": "L05-Q15",
+          "bloom_level": "L4_analyze",
+          "topic": "crowding_problem",
+          "finance_context": false,
+          "slide_reference": "L05 deepdive (Student-t distribution)"
+        },
+        {
+          "qid": "L05-Q16",
+          "bloom_level": "L5_evaluate",
+          "topic": "tSNE_stochastic_runs",
+          "finance_context": false,
+          "slide_reference": "L05 overview (t-SNE interpretation)"
+        },
+        {
+          "qid": "L05-Q17",
+          "bloom_level": "L5_evaluate",
+          "topic": "tSNE_no_mapping_function",
+          "finance_context": false,
+          "slide_reference": "L05 deepdive (t-SNE limitations)"
+        },
+        {
+          "qid": "L05-Q18",
+          "bloom_level": "L5_evaluate",
+          "topic": "PCA_vs_tSNE_comparison",
+          "finance_context": false,
+          "slide_reference": "L05 overview (comparison)"
+        },
+        {
+          "qid": "L05-Q19",
+          "bloom_level": "L3_apply",
+          "topic": "PCA_credit_risk_benefits",
+          "finance_context": true,
+          "slide_reference": "L05 overview (practical benefits)"
+        },
+        {
+          "qid": "L05-Q20",
+          "bloom_level": "L5_evaluate",
+          "topic": "UMAP_vs_tSNE",
+          "finance_context": false,
+          "slide_reference": "L05 deepdive (UMAP)"
+        }
+      ]
+    },
+    {
+      "id": "L06_canonical",
+      "lecture": "L06",
+      "title": "Embeddings & RL",
+      "type": "canonical",
+      "file": "docs/quiz/L06_embeddings_rl.html",
+      "questions_count": 20,
+      "duration_minutes": 25,
+      "bloom_distribution": {
+        "L1_remember": 2,
+        "L2_understand": 5,
+        "L3_apply": 3,
+        "L4_analyze": 7,
+        "L5_evaluate": 3
+      },
+      "finance_questions": 11,
+      "calculation_questions": 2,
+      "diagnose_failure_questions": 2,
+      "topics_covered": [
+        "one_hot_encoding",
+        "dense_embeddings",
+        "distributional_hypothesis",
+        "word2vec_skipgram_cbow",
+        "vector_analogies",
+        "cosine_similarity",
+        "FinBERT",
+        "FastText",
+        "stock_embeddings",
+        "MDP_tuple",
+        "Markov_property",
+        "policy",
+        "Q_function_Bellman",
+        "TD_error",
+        "epsilon_greedy",
+        "discount_factor",
+        "DQN",
+        "non_stationarity",
+        "domain_embeddings",
+        "backtesting_overfitting"
+      ],
+      "learning_objectives_tested": [
+        "L06-O1",
+        "L06-O2",
+        "L06-O3",
+        "L06-O4"
+      ],
+      "quality_metrics": {
+        "l3_plus_percent": 65,
+        "finance_percent": 55,
+        "slide_reference_coverage": 100
+      },
+      "status": "complete",
+      "last_audit": "2026-03-06",
+      "questions": [
+        {
+          "qid": "L06-Q01",
+          "bloom_level": "L2_understand",
+          "topic": "one_hot_problems",
+          "finance_context": false,
+          "slide_reference": "L06 overview (one-hot encoding)"
+        },
+        {
+          "qid": "L06-Q02",
+          "bloom_level": "L2_understand",
+          "topic": "dense_embeddings",
+          "finance_context": false,
+          "slide_reference": "L06 overview (dense vectors)"
+        },
+        {
+          "qid": "L06-Q03",
+          "bloom_level": "L2_understand",
+          "topic": "distributional_hypothesis",
+          "finance_context": false,
+          "slide_reference": "L06 deepdive (Firth 1957)"
+        },
+        {
+          "qid": "L06-Q04",
+          "bloom_level": "L1_remember",
+          "topic": "skipgram_vs_cbow",
+          "finance_context": false,
+          "slide_reference": "L06 overview (Word2Vec)"
+        },
+        {
+          "qid": "L06-Q05",
+          "bloom_level": "L4_analyze",
+          "topic": "vector_analogies",
+          "finance_context": false,
+          "slide_reference": "L06 overview (king-queen analogy)"
+        },
+        {
+          "qid": "L06-Q06",
+          "bloom_level": "L3_apply",
+          "topic": "cosine_similarity_calculation",
+          "finance_context": false,
+          "slide_reference": "L06 overview (cosine similarity)"
+        },
+        {
+          "qid": "L06-Q07",
+          "bloom_level": "L4_analyze",
+          "topic": "FinBERT_domain",
+          "finance_context": true,
+          "slide_reference": "L06 deepdive (domain embeddings)"
+        },
+        {
+          "qid": "L06-Q08",
+          "bloom_level": "L4_analyze",
+          "topic": "FastText_OOV",
+          "finance_context": true,
+          "slide_reference": "L06 deepdive (FastText)"
+        },
+        {
+          "qid": "L06-Q09",
+          "bloom_level": "L4_analyze",
+          "topic": "stock_embedding_similarity",
+          "finance_context": true,
+          "slide_reference": "L06 overview (finance application)"
+        },
+        {
+          "qid": "L06-Q10",
+          "bloom_level": "L1_remember",
+          "topic": "MDP_discount_factor",
+          "finance_context": false,
+          "slide_reference": "L06 overview (MDP definition)"
+        },
+        {
+          "qid": "L06-Q11",
+          "bloom_level": "L4_analyze",
+          "topic": "Markov_property_trading",
+          "finance_context": true,
+          "slide_reference": "L06 deepdive (Markov property)"
+        },
+        {
+          "qid": "L06-Q12",
+          "bloom_level": "L2_understand",
+          "topic": "stochastic_policy",
+          "finance_context": true,
+          "slide_reference": "L06 overview (policy)"
+        },
+        {
+          "qid": "L06-Q13",
+          "bloom_level": "L2_understand",
+          "topic": "Bellman_equation",
+          "finance_context": false,
+          "slide_reference": "L06 deepdive (Bellman optimality)"
+        },
+        {
+          "qid": "L06-Q14",
+          "bloom_level": "L4_analyze",
+          "topic": "TD_error",
+          "finance_context": false,
+          "slide_reference": "L06 deepdive (Q-learning update)"
+        },
+        {
+          "qid": "L06-Q15",
+          "bloom_level": "L3_apply",
+          "topic": "epsilon_greedy",
+          "finance_context": true,
+          "slide_reference": "L06 overview (exploration)"
+        },
+        {
+          "qid": "L06-Q16",
+          "bloom_level": "L3_apply",
+          "topic": "discount_factor_calculation",
+          "finance_context": true,
+          "slide_reference": "L06 overview (discounting)"
+        },
+        {
+          "qid": "L06-Q17",
+          "bloom_level": "L4_analyze",
+          "topic": "tabular_Q_limitation",
+          "finance_context": true,
+          "slide_reference": "L06 deepdive (DQN motivation)"
+        },
+        {
+          "qid": "L06-Q18",
+          "bloom_level": "L5_evaluate",
+          "topic": "non_stationarity",
+          "finance_context": true,
+          "slide_reference": "L06 deepdive (financial RL challenges)"
+        },
+        {
+          "qid": "L06-Q19",
+          "bloom_level": "L5_evaluate",
+          "topic": "domain_embedding_failure",
+          "finance_context": true,
+          "slide_reference": "L06 overview (polysemy)"
+        },
+        {
+          "qid": "L06-Q20",
+          "bloom_level": "L5_evaluate",
+          "topic": "backtesting_overfitting",
+          "finance_context": true,
+          "slide_reference": "L06 deepdive (RL deployment)"
+        }
+      ]
+    }
+  ],
+  "supplementary_quizzes": [
+    {
+      "id": "L03_knn_deep",
+      "lecture": "L03",
+      "title": "KNN (Deep Dive)",
+      "type": "supplementary",
+      "file": "docs/quiz/L03_knn.html",
+      "questions_count": 20,
+      "status": "complete"
+    },
+    {
+      "id": "L03_kmeans_deep",
+      "lecture": "L03",
+      "title": "K-Means (Deep Dive)",
+      "type": "supplementary",
+      "file": "docs/quiz/L03_kmeans.html",
+      "questions_count": 20,
+      "status": "complete"
+    },
+    {
+      "id": "L03_accessible",
+      "lecture": "L03",
+      "title": "KNN & K-Means (Accessible)",
+      "type": "supplementary",
+      "file": "docs/quiz/L03_knn_kmeans_accessible.html",
+      "questions_count": 20,
+      "status": "complete"
+    },
+    {
+      "id": "L04_decision_trees_deep",
+      "lecture": "L04",
+      "title": "Decision Trees (Deep Dive)",
+      "type": "supplementary",
+      "file": "docs/quiz/L04_decision_trees.html",
+      "questions_count": 20,
+      "status": "complete"
+    },
+    {
+      "id": "L04_ensemble_deep",
+      "lecture": "L04",
+      "title": "Ensemble Methods (Deep Dive)",
+      "type": "supplementary",
+      "file": "docs/quiz/L04_ensemble_methods.html",
+      "questions_count": 20,
+      "status": "complete"
+    }
+  ],
+  "overview_quizzes": [
+    {
+      "id": "quiz1_overview",
+      "lectures": [
+        "L01",
+        "L02"
+      ],
+      "title": "Regression Methods",
+      "type": "overview",
+      "file": "docs/quiz/quiz1_regression.html",
+      "questions_count": 15,
+      "status": "complete"
+    },
+    {
+      "id": "quiz2_overview",
+      "lectures": [
+        "L03",
+        "L04"
+      ],
+      "title": "Classification & Ensembles",
+      "type": "overview",
+      "file": "docs/quiz/quiz2_classification_ensemble.html",
+      "questions_count": 15,
+      "status": "complete"
+    },
+    {
+      "id": "quiz3_overview",
+      "lectures": [
+        "L05",
+        "L06"
+      ],
+      "title": "Advanced Topics",
+      "type": "overview",
+      "file": "docs/quiz/quiz3_advanced.html",
+      "questions_count": 15,
+      "status": "complete"
+    }
+  ],
+  "moodle_quizzes": [
+    {
+      "id": "moodle_quiz1",
+      "lectures": [
+        "L01",
+        "L02"
+      ],
+      "title": "Quiz 1: Regression Methods",
+      "type": "moodle",
+      "file": "quizzes/quiz1_topics_1_2.xml",
+      "questions_count": 15,
+      "status": "complete"
+    },
+    {
+      "id": "moodle_quiz2",
+      "lectures": [
+        "L03",
+        "L04"
+      ],
+      "title": "Quiz 2: Classification & Ensembles",
+      "type": "moodle",
+      "file": "quizzes/quiz2_topics_3_4.xml",
+      "questions_count": 15,
+      "status": "complete"
+    },
+    {
+      "id": "moodle_quiz3",
+      "lectures": [
+        "L05",
+        "L06"
+      ],
+      "title": "Quiz 3: Advanced Topics",
+      "type": "moodle",
+      "file": "quizzes/quiz3_topics_5_6.xml",
+      "questions_count": 15,
+      "status": "complete"
+    }
+  ]
+}

@@ -339,175 +339,151 @@
             questions: [
                 {
                     "id": 1,
-                    "question": "What is a major limitation of one-hot encoding for words?",
+                    "question": "One-hot encoding represents word 'bank' in a 50,000-word vocabulary as a vector of length 50,000 with a single 1. What are two major problems with this?",
                     "options": {
-                        "A": "It captures semantic similarity between words",
-                        "B": "Vectors are sparse with dimensionality equal to vocabulary size",
-                        "C": "It requires labeled training data",
-                        "D": "It only works for numerical features"
+                        "A": "Vectors are dense and capture semantic similarity",
+                        "B": "Vectors are sparse (memory-wasteful) and encode no semantic similarity between words",
+                        "C": "Vectors are too short to represent words",
+                        "D": "One-hot encoding only works for numeric data"
                     },
                     "correct": "B",
-                    "explanation": "One-hot encoding creates sparse vectors where each word is represented by a vector of length V (vocabulary size) with a single 1 and all other entries 0. This is memory-inefficient and doesn't capture word relationships."
+                    "explanation": "One-hot vectors are sparse (49,999 zeros, one 1) and all pairs are orthogonal: $\\cos(\\text{'bank'}, \\text{'finance'}) = 0$, the same as $\\cos(\\text{'bank'}, \\text{'elephant'})$. No word relationships are captured."
                 },
                 {
                     "id": 2,
-                    "question": "What is the key advantage of dense word embeddings over one-hot encoding?",
+                    "question": "Dense word embeddings represent words as vectors in $\\mathbb{R}^d$ where $d \\approx 100\\text{-}300$. What key property makes them superior to one-hot encoding?",
                     "options": {
-                        "A": "They use more memory",
-                        "B": "They capture semantic relationships in low-dimensional space",
-                        "C": "They are easier to interpret",
-                        "D": "They require no training"
+                        "A": "They use more memory per word",
+                        "B": "Similar words have similar vectors, capturing semantic relationships in geometric structure",
+                        "C": "They are easier to interpret by humans",
+                        "D": "They require no training data"
                     },
                     "correct": "B",
-                    "explanation": "Dense embeddings represent words in low-dimensional continuous vectors (e.g., 100-300 dimensions) where similar words are close together, capturing semantic relationships that one-hot encoding cannot."
+                    "explanation": "Dense embeddings place semantically similar words close together: $\\cos(\\text{'bank'}, \\text{'finance'}) \\approx 0.8$ while $\\cos(\\text{'bank'}, \\text{'elephant'}) \\approx 0.1$. This geometric structure enables downstream ML models to leverage word relationships."
                 },
                 {
                     "id": 3,
-                    "question": "The distributional hypothesis states that words with similar meanings:",
+                    "question": "The distributional hypothesis states: 'You shall know a word by the company it keeps' (Firth, 1957). What does this mean for training embeddings?",
                     "options": {
-                        "A": "Have the same spelling",
-                        "B": "Appear in similar contexts",
-                        "C": "Have the same length",
-                        "D": "Start with the same letter"
+                        "A": "Words are defined by their spelling patterns",
+                        "B": "Words appearing in similar contexts (neighboring words) tend to have similar meanings, so co-occurrence patterns learn semantics",
+                        "C": "Words must be manually labeled with meanings",
+                        "D": "Rare words cannot have embeddings"
                     },
                     "correct": "B",
-                    "explanation": "The distributional hypothesis, often summarized as 'you shall know a word by the company it keeps' (Firth, 1957), states that words occurring in similar contexts tend to have similar meanings."
+                    "explanation": "If 'bank' and 'lender' frequently appear near words like 'loan', 'interest', 'credit', their embeddings converge. Word2Vec, GloVe, and FastText all exploit this: they learn embeddings from co-occurrence statistics in large text corpora."
                 },
                 {
                     "id": 4,
-                    "question": "In Word2Vec Skip-gram, what does the model predict?",
+                    "question": "In Word2Vec Skip-gram, given center word 'loan', the model predicts context words like 'interest', 'bank', 'approval'. How does CBOW differ?",
                     "options": {
-                        "A": "The center word given context words",
-                        "B": "Context words given the center word",
-                        "C": "The next sentence",
-                        "D": "Word frequency"
-                    },
-                    "correct": "B",
-                    "explanation": "Skip-gram predicts surrounding context words given the center word. For example, given 'bank', it learns to predict 'river', 'money', 'account' based on training contexts."
-                },
-                {
-                    "id": 5,
-                    "question": "How does CBOW differ from Skip-gram?",
-                    "options": {
-                        "A": "CBOW predicts the center word from context; Skip-gram predicts context from center",
-                        "B": "CBOW is slower to train",
-                        "C": "CBOW works better for rare words",
+                        "A": "CBOW predicts the center word from context words; Skip-gram predicts context from the center word",
+                        "B": "CBOW is always slower than Skip-gram",
+                        "C": "CBOW performs better on rare words",
                         "D": "CBOW uses character-level features"
                     },
                     "correct": "A",
-                    "explanation": "CBOW (Continuous Bag of Words) predicts the center word given surrounding context words, while Skip-gram does the reverse. CBOW is faster to train but Skip-gram performs better on rare words."
+                    "explanation": "CBOW (Continuous Bag of Words) takes context words ('interest', 'bank', 'approval') as input and predicts the center word ('loan'). Skip-gram does the reverse. CBOW is faster; Skip-gram handles rare words better."
+                },
+                {
+                    "id": 5,
+                    "question": "The analogy 'king $-$ man $+$ woman $\\approx$ queen' works in embedding space. What does this demonstrate about the geometric structure?",
+                    "options": {
+                        "A": "Embeddings memorize specific word pairs",
+                        "B": "Semantic relationships are encoded as consistent vector directions (gender direction: man$\\to$woman $\\approx$ king$\\to$queen)",
+                        "C": "Vector arithmetic always produces exact results",
+                        "D": "Only gendered analogies work in embedding space"
+                    },
+                    "correct": "B",
+                    "explanation": "The vector $\\vec{\\text{woman}} - \\vec{\\text{man}}$ captures a 'gender direction'. Adding this to $\\vec{\\text{king}}$ moves along the same direction, landing near $\\vec{\\text{queen}}$. This works for many relationships: country-capital, verb tenses, etc."
                 },
                 {
                     "id": 6,
-                    "question": "The word analogy 'king - man + woman = queen' demonstrates that embeddings capture:",
+                    "question": "Compute the cosine similarity between vectors $\\mathbf{a} = [3, 4]$ and $\\mathbf{b} = [4, 3]$.",
                     "options": {
-                        "A": "Word frequency",
-                        "B": "Semantic relationships as vector arithmetic",
-                        "C": "Grammar rules",
-                        "D": "Sentence structure"
+                        "A": "$\\frac{3 \\times 4 + 4 \\times 3}{\\sqrt{9+16} \\times \\sqrt{16+9}} = \\frac{24}{25} = 0.96$",
+                        "B": "$\\frac{3 \\times 4 + 4 \\times 3}{5 + 5} = 2.4$",
+                        "C": "$\\sqrt{(3-4)^2 + (4-3)^2} = \\sqrt{2}$",
+                        "D": "$|3-4| + |4-3| = 2$"
                     },
-                    "correct": "B",
-                    "explanation": "Word analogies show that embeddings encode semantic relationships as directions in vector space. The vector from 'man' to 'woman' is similar to 'king' to 'queen', allowing vector arithmetic to solve analogies."
+                    "correct": "A",
+                    "explanation": "Cosine similarity = $\\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\|\\mathbf{a}\\| \\|\\mathbf{b}\\|} = \\frac{12+12}{5 \\times 5} = \\frac{24}{25} = 0.96$. These vectors are very similar (nearly parallel). Cosine similarity ranges from $-1$ (opposite) through $0$ (orthogonal) to $+1$ (identical direction)."
                 },
                 {
                     "id": 7,
-                    "question": "What is the cosine similarity between vectors $[1, 0]$ and $[0, 1]$?",
+                    "question": "Why might a bank use FinBERT instead of general BERT for analyzing financial news sentiment?",
                     "options": {
-                        "A": "1",
-                        "B": "0",
-                        "C": "-1",
-                        "D": "0.5"
+                        "A": "FinBERT is faster because it has fewer parameters",
+                        "B": "FinBERT was fine-tuned on financial text and understands domain language (e.g., 'short' as a trading position, 'bull' as market optimism)",
+                        "C": "General BERT cannot process text at all",
+                        "D": "FinBERT does not require GPU resources"
                     },
                     "correct": "B",
-                    "explanation": "Cosine similarity = $\\frac{a \\cdot b}{||a|| \\cdot ||b||} = \\frac{1 \\times 0 + 0 \\times 1}{1 \\times 1} = 0$. Perpendicular (orthogonal) vectors have zero cosine similarity, indicating no relationship."
+                    "explanation": "In general English, 'short' means brief. In finance, 'short' means selling borrowed assets. FinBERT was fine-tuned on financial corpora (SEC filings, financial news) and correctly interprets domain-specific language for sentiment analysis."
                 },
                 {
                     "id": 8,
-                    "question": "What is the cosine similarity between a vector and itself?",
+                    "question": "FastText represents words using character n-grams. Why is this useful for financial text processing?",
                     "options": {
-                        "A": "0",
-                        "B": "The vector's magnitude",
-                        "C": "1",
-                        "D": "Undefined"
+                        "A": "It makes embedding dimensions larger",
+                        "B": "It can generate embeddings for out-of-vocabulary words (e.g., ticker symbols, misspellings) by combining known n-grams",
+                        "C": "It requires a larger vocabulary than Word2Vec",
+                        "D": "It only works with English text"
                     },
-                    "correct": "C",
-                    "explanation": "For any non-zero vector $a$, cosine similarity with itself is $\\frac{a \\cdot a}{||a|| \\cdot ||a||} = \\frac{||a||^2}{||a||^2} = 1$. This is the maximum possible similarity."
+                    "correct": "B",
+                    "explanation": "Financial text contains many OOV words: ticker symbols (AAPL), product names (CDO), abbreviations (EBITDA). FastText builds 'cryptocurrency' from n-grams like 'cry', 'ryp', 'ypt', etc., even if the full word was never seen in training."
                 },
                 {
                     "id": 9,
-                    "question": "Which pre-trained embedding model uses character n-grams to handle out-of-vocabulary words?",
+                    "question": "A trading firm uses embeddings to find stocks similar to AAPL. They compute $\\cos(\\vec{\\text{AAPL}}, \\vec{\\text{MSFT}}) = 0.85$ and $\\cos(\\vec{\\text{AAPL}}, \\vec{\\text{XOM}}) = 0.3$. What does this suggest?",
                     "options": {
-                        "A": "Word2Vec",
-                        "B": "GloVe",
-                        "C": "FastText",
-                        "D": "BERT"
+                        "A": "AAPL and XOM are more similar than AAPL and MSFT",
+                        "B": "AAPL and MSFT are discussed in very similar contexts (both tech giants); AAPL and XOM (oil company) appear in different contexts",
+                        "C": "MSFT has a higher stock price than XOM",
+                        "D": "The embeddings are incorrect"
                     },
-                    "correct": "C",
-                    "explanation": "FastText represents words as sums of character n-gram embeddings. This allows it to generate embeddings for unseen words by combining known n-grams, handling typos and morphological variations."
+                    "correct": "B",
+                    "explanation": "High cosine similarity (0.85) between AAPL and MSFT reflects co-occurrence in similar contexts: both appear near 'tech', 'earnings', 'innovation'. Low similarity (0.3) with XOM (energy sector) reflects different contextual patterns. This enables sector-aware portfolio analysis."
                 },
                 {
                     "id": 10,
-                    "question": "Why might FinBERT be preferred over general BERT for financial sentiment analysis?",
+                    "question": "In a Markov Decision Process (MDP), the tuple $(S, A, P, R, \\gamma)$ defines the environment. What does $\\gamma$ control?",
                     "options": {
-                        "A": "It runs faster",
-                        "B": "It was fine-tuned on financial text and understands domain-specific language",
-                        "C": "It uses smaller embeddings",
-                        "D": "It doesn't require GPU"
+                        "A": "The number of states",
+                        "B": "The discount factor: how much the agent values future rewards relative to immediate rewards",
+                        "C": "The learning rate for parameter updates",
+                        "D": "The probability of transitioning between states"
                     },
                     "correct": "B",
-                    "explanation": "FinBERT is fine-tuned on financial news and reports, understanding that 'bullish' means positive sentiment and 'short' can mean a trading position. Domain-specific models capture nuances that general models miss."
+                    "explanation": "$\\gamma \\in [0, 1]$ discounts future rewards: a reward $r$ received $k$ steps later contributes $\\gamma^k r$. $\\gamma = 0$: myopic (only immediate rewards). $\\gamma = 1$: equal weight to all future rewards. $\\gamma = 0.95$: common choice balancing short and long-term returns."
                 },
                 {
                     "id": 11,
-                    "question": "In a Markov Decision Process (MDP), what does the tuple $(S, A, P, R, \\gamma)$ represent?",
+                    "question": "The Markov property states $P(s_{t+1}|s_t, s_{t-1}, \\ldots, s_0) = P(s_{t+1}|s_t)$. In a trading context, why might this assumption be limiting?",
                     "options": {
-                        "A": "Speed, Accuracy, Precision, Recall, Gradient",
-                        "B": "States, Actions, Transition probabilities, Rewards, Discount factor",
-                        "C": "Samples, Attributes, Probabilities, Results, Gain",
-                        "D": "Sequences, Algorithms, Parameters, Regularization, Growth"
+                        "A": "Because markets have no memory at all",
+                        "B": "Because real markets often exhibit momentum and long-term dependencies that violate memorylessness",
+                        "C": "Because the Markov property requires continuous state spaces",
+                        "D": "Because all financial states are identical"
                     },
                     "correct": "B",
-                    "explanation": "An MDP is defined by: States (S) - possible situations; Actions (A) - possible moves; P - transition probabilities; R - reward function; and $\\gamma$ - discount factor for future rewards."
+                    "explanation": "The Markov property assumes the current state contains all relevant information. But markets exhibit momentum (trends persist), mean reversion, and regime changes that depend on history. Practitioners encode history into the state (e.g., using rolling windows of past returns) to approximate Markov behavior."
                 },
                 {
                     "id": 12,
-                    "question": "The Markov property states that:",
+                    "question": "A policy $\\pi(a|s)$ maps states to action probabilities. In algorithmic trading, if state $s$ = 'price above 200-day MA' and actions $A$ = {buy, hold, sell}, what does $\\pi(\\text{buy}|s) = 0.7$ mean?",
                     "options": {
-                        "A": "All states are equally likely",
-                        "B": "The future depends only on the current state, not the history",
-                        "C": "Rewards must be positive",
-                        "D": "Actions must be deterministic"
+                        "A": "The agent always buys when price is above the MA",
+                        "B": "The agent buys with 70% probability in this state, exploring other actions 30% of the time",
+                        "C": "The profit from buying is 70%",
+                        "D": "70% of training examples have this state"
                     },
                     "correct": "B",
-                    "explanation": "The Markov property means $P(s_{t+1}|s_t, s_{t-1}, ..., s_0) = P(s_{t+1}|s_t)$. The current state contains all information needed to predict the future; history doesn't matter."
+                    "explanation": "A stochastic policy assigns probabilities to actions: $\\pi(\\text{buy}|s)=0.7$, $\\pi(\\text{hold}|s)=0.2$, $\\pi(\\text{sell}|s)=0.1$. The agent mostly buys (exploiting a trend-following strategy) but occasionally explores alternatives."
                 },
                 {
                     "id": 13,
-                    "question": "A policy $\\pi(a|s)$ represents:",
-                    "options": {
-                        "A": "The reward for action $a$ in state $s$",
-                        "B": "The probability of taking action $a$ in state $s$",
-                        "C": "The next state after taking action $a$",
-                        "D": "The value of state $s$"
-                    },
-                    "correct": "B",
-                    "explanation": "A policy $\\pi(a|s)$ is a mapping from states to action probabilities. It defines the agent's behavior by specifying the probability of selecting each action in each state."
-                },
-                {
-                    "id": 14,
-                    "question": "What does the Q-function $Q(s, a)$ represent?",
-                    "options": {
-                        "A": "The immediate reward for action $a$ in state $s$",
-                        "B": "The expected cumulative reward starting from state $s$, taking action $a$, then following the optimal policy",
-                        "C": "The probability of reaching state $s$",
-                        "D": "The quality of the training data"
-                    },
-                    "correct": "B",
-                    "explanation": "The Q-function (action-value function) estimates the expected total discounted reward when taking action $a$ in state $s$ and then following the optimal policy. It guides action selection."
-                },
-                {
-                    "id": 15,
-                    "question": "The Bellman equation for $Q^*(s, a)$ states that optimal Q-values satisfy:",
+                    "question": "The Q-function $Q(s, a)$ represents the expected cumulative discounted reward of taking action $a$ in state $s$ then following the optimal policy. The Bellman equation states:",
                     "options": {
                         "A": "$Q^*(s, a) = R(s, a)$",
                         "B": "$Q^*(s, a) = R(s, a) + \\gamma \\max_{a'} Q^*(s', a')$",
@@ -515,67 +491,91 @@
                         "D": "$Q^*(s, a) = \\sum_a Q^*(s, a)$"
                     },
                     "correct": "B",
-                    "explanation": "The Bellman optimality equation decomposes the Q-value into immediate reward plus discounted future value: $Q^*(s, a) = R(s, a) + \\gamma \\max_{a'} Q^*(s', a')$. This recursion enables iterative computation."
+                    "explanation": "The Bellman optimality equation decomposes value into: immediate reward $R(s,a)$ + discounted best future value $\\gamma \\max_{a'} Q^*(s', a')$. This recursive structure is the foundation of all value-based RL algorithms."
+                },
+                {
+                    "id": 14,
+                    "question": "In Q-learning, the update rule is $Q(s,a) \\leftarrow Q(s,a) + \\alpha[r + \\gamma \\max_{a'} Q(s',a') - Q(s,a)]$. What is the term in brackets called?",
+                    "options": {
+                        "A": "The policy gradient",
+                        "B": "The temporal difference (TD) error: the gap between the current estimate and the observed target",
+                        "C": "The learning rate",
+                        "D": "The discount factor"
+                    },
+                    "correct": "B",
+                    "explanation": "The TD error $\\delta = r + \\gamma \\max_{a'} Q(s',a') - Q(s,a)$ measures how 'surprised' the agent is. Positive $\\delta$: outcome was better than expected (increase Q). Negative $\\delta$: outcome was worse (decrease Q). $\\alpha$ controls how much each update moves Q."
+                },
+                {
+                    "id": 15,
+                    "question": "With $\\varepsilon$-greedy exploration where $\\varepsilon = 0.15$, a trading agent will:",
+                    "options": {
+                        "A": "Take the best known action 15% of the time, random action 85%",
+                        "B": "Take the best known action 85% of the time, random action 15%",
+                        "C": "Always take the best known action",
+                        "D": "Always take a random action"
+                    },
+                    "correct": "B",
+                    "explanation": "$\\varepsilon$-greedy: with probability $1-\\varepsilon = 0.85$, exploit (take $\\arg\\max_a Q(s,a)$). With probability $\\varepsilon = 0.15$, explore (random action). In trading, exploration tries unconventional strategies that might reveal profitable patterns the agent missed."
                 },
                 {
                     "id": 16,
-                    "question": "In Q-learning, how is the Q-table updated after observing reward $r$ and next state $s'$?",
+                    "question": "A trading agent uses $\\gamma = 0.95$. A strategy yields $\\$100$ profit now or $\\$150$ profit in 10 steps. What is the discounted value of the delayed profit?",
                     "options": {
-                        "A": "$Q(s, a) \\leftarrow r$",
-                        "B": "$Q(s, a) \\leftarrow Q(s, a) + \\alpha[r + \\gamma \\max_{a'} Q(s', a') - Q(s, a)]$",
-                        "C": "$Q(s, a) \\leftarrow \\max Q(s', a')$",
-                        "D": "$Q(s, a) \\leftarrow Q(s, a) + r$"
+                        "A": "$150 \\times 0.95^{10} \\approx 150 \\times 0.599 \\approx \\$89.8$",
+                        "B": "$150 \\times 0.95 = \\$142.5$",
+                        "C": "$150 \\times 10 = \\$1500$",
+                        "D": "$150 / 0.95^{10} \\approx \\$250.3$"
                     },
-                    "correct": "B",
-                    "explanation": "Q-learning uses temporal difference: update $Q(s,a)$ toward target $r + \\gamma \\max_{a'} Q(s', a')$ with learning rate $\\alpha$. This incrementally improves Q-estimates from experience."
+                    "correct": "A",
+                    "explanation": "Discounted value = $\\gamma^k \\cdot r = 0.95^{10} \\times 150 \\approx 0.599 \\times 150 \\approx \\$89.8$. The immediate $\\$100$ is preferred over the discounted $\\$89.8$. Higher $\\gamma$ (closer to 1) would make the agent more patient."
                 },
                 {
                     "id": 17,
-                    "question": "The exploration-exploitation tradeoff in RL refers to balancing:",
+                    "question": "Why does tabular Q-learning fail for stock trading with continuous state spaces (prices, volumes, ratios)?",
                     "options": {
-                        "A": "Training speed vs. accuracy",
-                        "B": "Trying new actions vs. using known good actions",
-                        "C": "Memory usage vs. computation",
-                        "D": "Model complexity vs. interpretability"
+                        "A": "Q-learning cannot handle rewards",
+                        "B": "A Q-table requires discrete states; continuous prices create infinitely many entries, making a lookup table infeasible",
+                        "C": "Continuous states violate the Markov property",
+                        "D": "Q-learning only works with 2 actions"
                     },
                     "correct": "B",
-                    "explanation": "Exploration means trying new actions to discover potentially better strategies. Exploitation means using the best known action. Balancing both is essential: too much exploration wastes time, too little may miss optimal solutions."
+                    "explanation": "Tabular Q-learning stores one entry per (state, action) pair. With continuous prices, the table would be infinite. Deep Q-Networks (DQN) solve this by using a neural network to approximate $Q(s,a)$ for any continuous state input."
                 },
                 {
                     "id": 18,
-                    "question": "In an $\\varepsilon$-greedy strategy with $\\varepsilon = 0.1$, what happens?",
+                    "question": "A portfolio management RL agent has states (market regime), actions (asset allocations), and receives daily return as reward. What key challenge makes this harder than game-playing RL?",
                     "options": {
-                        "A": "Random action 100% of the time",
-                        "B": "Best known action 10% of the time, random 90%",
-                        "C": "Best known action 90% of the time, random 10%",
-                        "D": "Best known action 100% of the time"
+                        "A": "Financial data is too clean and predictable",
+                        "B": "Non-stationarity: market dynamics change over time (regimes shift), so the MDP itself changes, unlike fixed-rule games",
+                        "C": "Financial RL has too few possible actions",
+                        "D": "Rewards in finance are always positive"
                     },
-                    "correct": "C",
-                    "explanation": "With $\\varepsilon$-greedy, the agent takes the action with highest Q-value with probability $1-\\varepsilon$ (90%) and a random action with probability $\\varepsilon$ (10%). This ensures exploration while mostly exploiting."
+                    "correct": "B",
+                    "explanation": "In Atari or chess, the rules never change. In finance, market regimes shift (bull/bear/crisis), correlations break down, and new instruments appear. The agent must continually adapt to a non-stationary environment, requiring online learning and regime detection."
                 },
                 {
                     "id": 19,
-                    "question": "A discount factor $\\gamma = 0.9$ means the agent:",
+                    "question": "A bank's NLP system processes customer complaints. It uses Word2Vec embeddings trained on general English. The complaint 'My CD matured but I can't access the funds' is misclassified. Why?",
                     "options": {
-                        "A": "Ignores future rewards entirely",
-                        "B": "Values immediate and future rewards equally",
-                        "C": "Values future rewards but prefers sooner rewards",
-                        "D": "Only considers the final reward"
+                        "A": "Word2Vec cannot process sentences",
+                        "B": "General Word2Vec likely encodes 'CD' as 'compact disc' rather than 'certificate of deposit', causing the financial meaning to be lost",
+                        "C": "The sentence is too short for NLP",
+                        "D": "Word2Vec always produces perfect results"
                     },
-                    "correct": "C",
-                    "explanation": "With $\\gamma = 0.9$, a reward $r$ received $k$ steps in the future contributes $0.9^k \\cdot r$ to the total. The agent values future rewards but discounts them, preferring sooner payoffs. $\\gamma = 1$ would weight all equally."
+                    "correct": "B",
+                    "explanation": "General-domain embeddings encode the most common meaning of polysemous words. 'CD' (compact disc) dominates over 'CD' (certificate of deposit) in general corpora. Fine-tuning on financial text or using domain-specific embeddings (FinBERT) resolves such ambiguities."
                 },
                 {
                     "id": 20,
-                    "question": "Deep Q-Networks (DQN) improve on tabular Q-learning by:",
+                    "question": "An RL-based trading system achieves 40% annual return in backtesting but loses money in live trading. What is the most likely explanation?",
                     "options": {
-                        "A": "Using a neural network to approximate Q-values for large/continuous state spaces",
-                        "B": "Removing the need for rewards",
-                        "C": "Eliminating exploration",
-                        "D": "Only working with discrete actions"
+                        "A": "RL algorithms cannot learn trading strategies",
+                        "B": "Overfitting to historical data: the agent memorized past patterns (look-ahead bias, survivorship bias, or regime changes) that do not persist in live markets",
+                        "C": "Live trading has no rewards",
+                        "D": "The discount factor was too high"
                     },
-                    "correct": "A",
-                    "explanation": "DQN uses a neural network to approximate $Q(s, a)$ instead of a lookup table. This enables RL in environments with large or continuous state spaces (like images) where a table would be infeasible."
+                    "correct": "B",
+                    "explanation": "Backtesting overfitting is the most common failure mode. The agent may exploit: (1) look-ahead bias (using future information), (2) survivorship bias (only training on surviving stocks), (3) regime changes (training on bull market, deploying in crash). Proper train/validation/test splits with walk-forward validation mitigate this."
                 }
             ]
         };

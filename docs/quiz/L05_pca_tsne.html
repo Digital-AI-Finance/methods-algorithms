@@ -341,241 +341,241 @@
                     "id": 1,
                     "question": "What does PCA maximize when finding principal components?",
                     "options": {
-                        "A": "Variance along each component",
-                        "B": "Covariance between components",
-                        "C": "Distance between data points",
-                        "D": "Number of features"
+                        "A": "Covariance between components",
+                        "B": "Variance of the data projected onto each component",
+                        "C": "Number of features retained",
+                        "D": "Distance between all data points"
                     },
-                    "correct": "A",
-                    "explanation": "PCA finds orthogonal directions that maximize the variance of the projected data. The first PC captures the most variance, the second captures the most remaining variance orthogonal to the first, and so on."
+                    "correct": "B",
+                    "explanation": "PCA finds orthogonal directions that maximize the variance of the projected data. PC1 captures the most variance, PC2 captures the most remaining variance perpendicular to PC1, and so on."
                 },
                 {
                     "id": 2,
-                    "question": "Given data matrix $X$ with $n$ samples and $p$ features (centered), how is the covariance matrix $\\Sigma$ computed?",
+                    "question": "The sample covariance matrix for centered data $\\mathbf{X}$ with $n$ samples and $p$ features is:",
                     "options": {
-                        "A": "$\\Sigma = \\frac{1}{n-1}X^TX$",
-                        "B": "$\\Sigma = XX^T$",
-                        "C": "$\\Sigma = X + X^T$",
-                        "D": "$\\Sigma = \\frac{1}{n}X$"
+                        "A": "$\\Sigma = \\frac{1}{n-1}\\mathbf{X}^\\top\\mathbf{X}$, a $p \\times p$ matrix",
+                        "B": "$\\Sigma = \\mathbf{X}\\mathbf{X}^\\top$, an $n \\times n$ matrix",
+                        "C": "$\\Sigma = \\frac{1}{n}\\mathbf{X}$, a $n \\times p$ matrix",
+                        "D": "$\\Sigma = \\mathbf{X} + \\mathbf{X}^\\top$"
                     },
                     "correct": "A",
-                    "explanation": "The sample covariance matrix is $\\Sigma = \\frac{1}{n-1}X^TX$ where $X$ is the centered data matrix. This produces a $p \\times p$ matrix capturing pairwise feature covariances."
+                    "explanation": "$\\Sigma = \\frac{1}{n-1}\\mathbf{X}^\\top\\mathbf{X}$ produces a $p \\times p$ symmetric matrix where entry $(i,j)$ is the covariance between features $i$ and $j$. The diagonal entries are feature variances."
                 },
                 {
                     "id": 3,
-                    "question": "In PCA, what mathematical operation is performed on the covariance matrix to find principal components?",
+                    "question": "PCA solves $\\Sigma \\mathbf{v} = \\lambda \\mathbf{v}$. What do the eigenvectors $\\mathbf{v}$ and eigenvalues $\\lambda$ represent?",
                     "options": {
-                        "A": "Eigenvalue decomposition",
-                        "B": "Matrix inversion",
-                        "C": "QR factorization",
-                        "D": "Cholesky decomposition"
+                        "A": "Eigenvectors are principal component directions; eigenvalues are the variance captured by each",
+                        "B": "Eigenvectors are data points; eigenvalues are distances",
+                        "C": "Eigenvectors are eigenvalues sorted; eigenvalues are eigenvectors unsorted",
+                        "D": "Both represent the original feature correlations"
                     },
                     "correct": "A",
-                    "explanation": "PCA performs eigenvalue decomposition on the covariance matrix: $\\Sigma v = \\lambda v$. The eigenvectors $v$ become principal components, and eigenvalues $\\lambda$ represent variance captured."
+                    "explanation": "Eigenvectors define the directions (principal components) in feature space along which data varies most. Eigenvalues $\\lambda_i$ quantify how much variance each direction captures. Larger $\\lambda_i$ = more important component."
                 },
                 {
                     "id": 4,
-                    "question": "What are the principal components in terms of the covariance matrix $\\Sigma$?",
+                    "question": "Eigenvalues of a covariance matrix from 8 financial features are: $\\lambda = [4.5, 2.1, 1.2, 0.8, 0.6, 0.4, 0.3, 0.1]$. What is the explained variance ratio of PC1?",
                     "options": {
-                        "A": "Eigenvectors of $\\Sigma$",
-                        "B": "Eigenvalues of $\\Sigma$",
-                        "C": "Diagonal elements of $\\Sigma$",
-                        "D": "Rows of $\\Sigma$"
+                        "A": "$\\frac{4.5}{10} = 45\\%$",
+                        "B": "$\\frac{4.5}{4.5+2.1} = 68\\%$",
+                        "C": "$\\frac{4.5}{8} = 56\\%$",
+                        "D": "$4.5\\%$"
                     },
                     "correct": "A",
-                    "explanation": "Principal components are the eigenvectors of the covariance matrix. They define orthogonal directions in feature space along which data varies most."
+                    "explanation": "Total variance = $4.5+2.1+1.2+0.8+0.6+0.4+0.3+0.1 = 10$. Explained variance ratio for PC1 = $\\frac{\\lambda_1}{\\sum\\lambda_i} = \\frac{4.5}{10} = 0.45 = 45\\%$. PC1 alone captures 45% of total variance."
                 },
                 {
                     "id": 5,
-                    "question": "What do the eigenvalues represent in PCA?",
+                    "question": "Using the same eigenvalues $[4.5, 2.1, 1.2, 0.8, 0.6, 0.4, 0.3, 0.1]$, how many components do you need to explain at least 80% of variance?",
                     "options": {
-                        "A": "Amount of variance captured by each principal component",
-                        "B": "Direction of each principal component",
-                        "C": "Number of data points projected onto each component",
-                        "D": "Correlation between original features"
+                        "A": "1 component (45%)",
+                        "B": "2 components (45% + 21% = 66%)",
+                        "C": "3 components (45% + 21% + 12% = 78%)",
+                        "D": "4 components (45% + 21% + 12% + 8% = 86%)"
                     },
-                    "correct": "A",
-                    "explanation": "Each eigenvalue $\\lambda_i$ represents the variance of the data when projected onto the corresponding eigenvector (principal component). Larger eigenvalues mean more variance captured."
+                    "correct": "D",
+                    "explanation": "Cumulative: PC1=45%, PC1+2=66%, PC1+2+3=78%, PC1+2+3+4=86%. You need 4 components to exceed the 80% threshold, reducing from 8 to 4 dimensions while retaining 86% of the information."
                 },
                 {
                     "id": 6,
-                    "question": "A scree plot shows eigenvalues in decreasing order. How do you typically choose the number of components to retain?",
+                    "question": "The Kaiser criterion states: retain components with eigenvalue $\\lambda > 1$ when using standardized data. Why is $\\lambda = 1$ the threshold?",
                     "options": {
-                        "A": "Look for the 'elbow' where eigenvalues level off",
-                        "B": "Always keep exactly 2 components",
-                        "C": "Keep components until eigenvalues become negative",
-                        "D": "Retain all components with non-zero eigenvalues"
+                        "A": "Because 1 is the average eigenvalue when each standardized variable has variance 1, so $\\lambda > 1$ captures more than one variable's worth of variance",
+                        "B": "Because eigenvalues below 1 are negative",
+                        "C": "Because 1 is an arbitrary convention with no justification",
+                        "D": "Because the total variance always equals 1"
                     },
                     "correct": "A",
-                    "explanation": "The 'elbow method' identifies where additional components contribute diminishing returns. Components before the elbow capture most signal; those after mostly capture noise."
+                    "explanation": "With standardized data, each variable has variance 1 and total variance = $p$. The average eigenvalue is $p/p = 1$. A component with $\\lambda > 1$ explains more variance than a single original variable, so it is worth keeping."
                 },
                 {
                     "id": 7,
-                    "question": "According to the Kaiser criterion, which principal components should be retained?",
+                    "question": "Why must data be centered (mean subtracted) before applying PCA?",
                     "options": {
-                        "A": "Components with eigenvalues $\\lambda > 1$ (for standardized data)",
-                        "B": "Components with eigenvalues $\\lambda > 0$",
-                        "C": "The first two components only",
-                        "D": "Components that explain exactly 50% variance"
+                        "A": "Centering is optional; PCA works the same with or without it",
+                        "B": "Without centering, PC1 points toward the data mean instead of the direction of maximum variance",
+                        "C": "Centering makes all eigenvalues positive",
+                        "D": "Centering reduces computational cost"
                     },
-                    "correct": "A",
-                    "explanation": "The Kaiser criterion retains components with $\\lambda > 1$ when using standardized data. Since each original standardized variable has variance 1, components with $\\lambda > 1$ explain more variance than a single original variable."
+                    "correct": "B",
+                    "explanation": "PCA maximizes projected variance. If data is not centered, the mean contributes a large 'trivial' variance component. Centering ensures PC1 captures the direction of maximum data spread, not just where the data is located."
                 },
                 {
                     "id": 8,
-                    "question": "If the first 3 principal components have eigenvalues $\\lambda_1=4.2$, $\\lambda_2=2.1$, $\\lambda_3=1.5$ and total variance is 10, what is the explained variance ratio for PC1?",
+                    "question": "PCA reconstruction error when using $k$ of $p$ components equals the sum of discarded eigenvalues: $\\sum_{i=k+1}^{p} \\lambda_i$. With eigenvalues $[5, 3, 1.5, 0.5]$ and $k=2$, what is the reconstruction error?",
                     "options": {
-                        "A": "42%",
-                        "B": "21%",
-                        "C": "78%",
-                        "D": "15%"
+                        "A": "$1.5 + 0.5 = 2.0$",
+                        "B": "$5 + 3 = 8.0$",
+                        "C": "$\\frac{2.0}{10} = 0.2$",
+                        "D": "$10 - 2 = 8.0$"
                     },
                     "correct": "A",
-                    "explanation": "Explained variance ratio for PC1 = $\\frac{\\lambda_1}{\\sum \\lambda_i} = \\frac{4.2}{10} = 0.42$ or 42%. This tells us PC1 alone captures 42% of total variance."
+                    "explanation": "Discarded components are $\\lambda_3 = 1.5$ and $\\lambda_4 = 0.5$, so reconstruction error = $1.5 + 0.5 = 2.0$. As a fraction of total variance ($5+3+1.5+0.5=10$), this is $2/10 = 20\\%$ information lost."
                 },
                 {
                     "id": 9,
-                    "question": "What is the reconstruction error in PCA?",
+                    "question": "What is a fundamental limitation of PCA as a dimensionality reduction method?",
                     "options": {
-                        "A": "The difference between original data and data reconstructed from reduced components",
-                        "B": "The number of components discarded",
-                        "C": "The computational time for eigendecomposition",
-                        "D": "The correlation between principal components"
-                    },
-                    "correct": "A",
-                    "explanation": "Reconstruction error measures $||X - X_{reconstructed}||^2$. When using $k < p$ components, some information is lost. The error equals the sum of eigenvalues for discarded components."
-                },
-                {
-                    "id": 10,
-                    "question": "Why must data be centered (mean subtracted) before applying PCA?",
-                    "options": {
-                        "A": "PCA finds directions of maximum variance, which requires data centered at origin",
-                        "B": "Centering makes eigenvalues positive",
-                        "C": "It reduces the number of required components",
-                        "D": "Centering is optional and only affects speed"
-                    },
-                    "correct": "A",
-                    "explanation": "Centering ensures that principal components pass through the data's center of mass. Without centering, the first PC would point toward the mean rather than the direction of maximum variance."
-                },
-                {
-                    "id": 11,
-                    "question": "What is a fundamental limitation of PCA for dimensionality reduction?",
-                    "options": {
-                        "A": "PCA can only capture linear relationships between features",
+                        "A": "PCA only captures linear relationships; non-linear structures (Swiss roll) cannot be unfolded",
                         "B": "PCA requires labeled data",
                         "C": "PCA cannot handle more than 10 features",
                         "D": "PCA always reduces to exactly 2 dimensions"
                     },
                     "correct": "A",
-                    "explanation": "PCA finds linear combinations of features. Non-linear structures (like a Swiss roll) cannot be properly unfolded by PCA. For non-linear dimensionality reduction, methods like t-SNE or UMAP are needed."
+                    "explanation": "PCA finds linear combinations of features. A Swiss roll is a 2D manifold curved in 3D -- PCA projects linearly, overlapping distant parts. Non-linear methods (t-SNE, UMAP) preserve the intrinsic manifold geometry."
+                },
+                {
+                    "id": 10,
+                    "question": "In portfolio risk analysis, PCA applied to the covariance matrix of 50 stock returns typically shows PC1 explaining 40-60% of variance. What does PC1 represent?",
+                    "options": {
+                        "A": "The highest-returning individual stock",
+                        "B": "The market factor -- the common systematic risk driving correlated asset movements",
+                        "C": "The risk-free interest rate",
+                        "D": "Individual stock-specific (idiosyncratic) risk"
+                    },
+                    "correct": "B",
+                    "explanation": "PC1 captures the largest common variance source: the overall market movement. When the market rises, most stocks rise together. PC2 might capture a sector effect (tech vs. energy). PC3 could be interest rate sensitivity. These are systematic risk factors."
+                },
+                {
+                    "id": 11,
+                    "question": "A bond trader applies PCA to the yield curve (2y, 5y, 10y, 30y maturities). PC1 typically captures 95% of variance and represents a parallel shift. What does PC2 typically represent?",
+                    "options": {
+                        "A": "A parallel shift of the entire yield curve",
+                        "B": "A twist/slope change (short rates up, long rates down or vice versa)",
+                        "C": "Random noise with no interpretation",
+                        "D": "The credit spread between government and corporate bonds"
+                    },
+                    "correct": "B",
+                    "explanation": "In yield curve PCA: PC1 = level (parallel shift, ~95% variance), PC2 = slope/twist (~3-4%), PC3 = curvature/butterfly (~1%). PC2 captures scenarios like the Fed raising short rates while long rates fall (yield curve flattening)."
                 },
                 {
                     "id": 12,
-                    "question": "What does t-SNE try to preserve when reducing dimensionality?",
+                    "question": "What does t-SNE preserve when reducing high-dimensional data to 2D?",
                     "options": {
-                        "A": "Probability distributions of pairwise similarities in high and low dimensions",
-                        "B": "Total variance of the data",
-                        "C": "Linear relationships between features",
-                        "D": "Exact Euclidean distances between all points"
+                        "A": "Total variance of the data (like PCA)",
+                        "B": "Local pairwise similarity structure (neighborhood relationships)",
+                        "C": "Exact Euclidean distances between all points",
+                        "D": "Linear feature correlations"
                     },
-                    "correct": "A",
-                    "explanation": "t-SNE converts pairwise distances to probability distributions (high-dim uses Gaussian, low-dim uses t-distribution) and minimizes the KL divergence between them, preserving local neighborhood structure."
+                    "correct": "B",
+                    "explanation": "t-SNE converts pairwise distances to probability distributions (Gaussian in high-dim, Student-t in low-dim) and minimizes the KL divergence between them. This preserves local neighborhoods: nearby points in high-dim stay nearby in 2D."
                 },
                 {
                     "id": 13,
-                    "question": "What does the perplexity parameter in t-SNE control?",
+                    "question": "t-SNE minimizes $KL(P\\|Q) = \\sum_{ij} p_{ij} \\log\\frac{p_{ij}}{q_{ij}}$. What do $P$ and $Q$ represent?",
                     "options": {
-                        "A": "The effective number of neighbors each point considers",
-                        "B": "The number of output dimensions",
-                        "C": "The learning rate for optimization",
-                        "D": "The total number of iterations"
+                        "A": "$P$: high-dimensional pairwise similarities; $Q$: low-dimensional pairwise similarities",
+                        "B": "$P$: class probabilities; $Q$: predicted probabilities",
+                        "C": "$P$: eigenvalues; $Q$: eigenvectors",
+                        "D": "$P$ and $Q$ are both covariance matrices"
                     },
                     "correct": "A",
-                    "explanation": "Perplexity (typically 5-50) balances attention between local and global structure. Low perplexity focuses on very close neighbors; high perplexity considers broader neighborhood relationships."
+                    "explanation": "$p_{ij}$ measures how similar points $i$ and $j$ are in the original high-dimensional space (using Gaussian kernels). $q_{ij}$ measures their similarity in the low-dimensional embedding (using Student-t distribution). KL divergence penalizes mismatches."
                 },
                 {
                     "id": 14,
-                    "question": "How does low perplexity (e.g., 5) vs high perplexity (e.g., 100) affect t-SNE output?",
+                    "question": "The perplexity parameter in t-SNE (typical range: 5-50) controls:",
                     "options": {
-                        "A": "Low perplexity creates tight local clusters; high perplexity shows more global structure",
-                        "B": "Low perplexity runs faster; high perplexity is more accurate",
-                        "C": "Low perplexity uses t-distribution; high perplexity uses Gaussian",
-                        "D": "Perplexity has no effect on the visualization"
+                        "A": "The number of output dimensions",
+                        "B": "The effective number of neighbors each point considers when computing similarities",
+                        "C": "The learning rate for gradient descent",
+                        "D": "The total number of iterations"
                     },
-                    "correct": "A",
-                    "explanation": "Low perplexity emphasizes very local structure, potentially fragmenting clusters. High perplexity considers more neighbors, revealing broader patterns but potentially merging distinct clusters."
+                    "correct": "B",
+                    "explanation": "Perplexity $\\approx 2^{H(P_i)}$ where $H$ is entropy. Perplexity 30 means each point effectively considers about 30 neighbors. Low perplexity (5) emphasizes very local structure; high perplexity (50) captures more global relationships."
                 },
                 {
                     "id": 15,
-                    "question": "Why does t-SNE use a t-distribution in the low-dimensional space instead of a Gaussian?",
+                    "question": "Why does t-SNE use a Student-t distribution (heavy tails) in the low-dimensional space instead of a Gaussian?",
                     "options": {
-                        "A": "To solve the crowding problem - t-distribution has heavier tails allowing moderate distances",
-                        "B": "To make computation faster",
-                        "C": "To ensure all distances are positive",
-                        "D": "To match the high-dimensional distribution exactly"
+                        "A": "The t-distribution is faster to compute",
+                        "B": "To solve the crowding problem: heavy tails allow dissimilar points to be pushed farther apart in low dimensions",
+                        "C": "The t-distribution matches the high-dimensional Gaussian exactly",
+                        "D": "Gaussians cannot represent 2D data"
                     },
-                    "correct": "A",
-                    "explanation": "The crowding problem occurs because low-dimensional space has less 'room' for moderate distances. The t-distribution's heavier tails allow dissimilar points to be placed farther apart, better preserving local structure."
+                    "correct": "B",
+                    "explanation": "The crowding problem: low-dimensional space has less 'room' for moderate distances. Gaussian tails decay fast, squishing moderately distant points together. The t-distribution's heavy tails provide more space for dissimilar points, preserving cluster separation."
                 },
                 {
                     "id": 16,
-                    "question": "What loss function does t-SNE minimize?",
+                    "question": "A data scientist runs t-SNE twice on the same dataset and gets different-looking plots. Is this a bug?",
                     "options": {
-                        "A": "Kullback-Leibler (KL) divergence between high-dim and low-dim probability distributions",
-                        "B": "Mean squared error between original and projected distances",
-                        "C": "Cross-entropy loss",
-                        "D": "Sum of squared eigenvalues"
+                        "A": "Yes, correct algorithms always produce identical results",
+                        "B": "No, t-SNE is stochastic (random initialization + gradient descent), so different runs yield different embeddings. Only cluster structure should be consistent.",
+                        "C": "No, but only if the perplexity was changed between runs",
+                        "D": "Yes, the implementation must be incorrect"
                     },
-                    "correct": "A",
-                    "explanation": "t-SNE minimizes $KL(P||Q) = \\sum_{ij} p_{ij} \\log\\frac{p_{ij}}{q_{ij}}$ where $P$ represents high-dimensional similarities and $Q$ represents low-dimensional similarities."
+                    "correct": "B",
+                    "explanation": "t-SNE uses random initialization and stochastic gradient descent, so exact positions differ between runs. However, the cluster structure (which groups of points are close) should remain consistent. Always run t-SNE multiple times and compare."
                 },
                 {
                     "id": 17,
-                    "question": "Which of the following is a limitation of t-SNE?",
+                    "question": "Which limitation makes t-SNE unsuitable as a preprocessing step for classification, unlike PCA?",
                     "options": {
-                        "A": "It cannot project new data points without rerunning on the entire dataset",
-                        "B": "It only works with 2D output",
-                        "C": "It requires labeled training data",
-                        "D": "It cannot handle more than 100 data points"
+                        "A": "t-SNE is too fast",
+                        "B": "t-SNE has no explicit mapping function; new data points cannot be projected without rerunning on the entire dataset",
+                        "C": "t-SNE only works with labeled data",
+                        "D": "t-SNE produces higher-dimensional output than input"
                     },
-                    "correct": "A",
-                    "explanation": "t-SNE has no explicit mapping function from high to low dimensions. New points require rerunning the entire algorithm. Also, t-SNE is non-deterministic (different runs give different results) and computationally expensive."
+                    "correct": "B",
+                    "explanation": "PCA learns a linear projection matrix $\\mathbf{W}$ that can transform any new point: $\\mathbf{z}_{\\text{new}} = \\mathbf{W}^\\top \\mathbf{x}_{\\text{new}}$. t-SNE has no such mapping -- adding one new point requires rerunning the $O(n^2)$ algorithm on all data."
                 },
                 {
                     "id": 18,
-                    "question": "Comparing PCA and t-SNE: which statement is correct?",
+                    "question": "Comparing PCA and t-SNE: PCA is $O(p^2 n)$, deterministic, and preserves global variance. Which t-SNE properties make it complementary?",
                     "options": {
-                        "A": "PCA is fast, reversible, and preserves global variance; t-SNE is slow, non-reversible, and preserves local structure",
-                        "B": "t-SNE is faster than PCA for large datasets",
-                        "C": "PCA preserves local structure better than t-SNE",
-                        "D": "Both methods always produce identical results"
+                        "A": "t-SNE is $O(n^2)$, stochastic, non-reversible, and excels at preserving local neighborhood structure",
+                        "B": "t-SNE is faster than PCA and preserves global structure better",
+                        "C": "t-SNE is identical to PCA but with a different name",
+                        "D": "t-SNE is deterministic and reversible like PCA"
                     },
                     "correct": "A",
-                    "explanation": "PCA: $O(p^2n)$ complexity, deterministic, reversible (can reconstruct), preserves global variance. t-SNE: $O(n^2)$ complexity, stochastic, non-reversible, excels at preserving local neighborhoods."
+                    "explanation": "PCA for global structure, dimensionality reduction, and preprocessing. t-SNE for visualization and discovering local cluster structure. Common workflow: PCA first (reduce to 30-50 dims for speed), then t-SNE for 2D visualization."
                 },
                 {
                     "id": 19,
-                    "question": "The Swiss roll is a classic test case for dimensionality reduction. Why does PCA fail on it while t-SNE succeeds?",
+                    "question": "A risk analyst applies PCA to 20 credit risk features for 5,000 loan applications. The first 5 PCs explain 92% of variance. What are the practical benefits of using these 5 PCs instead of all 20 features?",
                     "options": {
-                        "A": "The Swiss roll has non-linear structure that PCA's linear projections cannot unfold",
-                        "B": "PCA cannot handle 3D data",
-                        "C": "The Swiss roll has too many data points",
-                        "D": "PCA requires the data to be normally distributed"
+                        "A": "No benefit; all 20 features should always be used",
+                        "B": "Reduced noise (discarded PCs mostly capture noise), faster model training, reduced multicollinearity, and lower overfitting risk, with only 8% information loss",
+                        "C": "The only benefit is visualization in 5D",
+                        "D": "PCA increases the number of features, not reduces them"
                     },
-                    "correct": "A",
-                    "explanation": "The Swiss roll is a 2D manifold curved in 3D space. PCA projects linearly, overlapping distant parts of the roll. t-SNE respects the intrinsic geometry by preserving local distances along the manifold surface."
+                    "correct": "B",
+                    "explanation": "Using 5 PCs instead of 20 features: (1) removes noise in the discarded 8%, (2) trains downstream models 4x faster, (3) eliminates multicollinearity (PCs are orthogonal), (4) reduces overfitting risk with fewer parameters. The trade-off is 8% information loss and reduced interpretability."
                 },
                 {
                     "id": 20,
-                    "question": "In portfolio risk analysis, PCA is applied to asset return covariance. What does the first principal component typically represent?",
+                    "question": "UMAP is a newer alternative to t-SNE. What is its main advantage over t-SNE?",
                     "options": {
-                        "A": "The market factor - the common source of systematic risk affecting all assets",
-                        "B": "The risk-free rate",
-                        "C": "The highest returning asset",
-                        "D": "Individual stock-specific risk"
+                        "A": "UMAP is faster ($O(n\\log n)$ vs $O(n^2)$), better preserves global structure, and supports embedding new points",
+                        "B": "UMAP always produces better visualizations",
+                        "C": "UMAP requires no hyperparameters",
+                        "D": "UMAP is a linear method like PCA"
                     },
                     "correct": "A",
-                    "explanation": "In finance, PC1 often captures 'market risk' - the correlated movement of assets with the overall market. Subsequent PCs may capture sector effects, interest rate sensitivity, or other systematic factors."
+                    "explanation": "UMAP advantages: (1) $O(n\\log n)$ complexity (scalable to millions of points), (2) better global structure preservation through cross-entropy optimization, (3) supports transform() for new points. Both t-SNE and UMAP require hyperparameter tuning (perplexity vs. n_neighbors)."
                 }
             ]
         };

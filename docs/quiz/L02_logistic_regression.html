@@ -339,243 +339,243 @@
             questions: [
                 {
                     "id": 1,
-                    "question": "What is the range of the sigmoid function $\\sigma(z)$?",
+                    "question": "What is the sigmoid function $\\sigma(z)$ and what is its range?",
                     "options": {
-                        "A": "$(0, 1)$",
-                        "B": "$(-1, 1)$",
-                        "C": "$[0, 1]$",
-                        "D": "$(-\\infty, \\infty)$"
+                        "A": "$\\sigma(z) = \\frac{1}{1+e^{-z}}$, range $(0, 1)$",
+                        "B": "$\\sigma(z) = \\frac{e^z - e^{-z}}{e^z + e^{-z}}$, range $(-1, 1)$",
+                        "C": "$\\sigma(z) = \\frac{1}{1+e^{-z}}$, range $[0, 1]$",
+                        "D": "$\\sigma(z) = e^{-z^2}$, range $(0, 1]$"
                     },
                     "correct": "A",
-                    "explanation": "The sigmoid function $\\sigma(z) = \\frac{1}{1+e^{-z}}$ outputs values strictly between 0 and 1, asymptotically approaching but never reaching exactly 0 or 1."
+                    "explanation": "The sigmoid function $\\sigma(z) = \\frac{1}{1+e^{-z}}$ maps any real number to the open interval $(0, 1)$. It asymptotically approaches 0 and 1 but never reaches them. At $z=0$, $\\sigma(0) = 0.5$."
                 },
                 {
                     "id": 2,
-                    "question": "What is the value of $\\sigma(0)$ for the sigmoid function?",
+                    "question": "In logistic regression, the logit (log-odds) is defined as $\\log\\frac{p}{1-p} = \\beta_0 + \\beta_1 x_1 + \\cdots + \\beta_p x_p$. Why is this called a generalized linear model?",
                     "options": {
-                        "A": "$0$",
-                        "B": "$0.5$",
-                        "C": "$1$",
-                        "D": "Undefined"
+                        "A": "Because the target variable $y$ is linearly related to features",
+                        "B": "Because a transformation of the expected response (the logit) is linear in the parameters",
+                        "C": "Because the sigmoid is a linear function",
+                        "D": "Because it uses the same loss function as linear regression"
                     },
                     "correct": "B",
-                    "explanation": "At $z=0$: $\\sigma(0) = \\frac{1}{1+e^{0}} = \\frac{1}{1+1} = \\frac{1}{2} = 0.5$. This is the decision boundary threshold when using default settings."
+                    "explanation": "The logit link function $g(p) = \\log\\frac{p}{1-p}$ transforms the probability into a quantity that is linear in the parameters. The model is linear in log-odds space, not in probability space."
                 },
                 {
                     "id": 3,
-                    "question": "In logistic regression, what does the log-odds (logit) represent?",
+                    "question": "Compute $\\sigma(0)$ for the sigmoid function. What makes this value significant?",
                     "options": {
-                        "A": "The probability of the positive class",
-                        "B": "The linear combination $\\beta_0 + \\beta_1 x_1 + ... + \\beta_n x_n$",
-                        "C": "The squared error loss",
-                        "D": "The classification threshold"
+                        "A": "$\\sigma(0) = 0$; it represents the minimum probability",
+                        "B": "$\\sigma(0) = 0.5$; it is the default decision boundary where $p = 0.5$",
+                        "C": "$\\sigma(0) = 1$; it represents certainty",
+                        "D": "$\\sigma(0)$ is undefined"
                     },
                     "correct": "B",
-                    "explanation": "The logit (log-odds) is $\\log\\frac{p}{1-p} = \\beta_0 + \\beta_1 x_1 + ... + \\beta_n x_n$. The linear combination of features maps directly to the log-odds, which is why logistic regression is a generalized linear model."
+                    "explanation": "$\\sigma(0) = \\frac{1}{1+e^{0}} = \\frac{1}{2} = 0.5$. When the linear combination $\\mathbf{w}^\\top \\mathbf{x} = 0$, the predicted probability is exactly 0.5, which is the default classification boundary."
                 },
                 {
                     "id": 4,
-                    "question": "If a coefficient $\\beta_j = 0.693$ in logistic regression, what is the odds ratio $e^{\\beta_j}$?",
+                    "question": "In a credit scoring model, a coefficient $\\beta = 0.693$ for 'number of late payments'. What is the odds ratio $e^{\\beta}$ and its interpretation?",
                     "options": {
-                        "A": "$0.5$",
-                        "B": "$1.0$",
-                        "C": "$2.0$",
-                        "D": "$0.693$"
+                        "A": "$e^{0.693} \\approx 2.0$; each late payment doubles the odds of default",
+                        "B": "$e^{0.693} \\approx 2.0$; each late payment doubles the probability of default",
+                        "C": "$e^{0.693} \\approx 0.5$; each late payment halves the odds of default",
+                        "D": "$e^{0.693} \\approx 1.0$; late payments have no effect"
                     },
-                    "correct": "C",
-                    "explanation": "The odds ratio is $e^{\\beta_j} = e^{0.693} \\approx 2.0$. This means a one-unit increase in feature $x_j$ doubles the odds of the positive class, holding other features constant."
+                    "correct": "A",
+                    "explanation": "The odds ratio $e^{0.693} \\approx 2.0$ means each additional late payment multiplies the odds of default by 2 (doubles them), holding other features constant. This affects odds, not probability directly. The probability change depends on the baseline probability."
                 },
                 {
                     "id": 5,
-                    "question": "Why can't we use Mean Squared Error (MSE) for logistic regression optimization?",
+                    "question": "Why does logistic regression use binary cross-entropy $L = -[y\\log(\\hat{p}) + (1-y)\\log(1-\\hat{p})]$ instead of MSE?",
                     "options": {
-                        "A": "MSE is always zero for classification",
-                        "B": "MSE creates a non-convex loss surface with many local minima",
-                        "C": "MSE cannot handle probabilities",
-                        "D": "MSE requires continuous targets"
+                        "A": "Cross-entropy is faster to compute than MSE",
+                        "B": "MSE combined with the sigmoid creates a non-convex loss surface; cross-entropy is convex, guaranteeing a global minimum",
+                        "C": "MSE cannot handle values between 0 and 1",
+                        "D": "Cross-entropy always produces smaller loss values"
                     },
                     "correct": "B",
-                    "explanation": "When combined with the sigmoid function, MSE creates a non-convex loss surface with multiple local minima, making optimization difficult. Binary cross-entropy (log-loss) is convex, guaranteeing a global minimum."
+                    "explanation": "MSE applied to sigmoid outputs creates multiple local minima (non-convex), making gradient descent unreliable. Binary cross-entropy is convex for logistic regression, ensuring gradient descent finds the global optimum."
                 },
                 {
                     "id": 6,
-                    "question": "What is the binary cross-entropy loss for a single sample with true label $y=1$ and predicted probability $\\hat{p}=0.8$?",
+                    "question": "Calculate the binary cross-entropy loss for a single sample with $y=1$ and $\\hat{p}=0.9$.",
                     "options": {
-                        "A": "$-\\log(0.8) \\approx 0.223$",
-                        "B": "$-\\log(0.2) \\approx 1.609$",
-                        "C": "$(1-0.8)^2 = 0.04$",
-                        "D": "$\\lvert 1-0.8 \\rvert = 0.2$"
+                        "A": "$-\\log(0.9) \\approx 0.105$",
+                        "B": "$-\\log(0.1) \\approx 2.303$",
+                        "C": "$(1-0.9)^2 = 0.01$",
+                        "D": "$-0.9\\log(0.9) \\approx 0.095$"
                     },
                     "correct": "A",
-                    "explanation": "Binary cross-entropy: $L = -[y\\log(\\hat{p}) + (1-y)\\log(1-\\hat{p})]$. With $y=1$: $L = -\\log(0.8) \\approx 0.223$. The loss penalizes confident wrong predictions more heavily."
+                    "explanation": "With $y=1$: $L = -[1 \\cdot \\log(0.9) + 0 \\cdot \\log(0.1)] = -\\log(0.9) \\approx 0.105$. A confident correct prediction ($\\hat{p}=0.9$ for $y=1$) yields small loss. If $\\hat{p}=0.1$ for $y=1$, loss would be $-\\log(0.1) \\approx 2.303$ -- much larger."
                 },
                 {
                     "id": 7,
-                    "question": "What is the gradient of the log-loss with respect to the linear combination $z = \\mathbf{w}^T\\mathbf{x}$?",
+                    "question": "The gradient of the log-loss with respect to the linear combination $z$ is $\\frac{\\partial L}{\\partial z} = \\sigma(z) - y$. Why is this gradient elegant?",
                     "options": {
-                        "A": "$y - \\sigma(z)$",
-                        "B": "$\\sigma(z) - y$",
-                        "C": "$\\sigma(z)(1-\\sigma(z))$",
-                        "D": "$-\\frac{y}{\\sigma(z)}$"
+                        "A": "It is always zero, meaning the model converges instantly",
+                        "B": "It is simply the prediction error (predicted probability minus true label), identical in form to linear regression's gradient",
+                        "C": "It involves the second derivative of the sigmoid",
+                        "D": "It does not depend on the predicted probability"
                     },
                     "correct": "B",
-                    "explanation": "The gradient of log-loss is elegantly simple: $\\frac{\\partial L}{\\partial z} = \\sigma(z) - y$, which is the predicted probability minus the true label. This drives weights toward correct predictions."
+                    "explanation": "The gradient $\\sigma(z) - y$ is the difference between predicted probability and true label. When the model predicts correctly ($\\sigma(z) \\approx y$), the gradient is near zero. This has the same form as linear regression's gradient $\\hat{y} - y$, making the update rule intuitive."
                 },
                 {
                     "id": 8,
-                    "question": "What shape is the decision boundary in standard logistic regression?",
+                    "question": "A fraud detection model has: TP=90, FP=30, TN=870, FN=10. Calculate the precision.",
                     "options": {
-                        "A": "Curved (nonlinear)",
-                        "B": "Linear (hyperplane)",
-                        "C": "Circular",
-                        "D": "Depends on the data"
+                        "A": "$\\frac{90}{120} = 0.75$",
+                        "B": "$\\frac{90}{100} = 0.90$",
+                        "C": "$\\frac{90}{1000} = 0.09$",
+                        "D": "$\\frac{870}{900} = 0.967$"
                     },
-                    "correct": "B",
-                    "explanation": "Standard logistic regression produces a linear decision boundary defined by $\\mathbf{w}^T\\mathbf{x} + b = 0$. For nonlinear boundaries, polynomial features or kernel methods must be added."
+                    "correct": "A",
+                    "explanation": "Precision = $\\frac{TP}{TP+FP} = \\frac{90}{90+30} = \\frac{90}{120} = 0.75$. Of all transactions flagged as fraud, 75% were actually fraudulent. The other 25% were false alarms."
                 },
                 {
                     "id": 9,
-                    "question": "If you lower the classification threshold from 0.5 to 0.3, what happens?",
+                    "question": "Using the same fraud model (TP=90, FP=30, TN=870, FN=10), calculate the recall. Why does recall matter more than accuracy here?",
                     "options": {
-                        "A": "Precision increases, recall decreases",
-                        "B": "Precision decreases, recall increases",
-                        "C": "Both precision and recall increase",
-                        "D": "Both precision and recall decrease"
+                        "A": "Recall = $\\frac{90}{100} = 0.90$; missing fraud (FN) is far more costly than a false alarm (FP)",
+                        "B": "Recall = $\\frac{90}{120} = 0.75$; recall equals precision for balanced data",
+                        "C": "Recall = $\\frac{960}{1000} = 0.96$; accuracy is always best",
+                        "D": "Recall = $\\frac{870}{900} = 0.967$; specificity is what matters"
                     },
-                    "correct": "B",
-                    "explanation": "A lower threshold classifies more samples as positive, catching more true positives (higher recall) but also more false positives (lower precision). This tradeoff is fundamental to threshold selection."
+                    "correct": "A",
+                    "explanation": "Recall = $\\frac{TP}{TP+FN} = \\frac{90}{100} = 0.90$. In fraud detection, each missed fraud (FN) can cost thousands. Accuracy is $\\frac{960}{1000} = 96\\%$, but predicting 'no fraud' for everyone gives $97\\%$ accuracy with 0% recall."
                 },
                 {
                     "id": 10,
-                    "question": "In multiclass logistic regression, what does the softmax function ensure?",
+                    "question": "If precision = 0.75 and recall = 0.90, what is the F1 score?",
                     "options": {
-                        "A": "Outputs sum to 1 across all classes",
-                        "B": "Each output is between -1 and 1",
-                        "C": "Gradients don't vanish",
-                        "D": "Classes are linearly separable"
+                        "A": "$\\frac{2 \\times 0.75 \\times 0.90}{0.75 + 0.90} \\approx 0.818$",
+                        "B": "$\\frac{0.75 + 0.90}{2} = 0.825$",
+                        "C": "$0.75 \\times 0.90 = 0.675$",
+                        "D": "$\\sqrt{0.75 \\times 0.90} \\approx 0.822$"
                     },
                     "correct": "A",
-                    "explanation": "Softmax converts raw scores (logits) into a valid probability distribution: $P(y=k) = \\frac{e^{z_k}}{\\sum_j e^{z_j}}$. The probabilities across all K classes sum to exactly 1."
+                    "explanation": "F1 is the harmonic mean: $F1 = \\frac{2 \\cdot P \\cdot R}{P + R} = \\frac{2 \\times 0.75 \\times 0.90}{1.65} \\approx 0.818$. The harmonic mean penalizes imbalance more than the arithmetic mean (0.825), rewarding balanced precision and recall."
                 },
                 {
                     "id": 11,
-                    "question": "In a confusion matrix, what does the cell at row 'Actual Positive' and column 'Predicted Negative' represent?",
+                    "question": "In a confusion matrix for loan default prediction, what does a False Negative represent?",
                     "options": {
-                        "A": "True Positive (TP)",
-                        "B": "True Negative (TN)",
-                        "C": "False Positive (FP)",
-                        "D": "False Negative (FN)"
+                        "A": "A defaulter correctly identified as high-risk",
+                        "B": "A good borrower incorrectly flagged as high-risk",
+                        "C": "A defaulter incorrectly classified as low-risk (approved for a loan they will default on)",
+                        "D": "A good borrower correctly approved"
                     },
-                    "correct": "D",
-                    "explanation": "False Negatives (FN) are actual positives incorrectly predicted as negative - the model 'missed' them. In fraud detection, these are fraudulent transactions classified as legitimate."
+                    "correct": "C",
+                    "explanation": "A False Negative means the model predicted 'no default' (negative) but the borrower actually defaulted (positive). In banking, this is the costliest error: the bank approved a loan that will result in losses."
                 },
                 {
                     "id": 12,
-                    "question": "Calculate precision given: TP=80, FP=20, TN=180, FN=20.",
+                    "question": "On an ROC curve, what does the point (FPR=0, TPR=1) represent, and what does AUC = 0.5 mean?",
                     "options": {
-                        "A": "$0.80$",
-                        "B": "$0.90$",
-                        "C": "$0.75$",
-                        "D": "$0.85$"
+                        "A": "(0,1) is a perfect classifier; AUC = 0.5 means performance equal to random guessing",
+                        "B": "(0,1) is a random classifier; AUC = 0.5 is perfect",
+                        "C": "(0,1) is the worst classifier; AUC = 0.5 is average",
+                        "D": "(0,1) is unachievable; AUC cannot equal 0.5"
                     },
                     "correct": "A",
-                    "explanation": "Precision = $\\frac{TP}{TP+FP} = \\frac{80}{80+20} = \\frac{80}{100} = 0.80$. Of all predicted positives, 80% were actually positive."
+                    "explanation": "The point (0,1) means TPR=1 (all positives caught) and FPR=0 (no false alarms) -- perfection. AUC = 0.5 is the diagonal line, equivalent to random coin flipping. AUC ranges from 0.5 (useless) to 1.0 (perfect)."
                 },
                 {
                     "id": 13,
-                    "question": "Using the same values (TP=80, FP=20, TN=180, FN=20), what is the recall?",
+                    "question": "A bank's credit model has AUC = 0.92. If you lower the classification threshold from 0.5 to 0.3, what happens to precision and recall?",
                     "options": {
-                        "A": "$0.75$",
-                        "B": "$0.80$",
-                        "C": "$0.85$",
-                        "D": "$0.90$"
+                        "A": "Precision increases, recall decreases",
+                        "B": "Precision decreases, recall increases",
+                        "C": "Both increase because AUC is high",
+                        "D": "Neither changes because AUC is fixed"
                     },
                     "correct": "B",
-                    "explanation": "Recall = $\\frac{TP}{TP+FN} = \\frac{80}{80+20} = \\frac{80}{100} = 0.80$. Of all actual positives, 80% were correctly identified."
+                    "explanation": "Lowering the threshold classifies more applicants as high-risk (positive), catching more true defaulters (higher recall) but also flagging more good borrowers (lower precision). The AUC stays the same -- it is threshold-independent."
                 },
                 {
                     "id": 14,
-                    "question": "If precision = 0.6 and recall = 0.9, what is the F1 score?",
+                    "question": "Why is the precision-recall curve preferred over ROC for fraud detection where only 0.1% of transactions are fraudulent?",
                     "options": {
-                        "A": "$0.72$",
-                        "B": "$0.75$",
-                        "C": "$0.80$",
-                        "D": "$0.85$"
+                        "A": "PR curves are always better than ROC curves",
+                        "B": "With 99.9% negatives, even many false positives produce a small FPR, making ROC misleadingly optimistic",
+                        "C": "ROC cannot plot when classes are imbalanced",
+                        "D": "PR curves do not require probability outputs"
                     },
-                    "correct": "A",
-                    "explanation": "F1 = $\\frac{2 \\cdot precision \\cdot recall}{precision + recall} = \\frac{2 \\cdot 0.6 \\cdot 0.9}{0.6 + 0.9} = \\frac{1.08}{1.5} = 0.72$. F1 is the harmonic mean, penalizing imbalanced precision/recall."
+                    "correct": "B",
+                    "explanation": "With 99.9% negatives, FPR = FP/(FP+TN) stays tiny even with many false positives, so ROC looks good. PR focuses on the positive class: Precision = TP/(TP+FP) directly reveals false alarm rates among flagged transactions."
                 },
                 {
                     "id": 15,
-                    "question": "On an ROC curve, what does the point (0, 1) represent?",
+                    "question": "The softmax function for multiclass classification is $P(y=k) = \\frac{e^{z_k}}{\\sum_{j=1}^{K} e^{z_j}}$. What property makes it a valid probability distribution?",
                     "options": {
-                        "A": "Random classifier",
-                        "B": "Perfect classifier",
-                        "C": "Always predict negative",
-                        "D": "Always predict positive"
+                        "A": "All outputs are negative",
+                        "B": "Each output is in $(0,1)$ and all outputs sum to exactly 1",
+                        "C": "Outputs are always integers",
+                        "D": "The largest output is always 1"
                     },
                     "correct": "B",
-                    "explanation": "The point (FPR=0, TPR=1) means zero false positives and all true positives correctly identified - a perfect classifier. The ROC curve measures how close a model gets to this ideal."
+                    "explanation": "Softmax maps raw logits to a valid probability distribution: each output is positive (exponential guarantees this) and they sum to 1 by construction ($\\sum_k \\frac{e^{z_k}}{\\sum_j e^{z_j}} = 1$). For $K=2$ classes, softmax reduces to the sigmoid."
                 },
                 {
                     "id": 16,
-                    "question": "What does an AUC of 0.5 indicate about a classifier?",
+                    "question": "What effect does L1 regularization have on logistic regression, and when is it preferred over L2?",
                     "options": {
-                        "A": "Perfect classification",
-                        "B": "Performance equivalent to random guessing",
-                        "C": "The model always predicts the majority class",
-                        "D": "High precision but low recall"
+                        "A": "L1 shrinks all coefficients equally; preferred when all features are important",
+                        "B": "L1 drives some coefficients exactly to zero (feature selection); preferred when many features are irrelevant",
+                        "C": "L1 increases model complexity; preferred for small datasets",
+                        "D": "L1 and L2 produce identical results"
                     },
                     "correct": "B",
-                    "explanation": "AUC = 0.5 corresponds to the diagonal line on the ROC curve, equivalent to random coin-flip classification. AUC ranges from 0.5 (random) to 1.0 (perfect), with values below 0.5 indicating worse-than-random (invert predictions)."
+                    "explanation": "L1 (Lasso) adds $\\lambda\\sum|w_j|$ to the loss, producing sparse solutions where irrelevant features get $w_j = 0$. This is automatic feature selection. L2 (Ridge) shrinks coefficients but never to exactly zero. Use L1 when you suspect many features are noise."
                 },
                 {
                     "id": 17,
-                    "question": "Why is the precision-recall curve preferred over ROC for highly imbalanced datasets?",
+                    "question": "A Wald test statistic for coefficient $\\beta_j$ is $W = \\frac{\\hat{\\beta}_j}{\\text{SE}(\\hat{\\beta}_j)}$. What null hypothesis does it test?",
                     "options": {
-                        "A": "PR curves are always above ROC curves",
-                        "B": "ROC's FPR is inflated by the large negative class, masking poor performance",
-                        "C": "PR curves don't require a threshold",
-                        "D": "ROC cannot handle imbalanced data"
+                        "A": "$H_0$: The model has no predictive power",
+                        "B": "$H_0$: $\\beta_j = 0$ (the feature has no effect on the log-odds)",
+                        "C": "$H_0$: The feature is perfectly correlated with the target",
+                        "D": "$H_0$: The odds ratio equals 2"
                     },
                     "correct": "B",
-                    "explanation": "With many negatives, even a high number of false positives yields a small FPR, making ROC look good. PR curves focus on the minority positive class, revealing true model performance on imbalanced data like fraud detection."
+                    "explanation": "The Wald test checks whether an individual coefficient is significantly different from zero. If $\\beta_j = 0$, the feature has no effect on the log-odds (and hence no effect on the predicted probability). Reject $H_0$ if $|W|$ exceeds the critical value."
                 },
                 {
                     "id": 18,
-                    "question": "What effect does L1 regularization have on logistic regression coefficients?",
+                    "question": "For class imbalance with 97% negatives and 3% positives, a model predicting 'negative' for all samples achieves 97% accuracy. Why is this misleading?",
                     "options": {
-                        "A": "Makes all coefficients equal",
-                        "B": "Encourages sparse solutions (some coefficients become exactly zero)",
-                        "C": "Always increases model accuracy",
-                        "D": "Removes the need for feature scaling"
+                        "A": "97% accuracy is always a good model",
+                        "B": "Accuracy ignores the positive class entirely; recall = 0% means no positives are detected",
+                        "C": "The model should achieve 100% accuracy on imbalanced data",
+                        "D": "Accuracy and recall always agree"
                     },
                     "correct": "B",
-                    "explanation": "L1 (Lasso) regularization adds $\\lambda\\lVert\\mathbf{w}\\rVert_1$ to the loss, producing sparse solutions where irrelevant feature coefficients become exactly zero. This performs automatic feature selection."
+                    "explanation": "Predicting all negatives gives TP=0, FN=all positives, so recall = 0/(0+all) = 0%. Despite 97% accuracy, the model catches zero fraud/defaults. Use F1, AUC, or recall for imbalanced problems; set class_weight='balanced' during training."
                 },
                 {
                     "id": 19,
-                    "question": "To handle class imbalance with 95% negatives and 5% positives, which approach is most appropriate?",
+                    "question": "A bank uses logistic regression for loan approval. Coefficient for 'debt-to-income ratio' is $\\beta = 0.8$. A customer's DTI increases by 2 units. By what factor do the odds of default change?",
                     "options": {
-                        "A": "Use accuracy as the evaluation metric",
-                        "B": "Set class_weight='balanced' or adjust the decision threshold",
-                        "C": "Remove all negative samples",
-                        "D": "Use linear regression instead"
+                        "A": "$e^{0.8} \\approx 2.23$",
+                        "B": "$e^{2 \\times 0.8} = e^{1.6} \\approx 4.95$",
+                        "C": "$2 \\times 0.8 = 1.6$",
+                        "D": "$0.8^2 = 0.64$"
                     },
                     "correct": "B",
-                    "explanation": "class_weight='balanced' automatically adjusts weights inversely proportional to class frequencies, or you can lower the threshold below 0.5. Accuracy is misleading here - predicting all negatives achieves 95% accuracy but 0% recall."
+                    "explanation": "For a change of $\\Delta x$ units, the odds multiply by $e^{\\beta \\cdot \\Delta x}$. With $\\beta = 0.8$ and $\\Delta x = 2$: odds ratio = $e^{0.8 \\times 2} = e^{1.6} \\approx 4.95$. The customer's odds of default nearly quintuple."
                 },
                 {
                     "id": 20,
-                    "question": "In a credit scoring model, a coefficient $\\beta = 0.4$ for 'number of late payments' means:",
+                    "question": "You compare two credit models: Model A (AUC = 0.88, 20 features) vs. Model B (AUC = 0.86, 5 features). A regulator demands model interpretability. Which model should you deploy and why?",
                     "options": {
-                        "A": "Each late payment increases default probability by 40%",
-                        "B": "Each late payment multiplies the odds of default by $e^{0.4} \\approx 1.49$",
-                        "C": "Late payments decrease default risk",
-                        "D": "The feature is not statistically significant"
+                        "A": "Model A because it has higher AUC, which always trumps interpretability",
+                        "B": "Model B because 5 features are easier to explain and the AUC difference is small; regulators require explainable adverse action reasons",
+                        "C": "Neither; AUC below 0.90 is unacceptable",
+                        "D": "Model A because more features always means better generalization"
                     },
                     "correct": "B",
-                    "explanation": "In logistic regression, coefficients affect log-odds. A coefficient of 0.4 means each additional late payment multiplies the odds of default by $e^{0.4} \\approx 1.49$ (49% increase in odds), not probability directly."
+                    "explanation": "A 0.02 AUC difference is modest, while 5 vs. 20 features dramatically improves interpretability. Regulations (e.g., ECOA) require specific reasons for denial. With 5 features, each coefficient has a clear interpretation: 'Your debt-to-income ratio contributed most to the denial.'"
                 }
             ]
         };

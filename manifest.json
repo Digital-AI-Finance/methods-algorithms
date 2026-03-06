@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "semester": "Spring 2026",
     "created": "2026-01-07",
-    "updated": "2026-01-10"
+    "updated": "2026-03-06"
   },
   "topics": [
     {
@@ -1023,7 +1023,9 @@
       "questions": 15,
       "duration_minutes": 30,
       "file": "quizzes/quiz1_topics_1_2.xml",
-      "status": "complete"
+      "status": "complete",
+      "type": "moodle",
+      "inventory_ref": "moodle_quiz1"
     },
     {
       "id": "quiz2",
@@ -1035,7 +1037,9 @@
       "questions": 15,
       "duration_minutes": 30,
       "file": "quizzes/quiz2_topics_3_4.xml",
-      "status": "complete"
+      "status": "complete",
+      "type": "moodle",
+      "inventory_ref": "moodle_quiz2"
     },
     {
       "id": "quiz3",
@@ -1047,7 +1051,9 @@
       "questions": 15,
       "duration_minutes": 30,
       "file": "quizzes/quiz3_topics_5_6.xml",
-      "status": "complete"
+      "status": "complete",
+      "type": "moodle",
+      "inventory_ref": "moodle_quiz3"
     },
     {
       "id": "quiz_L01",
@@ -1058,7 +1064,9 @@
       "questions": 20,
       "duration_minutes": 25,
       "file": "docs/quiz/L01_linear_regression.html",
-      "status": "complete"
+      "status": "complete",
+      "type": "canonical",
+      "inventory_ref": "L01_canonical"
     },
     {
       "id": "quiz_L02",
@@ -1069,7 +1077,9 @@
       "questions": 20,
       "duration_minutes": 25,
       "file": "docs/quiz/L02_logistic_regression.html",
-      "status": "complete"
+      "status": "complete",
+      "type": "canonical",
+      "inventory_ref": "L02_canonical"
     },
     {
       "id": "quiz_L03",
@@ -1080,7 +1090,9 @@
       "questions": 20,
       "duration_minutes": 25,
       "file": "docs/quiz/L03_knn_kmeans.html",
-      "status": "complete"
+      "status": "complete",
+      "type": "canonical",
+      "inventory_ref": "L03_canonical"
     },
     {
       "id": "quiz_L04",
@@ -1091,7 +1103,9 @@
       "questions": 20,
       "duration_minutes": 25,
       "file": "docs/quiz/L04_random_forests.html",
-      "status": "complete"
+      "status": "complete",
+      "type": "canonical",
+      "inventory_ref": "L04_canonical"
     },
     {
       "id": "quiz_L05",
@@ -1102,7 +1116,9 @@
       "questions": 20,
       "duration_minutes": 25,
       "file": "docs/quiz/L05_pca_tsne.html",
-      "status": "complete"
+      "status": "complete",
+      "type": "canonical",
+      "inventory_ref": "L05_canonical"
     },
     {
       "id": "quiz_L06",
@@ -1113,7 +1129,74 @@
       "questions": 20,
       "duration_minutes": 25,
       "file": "docs/quiz/L06_embeddings_rl.html",
-      "status": "complete"
+      "status": "complete",
+      "type": "canonical",
+      "inventory_ref": "L06_canonical"
+    },
+    {
+      "id": "quiz_L03_knn_deep",
+      "title": "Quiz: L03 KNN (Deep Dive)",
+      "topics": [
+        "L03"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L03_knn.html",
+      "status": "complete",
+      "type": "supplementary",
+      "inventory_ref": "L03_knn_deep"
+    },
+    {
+      "id": "quiz_L03_kmeans_deep",
+      "title": "Quiz: L03 K-Means (Deep Dive)",
+      "topics": [
+        "L03"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L03_kmeans.html",
+      "status": "complete",
+      "type": "supplementary",
+      "inventory_ref": "L03_kmeans_deep"
+    },
+    {
+      "id": "quiz_L03_accessible",
+      "title": "Quiz: L03 KNN & K-Means (Accessible)",
+      "topics": [
+        "L03"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L03_knn_kmeans_accessible.html",
+      "status": "complete",
+      "type": "supplementary",
+      "inventory_ref": "L03_accessible"
+    },
+    {
+      "id": "quiz_L04_dt_deep",
+      "title": "Quiz: L04 Decision Trees (Deep Dive)",
+      "topics": [
+        "L04"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L04_decision_trees.html",
+      "status": "complete",
+      "type": "supplementary",
+      "inventory_ref": "L04_decision_trees_deep"
+    },
+    {
+      "id": "quiz_L04_ensemble_deep",
+      "title": "Quiz: L04 Ensemble Methods (Deep Dive)",
+      "topics": [
+        "L04"
+      ],
+      "questions": 20,
+      "duration_minutes": 25,
+      "file": "docs/quiz/L04_ensemble_methods.html",
+      "status": "complete",
+      "type": "supplementary",
+      "inventory_ref": "L04_ensemble_deep"
     }
   ],
   "presentations": {
