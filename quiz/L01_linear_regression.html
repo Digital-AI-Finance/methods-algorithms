@@ -339,243 +339,243 @@
             questions: [
                 {
                     "id": 1,
-                    "question": "What is the closed-form solution for Ordinary Least Squares (OLS)?",
+                    "question": "What is the closed-form OLS solution called the normal equation?",
                     "options": {
-                        "A": "$\\beta = (X^T X)^{-1} X^T y$",
-                        "B": "$\\beta = X^T y$",
-                        "C": "$\\beta = (X X^T)^{-1} y$",
-                        "D": "$\\beta = X^{-1} y$"
+                        "A": "$\\hat{\\boldsymbol{\\beta}} = (\\mathbf{X}^\\top \\mathbf{X})^{-1} \\mathbf{X}^\\top \\mathbf{y}$",
+                        "B": "$\\hat{\\boldsymbol{\\beta}} = \\mathbf{X}^\\top \\mathbf{y}$",
+                        "C": "$\\hat{\\boldsymbol{\\beta}} = (\\mathbf{X} \\mathbf{X}^\\top)^{-1} \\mathbf{y}$",
+                        "D": "$\\hat{\\boldsymbol{\\beta}} = \\mathbf{X}^{-1} \\mathbf{y}$"
                     },
                     "correct": "A",
-                    "explanation": "The normal equation $\\beta = (X^T X)^{-1} X^T y$ minimizes the sum of squared errors analytically by setting the gradient to zero."
+                    "explanation": "Setting the gradient of the SSE loss to zero yields $\\mathbf{X}^\\top \\mathbf{X} \\hat{\\boldsymbol{\\beta}} = \\mathbf{X}^\\top \\mathbf{y}$, which gives the normal equation $\\hat{\\boldsymbol{\\beta}} = (\\mathbf{X}^\\top \\mathbf{X})^{-1} \\mathbf{X}^\\top \\mathbf{y}$."
                 },
                 {
                     "id": 2,
-                    "question": "In the design matrix $X$ for linear regression with $n$ samples and $p$ features, what are the dimensions of $X$?",
+                    "question": "What does the Gauss-Markov theorem guarantee about OLS under assumptions 1-4 (linearity, exogeneity, homoscedasticity, full rank)?",
                     "options": {
-                        "A": "$n \\times p$",
-                        "B": "$p \\times n$",
-                        "C": "$n \\times (p+1)$",
-                        "D": "$(p+1) \\times n$"
+                        "A": "OLS always produces the highest $R^2$",
+                        "B": "OLS is the Best Linear Unbiased Estimator (BLUE)",
+                        "C": "OLS residuals are normally distributed",
+                        "D": "OLS minimizes mean absolute error"
                     },
-                    "correct": "C",
-                    "explanation": "The design matrix $X$ has dimensions $n \\times (p+1)$ where the extra column is for the intercept term (column of ones)."
+                    "correct": "B",
+                    "explanation": "Gauss-Markov proves OLS has the lowest variance among all linear unbiased estimators (BLUE). Normality (assumption 5) is not required for unbiasedness, only for exact t-tests and confidence intervals."
                 },
                 {
                     "id": 3,
-                    "question": "What does the Sum of Squared Errors (SSE) loss function measure?",
+                    "question": "A property valuation model yields: Price = 50,000 + 200 $\\times$ Size + 15,000 $\\times$ Bedrooms $-$ 1,000 $\\times$ Age. For a 120 sqm, 3-bedroom, 10-year-old apartment, what is the predicted price?",
                     "options": {
-                        "A": "The average absolute difference between predictions and actual values",
-                        "B": "The sum of squared differences between predictions and actual values",
-                        "C": "The variance of the residuals",
-                        "D": "The correlation between features and target"
+                        "A": "$89,000",
+                        "B": "$99,000",
+                        "C": "$109,000",
+                        "D": "$119,000"
                     },
-                    "correct": "B",
-                    "explanation": "SSE = $\\sum_{i=1}^{n}(y_i - \\hat{y}_i)^2$ measures the total squared deviation of predictions from actual values."
+                    "correct": "C",
+                    "explanation": "Price = 50,000 + 200(120) + 15,000(3) $-$ 1,000(10) = 50,000 + 24,000 + 45,000 $-$ 10,000 = $109,000. Each coefficient shows the marginal effect holding other features constant."
                 },
                 {
                     "id": 4,
-                    "question": "Which assumption is violated when the error variance changes across levels of the predictor?",
+                    "question": "The gradient of the SSE loss function is $\\nabla L(\\boldsymbol{\\beta}) = -2\\mathbf{X}^\\top(\\mathbf{y} - \\mathbf{X}\\boldsymbol{\\beta})$. What is the gradient descent update rule?",
                     "options": {
-                        "A": "Linearity",
-                        "B": "Independence",
-                        "C": "Homoscedasticity",
-                        "D": "Normality"
+                        "A": "$\\boldsymbol{\\beta}^{(t+1)} = \\boldsymbol{\\beta}^{(t)} + \\alpha \\nabla L$",
+                        "B": "$\\boldsymbol{\\beta}^{(t+1)} = \\boldsymbol{\\beta}^{(t)} - \\alpha \\nabla L$",
+                        "C": "$\\boldsymbol{\\beta}^{(t+1)} = -\\alpha \\nabla L$",
+                        "D": "$\\boldsymbol{\\beta}^{(t+1)} = \\boldsymbol{\\beta}^{(t)} - \\nabla L$"
                     },
-                    "correct": "C",
-                    "explanation": "Homoscedasticity requires constant error variance. When variance changes with predictor levels, we have heteroscedasticity, which can lead to inefficient estimates."
+                    "correct": "B",
+                    "explanation": "Gradient descent moves opposite to the gradient: $\\boldsymbol{\\beta}^{(t+1)} = \\boldsymbol{\\beta}^{(t)} - \\alpha \\nabla L$. The learning rate $\\alpha$ controls step size. Moving in the gradient direction would maximize (not minimize) the loss."
                 },
                 {
                     "id": 5,
-                    "question": "What is the gradient descent update rule for linear regression?",
+                    "question": "What does the design matrix $\\mathbf{X} \\in \\mathbb{R}^{n \\times (p+1)}$ look like, and why is the first column all ones?",
                     "options": {
-                        "A": "$\\beta = \\beta + \\alpha \\nabla L$",
-                        "B": "$\\beta = \\beta - \\alpha \\nabla L$",
-                        "C": "$\\beta = \\beta - \\nabla L$",
-                        "D": "$\\beta = \\alpha \\nabla L$"
+                        "A": "The ones column encodes the intercept $\\beta_0$ so that $\\mathbf{X}\\boldsymbol{\\beta}$ includes a constant term",
+                        "B": "The ones column normalizes each observation to unit length",
+                        "C": "The ones column represents the target variable",
+                        "D": "The ones column is a computational placeholder with no effect on the model"
                     },
-                    "correct": "B",
-                    "explanation": "The update rule $\\beta = \\beta - \\alpha \\nabla L$ moves parameters in the direction opposite to the gradient, scaled by learning rate $\\alpha$."
+                    "correct": "A",
+                    "explanation": "The column of ones allows the matrix product $\\mathbf{X}\\boldsymbol{\\beta}$ to include $\\beta_0 \\cdot 1 + \\beta_1 x_1 + \\cdots + \\beta_p x_p$ for each row, incorporating the intercept without special treatment."
                 },
                 {
                     "id": 6,
-                    "question": "What happens if the learning rate $\\alpha$ is too large in gradient descent?",
+                    "question": "Computing $(\\mathbf{X}^\\top \\mathbf{X})^{-1}$ in the normal equation has complexity $O(p^3)$. For what regime is gradient descent preferred?",
                     "options": {
-                        "A": "Convergence is guaranteed but slow",
-                        "B": "The algorithm may overshoot and diverge",
-                        "C": "The algorithm will find the global minimum faster",
-                        "D": "The model will underfit the data"
+                        "A": "When $p$ is small (e.g., $p < 100$) regardless of $n$",
+                        "B": "When $p$ is very large (e.g., $p > 10{,}000$) because matrix inversion becomes infeasible",
+                        "C": "When the data has no missing values",
+                        "D": "When the loss function is non-convex"
                     },
                     "correct": "B",
-                    "explanation": "A learning rate that is too large causes the algorithm to overshoot the minimum, potentially oscillating or diverging entirely."
+                    "explanation": "The $O(p^3)$ cost of inverting $\\mathbf{X}^\\top \\mathbf{X}$ makes the normal equation impractical for large $p$. Gradient descent processes data iteratively, scaling to millions of features. For moderate $p$, the normal equation is faster and exact."
                 },
                 {
                     "id": 7,
-                    "question": "When should you prefer the normal equation over gradient descent?",
+                    "question": "A bank's mortgage pricing model has $R^2 = 0.82$. A junior analyst adds 50 random noise features, and $R^2$ rises to 0.87. What does Adjusted $R^2$ most likely show?",
                     "options": {
-                        "A": "When $n$ (samples) is very large and $p$ (features) is small",
-                        "B": "When $p$ (features) is very large (e.g., millions)",
-                        "C": "When the number of features is moderate (e.g., < 10,000)",
-                        "D": "When working with streaming data"
+                        "A": "Adjusted $R^2$ also rises to 0.87",
+                        "B": "Adjusted $R^2$ drops below the original 0.82",
+                        "C": "Adjusted $R^2$ stays exactly at 0.82",
+                        "D": "Adjusted $R^2$ becomes negative"
                     },
-                    "correct": "C",
-                    "explanation": "The normal equation requires computing $(X^T X)^{-1}$, which is $O(p^3)$. For moderate $p$, this is efficient, but gradient descent is preferred for very large $p$."
+                    "correct": "B",
+                    "explanation": "Adjusted $R^2 = 1 - \\frac{(1-R^2)(n-1)}{n-p-1}$ penalizes the number of predictors $p$. Adding 50 noise features inflates $R^2$ but the penalty term dominates, causing Adjusted $R^2$ to decrease. This is why Adjusted $R^2$ is preferred for model comparison."
                 },
                 {
                     "id": 8,
-                    "question": "What does $R^2 = 0.85$ mean?",
+                    "question": "Which OLS assumption is violated when residuals show a funnel-shaped pattern (wider spread for larger predicted values)?",
                     "options": {
-                        "A": "The model explains 85% of the variance in the target variable",
-                        "B": "The model has 85% accuracy",
-                        "C": "85% of predictions are within one standard deviation",
-                        "D": "The correlation coefficient is 0.85"
+                        "A": "Linearity",
+                        "B": "Homoscedasticity",
+                        "C": "Normality",
+                        "D": "No multicollinearity"
                     },
-                    "correct": "A",
-                    "explanation": "$R^2$ (coefficient of determination) represents the proportion of variance in the dependent variable explained by the model. $R^2 = 0.85$ means 85% of variance is explained."
+                    "correct": "B",
+                    "explanation": "A funnel shape means error variance increases with the predicted value, violating homoscedasticity ($\\text{Var}(\\varepsilon|X) = \\sigma^2 I$). The remedy is to use robust (White/HC) standard errors or transform the target (e.g., log transform)."
                 },
                 {
                     "id": 9,
-                    "question": "Why does Adjusted $R^2$ penalize additional features?",
+                    "question": "For a CAPM regression $R_i - R_f = \\alpha + \\beta(R_m - R_f) + \\varepsilon$, if $\\hat{\\beta} = 1.3$, what does this mean?",
                     "options": {
-                        "A": "To prevent overfitting by accounting for model complexity",
-                        "B": "To make computation faster",
-                        "C": "To ensure coefficients are positive",
-                        "D": "To handle missing values"
+                        "A": "The asset is risk-free",
+                        "B": "A 10% market rise predicts a 13% rise in the asset's excess return",
+                        "C": "The asset moves inversely to the market",
+                        "D": "The asset has no systematic risk"
                     },
-                    "correct": "A",
-                    "explanation": "Adjusted $R^2 = 1 - \\frac{(1-R^2)(n-1)}{n-p-1}$ penalizes additional features because adding features always increases $R^2$, even if they add no real predictive value."
+                    "correct": "B",
+                    "explanation": "$\\beta = 1.3$ means the asset amplifies market movements: a 10% market excess return predicts $1.3 \\times 10\\% = 13\\%$ excess return. This is greater-than-market systematic risk. $\\beta < 1$ would be defensive, $\\beta = 0$ means no market sensitivity."
                 },
                 {
                     "id": 10,
-                    "question": "A bank wants to compare loan default prediction errors. RMSE = 5,000 and MAE = 3,500. What does this suggest?",
+                    "question": "What does $\\text{RMSE} = \\sqrt{\\frac{1}{n}\\sum(y_i - \\hat{y}_i)^2}$ measure, and in what units is it expressed?",
                     "options": {
-                        "A": "The model has no outliers in predictions",
-                        "B": "There are some large prediction errors (outliers)",
-                        "C": "The model is perfectly calibrated",
-                        "D": "MAE is always larger than RMSE"
+                        "A": "Proportion of variance explained; dimensionless (0 to 1)",
+                        "B": "Average prediction error in the same units as the target variable",
+                        "C": "The probability that the model is correct",
+                        "D": "The number of outlier predictions"
                     },
                     "correct": "B",
-                    "explanation": "RMSE penalizes large errors more heavily than MAE. When RMSE >> MAE, it indicates the presence of some large outlier predictions that disproportionately affect RMSE."
+                    "explanation": "RMSE is in the same units as the target (e.g., dollars for house prices). It gives the typical magnitude of prediction error. An RMSE of $15,000 on a house price model means predictions are off by about $15,000 on average."
                 },
                 {
                     "id": 11,
-                    "question": "In a residual plot, what pattern indicates that the linearity assumption is violated?",
+                    "question": "An insurance company's model has RMSE = $8,000 and MAE = $4,200 for property claims. What does the large gap between RMSE and MAE indicate?",
                     "options": {
-                        "A": "Random scatter around zero",
-                        "B": "A funnel shape (increasing spread)",
-                        "C": "A curved or U-shaped pattern",
-                        "D": "Residuals clustered at zero"
+                        "A": "The model has uniformly small errors across all predictions",
+                        "B": "Some predictions have very large errors that inflate RMSE relative to MAE",
+                        "C": "MAE and RMSE always have this ratio",
+                        "D": "The model is underfitting"
                     },
-                    "correct": "C",
-                    "explanation": "A curved or U-shaped pattern in residuals indicates the relationship is non-linear. Random scatter suggests linearity holds; funnel shapes indicate heteroscedasticity."
+                    "correct": "B",
+                    "explanation": "RMSE squares errors before averaging, so large outlier errors have disproportionate impact. When RMSE is much larger than MAE, it signals a few extreme prediction errors. In insurance, these could be high-value claims the model underestimates."
                 },
                 {
                     "id": 12,
-                    "question": "Why do we split data into training and test sets?",
+                    "question": "What does the gradient descent learning rate $\\alpha$ control, and what happens if $\\alpha$ is too large?",
                     "options": {
-                        "A": "To reduce computation time",
-                        "B": "To estimate how the model will perform on unseen data",
-                        "C": "To increase the number of features",
-                        "D": "To ensure the model memorizes all data points"
+                        "A": "$\\alpha$ sets the number of iterations; too large means too few iterations",
+                        "B": "$\\alpha$ scales the step size; too large causes overshooting and divergence",
+                        "C": "$\\alpha$ determines how many features to use; too large adds noise features",
+                        "D": "$\\alpha$ controls the regularization penalty; too large underfits"
                     },
                     "correct": "B",
-                    "explanation": "Train-test split provides an unbiased estimate of model performance on new, unseen data, helping detect overfitting."
+                    "explanation": "$\\alpha$ multiplies the gradient to determine step size. If $\\alpha$ is too large, updates overshoot the minimum and the loss oscillates or diverges. The convergence condition is $\\alpha < 2/\\lambda_{\\max}(\\mathbf{X}^\\top\\mathbf{X})$."
                 },
                 {
                     "id": 13,
-                    "question": "In 5-fold cross-validation, how many times is each data point used for testing?",
+                    "question": "After standardizing features ($z_j = \\frac{x_j - \\mu_j}{\\sigma_j}$), a linear regression gives $|\\beta_1| = 0.8$ and $|\\beta_2| = 0.3$. Which feature has more influence?",
                     "options": {
-                        "A": "0 times",
-                        "B": "1 time",
-                        "C": "5 times",
-                        "D": "It varies"
+                        "A": "Feature 1 has more influence because $0.8 > 0.3$",
+                        "B": "Feature 2 has more influence because smaller coefficients are better",
+                        "C": "They have equal influence because standardization removes differences",
+                        "D": "Cannot determine without knowing the original feature scales"
                     },
-                    "correct": "B",
-                    "explanation": "In K-fold CV, data is split into K folds. Each fold serves as the test set exactly once, while the remaining K-1 folds are used for training."
+                    "correct": "A",
+                    "explanation": "After standardization, all features are on the same scale (mean 0, std 1). Therefore coefficient magnitudes directly reflect relative importance: a one-standard-deviation change in Feature 1 shifts the prediction by 0.8 vs. 0.3 for Feature 2."
                 },
                 {
                     "id": 14,
-                    "question": "What type of penalty does Ridge regression (L2) add to the loss function?",
+                    "question": "What penalty does Ridge regression add to the OLS loss, and what is the resulting closed-form solution?",
                     "options": {
-                        "A": "$\\lambda \\sum \\lvert\\beta_j\\rvert$",
-                        "B": "$\\lambda \\sum \\beta_j^2$",
-                        "C": "$\\lambda \\sum \\beta_j$",
-                        "D": "$\\lambda \\max(\\lvert\\beta_j\\rvert)$"
+                        "A": "$\\lambda\\|\\boldsymbol{\\beta}\\|_1$; no closed form exists",
+                        "B": "$\\lambda\\|\\boldsymbol{\\beta}\\|_2^2$; $\\hat{\\boldsymbol{\\beta}}_{\\text{ridge}} = (\\mathbf{X}^\\top\\mathbf{X} + \\lambda\\mathbf{I})^{-1}\\mathbf{X}^\\top\\mathbf{y}$",
+                        "C": "$\\lambda\\|\\boldsymbol{\\beta}\\|_2^2$; $\\hat{\\boldsymbol{\\beta}}_{\\text{ridge}} = (\\mathbf{X}^\\top\\mathbf{X})^{-1}\\mathbf{X}^\\top\\mathbf{y}$",
+                        "D": "$\\lambda\\sum|\\beta_j|$; $\\hat{\\boldsymbol{\\beta}}_{\\text{ridge}} = \\lambda\\mathbf{X}^\\top\\mathbf{y}$"
                     },
                     "correct": "B",
-                    "explanation": "Ridge regression adds an L2 penalty $\\lambda \\sum_{j=1}^{p} \\beta_j^2$ to the loss, which shrinks coefficients toward zero but does not set them exactly to zero."
+                    "explanation": "Ridge adds the L2 penalty $\\lambda\\|\\boldsymbol{\\beta}\\|_2^2 = \\lambda\\sum\\beta_j^2$ to the loss. The closed-form solution adds $\\lambda\\mathbf{I}$ to $\\mathbf{X}^\\top\\mathbf{X}$, which also stabilizes inversion when features are correlated."
                 },
                 {
                     "id": 15,
-                    "question": "Which regularization method can perform automatic feature selection by setting some coefficients exactly to zero?",
+                    "question": "Why does Lasso (L1) produce sparse solutions while Ridge (L2) does not?",
                     "options": {
-                        "A": "Ridge regression",
-                        "B": "Lasso regression",
-                        "C": "Ordinary Least Squares",
-                        "D": "Gradient descent"
+                        "A": "Lasso uses a diamond-shaped constraint region whose corners lie on the axes, so the solution often hits an axis (coefficient = 0)",
+                        "B": "Lasso uses a circular constraint region that smoothly shrinks all coefficients",
+                        "C": "Ridge has a diamond constraint that favors zeros",
+                        "D": "There is no geometric difference; both produce equally sparse solutions"
                     },
-                    "correct": "B",
-                    "explanation": "Lasso (L1 penalty: $\\lambda \\sum \\lvert\\beta_j\\rvert$) can shrink coefficients exactly to zero due to its geometry, effectively performing feature selection."
+                    "correct": "A",
+                    "explanation": "The L1 constraint $\\sum|\\beta_j| \\leq t$ forms a diamond with corners on the axes. The elliptical SSE contours tend to first touch these corners, setting one or more coefficients exactly to zero. Ridge's circular constraint has no corners, so coefficients shrink but never reach zero."
                 },
                 {
                     "id": 16,
-                    "question": "What is Elastic Net regression?",
+                    "question": "In a real estate pricing model, $\\text{VIF}_{\\text{size}} = 12$ and $\\text{VIF}_{\\text{rooms}} = 11$. What problem does this indicate, and what is a remedy?",
                     "options": {
-                        "A": "A combination of L1 and L2 penalties",
-                        "B": "A faster version of gradient descent",
-                        "C": "An ensemble of linear models",
-                        "D": "A method for handling missing data"
+                        "A": "Heteroscedasticity; use robust standard errors",
+                        "B": "Multicollinearity; remove one correlated feature or use Ridge regression",
+                        "C": "Non-normality; apply a log transform to the target",
+                        "D": "Underfitting; add polynomial features"
                     },
-                    "correct": "A",
-                    "explanation": "Elastic Net combines L1 (Lasso) and L2 (Ridge) penalties: $\\lambda_1 \\sum \\lvert\\beta_j\\rvert + \\lambda_2 \\sum \\beta_j^2$, getting benefits of both sparsity and coefficient shrinkage."
+                    "correct": "B",
+                    "explanation": "VIF $> 10$ indicates serious multicollinearity: size and number of rooms are highly correlated. This inflates standard errors and makes coefficients unstable. Ridge regression ($\\lambda > 0$) stabilizes the inversion, or you can drop one of the correlated features."
                 },
                 {
                     "id": 17,
-                    "question": "How should you select the regularization parameter $\\lambda$?",
+                    "question": "In 5-fold cross-validation for selecting the regularization parameter $\\lambda$, how many times is each data point used for validation?",
                     "options": {
-                        "A": "Always use $\\lambda = 1$",
-                        "B": "Use cross-validation to find the value that minimizes validation error",
-                        "C": "Set it equal to the number of features",
-                        "D": "Choose the largest possible value"
+                        "A": "0 times",
+                        "B": "Exactly 1 time",
+                        "C": "Exactly 5 times",
+                        "D": "It varies randomly"
                     },
                     "correct": "B",
-                    "explanation": "The optimal $\\lambda$ is typically selected via cross-validation, testing multiple values and choosing the one that minimizes cross-validated error."
+                    "explanation": "In 5-fold CV, data is split into 5 non-overlapping folds. Each fold serves as the validation set exactly once, while the other 4 folds are used for training. This gives 5 error estimates that are averaged."
                 },
                 {
                     "id": 18,
-                    "question": "In the bias-variance decomposition, what happens to bias as model complexity increases?",
+                    "question": "The bias-variance decomposition states $E[(y - \\hat{f}(x))^2] = \\text{Bias}^2 + \\text{Var} + \\sigma^2$. As regularization strength $\\lambda$ increases from 0, what happens?",
                     "options": {
-                        "A": "Bias increases",
-                        "B": "Bias decreases",
-                        "C": "Bias stays constant",
-                        "D": "Bias becomes negative"
+                        "A": "Bias decreases and variance increases",
+                        "B": "Bias increases and variance decreases",
+                        "C": "Both bias and variance decrease",
+                        "D": "Both bias and variance increase"
                     },
                     "correct": "B",
-                    "explanation": "As model complexity increases, the model can fit the training data more closely, reducing bias. However, this typically increases variance (overfitting risk)."
+                    "explanation": "Increasing $\\lambda$ constrains coefficients more (simpler model), which increases bias (less flexible fit) but decreases variance (less sensitive to training data). The optimal $\\lambda$ minimizes total error at the bias-variance tradeoff sweet spot."
                 },
                 {
                     "id": 19,
-                    "question": "A model has low training error but high test error. What is this called?",
+                    "question": "A credit risk model trained on 500 features shows training RMSE = $800 but test RMSE = $5,200. Residual plots show U-shaped patterns. What TWO issues are present, and which fix addresses both?",
                     "options": {
-                        "A": "Underfitting",
-                        "B": "Overfitting",
-                        "C": "Optimal fit",
-                        "D": "Bias-variance balance"
+                        "A": "Overfitting and non-linearity; add more features to capture the pattern",
+                        "B": "Underfitting and heteroscedasticity; increase model complexity",
+                        "C": "Overfitting (large train-test gap) and non-linearity (U-shaped residuals); apply Lasso to reduce features and add polynomial terms for the non-linear relationship",
+                        "D": "The model is fine; RMSE differences of this magnitude are normal"
                     },
-                    "correct": "B",
-                    "explanation": "Overfitting occurs when a model learns the training data too well (including noise), resulting in low training error but poor generalization (high test error)."
+                    "correct": "C",
+                    "explanation": "The large train-test gap ($800 vs $5,200) signals overfitting from too many features. U-shaped residuals indicate a non-linear relationship the model misses. Lasso reduces features (addressing overfitting) while polynomial terms capture non-linearity."
                 },
                 {
                     "id": 20,
-                    "question": "When is linear regression NOT appropriate?",
+                    "question": "A regulator asks why your bank's property valuation model is suitable. You show $R^2 = 0.91$ on training data only. What is the critical flaw in this evidence?",
                     "options": {
-                        "A": "When predicting a continuous numeric target",
-                        "B": "When the relationship between features and target is approximately linear",
-                        "C": "When the target is a binary class (0 or 1)",
-                        "D": "When you have multiple predictor variables"
+                        "A": "$R^2 > 0.9$ is always evidence of a good model",
+                        "B": "Training $R^2$ overstates true performance; cross-validated or held-out test $R^2$ is needed to demonstrate generalization",
+                        "C": "The model should use MAE instead of $R^2$",
+                        "D": "$R^2 = 0.91$ means the model is underfitting"
                     },
-                    "correct": "C",
-                    "explanation": "Linear regression predicts continuous values. For binary classification (0/1), logistic regression is appropriate as it outputs probabilities bounded between 0 and 1."
+                    "correct": "B",
+                    "explanation": "Training $R^2$ can be artificially high due to overfitting, especially with many features (it always increases when features are added). The regulator needs test-set or cross-validated metrics to assess how the model performs on unseen properties, which is what matters for new mortgage applications."
                 }
             ]
         };

@@ -341,241 +341,241 @@
                     "id": 1,
                     "question": "Why is KNN called a 'lazy learner' or 'instance-based' algorithm?",
                     "options": {
-                        "A": "It stores all training data and defers computation until prediction time",
-                        "B": "It requires less training data than other algorithms",
-                        "C": "It trains very slowly compared to other methods",
-                        "D": "It uses lazy evaluation for memory efficiency"
+                        "A": "It builds a compact model during training, then discards the data",
+                        "B": "It stores all training data and defers all computation to prediction time",
+                        "C": "It uses a slow gradient descent optimization",
+                        "D": "It randomly samples data during training"
                     },
-                    "correct": "A",
-                    "explanation": "KNN is called a lazy learner because it doesn't build an explicit model during training. Instead, it stores all training instances and performs computation only when making predictions."
+                    "correct": "B",
+                    "explanation": "KNN has no training phase: it stores the entire dataset and only computes distances when a prediction is needed. This contrasts with 'eager learners' (e.g., logistic regression) that build an explicit model during training."
                 },
                 {
                     "id": 2,
-                    "question": "What is the Euclidean distance between points $(1, 2)$ and $(4, 6)$?",
+                    "question": "Compute the Euclidean distance between points $(2, 5)$ and $(6, 2)$.",
                     "options": {
-                        "A": "5",
-                        "B": "7",
-                        "C": "25",
-                        "D": "3"
+                        "A": "$\\sqrt{(6-2)^2 + (2-5)^2} = \\sqrt{16+9} = 5$",
+                        "B": "$|6-2| + |2-5| = 4 + 3 = 7$",
+                        "C": "$\\sqrt{(6-2)^2 + (5-2)^2} = \\sqrt{16+9} = 5$",
+                        "D": "$(6-2)^2 + (2-5)^2 = 25$"
                     },
                     "correct": "A",
-                    "explanation": "Euclidean distance $= \\sqrt{(4-1)^2 + (6-2)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$"
+                    "explanation": "Euclidean distance $= \\sqrt{\\sum(x_i - y_i)^2} = \\sqrt{(6-2)^2 + (2-5)^2} = \\sqrt{16 + 9} = \\sqrt{25} = 5$. Note option B computes Manhattan distance (7) and option D omits the square root (25)."
                 },
                 {
                     "id": 3,
-                    "question": "What is the Manhattan distance between points $(1, 2)$ and $(4, 6)$?",
+                    "question": "Compute the Manhattan distance between points $(2, 5)$ and $(6, 2)$.",
                     "options": {
-                        "A": "7",
-                        "B": "5",
-                        "C": "25",
-                        "D": "12"
+                        "A": "$5$",
+                        "B": "$7$",
+                        "C": "$25$",
+                        "D": "$3$"
                     },
-                    "correct": "A",
-                    "explanation": "Manhattan distance $= \\lvert 4-1 \\rvert + \\lvert 6-2 \\rvert = 3 + 4 = 7$. It sums the absolute differences along each dimension."
+                    "correct": "B",
+                    "explanation": "Manhattan distance $= |6-2| + |2-5| = 4 + 3 = 7$. It sums absolute differences along each axis. Named after the grid-like street layout of Manhattan."
                 },
                 {
                     "id": 4,
-                    "question": "The Minkowski distance with $p=1$ is equivalent to which distance metric?",
+                    "question": "The Minkowski distance is $d(x,y) = \\left(\\sum|x_i - y_i|^p\\right)^{1/p}$. Which special cases correspond to $p=1$ and $p=2$?",
                     "options": {
-                        "A": "Manhattan distance",
-                        "B": "Euclidean distance",
-                        "C": "Chebyshev distance",
-                        "D": "Cosine distance"
+                        "A": "$p=1$: Manhattan; $p=2$: Euclidean",
+                        "B": "$p=1$: Euclidean; $p=2$: Manhattan",
+                        "C": "$p=1$: Cosine; $p=2$: Chebyshev",
+                        "D": "$p=1$: Chebyshev; $p=2$: Cosine"
                     },
                     "correct": "A",
-                    "explanation": "The Minkowski distance formula $d = (\\sum\\lvert x_i - y_i \\rvert^p)^{1/p}$ becomes Manhattan distance when $p=1$ and Euclidean distance when $p=2$."
+                    "explanation": "Minkowski with $p=1$ gives $\\sum|x_i - y_i|$ (Manhattan/L1). With $p=2$ gives $\\sqrt{\\sum(x_i - y_i)^2}$ (Euclidean/L2). As $p \\to \\infty$, it becomes Chebyshev distance $\\max|x_i - y_i|$."
                 },
                 {
                     "id": 5,
-                    "question": "A common heuristic for choosing K in KNN for a dataset with $n$ samples is:",
+                    "question": "A bank's fraud detection features include 'transaction amount' (range: $0-$50,000) and 'time since last transaction' (range: 0-24 hours). Why will KNN fail without feature scaling?",
                     "options": {
-                        "A": "$K = \\sqrt{n}$",
-                        "B": "$K = n/2$",
-                        "C": "$K = \\log(n)$",
-                        "D": "$K = n - 1$"
+                        "A": "KNN cannot handle numerical features",
+                        "B": "The transaction amount (0-50,000) will dominate the distance, making time effectively invisible",
+                        "C": "Feature scaling causes KNN to overfit",
+                        "D": "KNN requires categorical features"
                     },
-                    "correct": "A",
-                    "explanation": "The $\\sqrt{n}$ heuristic provides a reasonable starting point. For 100 samples, this suggests $K \\approx 10$. Cross-validation should be used to fine-tune."
+                    "correct": "B",
+                    "explanation": "Without scaling, a $100 difference in amount contributes $100^2 = 10,000$ to squared Euclidean distance, while a 1-hour difference contributes only $1^2 = 1$. Standardization ($z = \\frac{x-\\mu}{\\sigma}$) ensures both features contribute equally."
                 },
                 {
                     "id": 6,
-                    "question": "In weighted KNN, how are neighbor votes typically weighted?",
+                    "question": "In weighted KNN, neighbors are weighted by $w_i = 1/d_i$ where $d_i$ is the distance. Why is this better than uniform voting?",
                     "options": {
-                        "A": "Inversely proportional to distance (closer neighbors have more influence)",
-                        "B": "Proportional to distance (farther neighbors have more influence)",
-                        "C": "All neighbors weighted equally regardless of distance",
-                        "D": "Weighted by the neighbor's class frequency"
+                        "A": "It is faster to compute",
+                        "B": "Closer neighbors are more similar and should have more influence on the prediction",
+                        "C": "It eliminates the need to choose $K$",
+                        "D": "It guarantees 100% accuracy"
                     },
-                    "correct": "A",
-                    "explanation": "Weighted KNN uses inverse distance weighting: $w_i = 1/d_i$. Closer neighbors are more similar and should have greater influence on the prediction."
+                    "correct": "B",
+                    "explanation": "Uniform KNN treats all $K$ neighbors equally, but a neighbor at distance 0.1 is far more informative than one at distance 10. Inverse-distance weighting $w_i = 1/d_i$ gives closer neighbors proportionally more influence."
                 },
                 {
                     "id": 7,
-                    "question": "Why is feature scaling crucial for distance-based methods like KNN?",
+                    "question": "The 'curse of dimensionality' states that in high dimensions, the ratio $\\frac{d_{\\min}}{d_{\\max}}$ approaches 1. What does this mean for KNN?",
                     "options": {
-                        "A": "Features with larger scales dominate the distance calculation",
-                        "B": "It speeds up the algorithm significantly",
-                        "C": "It reduces memory usage",
-                        "D": "It prevents overfitting"
+                        "A": "KNN becomes faster in high dimensions",
+                        "B": "All points become roughly equidistant, making 'nearest neighbor' meaningless",
+                        "C": "KNN requires fewer neighbors in high dimensions",
+                        "D": "The curse only affects K-Means, not KNN"
                     },
-                    "correct": "A",
-                    "explanation": "Without scaling, a feature ranging from 0-1000 will dominate distance calculations over a feature ranging from 0-1. Standardization or normalization ensures equal contribution."
+                    "correct": "B",
+                    "explanation": "When all points are approximately equidistant, the concept of 'nearest' loses meaning. A point's 1st-nearest and 100th-nearest neighbor are nearly the same distance away. Remedies: dimensionality reduction (PCA) or feature selection before applying KNN."
                 },
                 {
                     "id": 8,
-                    "question": "The 'curse of dimensionality' in KNN refers to:",
+                    "question": "What data structure reduces KNN query time from $O(n)$ brute-force to approximately $O(\\log n)$?",
                     "options": {
-                        "A": "Points become equidistant in high dimensions, making nearest neighbors less meaningful",
-                        "B": "The algorithm becomes slower with more features",
-                        "C": "Memory requirements grow exponentially",
-                        "D": "Overfitting becomes impossible to prevent"
+                        "A": "Hash Table",
+                        "B": "KD-Tree or Ball Tree",
+                        "C": "Linked List",
+                        "D": "Stack"
                     },
-                    "correct": "A",
-                    "explanation": "In high dimensions, the ratio of nearest to farthest distance approaches 1. All points appear roughly equidistant, making the 'nearest neighbor' concept less meaningful."
+                    "correct": "B",
+                    "explanation": "KD-Trees recursively partition space along coordinate axes, enabling binary-search-like queries. Ball Trees use nested hyperspheres. Both achieve $O(\\log n)$ for low dimensions, though they degrade to $O(n)$ in very high dimensions."
                 },
                 {
                     "id": 9,
-                    "question": "What data structure is commonly used to accelerate KNN queries?",
+                    "question": "A heuristic starting point for choosing $K$ in KNN with $n=400$ samples is:",
                     "options": {
-                        "A": "KD-Tree or Ball Tree",
-                        "B": "Hash Table",
-                        "C": "Linked List",
-                        "D": "Binary Search Tree"
+                        "A": "$K = \\sqrt{400} = 20$",
+                        "B": "$K = 400/2 = 200$",
+                        "C": "$K = \\log(400) \\approx 6$",
+                        "D": "$K = 1$ always"
                     },
                     "correct": "A",
-                    "explanation": "KD-Trees partition space along coordinate axes, while Ball Trees use hyperspheres. Both reduce search time from $O(n)$ to approximately $O(\\log n)$ for low dimensions."
+                    "explanation": "$K = \\sqrt{n}$ is a widely-used heuristic: $\\sqrt{400} = 20$. This balances bias ($K$ too large) and variance ($K$ too small). Always refine with cross-validation. For binary classification, choose odd $K$ to avoid ties."
                 },
                 {
                     "id": 10,
                     "question": "What objective function does K-Means minimize?",
                     "options": {
-                        "A": "Within-Cluster Sum of Squares (WCSS)",
+                        "A": "Within-Cluster Sum of Squares: $\\text{WCSS} = \\sum_{k=1}^{K}\\sum_{x_i \\in C_k} \\|x_i - \\mu_k\\|^2$",
                         "B": "Between-Cluster Sum of Squares",
                         "C": "Total number of clusters",
-                        "D": "Maximum cluster diameter"
+                        "D": "Maximum distance between any two cluster centers"
                     },
                     "correct": "A",
-                    "explanation": "K-Means minimizes WCSS: $\\sum_{k=1}^{K} \\sum_{x_i \\in C_k} ||x_i - \\mu_k||^2$, which is the sum of squared distances from each point to its cluster centroid."
+                    "explanation": "K-Means minimizes the total squared distance from each point to its assigned cluster centroid. Lower WCSS means tighter, more compact clusters. The two alternating steps (assign, update) both monotonically decrease WCSS."
                 },
                 {
                     "id": 11,
-                    "question": "In the K-Means algorithm, what are the two alternating steps?",
+                    "question": "K-Means alternates two steps. What are they, and what convergence does this guarantee?",
                     "options": {
-                        "A": "Assign points to nearest centroid, then update centroids to cluster means",
-                        "B": "Split clusters, then merge similar clusters",
-                        "C": "Calculate distances, then normalize features",
-                        "D": "Add new clusters, then remove empty clusters"
+                        "A": "Assign points to nearest centroid, then update centroids to cluster means; WCSS monotonically decreases to a local minimum",
+                        "B": "Split clusters, then merge clusters; converges to global optimum",
+                        "C": "Add points, then remove outliers; WCSS increases monotonically",
+                        "D": "Randomly reassign, then compute silhouette; no convergence guarantee"
                     },
                     "correct": "A",
-                    "explanation": "K-Means alternates: (1) Assignment step - assign each point to the nearest centroid; (2) Update step - recalculate centroids as the mean of assigned points."
+                    "explanation": "Step 1 (assignment) decreases WCSS by assigning each point to the closest centroid. Step 2 (update) decreases WCSS by setting each centroid to the mean of its points. Monotonic decrease guarantees convergence, but only to a local minimum."
                 },
                 {
                     "id": 12,
-                    "question": "What problem does K-Means++ initialization solve?",
+                    "question": "How does K-Means++ improve on random initialization?",
                     "options": {
-                        "A": "Poor convergence due to bad initial centroid placement",
-                        "B": "Determining the optimal number of clusters",
-                        "C": "Handling missing values in the data",
-                        "D": "Dealing with categorical features"
+                        "A": "It chooses initial centroids spread apart, with probability proportional to squared distance from existing centroids",
+                        "B": "It uses the data mean as the first centroid",
+                        "C": "It runs K-Means multiple times and picks the worst result",
+                        "D": "It determines the optimal number of clusters automatically"
                     },
                     "correct": "A",
-                    "explanation": "K-Means++ selects initial centroids that are spread apart by choosing each new centroid with probability proportional to squared distance from existing centroids."
+                    "explanation": "K-Means++ selects the first centroid randomly, then each subsequent centroid is chosen with probability $\\frac{d(x)^2}{\\sum d(x)^2}$ where $d(x)$ is the distance to the nearest existing centroid. This spreads centroids apart, avoiding poor local minima."
                 },
                 {
                     "id": 13,
-                    "question": "What convergence guarantee does K-Means provide?",
+                    "question": "In the elbow method, you plot WCSS vs. $K$. A WCSS plot shows values: $K=2$: 500, $K=3$: 250, $K=4$: 220, $K=5$: 210. Which $K$ is the elbow?",
                     "options": {
-                        "A": "WCSS decreases monotonically and converges to a local minimum",
-                        "B": "Always finds the global optimum",
-                        "C": "Converges in exactly K iterations",
-                        "D": "Guarantees equal-sized clusters"
+                        "A": "$K=2$ because it has the largest WCSS",
+                        "B": "$K=3$ because the largest drop (500 to 250) occurs before it, and subsequent drops are small",
+                        "C": "$K=5$ because it has the lowest WCSS",
+                        "D": "$K=4$ because it is the middle value"
                     },
-                    "correct": "A",
-                    "explanation": "Each K-Means iteration either decreases WCSS or leaves it unchanged, guaranteeing convergence. However, it only guarantees a local minimum, not the global optimum."
+                    "correct": "B",
+                    "explanation": "The 'elbow' is at $K=3$: WCSS drops sharply from 500 to 250 (50% reduction), but from $K=3$ to $K=4$ only from 250 to 220 (12%). Diminishing returns beyond $K=3$ suggest 3 natural clusters."
                 },
                 {
                     "id": 14,
-                    "question": "In the elbow method for choosing K, what should you look for?",
+                    "question": "The silhouette score is $s(i) = \\frac{b(i) - a(i)}{\\max(a(i), b(i))}$. If $a(i) = 2$ and $b(i) = 8$, what is $s(i)$?",
                     "options": {
-                        "A": "The point where adding more clusters yields diminishing returns in WCSS reduction",
-                        "B": "The K value with the highest WCSS",
-                        "C": "The point where WCSS becomes zero",
-                        "D": "The largest gap between consecutive K values"
+                        "A": "$\\frac{8-2}{\\max(2,8)} = \\frac{6}{8} = 0.75$",
+                        "B": "$\\frac{2-8}{\\max(2,8)} = -0.75$",
+                        "C": "$\\frac{8-2}{2+8} = 0.6$",
+                        "D": "$\\frac{2}{8} = 0.25$"
                     },
                     "correct": "A",
-                    "explanation": "The elbow point is where the rate of WCSS decrease sharply slows. Beyond this point, additional clusters provide minimal improvement in cluster compactness."
+                    "explanation": "$s(i) = \\frac{b(i)-a(i)}{\\max(a(i),b(i))} = \\frac{8-2}{8} = 0.75$. A score of 0.75 means the point is well-matched to its own cluster ($a(i)=2$ is small) and far from the nearest other cluster ($b(i)=8$). Silhouette ranges from $-1$ (wrong cluster) to $+1$ (perfect)."
                 },
                 {
                     "id": 15,
-                    "question": "The silhouette score $s(i) = \\frac{b(i) - a(i)}{\\max(a(i), b(i))}$ ranges from:",
+                    "question": "K-Means assumes clusters are spherical (isotropic). Which real-world cluster shape will K-Means fail to capture?",
                     "options": {
-                        "A": "-1 to +1, where +1 indicates well-clustered",
-                        "B": "0 to 1, where 1 indicates well-clustered",
-                        "C": "0 to infinity",
-                        "D": "-infinity to +infinity"
+                        "A": "Circular clusters of equal size",
+                        "B": "Crescent-shaped or interlocking rings",
+                        "C": "Three well-separated spherical blobs",
+                        "D": "Two Gaussian clouds of similar variance"
                     },
-                    "correct": "A",
-                    "explanation": "Silhouette ranges from -1 (misclassified) to +1 (well-clustered). Here $a(i)$ is mean intra-cluster distance and $b(i)$ is mean nearest-cluster distance."
+                    "correct": "B",
+                    "explanation": "K-Means assigns points to the nearest centroid (Voronoi partition), which creates convex boundaries. Non-convex shapes like crescents, spirals, or interlocking rings cannot be captured. DBSCAN or spectral clustering handles these shapes."
                 },
                 {
                     "id": 16,
-                    "question": "K-Means assumes clusters are:",
+                    "question": "What is the fundamental difference between KNN (supervised) and K-Means (unsupervised)?",
                     "options": {
-                        "A": "Spherical (isotropic) and roughly equal in size",
-                        "B": "Hierarchically nested",
-                        "C": "Linearly separable",
-                        "D": "Connected but can be any shape"
+                        "A": "KNN uses labeled data to classify new points; K-Means discovers structure in unlabeled data",
+                        "B": "KNN clusters data; K-Means classifies data",
+                        "C": "They are the same algorithm with different names",
+                        "D": "KNN is unsupervised; K-Means is supervised"
                     },
                     "correct": "A",
-                    "explanation": "K-Means uses Euclidean distance to centroids, which works best for spherical, convex clusters of similar size and density."
+                    "explanation": "KNN requires labels (supervised): it predicts a new point's class from its $K$ nearest labeled neighbors. K-Means has no labels (unsupervised): it groups data into $K$ clusters by minimizing WCSS. Despite both using '$K$', they solve completely different problems."
                 },
                 {
                     "id": 17,
-                    "question": "K-Means is likely to fail when clusters have:",
+                    "question": "A bank uses K-Means to segment 10,000 customers on spending, savings, and loan features. Marketing wants 4 segments. After running K-Means with $K=4$, how should you validate the result?",
                     "options": {
-                        "A": "Non-convex shapes (e.g., crescents) or very different densities",
-                        "B": "Similar sizes and densities",
-                        "C": "Spherical shapes",
-                        "D": "Well-separated centroids"
+                        "A": "Accept whatever K-Means returns without validation",
+                        "B": "Compute silhouette scores, compare with $K=3$ and $K=5$, and check if segments are interpretable and actionable",
+                        "C": "Only use the elbow method",
+                        "D": "Train a classification model on the clusters"
                     },
-                    "correct": "A",
-                    "explanation": "K-Means cannot capture non-convex shapes because it assigns points to the nearest centroid. It also struggles when clusters have vastly different sizes or densities."
+                    "correct": "B",
+                    "explanation": "Cluster validation combines quantitative (silhouette score, WCSS comparison across $K$) and qualitative (are segments interpretable for marketing?). A high silhouette score with $K=4$ plus meaningful business interpretation (e.g., 'high-net-worth savers') confirms the choice."
                 },
                 {
                     "id": 18,
-                    "question": "What is the fundamental difference between KNN and K-Means?",
+                    "question": "For real-time credit card fraud detection using KNN, a new transaction at $(\\text{amount}=2500, \\text{distance\\_from\\_home}=500\\text{km})$ has 5 nearest neighbors: 3 fraudulent, 2 legitimate. What does KNN predict?",
                     "options": {
-                        "A": "KNN is supervised (uses labels), K-Means is unsupervised (discovers structure)",
-                        "B": "KNN is faster than K-Means",
-                        "C": "K-Means is used for classification, KNN for clustering",
-                        "D": "They are equivalent algorithms with different names"
+                        "A": "Fraudulent, because 3/5 = 60% of neighbors are fraudulent (majority vote)",
+                        "B": "Legitimate, because most transactions in the database are legitimate",
+                        "C": "Cannot determine without running gradient descent",
+                        "D": "Legitimate, because the amount is below the fraud threshold"
                     },
                     "correct": "A",
-                    "explanation": "KNN uses labeled training data to predict classes (supervised). K-Means discovers natural groupings in unlabeled data (unsupervised). Despite similar names, they solve different problems."
+                    "explanation": "KNN with $K=5$ uses majority vote: 3 fraud vs. 2 legitimate means the prediction is 'fraudulent'. With weighted KNN, the distances would matter -- if the 2 legitimate neighbors are much closer, the prediction could change."
                 },
                 {
                     "id": 19,
-                    "question": "In customer segmentation for a bank, K-Means would be used to:",
+                    "question": "Cover and Hart (1967) proved that as $n \\to \\infty$, the error rate of 1-NN is bounded by:",
                     "options": {
-                        "A": "Group customers with similar behaviors for targeted marketing",
-                        "B": "Predict which customers will default on loans",
-                        "C": "Classify transactions as fraudulent or legitimate",
-                        "D": "Predict customer lifetime value"
+                        "A": "At most twice the Bayes optimal error rate: $R^* \\leq R_{1\\text{-NN}} \\leq 2R^*$",
+                        "B": "Exactly equal to the Bayes optimal error rate",
+                        "C": "Always worse than random guessing",
+                        "D": "Zero for all distributions"
                     },
                     "correct": "A",
-                    "explanation": "K-Means clusters customers based on behavioral features (spending, account activity). Each cluster represents a segment (e.g., 'high-value savers', 'frequent transactors') for tailored strategies."
+                    "explanation": "The Cover-Hart theorem states the 1-NN error rate is at most $2R^*(1 - R^*)$, which simplifies to at most $2R^*$ where $R^*$ is the Bayes optimal rate. This means even the simplest KNN ($K=1$) is at most twice as bad as the best possible classifier -- a remarkable guarantee."
                 },
                 {
                     "id": 20,
-                    "question": "For real-time fraud detection, KNN could be used to:",
+                    "question": "DBSCAN can find clusters of arbitrary shape unlike K-Means. What is the key trade-off when choosing DBSCAN over K-Means for customer segmentation?",
                     "options": {
-                        "A": "Flag a transaction as suspicious if its nearest neighbors are mostly fraudulent",
-                        "B": "Group all transactions into fraud and non-fraud clusters",
-                        "C": "Calculate the total fraud amount in the dataset",
-                        "D": "Compress transaction data for storage"
+                        "A": "DBSCAN finds any-shape clusters and identifies outliers, but requires tuning $\\varepsilon$ and min_samples (not $K$), and cannot assign new points without rerunning",
+                        "B": "DBSCAN always outperforms K-Means with no disadvantages",
+                        "C": "DBSCAN requires specifying $K$ like K-Means",
+                        "D": "DBSCAN only works with 2D data"
                     },
                     "correct": "A",
-                    "explanation": "KNN compares new transactions to historical labeled examples. If most of the K nearest transactions (similar amounts, locations, times) were fraudulent, the new transaction is flagged for review."
+                    "explanation": "DBSCAN advantages: finds non-convex clusters, naturally identifies noise/outliers. Disadvantages: sensitive to $\\varepsilon$ (neighborhood radius) and min_samples; struggles with clusters of varying density; no centroid for easy interpretation. K-Means is simpler when clusters are roughly spherical."
                 }
             ]
         };

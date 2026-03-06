@@ -98,20 +98,14 @@ a{color:#0066CC;text-decoration:none}
 <li><a href="#prerequisites">Classification & Decomposition</a></li>
 </ul></details>
 <details style="border-bottom:1px solid #f0f0f0"><summary style="border-left:3px solid #3333B2">Quizzes</summary><ul>
-<li><a href="#quizzes">Quiz 1: Regression</a></li>
-<li><a href="#quizzes">Quiz 2: Classification</a></li>
-<li><a href="#quizzes">Quiz 3: Advanced</a></li>
-<li><a href="#per-lesson-quizzes">L01 Linear Regression</a></li>
-<li><a href="#per-lesson-quizzes">L02 Logistic Regression</a></li>
-<li><a href="#per-lesson-quizzes">L03 KNN & K-Means</a></li>
-<li><a href="#per-lesson-quizzes">L03 KNN & K-Means (Accessible)</a></li>
-<li><a href="#per-lesson-quizzes">L03 KNN (Deep)</a></li>
-<li><a href="#per-lesson-quizzes">L03 K-Means (Deep)</a></li>
-<li><a href="#per-lesson-quizzes">L04 Random Forests</a></li>
-<li><a href="#per-lesson-quizzes">L04 Decision Trees (Deep)</a></li>
-<li><a href="#per-lesson-quizzes">L04 Ensemble Methods (Deep)</a></li>
-<li><a href="#per-lesson-quizzes">L05 PCA & t-SNE</a></li>
-<li><a href="#per-lesson-quizzes">L06 Embeddings & RL</a></li>
+<li><a href="#quizzes">L01 Linear Regression</a></li>
+<li><a href="#quizzes">L02 Logistic Regression</a></li>
+<li><a href="#quizzes">L03 KNN & K-Means</a></li>
+<li><a href="#quizzes">L04 Random Forests</a></li>
+<li><a href="#quizzes">L05 PCA & t-SNE</a></li>
+<li><a href="#quizzes">L06 Embeddings & RL</a></li>
+<li><a href="#deep-dive-quizzes">Deep Dive Quizzes</a></li>
+<li><a href="#overview-quizzes">Overview Quizzes</a></li>
 </ul></details>
 <details style="border-bottom:1px solid #f0f0f0"><summary style="border-left:3px solid #0066CC">Group Assignment</summary><ul>
 <li><a href="#assignment">Overview</a></li>
@@ -382,31 +376,38 @@ a{color:#0066CC;text-decoration:none}
 </div>
 </section>
 
-<!-- Quizzes Section -->
+<!-- Canonical Per-Lecture Quizzes (Primary) -->
 <section class="section" id="quizzes">
-<div class="section-head" style="border-color:#3333B2"><span style="background:#3333B2">Q</span><h2>Interactive Quizzes (45 questions)</h2></div>
+<div class="section-head" style="border-color:#8b5cf6"><span style="background:#8b5cf6">Q</span><h2>Canonical Quizzes -- 120 questions (20 per lecture)</h2></div>
 <div class="lgrid" style="grid-template-columns:repeat(3,1fr)">
-<a class="lcard" href="quiz/quiz1_regression.html" style="border-left:3px solid #2CA02C;background:linear-gradient(135deg,#f0fff0,#d4edda)"><span class="lcard-num" style="background:#2CA02C;color:white">Q1</span><span class="lcard-title">Regression Methods</span><div style="font-size:9px;color:#1e7e34;margin-top:4px;font-weight:600">15 questions</div></a>
-<a class="lcard" href="quiz/quiz2_classification_ensemble.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#fff8f0,#ffecd2)"><span class="lcard-num" style="background:#FF7F0E;color:white">Q2</span><span class="lcard-title">Classification & Ensembles</span><div style="font-size:9px;color:#e06600;margin-top:4px;font-weight:600">15 questions</div></a>
-<a class="lcard" href="quiz/quiz3_advanced.html" style="border-left:3px solid #D62728;background:linear-gradient(135deg,#fff5f5,#f8d7da)"><span class="lcard-num" style="background:#D62728;color:white">Q3</span><span class="lcard-title">Advanced Topics</span><div style="font-size:9px;color:#c82333;margin-top:4px;font-weight:600">15 questions</div></a>
+<a class="lcard" href="quiz/L01_linear_regression.html" style="border-left:3px solid #2CA02C;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L01</span><span class="lcard-title">Linear Regression</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions -- Bloom L3+ 65%</div></a>
+<a class="lcard" href="quiz/L02_logistic_regression.html" style="border-left:3px solid #2CA02C;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L02</span><span class="lcard-title">Logistic Regression</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions -- Bloom L3+ 70%</div></a>
+<a class="lcard" href="quiz/L03_knn_kmeans.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L03</span><span class="lcard-title">KNN & K-Means</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions -- Bloom L3+ 60%</div></a>
+<a class="lcard" href="quiz/L04_random_forests.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L04</span><span class="lcard-title">Random Forests</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions -- Bloom L3+ 65%</div></a>
+<a class="lcard" href="quiz/L05_pca_tsne.html" style="border-left:3px solid #D62728;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L05</span><span class="lcard-title">PCA & t-SNE</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions -- Bloom L3+ 65%</div></a>
+<a class="lcard" href="quiz/L06_embeddings_rl.html" style="border-left:3px solid #D62728;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L06</span><span class="lcard-title">Embeddings & RL</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions -- Bloom L3+ 65%</div></a>
 </div>
 </section>
 
-<!-- Per-Lesson Quizzes Section -->
-<section class="section" id="per-lesson-quizzes">
-<div class="section-head" style="border-color:#8b5cf6"><span style="background:#8b5cf6">PL</span><h2>Per-Lesson Quizzes (220 questions)</h2></div>
+<!-- Deep Dive Quizzes (Supplementary) -->
+<section class="section" id="deep-dive-quizzes">
+<div class="section-head" style="border-color:#586069"><span style="background:#586069">DD</span><h2>Deep Dive Quizzes -- 100 supplementary questions</h2></div>
 <div class="lgrid" style="grid-template-columns:repeat(3,1fr)">
-<a class="lcard" href="quiz/L01_linear_regression.html" style="border-left:3px solid #2CA02C;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L01</span><span class="lcard-title">Linear Regression</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L02_logistic_regression.html" style="border-left:3px solid #2CA02C;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L02</span><span class="lcard-title">Logistic Regression</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L03_knn_kmeans.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L03</span><span class="lcard-title">KNN & K-Means</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L03_knn_kmeans_accessible.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L03</span><span class="lcard-title">KNN & K-Means (Accessible)</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L03_knn.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L03</span><span class="lcard-title">KNN (Deep)</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L03_kmeans.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L03</span><span class="lcard-title">K-Means (Deep)</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L04_random_forests.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L04</span><span class="lcard-title">Random Forests</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L04_decision_trees.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L04</span><span class="lcard-title">Decision Trees (Deep)</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L04_ensemble_methods.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L04</span><span class="lcard-title">Ensemble Methods (Deep)</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L05_pca_tsne.html" style="border-left:3px solid #D62728;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L05</span><span class="lcard-title">PCA & t-SNE</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
-<a class="lcard" href="quiz/L06_embeddings_rl.html" style="border-left:3px solid #D62728;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><span class="lcard-num" style="background:#8b5cf6;color:white">L06</span><span class="lcard-title">Embeddings & RL</span><div style="font-size:9px;color:#7c3aed;margin-top:4px;font-weight:600">20 questions</div></a>
+<a class="lcard" href="quiz/L03_knn.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#fff8f0,#ffecd2)"><span class="lcard-num" style="background:#FF7F0E;color:white">L03</span><span class="lcard-title">KNN (Deep Dive)</span><div style="font-size:9px;color:#e06600;margin-top:4px;font-weight:600">20 questions</div></a>
+<a class="lcard" href="quiz/L03_kmeans.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#fff8f0,#ffecd2)"><span class="lcard-num" style="background:#FF7F0E;color:white">L03</span><span class="lcard-title">K-Means (Deep Dive)</span><div style="font-size:9px;color:#e06600;margin-top:4px;font-weight:600">20 questions</div></a>
+<a class="lcard" href="quiz/L03_knn_kmeans_accessible.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#fff8f0,#ffecd2)"><span class="lcard-num" style="background:#FF7F0E;color:white">L03</span><span class="lcard-title">KNN & K-Means (Accessible)</span><div style="font-size:9px;color:#e06600;margin-top:4px;font-weight:600">20 questions</div></a>
+<a class="lcard" href="quiz/L04_decision_trees.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#fff8f0,#ffecd2)"><span class="lcard-num" style="background:#FF7F0E;color:white">L04</span><span class="lcard-title">Decision Trees (Deep Dive)</span><div style="font-size:9px;color:#e06600;margin-top:4px;font-weight:600">20 questions</div></a>
+<a class="lcard" href="quiz/L04_ensemble_methods.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#fff8f0,#ffecd2)"><span class="lcard-num" style="background:#FF7F0E;color:white">L04</span><span class="lcard-title">Ensemble Methods (Deep Dive)</span><div style="font-size:9px;color:#e06600;margin-top:4px;font-weight:600">20 questions</div></a>
+</div>
+</section>
+
+<!-- Overview Quizzes -->
+<section class="section" id="overview-quizzes">
+<div class="section-head" style="border-color:#3333B2"><span style="background:#3333B2">OV</span><h2>Overview Quizzes -- 45 cross-topic questions</h2></div>
+<div class="lgrid" style="grid-template-columns:repeat(3,1fr)">
+<a class="lcard" href="quiz/quiz1_regression.html" style="border-left:3px solid #2CA02C;background:linear-gradient(135deg,#f0fff0,#d4edda)"><span class="lcard-num" style="background:#2CA02C;color:white">Q1</span><span class="lcard-title">Regression Methods</span><div style="font-size:9px;color:#1e7e34;margin-top:4px;font-weight:600">15 questions (L01-L02)</div></a>
+<a class="lcard" href="quiz/quiz2_classification_ensemble.html" style="border-left:3px solid #FF7F0E;background:linear-gradient(135deg,#fff8f0,#ffecd2)"><span class="lcard-num" style="background:#FF7F0E;color:white">Q2</span><span class="lcard-title">Classification & Ensembles</span><div style="font-size:9px;color:#e06600;margin-top:4px;font-weight:600">15 questions (L03-L04)</div></a>
+<a class="lcard" href="quiz/quiz3_advanced.html" style="border-left:3px solid #D62728;background:linear-gradient(135deg,#fff5f5,#f8d7da)"><span class="lcard-num" style="background:#D62728;color:white">Q3</span><span class="lcard-title">Advanced Topics</span><div style="font-size:9px;color:#c82333;margin-top:4px;font-weight:600">15 questions (L05-L06)</div></a>
 </div>
 </section>
 
