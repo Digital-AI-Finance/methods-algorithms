@@ -86,6 +86,14 @@
           "file": "slides/L01_Introduction_Linear_Regression/L01_deepdive.tex",
           "status": "complete"
         },
+        "linreg_mini_slides": {
+          "file": "slides/L01_Introduction_Linear_Regression/L01_linreg_mini.tex",
+          "status": "complete"
+        },
+        "linreg_full_slides": {
+          "file": "slides/L01_Introduction_Linear_Regression/L01_linreg_full.tex",
+          "status": "complete"
+        },
         "charts": [
           {
             "id": "01_simple_regression",
@@ -221,6 +229,14 @@
         },
         "deepdive_slides": {
           "file": "slides/L02_Logistic_Regression/L02_deepdive.tex",
+          "status": "complete"
+        },
+        "logreg_mini_slides": {
+          "file": "slides/L02_Logistic_Regression/L02_logreg_mini.tex",
+          "status": "complete"
+        },
+        "logreg_full_slides": {
+          "file": "slides/L02_Logistic_Regression/L02_logreg_full.tex",
           "status": "complete"
         },
         "charts": [
