@@ -567,6 +567,14 @@ RF ($\sqrt{p}$) & 0.1 & 1000 & $0.101\sigma^2$ \\
 \bottomnote{In practice, tune max\_features before n\_estimators.}
 \end{frame}
 
+% Chart 22: Correlation vs Ensemble Size
+\begin{frame}[t]{Correlation vs Ensemble Size: The Variance Surface}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{22_correlation_variance_surface/chart.pdf}
+\end{center}
+\bottomnote{Decorrelating trees (low $\rho$) through feature randomization is the key to variance reduction.}
+\end{frame}
+
 % RF max_features OOB Error (chart)
 \begin{frame}[t]{Feature Randomization: OOB Error Curve}
 \begin{center}
@@ -632,6 +640,14 @@ RF ($\sqrt{p}$) & 0.1 & 1000 & $0.101\sigma^2$ \\
 \bottomnote{Top: single tree (high variance). Bottom: 500-tree forest (low variance, similar bias).}
 \end{frame}
 
+% Chart 21: RF Depth Curve Fitting
+\begin{frame}[t]{Random Forest Depth: Smooth at Every Level}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{21_rf_depth_curve_fitting/chart.pdf}
+\end{center}
+\bottomnote{Averaging 200 trees produces stable, smooth predictions regardless of individual tree depth.}
+\end{frame}
+
 % Frame 15: What Is the Random Forest Algorithm in Pseudocode?
 \begin{frame}[fragile]{What Is the Random Forest Algorithm in Pseudocode?}
 \begin{columns}[T]
@@ -676,6 +692,14 @@ RF ($\sqrt{p}$) & 0.1 & 1000 & $0.101\sigma^2$ \\
 \scriptsize The algorithm is trivially parallelizable -- training time scales linearly with cores, making RF fast even on large datasets.
 \end{block}
 \bottomnote{scikit-learn: RandomForestClassifier(n\_jobs=-1) uses all available CPU cores.}
+\end{frame}
+
+% Chart 27: Number of Trees Convergence
+\begin{frame}[t]{Convergence: How Many Trees Do We Need?}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{27_rf_ntrees_convergence/chart.pdf}
+\end{center}
+\bottomnote{OOB error provides a free validation metric; test error confirms generalization.}
 \end{frame}
 
 %% === SECTION 4: FEATURE IMPORTANCE ===
@@ -798,6 +822,14 @@ $\Rightarrow$ Amount and location drove the flag.
 \scriptsize SHAP is the only feature attribution method with a \emph{unique} solution satisfying all fairness axioms from game theory.
 \end{block}
 \bottomnote{Lundberg \& Lee (2017): ``A Unified Approach to Interpreting Model Predictions.'' NeurIPS.}
+\end{frame}
+
+% Chart 24: SHAP Waterfall
+\begin{frame}[t]{SHAP Waterfall: Individual Prediction Explanation}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{24_shap_waterfall/chart.pdf}
+\end{center}
+\bottomnote{SHAP values decompose a prediction into per-feature contributions from a base rate.}
 \end{frame}
 
 %% === SECTION 5: BOOSTING ===
@@ -1242,6 +1274,14 @@ class\_weight & None & `balanced' for imbalance \\
 \bottomnote{Use PR-AUC, not ROC-AUC, when the positive class is rare (Davis \& Goadrich, 2006).}
 \end{frame}
 
+% Chart 23: Precision-Recall Curve
+\begin{frame}[t]{Precision-Recall Analysis for Fraud Detection}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{23_precision_recall_curve/chart.pdf}
+\end{center}
+\bottomnote{Selecting the optimal threshold depends on the business cost of false positives vs missed fraud.}
+\end{frame}
+
 % Frame 27: When Should You Choose RF Over Logistic Regression?
 \begin{frame}{When Should You Choose RF Over Logistic Regression?}
 \begin{columns}[T]
@@ -1399,6 +1439,34 @@ class\_weight & None & `balanced' for imbalance \\
 \end{column}
 \end{columns}
 \bottomnote{Random Forests remain one of the strongest ``out-of-the-box'' classifiers two decades after Breiman (2001).}
+\end{frame}
+
+% T12: The Forest Parliament
+\begin{frame}[t]{The Forest Parliament}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=0.85,every node/.style={transform shape}]
+% Five trees in semicircle
+\foreach \i/\color/\xpos/\ypos in {1/mlblue/-4/0, 2/mlgreen/-2/1.5, 3/mlorange/0/2, 4/mlred/2/1.5, 5/mlpurple/4/0} {
+  % Tree trunk
+  \draw[\color,line width=2pt] (\xpos,\ypos) -- (\xpos,\ypos+0.6);
+  % Tree canopy (triangle)
+  \fill[\color!40] (\xpos-0.5,\ypos+0.6) -- (\xpos,\ypos+1.8) -- (\xpos+0.5,\ypos+0.6) -- cycle;
+  \draw[\color,thick] (\xpos-0.5,\ypos+0.6) -- (\xpos,\ypos+1.8) -- (\xpos+0.5,\ypos+0.6) -- cycle;
+}
+
+% Speech bubbles
+\node[draw,rounded corners=3pt,fill=mlblue!10,font=\small\bfseries,text=mlblue] at (-4,2.6) {Fraud!};
+\node[draw,rounded corners=3pt,fill=mlgreen!10,font=\small\bfseries,text=mlgreen] at (-2,4.1) {Legit!};
+\node[draw,rounded corners=3pt,fill=mlorange!10,font=\small\bfseries,text=mlorange] at (0,4.6) {Fraud!};
+\node[draw,rounded corners=3pt,fill=mlred!10,font=\small\bfseries,text=mlred] at (2,4.1) {Fraud!};
+\node[draw,rounded corners=3pt,fill=mlpurple!10,font=\small\bfseries,text=mlpurple] at (4,2.6) {Legit!};
+
+% Central banner
+\node[draw,rounded corners=5pt,fill=mlpurple!15,line width=1.5pt,draw=mlpurple,
+      font=\large\bfseries,minimum width=6cm,minimum height=1cm] at (0,-1.5) {Majority Rules: FRAUD (3--2)};
+\end{tikzpicture}
+\end{center}
+\bottomnote{Democracy in the forest: each tree votes independently, and the majority wins}
 \end{frame}
 
 % Frame 31: Until Next Time...

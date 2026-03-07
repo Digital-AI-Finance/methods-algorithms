@@ -629,6 +629,46 @@
             "id": "19_pruning_ccp",
             "file": "slides/L04_Random_Forests/19_pruning_ccp/chart.py",
             "status": "complete"
+          },
+          {
+            "id": "20_dt_depth_curve_fitting",
+            "file": "slides/L04_Random_Forests/20_dt_depth_curve_fitting/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "21_rf_depth_curve_fitting",
+            "file": "slides/L04_Random_Forests/21_rf_depth_curve_fitting/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "22_correlation_variance_surface",
+            "file": "slides/L04_Random_Forests/22_correlation_variance_surface/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "23_precision_recall_curve",
+            "file": "slides/L04_Random_Forests/23_precision_recall_curve/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "24_shap_waterfall",
+            "file": "slides/L04_Random_Forests/24_shap_waterfall/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "25_bagging_vs_boosting",
+            "file": "slides/L04_Random_Forests/25_bagging_vs_boosting/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "26_smote_visualization",
+            "file": "slides/L04_Random_Forests/26_smote_visualization/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "27_rf_ntrees_convergence",
+            "file": "slides/L04_Random_Forests/27_rf_ntrees_convergence/chart.py",
+            "status": "complete"
           }
         ],
         "notebook": {

@@ -672,6 +672,14 @@ where $R(T)$ = misclassification rate, $|T|$ = number of leaves, $\alpha$ = comp
 \bottomnote{sklearn: \texttt{GridSearchCV(param\_grid=\{`max\_depth': range(1,20)\})} automates this}
 \end{frame}
 
+% Chart 20: DT Depth Curve Fitting
+\begin{frame}[t]{Depth Effect: Curve Fitting Visualization}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{20_dt_depth_curve_fitting/chart.pdf}
+\end{center}
+\bottomnote{Each additional level of depth allows the tree to fit more complex patterns---and more noise.}
+\end{frame}
+
 %% SLIDE 19: Regression Trees
 \begin{frame}[t]{Regression Trees: Predicting Numbers, Not Categories}
 \small
@@ -893,6 +901,49 @@ Decorrelating trees ($\rho \downarrow$) reduces ensemble variance.
 \end{block}
 \end{columns}
 \bottomnote{Next lecture: Random Forests --- bagging, feature randomization, OOB error, feature importance}
+\end{frame}
+
+% T11: The Tree That Learned Too Much
+\begin{frame}[t]{The Tree That Learned Too Much}
+\begin{center}
+\begin{tikzpicture}[
+  >=Stealth,
+  every node/.style={font=\small},
+  treenode/.style={draw,rounded corners=3pt,minimum width=2.2cm,minimum height=0.65cm,align=center,font=\small},
+  leafnode/.style={draw,rounded corners=3pt,minimum width=1.6cm,minimum height=0.55cm,align=center,font=\small},
+  level 1/.style={sibling distance=5.5cm,level distance=1.4cm},
+  level 2/.style={sibling distance=3cm,level distance=1.4cm},
+  level 3/.style={sibling distance=2.5cm,level distance=1.4cm},
+  arr/.style={->,thick}
+]
+\node[treenode,fill=mlblue!20] {Income $>$ \$50k?}
+  child {node[treenode,fill=mlblue!20] {Debt ratio $>$ 0.4?}
+    child {node[leafnode,fill=mlgreen!20] {Approve}
+      edge from parent node[left,font=\tiny] {No}
+    }
+    child {node[treenode,fill=mlorange!30] {Is it a Tuesday?}
+      child {node[treenode,fill=mlred!20] {Did applicant\\blink twice?}
+        child {node[leafnode,fill=mlred!40,font=\small\bfseries] {CONFUSED ?!}
+          edge from parent node[left,font=\tiny] {No}
+        }
+        child {node[leafnode,fill=mlgreen!20] {Approve}
+          edge from parent node[right,font=\tiny] {Yes}
+        }
+        edge from parent node[left,font=\tiny] {Yes}
+      }
+      child {node[leafnode,fill=mlred!30] {Deny}
+        edge from parent node[right,font=\tiny] {No}
+      }
+      edge from parent node[right,font=\tiny] {Yes}
+    }
+    edge from parent node[left,font=\tiny] {No}
+  }
+  child {node[leafnode,fill=mlgreen!20] {Approve}
+    edge from parent node[right,font=\tiny] {Yes}
+  };
+\end{tikzpicture}
+\end{center}
+\bottomnote{Overfitting: when the model memorizes noise instead of learning patterns}
 \end{frame}
 
 %% SLIDE 25: Closing Thought + XKCD

@@ -7,6 +7,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.callouts,shapes.geometric,decorations.pathreplacing}
 \usepackage{hyperref}
 \usepackage{algorithm}
 \usepackage{algorithmic}
@@ -251,6 +252,14 @@ Each split aims to create purer child nodes (lower Gini impurity or entropy).
 \bottomnote{Deeper trees reduce training error but increase test error---the fundamental bias-variance tradeoff}
 \end{frame}
 
+% Chart 20: DT Depth Curve Fitting
+\begin{frame}[t]{How Does Tree Depth Affect Curve Fitting?}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{20_dt_depth_curve_fitting/chart.pdf}
+\end{center}
+\bottomnote{Shallow trees underfit; deep trees memorize noise. Finding the right depth is key.}
+\end{frame}
+
 % ------------------------------
 \section{Method}
 % ------------------------------
@@ -264,6 +273,53 @@ Each split aims to create purer child nodes (lower Gini impurity or entropy).
 \vspace{-0.8em}
 \textbf{Key idea:} draw $B$ bootstrap samples (with replacement), train one tree on each, average predictions.
 \bottomnote{Bagging: sampling with replacement creates diverse training sets -- each tree sees roughly 63.2\% of original data}
+\end{frame}
+
+% T9: Bagging Pipeline Cartoon
+\begin{frame}[t]{How Bagging Works: From Data to Decision}
+\begin{center}
+\begin{tikzpicture}[
+  >=Stealth,
+  box/.style={draw,rounded corners=3pt,minimum width=1.6cm,minimum height=0.8cm,align=center,font=\small},
+  tree/.style={isosceles triangle,draw,shape border rotate=90,minimum width=0.7cm,minimum height=0.9cm,inner sep=0pt},
+  arr/.style={->,thick}
+]
+% Training Data
+\node[box,fill=mlblue!20] (data) at (0,0) {Training\\Data};
+
+% Bootstrap samples
+\node[box,fill=mlorange!20] (b1) at (3.5,1.5) {Bootstrap\\Sample 1};
+\node[box,fill=mlorange!20] (b2) at (3.5,0) {Bootstrap\\Sample 2};
+\node[box,fill=mlorange!20] (b3) at (3.5,-1.5) {Bootstrap\\Sample 3};
+
+% Arrows from data to bootstrap
+\draw[arr] (data.east) -- (b1.west);
+\draw[arr] (data.east) -- (b2.west);
+\draw[arr] (data.east) -- (b3.west);
+
+% Trees
+\node[tree,fill=mlgreen!30] (t1) at (6.5,1.5) {};
+\node[font=\tiny] at (6.5,1.5) {Tree 1};
+\node[tree,fill=mlgreen!30] (t2) at (6.5,0) {};
+\node[font=\tiny] at (6.5,0) {Tree 2};
+\node[tree,fill=mlgreen!30] (t3) at (6.5,-1.5) {};
+\node[font=\tiny] at (6.5,-1.5) {Tree 3};
+
+% Arrows from bootstrap to trees
+\draw[arr] (b1.east) -- (t1.west);
+\draw[arr] (b2.east) -- (t2.west);
+\draw[arr] (b3.east) -- (t3.west);
+
+% Majority Vote
+\node[box,fill=mlpurple!20,minimum width=1.8cm] (vote) at (9.5,0) {Majority\\Vote};
+
+% Arrows from trees to vote
+\draw[arr] (t1.east) -- (vote.west);
+\draw[arr] (t2.east) -- (vote.west);
+\draw[arr] (t3.east) -- (vote.west);
+\end{tikzpicture}
+\end{center}
+\bottomnote{Bootstrap sampling creates diverse training sets; aggregation reduces variance}
 \end{frame}
 
 % SLIDE 11: Bagging Variance Reduction
@@ -306,6 +362,14 @@ Each split aims to create purer child nodes (lower Gini impurity or entropy).
 \vspace{0.5em}
 \textbf{Why this works:} Feature subsampling prevents dominant predictors from appearing in every tree, which \highlight{decorrelates} the trees and reduces $\rho$ in the variance formula.
 \bottomnote{Breiman (2001): the combination of bagging + feature randomization is what makes Random Forests so effective}
+\end{frame}
+
+% Chart 21: RF Depth
+\begin{frame}[t]{How Does Random Forest Handle Depth?}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{21_rf_depth_curve_fitting/chart.pdf}
+\end{center}
+\bottomnote{Averaging many trees produces smooth predictions even at maximum depth.}
 \end{frame}
 
 % SLIDE 13: Gini Impurity and Information Gain
@@ -397,6 +461,14 @@ Use \texttt{class\_weight='balanced'} in scikit-learn to upweight the minority c
 \bottomnote{In fraud detection, a missed fraud (false negative) is far more costly than a false alarm (false positive)}
 \end{frame}
 
+% Chart 23: PR Curve
+\begin{frame}[t]{Precision vs Recall: The Fraud Detection Tradeoff}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{23_precision_recall_curve/chart.pdf}
+\end{center}
+\bottomnote{In fraud detection, we often sacrifice precision (more false alarms) to catch more actual fraud (higher recall).}
+\end{frame}
+
 % SLIDE 18: Handling Class Imbalance
 \begin{frame}[t]{Handling Class Imbalance}
 \textbf{Data-level strategies}
@@ -413,6 +485,14 @@ Use \texttt{class\_weight='balanced'} in scikit-learn to upweight the minority c
   \item Random Forests support cost-sensitive learning via \texttt{class\_weight} and \texttt{sample\_weight}
 \end{itemize}
 \bottomnote{Combine multiple strategies: SMOTE + threshold tuning + cost-sensitive weights for best results}
+\end{frame}
+
+% Chart 26: SMOTE
+\begin{frame}[t]{SMOTE: Creating Synthetic Minority Samples}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{26_smote_visualization/chart.pdf}
+\end{center}
+\bottomnote{SMOTE generates new minority examples by interpolating between existing minority points.}
 \end{frame}
 
 % SLIDE 19: RF vs Boosting Overview
@@ -434,6 +514,14 @@ Interpretability & Feature importance built-in & SHAP required \\
 \vspace{0.5em}
 \textbf{Modern boosting:} XGBoost, LightGBM, and CatBoost dominate Kaggle competitions and production ML systems. Random Forests remain the robust, low-tuning baseline.
 \bottomnote{Both are ensemble methods but with fundamentally different strategies for improving predictions}
+\end{frame}
+
+% Chart 25: Bagging vs Boosting
+\begin{frame}[t]{Bagging vs Boosting: How Do They Reduce Error?}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{25_bagging_vs_boosting/chart.pdf}
+\end{center}
+\bottomnote{Bagging reduces variance through averaging; boosting reduces bias by correcting residual errors.}
 \end{frame}
 
 % SLIDE 20: From Bagging to Boosting

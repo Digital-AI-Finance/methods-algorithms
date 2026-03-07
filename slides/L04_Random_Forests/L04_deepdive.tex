@@ -7,6 +7,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.callouts,shapes.geometric,decorations.pathreplacing}
 \usepackage{hyperref}
 \usepackage{algorithm}
 \usepackage{algorithmic}
@@ -280,6 +281,14 @@ Impurity measures: Gini $= 1 - \sum_k p_k^2$, \; Entropy $= -\sum_k p_k \log_2 p
 \bottomnote{Cross-validation identifies the optimal $\alpha$ that balances tree complexity and predictive accuracy}
 \end{frame}
 
+% Chart 20: DT Depth Curve Fitting
+\begin{frame}[t]{Decision Tree Depth: From Underfitting to Overfitting}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{20_dt_depth_curve_fitting/chart.pdf}
+\end{center}
+\bottomnote{Increasing depth trades bias for variance; pruning or ensemble methods control this tradeoff.}
+\end{frame}
+
 %% ================================================================
 \section{Ensemble Methods}
 %% ================================================================
@@ -379,6 +388,14 @@ For $B$ predictions, each with variance $\sigma^2$ and pairwise correlation $\rh
 \bottomnote{This motivates feature randomization: the key innovation from bagging to Random Forests}
 \end{frame}
 
+% Chart 22: Correlation and Ensemble Size
+\begin{frame}[t]{How Correlation and Ensemble Size Affect Variance}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{22_correlation_variance_surface/chart.pdf}
+\end{center}
+\bottomnote{Low tree correlation (via feature randomization) matters more than simply adding more trees.}
+\end{frame}
+
 %% ================================================================
 \section{Random Forests Algorithm}
 %% ================================================================
@@ -447,6 +464,14 @@ For $B$ predictions, each with variance $\sigma^2$ and pairwise correlation $\rh
 \item Monitor OOB convergence to find the ``sweet spot''
 \end{itemize}
 \bottomnote{Unlike most hyperparameters, more trees cannot hurt accuracy---only cost and latency}
+\end{frame}
+
+% Chart 27: Number of Trees Convergence
+\begin{frame}[t]{How Many Trees Are Enough?}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{27_rf_ntrees_convergence/chart.pdf}
+\end{center}
+\bottomnote{OOB and test error converge after 100--200 trees; adding more provides diminishing returns.}
 \end{frame}
 
 % SLIDE 18: Hyperparameters: Tree Complexity
@@ -608,6 +633,14 @@ where $p(v) = $ fraction of samples reaching node $v$, $T = $ number of trees.
 \bottomnote{Lundberg \& Lee (2017). A unified approach to interpreting model predictions. \textit{NeurIPS}, 4765--4774. | Formal axioms in Appendix A8}
 \end{frame}
 
+% Chart 24: SHAP Waterfall
+\begin{frame}[t]{SHAP Values: Explaining a Single Fraud Prediction}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{24_shap_waterfall/chart.pdf}
+\end{center}
+\bottomnote{Each feature pushes the prediction higher (toward fraud) or lower (toward legitimate).}
+\end{frame}
+
 %% ================================================================
 \section{Bias-Variance and OOB}
 %% ================================================================
@@ -658,6 +691,14 @@ where $p(v) = $ fraction of samples reaching node $v$, $T = $ number of trees.
 \includegraphics[width=0.65\textwidth]{06b_random_forest_variance/chart.pdf}
 \end{center}
 \bottomnote{Averaging decorrelated trees dramatically reduces prediction variance}
+\end{frame}
+
+% Chart 21: RF Depth Curve Fitting
+\begin{frame}[t]{Random Forest Depth: Variance Tamed by Averaging}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{21_rf_depth_curve_fitting/chart.pdf}
+\end{center}
+\bottomnote{Unlike a single DT, the random forest produces smooth fits even at unlimited depth.}
 \end{frame}
 
 % SLIDE 28: OOB Error (chart)
@@ -722,6 +763,14 @@ Overfit risk & Low & Higher (tune carefully) \\
 \vspace{0.3em}
 \textbf{Core idea of boosting}: Train each new model on the \textit{residuals} (errors) of the previous ensemble---sequentially correcting mistakes.
 \bottomnote{Bagging and boosting are complementary: one reduces variance, the other reduces bias}
+\end{frame}
+
+% Chart 25: Bagging vs Boosting Convergence
+\begin{frame}[t]{Bagging vs Boosting: Convergence Comparison}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{25_bagging_vs_boosting/chart.pdf}
+\end{center}
+\bottomnote{Random forests converge smoothly; gradient boosting can overfit if pushed too far.}
 \end{frame}
 
 % SLIDE 31: AdaBoost Algorithm (Pseudocode)
@@ -816,6 +865,49 @@ Regularization: $\Omega(f) = \gamma T + \tfrac{1}{2}\lambda \sum_{j=1}^{T} w_j^2
 \bottomnote{Smaller learning rates require more iterations but achieve lower test error---the regularization effect}
 \end{frame}
 
+% T10: Gradient Descent in Function Space
+\begin{frame}[t]{Gradient Boosting: Walking Downhill in Loss Space}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=0.9]
+% Loss curve
+\draw[thick,mlpurple] plot[smooth,tension=0.6] coordinates {
+  (0,4.5) (1,3.8) (2,2.5) (3,1.8) (4,1.2) (5,0.9) (6,0.7) (7,0.8) (8,1.1) (9,1.8) (10,3.0)
+};
+\node[font=\small,mlpurple] at (10.5,3.0) {Loss};
+
+% Axes
+\draw[->,thick] (-0.3,0) -- (10.5,0) node[right,font=\small] {Function Space};
+\draw[->,thick] (0,-0.3) -- (0,5) node[above,font=\small] {Loss};
+
+% Ball positions (decreasing step sizes)
+\fill[mlblue] (1.5,3.3) circle (4pt);
+\fill[mlorange] (3.5,1.5) circle (4pt);
+\fill[mlgreen] (5.0,0.85) circle (4pt);
+
+% Step arrows with decreasing size
+\draw[->,very thick,mlblue] (1.6,3.1) -- (3.3,1.7);
+\draw[->,thick,mlorange] (3.6,1.35) -- (4.8,0.95);
+\draw[->,mlgreen] (5.1,0.8) -- (5.8,0.72);
+
+% Labels
+\node[font=\small\bfseries,mlblue,above] at (1.5,3.5) {Tree 1};
+\node[font=\small\bfseries,mlorange,below right] at (3.5,1.5) {Tree 2};
+\node[font=\small\bfseries,mlgreen,above right] at (5.0,0.85) {Tree 3};
+
+% Step size annotation
+\draw[decorate,decoration={brace,amplitude=5pt,mirror},thick,mlgray] (1.5,-0.4) -- (3.5,-0.4);
+\node[font=\tiny,mlgray,below] at (2.5,-0.7) {Large step};
+\draw[decorate,decoration={brace,amplitude=3pt,mirror},thick,mlgray] (3.5,-0.4) -- (5.0,-0.4);
+\node[font=\tiny,mlgray,below] at (4.25,-0.6) {Small step};
+
+% Minimum marker
+\draw[dashed,mlgray] (6,0) -- (6,0.7);
+\node[font=\tiny,mlgray] at (6,-0.3) {Minimum};
+\end{tikzpicture}
+\end{center}
+\bottomnote{Each tree takes one step in the direction of steepest descent, with the learning rate controlling step size}
+\end{frame}
+
 % SLIDE 34: Boosting in Finance
 \begin{frame}[t]{Boosting in Finance: The Dominant Paradigm}
 \textbf{Credit scoring}---XGBoost/LightGBM dominate competitions:
@@ -872,6 +964,14 @@ Kaggle/industry & Baseline & State-of-the-art \\
 \bottomnote{NEVER use accuracy for imbalanced classification---it is dangerously misleading}
 \end{frame}
 
+% Chart 23: Precision-Recall Curve
+\begin{frame}[t]{Precision-Recall Curve: Evaluating Imbalanced Classifiers}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{23_precision_recall_curve/chart.pdf}
+\end{center}
+\bottomnote{The PR curve is preferred over ROC when the positive class is rare, as in fraud detection.}
+\end{frame}
+
 % SLIDE 36: Handling Class Imbalance
 \begin{frame}[t]{Handling Class Imbalance}
 \textbf{1. Class Weighting} (scikit-learn):
@@ -895,6 +995,14 @@ Kaggle/industry & Baseline & State-of-the-art \\
 \item Choose threshold based on business costs: FN cost $\gg$ FP cost for fraud
 \end{itemize}
 \bottomnote{Always check class distribution BEFORE training any classifier!}
+\end{frame}
+
+% Chart 26: SMOTE Visualization
+\begin{frame}[t]{Visualizing SMOTE Resampling}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{26_smote_visualization/chart.pdf}
+\end{center}
+\bottomnote{SMOTE creates synthetic points along line segments between existing minority class neighbors.}
 \end{frame}
 
 % SLIDE 37: Credit Risk Feature Importance
