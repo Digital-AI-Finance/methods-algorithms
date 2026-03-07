@@ -993,6 +993,66 @@
             "id": "07_decision_flowchart",
             "file": "slides/L05_PCA_tSNE/07_decision_flowchart/chart.py",
             "status": "complete"
+          },
+          {
+            "id": "top10_09_cumulative_variance",
+            "file": "slides/L05_PCA_tSNE/top10_09_cumulative_variance/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_10_pca_biplot",
+            "file": "slides/L05_PCA_tSNE/top10_10_pca_biplot/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_11_scaling_effect",
+            "file": "slides/L05_PCA_tSNE/top10_11_scaling_effect/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_12_kernel_pca",
+            "file": "slides/L05_PCA_tSNE/top10_12_kernel_pca/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_13_tsne_iterations",
+            "file": "slides/L05_PCA_tSNE/top10_13_tsne_iterations/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_14_explained_var_heatmap",
+            "file": "slides/L05_PCA_tSNE/top10_14_explained_var_heatmap/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_15_pca_denoising",
+            "file": "slides/L05_PCA_tSNE/top10_15_pca_denoising/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_16_tsne_distance_preservation",
+            "file": "slides/L05_PCA_tSNE/top10_16_tsne_distance_preservation/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_17_pca_vs_tsne_runtime",
+            "file": "slides/L05_PCA_tSNE/top10_17_pca_vs_tsne_runtime/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_18_intrinsic_dimensionality",
+            "file": "slides/L05_PCA_tSNE/top10_18_intrinsic_dimensionality/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_19_pca_whitening",
+            "file": "slides/L05_PCA_tSNE/top10_19_pca_whitening/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_20_tsne_perplexity_grid",
+            "file": "slides/L05_PCA_tSNE/top10_20_tsne_perplexity_grid/chart.py",
+            "status": "complete"
           }
         ],
         "notebook": {
@@ -1029,6 +1089,10 @@
         },
         "notebook_tsne": {
           "file": "notebooks/L05_tsne.ipynb",
+          "status": "complete"
+        },
+        "pca_tsne_top10_slides": {
+          "file": "slides/L05_PCA_tSNE/L05_pca_tsne_top10.tex",
           "status": "complete"
         }
       },
@@ -1166,6 +1230,71 @@
             "id": "10_negative_sampling",
             "file": "slides/L06_Embeddings_RL/10_negative_sampling/chart.py",
             "status": "complete"
+          },
+          {
+            "id": "top10_08_word_analogy",
+            "file": "slides/L06_Embeddings_RL/top10_08_word_analogy/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_09_epsilon_greedy",
+            "file": "slides/L06_Embeddings_RL/top10_09_epsilon_greedy/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_10_embedding_dimensions",
+            "file": "slides/L06_Embeddings_RL/top10_10_embedding_dimensions/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_11_word_frequency_rank",
+            "file": "slides/L06_Embeddings_RL/top10_11_word_frequency_rank/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_12_context_window",
+            "file": "slides/L06_Embeddings_RL/top10_12_context_window/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_13_embedding_neighbors",
+            "file": "slides/L06_Embeddings_RL/top10_13_embedding_neighbors/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_14_qvalue_convergence",
+            "file": "slides/L06_Embeddings_RL/top10_14_qvalue_convergence/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_15_state_action_heatmap",
+            "file": "slides/L06_Embeddings_RL/top10_15_state_action_heatmap/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_16_bandit_regret",
+            "file": "slides/L06_Embeddings_RL/top10_16_bandit_regret/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_17_td_learning_update",
+            "file": "slides/L06_Embeddings_RL/top10_17_td_learning_update/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_18_embedding_pca_variance",
+            "file": "slides/L06_Embeddings_RL/top10_18_embedding_pca_variance/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_19_gridworld_trajectory",
+            "file": "slides/L06_Embeddings_RL/top10_19_gridworld_trajectory/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_20_reward_shaping",
+            "file": "slides/L06_Embeddings_RL/top10_20_reward_shaping/chart.py",
+            "status": "complete"
           }
         ],
         "notebook": {
@@ -1202,6 +1331,10 @@
         },
         "notebook_rl": {
             "file": "notebooks/L06_rl.ipynb",
+            "status": "complete"
+        },
+        "embeddings_rl_top10_slides": {
+            "file": "slides/L06_Embeddings_RL/L06_embeddings_rl_top10.tex",
             "status": "complete"
         }
       },
