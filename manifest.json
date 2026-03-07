@@ -1053,6 +1053,16 @@
             "id": "top10_20_tsne_perplexity_grid",
             "file": "slides/L05_PCA_tSNE/top10_20_tsne_perplexity_grid/chart.py",
             "status": "complete"
+          },
+          {
+            "id": "08_high_dim_before_after",
+            "file": "slides/L05_PCA_tSNE/08_high_dim_before_after/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "09_yield_curve_factors",
+            "file": "slides/L05_PCA_tSNE/09_yield_curve_factors/chart.py",
+            "status": "complete"
           }
         ],
         "notebook": {
@@ -1093,6 +1103,10 @@
         },
         "pca_tsne_top10_slides": {
           "file": "slides/L05_PCA_tSNE/L05_pca_tsne_top10.tex",
+          "status": "complete"
+        },
+        "pca_simple_slides": {
+          "file": "slides/L05_PCA_tSNE/L05_pca_simple.tex",
           "status": "complete"
         }
       },

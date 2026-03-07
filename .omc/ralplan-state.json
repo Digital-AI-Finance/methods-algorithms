@@ -1,13 +1,13 @@
 {
   "active": false,
   "mode": "ralplan",
-  "iteration": 1,
+  "iteration": 4,
   "max_iterations": 5,
-  "plan_path": ".omc/plans/l05-l06-top10-charts.md",
+  "plan_path": ".omc/plans/pca-simple-narrative.md",
   "current_phase": "complete",
-  "started_at": "2026-03-07T16:30:00Z",
-  "completed_at": "2026-03-07T17:00:00Z",
-  "task_description": "Create standalone top-20 essential charts lectures for L05 (PCA & t-SNE) and L06 (Embeddings & RL), following the same pattern as L03 and L04.",
+  "started_at": "2026-03-07T18:30:00Z",
+  "completed_at": "2026-03-07T19:30:00Z",
+  "task_description": "Create a simple PCA lecture using beamer-slide-creator skill. Narrative-driven, chart-first. All charts use synthetic data and Python. As simple as possible.",
   "verdict": "OKAY",
-  "verdict_iteration": 1
+  "verdict_iteration": 4
 }
