@@ -529,6 +529,10 @@
           "file": "slides/L04_Random_Forests/L04_dt_full.tex",
           "status": "complete"
         },
+        "dt_rf_top10_slides": {
+          "file": "slides/L04_Random_Forests/L04_dt_rf_top10.tex",
+          "status": "complete"
+        },
         "charts": [
           {
             "id": "01_decision_tree",
@@ -668,6 +672,71 @@
           {
             "id": "27_rf_ntrees_convergence",
             "file": "slides/L04_Random_Forests/27_rf_ntrees_convergence/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_05_tree_structure",
+            "file": "slides/L04_Random_Forests/top10_05_tree_structure/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_08_dt_vs_rf_boundary",
+            "file": "slides/L04_Random_Forests/top10_08_dt_vs_rf_boundary/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_10_partial_dependence",
+            "file": "slides/L04_Random_Forests/top10_10_partial_dependence/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_11_learning_curve",
+            "file": "slides/L04_Random_Forests/top10_11_learning_curve/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_12_validation_curve",
+            "file": "slides/L04_Random_Forests/top10_12_validation_curve/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_13_roc_comparison",
+            "file": "slides/L04_Random_Forests/top10_13_roc_comparison/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_14_confusion_matrix",
+            "file": "slides/L04_Random_Forests/top10_14_confusion_matrix/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_15_calibration_curve",
+            "file": "slides/L04_Random_Forests/top10_15_calibration_curve/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_16_probability_heatmap",
+            "file": "slides/L04_Random_Forests/top10_16_probability_heatmap/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_17_2d_pdp_contour",
+            "file": "slides/L04_Random_Forests/top10_17_2d_pdp_contour/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_18_ensemble_diversity",
+            "file": "slides/L04_Random_Forests/top10_18_ensemble_diversity/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_19_leaf_purity",
+            "file": "slides/L04_Random_Forests/top10_19_leaf_purity/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_20_proximity_matrix",
+            "file": "slides/L04_Random_Forests/top10_20_proximity_matrix/chart.py",
             "status": "complete"
           }
         ],

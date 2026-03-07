@@ -3,11 +3,11 @@
   "mode": "ralplan",
   "iteration": 2,
   "max_iterations": 5,
-  "plan_path": ".omc/plans/l04-charts-cartoons.md",
+  "plan_path": ".omc/plans/l04-top10-dt-rf-charts.md",
   "current_phase": "complete",
-  "started_at": "2026-03-06T12:00:00Z",
-  "completed_at": "2026-03-06T13:00:00Z",
-  "task_description": "Add many more charts and cartoons to L04 DT/RF lecture. Python charts showing tree depth effect on curve fitting for DTs and RFs.",
+  "started_at": "2026-03-07T10:00:00Z",
+  "completed_at": "2026-03-07T11:00:00Z",
+  "task_description": "Create one lecture with 10 most common/useful Python-generated charts for Decision Trees and Random Forests, using synthetic data. Brainstorm the best 10 charts.",
   "verdict": "OKAY",
   "verdict_iteration": 2
 }
