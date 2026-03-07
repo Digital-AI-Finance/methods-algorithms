@@ -381,6 +381,10 @@
           "file": "slides/L03_KNN_KMeans/L03_kmeans_full.tex",
           "status": "complete"
         },
+        "knn_kmeans_top10_slides": {
+          "file": "slides/L03_KNN_KMeans/L03_knn_kmeans_top10.tex",
+          "status": "complete"
+        },
         "charts": [
           {
             "id": "01_knn_boundaries",
@@ -415,6 +419,91 @@
           {
             "id": "07_decision_flowchart",
             "file": "slides/L03_KNN_KMeans/07_decision_flowchart/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "08_feature_scaling_effect",
+            "file": "slides/L03_KNN_KMeans/08_feature_scaling_effect/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "09_knn_step_by_step",
+            "file": "slides/L03_KNN_KMeans/09_knn_step_by_step/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "10_bias_variance_visual",
+            "file": "slides/L03_KNN_KMeans/10_bias_variance_visual/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "11_rfm_scatter",
+            "file": "slides/L03_KNN_KMeans/11_rfm_scatter/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "12_kmeans_worked_example",
+            "file": "slides/L03_KNN_KMeans/12_kmeans_worked_example/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "13_cv_accuracy_curve",
+            "file": "slides/L03_KNN_KMeans/13_cv_accuracy_curve/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_10_kmeans_failure_cases",
+            "file": "slides/L03_KNN_KMeans/top10_10_kmeans_failure_cases/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_11_knn_weighted_vs_uniform",
+            "file": "slides/L03_KNN_KMeans/top10_11_knn_weighted_vs_uniform/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_12_curse_of_dimensionality",
+            "file": "slides/L03_KNN_KMeans/top10_12_curse_of_dimensionality/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_13_knn_regression",
+            "file": "slides/L03_KNN_KMeans/top10_13_knn_regression/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_14_kmeans_init_sensitivity",
+            "file": "slides/L03_KNN_KMeans/top10_14_kmeans_init_sensitivity/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_15_minibatch_kmeans",
+            "file": "slides/L03_KNN_KMeans/top10_15_minibatch_kmeans/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_16_cluster_centers_heatmap",
+            "file": "slides/L03_KNN_KMeans/top10_16_cluster_centers_heatmap/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_17_gap_statistic",
+            "file": "slides/L03_KNN_KMeans/top10_17_gap_statistic/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_18_knn_roc_curves",
+            "file": "slides/L03_KNN_KMeans/top10_18_knn_roc_curves/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_19_kmeans_inertia_convergence",
+            "file": "slides/L03_KNN_KMeans/top10_19_kmeans_inertia_convergence/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "top10_20_knn_confusion_matrix",
+            "file": "slides/L03_KNN_KMeans/top10_20_knn_confusion_matrix/chart.py",
             "status": "complete"
           }
         ],
