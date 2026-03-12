@@ -307,7 +307,7 @@
         <div class="quiz-header">
             <div class="quiz-title">Quiz 5: PCA &amp; t-SNE</div>
             <div class="quiz-stats">
-                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-progress" id="progressBadge">0/22</span>
                 <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
             </div>
         </div>
@@ -576,6 +576,30 @@
                     },
                     "correct": "A",
                     "explanation": "UMAP advantages: (1) $O(n\\log n)$ complexity (scalable to millions of points), (2) better global structure preservation through cross-entropy optimization, (3) supports transform() for new points. Both t-SNE and UMAP require hyperparameter tuning (perplexity vs. n_neighbors)."
+                },
+                {
+                    "id": 21,
+                    "question": "The PCA algorithm has these steps: (i) mean-center the data, (ii) compute the covariance matrix, (iii) eigendecompose it, (iv) project onto the top $k$ eigenvectors. What is the computational complexity of this procedure for $n$ samples and $p$ features?",
+                    "options": {
+                        "A": "$O(\\min(n^2 p,\\, n p^2))$ --- dominated by the covariance computation or the eigendecomposition, whichever is larger",
+                        "B": "$O(n \\log n)$ --- the data only needs to be sorted",
+                        "C": "$O(n + p)$ --- linear in both samples and features",
+                        "D": "$O(2^p)$ --- exponential in the number of features"
+                    },
+                    "correct": "A",
+                    "explanation": "Computing the covariance matrix $X_c^\\top X_c$ costs $O(n p^2)$, and eigendecomposition of the $p \\times p$ matrix costs $O(p^3)$. When $n < p$, using the SVD on $X_c$ directly costs $O(n^2 p)$. The overall complexity is $O(\\min(n^2 p, n p^2))$. For very large datasets, randomized SVD or incremental PCA reduce this further."
+                },
+                {
+                    "id": 22,
+                    "question": "Given 5 data points in 2D: $(1,2), (3,4), (5,6), (2,3), (4,5)$ with mean $(3,4)$. After centering, the covariance matrix is $C = \\begin{pmatrix} 2.5 & 2.5 \\\\ 2.5 & 2.5 \\end{pmatrix}$ with eigenvalues $\\lambda_1=5, \\lambda_2=0$. What does $\\lambda_2=0$ tell us?",
+                    "options": {
+                        "A": "The data lies perfectly on a 1D line --- all variance is captured by PC1 and no information is lost by projecting to 1 dimension",
+                        "B": "The second feature has zero variance",
+                        "C": "PCA cannot be applied to this dataset",
+                        "D": "The covariance matrix is incorrectly computed"
+                    },
+                    "correct": "A",
+                    "explanation": "When $\\lambda_2 = 0$, the data has zero variance in the PC2 direction --- all points lie on the line defined by PC1. In this example, all centered points fall on $y = x$, so PC1 $= \\frac{1}{\\sqrt{2}}(1,1)$ captures 100% of the variance ($\\frac{5}{5+0} = 1$). This is a perfect case for dimensionality reduction from 2D to 1D with zero reconstruction error."
                 }
             ]
         };
