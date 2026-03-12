@@ -110,7 +110,7 @@
 % Slide 2: Outline
 \begin{frame}{Outline}
   \tableofcontents
-\bottomnote{Three zones: Introduction, Core Content (PMSP), and Wrap-Up}
+\bottomnote{Two topics today: text embeddings and reinforcement learning}
 \end{frame}
 
 % Slide 3: Opening Comic (XKCD #1838)
@@ -191,8 +191,8 @@ then collect the answers on the other side.''}
 
 \section{Problem}
 
-% Slide 8: The Business Problem
-\begin{frame}[t]{The Business Problem}
+% Slide 8: Why Can't Machines Read Text?
+\begin{frame}[t]{Why Can't Machines Read Text?}
 \textbf{Text Data: One-Hot Encoding Wastes Dimensions}
 \begin{itemize}
 \item A vocabulary of 50,000 words $\Rightarrow$ 50,000-dimensional sparse vectors
@@ -209,35 +209,9 @@ then collect the answers on the other side.''}
 \bottomnote{Embeddings solve the text problem; RL solves the sequential decision problem}
 \end{frame}
 
-% Slide 9: Key Equations
-\begin{frame}[t]{Key Equations}
-\textbf{Embeddings --- Skip-Gram Objective:}
-\[
-\max \sum_{t=1}^{T} \sum_{\substack{-c \leq j \leq c \\ j \neq 0}} \log p(w_{t+j} \mid w_t)
-\]
-
-\textbf{Cosine Similarity:}
-\[
-\text{sim}(u, v) = \frac{u \cdot v}{\|u\| \, \|v\|}
-\]
-
-\textbf{Example:} $\text{cos}(\text{``king''}, \text{``queen''}) = 0.85$ (very similar) vs.\ $\text{cos}(\text{``king''}, \text{``car''}) = 0.12$ (unrelated).
-
-\textbf{Reinforcement Learning --- Bellman Equation:}
-\[
-Q^*(s,a) = \mathbb{E}\bigl[r + \gamma \max_{a'} Q^*(s', a') \mid s, a\bigr]
-\]
-
-\textbf{TD Update (Q-Learning):}
-\[
-Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\bigr]
-\]
-\bottomnote{These four equations are the mathematical backbone of this lecture}
-\end{frame}
-
 \section{Method}
 
-% Slide 10: Word Embedding Space (CHART 01)
+% Slide 9: Word Embedding Space (CHART 01)
 \begin{frame}[t]{Word Embedding Space}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{01_word_embedding_space/chart.pdf}
@@ -245,8 +219,8 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \bottomnote{Similar words cluster together in embedding space}
 \end{frame}
 
-% Slide 11: From Words to Vectors
-\begin{frame}[t]{From Words to Vectors}
+% Slide 10: How Do We Turn Words Into Numbers?
+\begin{frame}[t]{How Do We Turn Words Into Numbers?}
 \textbf{The Distributional Hypothesis}
 \begin{quote}
 ``You shall know a word by the company it keeps.'' --- J.R.\ Firth (1957)
@@ -260,8 +234,30 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \bottomnote{Word2Vec: the breakthrough that made word embeddings practical (Mikolov et al., 2013)}
 \end{frame}
 
-% Slide 12: Static vs. Contextual Embeddings
-\begin{frame}[t]{Static vs.\ Contextual Embeddings}
+% Slide 11: Cosine Similarity (MVF: Motivate-Visualize-Formalize)
+\begin{frame}[t]{How Do We Measure Word Similarity?}
+\textbf{Intuition:} Two vectors pointing in a similar direction encode similar meaning.
+
+\vspace{0.3em}
+\begin{center}
+\begin{tikzpicture}[scale=1.2]
+  \draw[->,thick,mlblue] (0,0) -- (3,4) node[right] {$\vec{u}=[3,4]$};
+  \draw[->,thick,mlorange] (0,0) -- (4,3) node[right] {$\vec{v}=[4,3]$};
+  \draw[mlgray,dashed] (0.6,0.8) arc[start angle=53.1,end angle=36.9,radius=1.0];
+  \node[mlgray] at (1.3,1.1) {$\theta$};
+\end{tikzpicture}
+\end{center}
+
+\vspace{-0.3em}
+\textbf{Cosine Similarity:}
+$\text{sim}(\vec{u}, \vec{v}) = \frac{\vec{u} \cdot \vec{v}}{\|\vec{u}\| \, \|\vec{v}\|}$
+
+\textbf{Example:} $\frac{3 \times 4 + 4 \times 3}{5 \times 5} = \frac{24}{25} = 0.96$ \quad (very similar direction)
+\bottomnote{Range: $[-1, 1]$. Cosine similarity = 1 means identical direction, 0 means unrelated, $-1$ means opposite}
+\end{frame}
+
+% Slide 12: Does 'Bank' Always Mean the Same Thing?
+\begin{frame}[t]{Does `Bank' Always Mean the Same Thing?}
 \textbf{Static Embeddings} (Word2Vec, GloVe)
 \begin{itemize}
 \item One fixed vector per word, regardless of context
@@ -274,7 +270,7 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \item ``The \textbf{bank} approved the loan'' vs.\ ``We walked along the river \textbf{bank}''
 \item FinBERT: BERT fine-tuned on financial text---captures domain nuance
 \end{itemize}
-\bottomnote{Static: one meaning per word. Contextual: meaning adapts to context.}
+\bottomnote{Static: one meaning per word. Contextual: meaning adapts to context. Next: sequential decisions.}
 \end{frame}
 
 % Slide 13: RL: Agent-Environment Loop (CHART 03)
@@ -297,8 +293,8 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \bottomnote{Agent takes actions, receives rewards, learns optimal policy}
 \end{frame}
 
-% Slide 14: Q-Learning at a Glance
-\begin{frame}[t]{Q-Learning at a Glance}
+% Slide 14: How Does an Agent Learn from Rewards?
+\begin{frame}[t]{How Does an Agent Learn from Rewards?}
 \textbf{What is Q(s, a)?}
 \begin{itemize}
 \item The expected total discounted reward from taking action $a$ in state $s$, then acting optimally
@@ -320,16 +316,17 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 
 \section{Solution}
 
-% Slide 15: Learning Progress (CHART 05)
-\begin{frame}[t]{Learning Progress}
+% Slide 15: Does the Agent Actually Improve? (CHART 05)
+\begin{frame}[t]{Does the Agent Actually Improve?}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{05_reward_curves/chart.pdf}
 \end{center}
 \bottomnote{RL agents improve through exploration and exploitation over many episodes}
 \end{frame}
 
-% Slide 16: Embeddings in Finance: Sentiment Analysis
-\begin{frame}[t]{Embeddings in Finance: Sentiment Analysis}
+% Slide 16: How Can Embeddings Detect Market Sentiment?
+\begin{frame}[t]{How Can Embeddings Detect Market Sentiment?}
+\textit{Returning to embeddings---}
 \textbf{Worked Example}
 \begin{itemize}
 \item Input headline: ``Fed signals aggressive rate hike amid inflation fears''
@@ -364,8 +361,8 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \bottomnote{RL for trading is an active research area; not a solved problem}
 \end{frame}
 
-% Slide 18: Comparison Table (Condensed)
-\begin{frame}[t]{Embeddings vs.\ Reinforcement Learning}
+% Slide 18: Embeddings vs. RL: When Do You Use Which?
+\begin{frame}[t]{Embeddings vs.\ RL: When Do You Use Which?}
 \begin{center}
 \renewcommand{\arraystretch}{1.4}
 \begin{tabular}{lll}
@@ -391,8 +388,8 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \bottomnote{Embeddings for text, RL for sequential decisions with delayed rewards}
 \end{frame}
 
-% Slide 20: Practical Tips
-\begin{frame}[t]{Practical Tips}
+% Slide 20: What Are the Common Pitfalls?
+\begin{frame}[t]{What Are the Common Pitfalls?}
 \textbf{Embeddings}
 \begin{itemize}
 \item Start with pre-trained models (Word2Vec, GloVe, or FinBERT)---training from scratch requires massive corpora
@@ -402,15 +399,15 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \vspace{0.5em}
 \textbf{Reinforcement Learning}
 \begin{itemize}
-\item Start simple: tabular Q-learning before DQN or policy gradient
+\item Start simple: tabular Q-learning before more advanced methods
 \item Design rewards carefully---reward shaping prevents sparse-signal problems
 \item Normalize states: RL is sensitive to feature scales
 \end{itemize}
 \bottomnote{Both domains: start simple, iterate, validate thoroughly}
 \end{frame}
 
-% Slide 21: Hands-on Exercise
-\begin{frame}[t]{Hands-on Exercise}
+% Slide 21: Can You Build It Yourself?
+\begin{frame}[t]{Can You Build It Yourself?}
 \textbf{Open the Colab Notebook}
 \begin{enumerate}
 \item \textbf{Exercise 1:} Explore word embeddings with Word2Vec---find similar words and visualize clusters
@@ -439,7 +436,7 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \textbf{Reinforcement Learning}
 \begin{itemize}
 \item An agent interacts with an environment, learning from rewards over time
-\item Q-learning and DQN provide practical algorithms for value-based control
+\item Q-learning provides a practical algorithm for value-based control
 \end{itemize}
 \vspace{0.3em}
 \textbf{Finance Applications}

@@ -203,46 +203,72 @@
 \bottomnote{Dimensionality reduction tackles sparsity, overfitting, and computational cost simultaneously}
 \end{frame}
 
-% SLIDE 9: Key Equations -- PCA
+% SLIDE 9: PCA in One Picture (CHART)
+% NOTE: chart 08 intentionally shared with deepdive (visual anchor at both levels)
+\begin{frame}[t]{PCA in One Picture: Before and After}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{08_high_dim_before_after/chart.pdf}
+\end{center}
+\vspace{-0.3em}
+\textbf{Key idea:} PCA compresses many dimensions into a few while preserving the dominant structure.
+\bottomnote{This is exactly the ``best camera angle'' idea --- mathematically, we formalize it next}
+\end{frame}
+
+% SLIDE 10: Key Equations -- PCA
 \begin{frame}[t]{Key Equations: PCA}
-\textbf{Covariance Matrix} (from mean-centered data $X_c = X - \bar{X}$):
+\textbf{To find the ``best camera angle,'' we measure how features move together and find the direction of greatest spread.}
+\vspace{0.3em}
+
+\textbf{Covariance Matrix} \textit{(measures how each pair of features varies together)} (from mean-centered data $X_c = X - \bar{X}$):
 \[
 C = \frac{1}{n-1}\, X_c^\top X_c
 \]
 
-\textbf{Eigendecomposition}: find directions and magnitudes
+\textbf{Eigendecomposition} \textit{(finds directions and magnitudes of greatest spread)}:
 \[
 C\, \mathbf{v}_k = \lambda_k\, \mathbf{v}_k
 \]
 
-\textbf{Explained Variance Ratio}: how much each component captures
+\textbf{Explained Variance Ratio} \textit{(fraction of total information each direction captures)}:
 \[
 \text{EVR}_k = \frac{\lambda_k}{\displaystyle\sum_{j=1}^{p} \lambda_j}
 \]
 
 \textbf{Example:} If the first eigenvalue explains 70\% and the second 20\%, then 2 components capture 90\% of the variance.
+\vspace{0.2em}
+\textit{The ``best camera angle'' IS the first eigenvector --- the direction capturing the most variance.}
 \bottomnote{PCA reduces to an eigenvalue problem on the covariance matrix}
 \end{frame}
 
-% SLIDE 10: Key Equations -- t-SNE
+% SLIDE 11: Key Equations -- t-SNE
 \begin{frame}[t]{Key Equations: t-SNE}
 \textbf{High-dimensional similarity} (Gaussian kernel):
 \[
 p_{j|i} = \frac{\exp\!\bigl(-\|x_i - x_j\|^2 / 2\sigma_i^2\bigr)}{\sum_{k \neq i}\exp\!\bigl(-\|x_i - x_k\|^2 / 2\sigma_i^2\bigr)}
 \]
 
+\vspace{0.1em}
+\textit{The Student's $t$-distribution has heavier tails than the Gaussian, preventing points from crowding in 2D.}
+\vspace{0.1em}
+
 \textbf{Low-dimensional similarity} (Student-$t$ with 1 degree of freedom):
 \[
 q_{ij} = \frac{\bigl(1 + \|y_i - y_j\|^2\bigr)^{-1}}{\sum_{k \neq l}\bigl(1 + \|y_k - y_l\|^2\bigr)^{-1}}
 \]
 
-\textbf{Objective}: minimize the Kullback--Leibler divergence $\text{KL}(P \| Q)$
+\vspace{0.2em}
+\textbf{Objective}: minimize KL divergence --- a measure of how different two probability distributions are:
+\[
+\text{KL}(P \| Q)
+\]
+\vspace{0.1em}
+\textit{Perplexity ($\approx 30$) controls how many neighbors each point considers --- like adjusting the zoom.}
 \bottomnote{The heavy-tailed $t$-distribution in low-D prevents crowding of moderate neighbors}
 \end{frame}
 
 \section{Method}
 
-% SLIDE 11: Scree Plot (CHART)
+% SLIDE 12: Scree Plot (CHART)
 \begin{frame}[t]{Scree Plot: Choosing the Number of Components}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{01_scree_plot/chart.pdf}
@@ -250,20 +276,27 @@ q_{ij} = \frac{\bigl(1 + \|y_i - y_j\|^2\bigr)^{-1}}{\sum_{k \neq l}\bigl(1 + \|
 \bottomnote{Choose $k$ capturing 80--95\% variance or at the elbow --- Kaiser criterion ($\lambda > 1$) valid for correlation matrix only}
 \end{frame}
 
-% SLIDE 12: Yield Curve PCA
+% SLIDE 13: Yield Curve PCA (CHART)
 \begin{frame}[t]{Yield Curve PCA: Three Factors Explain 98\%}
-\textbf{Three principal components capture nearly all yield curve variation:}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{09_yield_curve_factors/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\textbf{Three components capture nearly all variation:}
 \begin{itemize}
-  \item \highlight{PC1 --- Level ($\sim$85\%):} all maturities load in the same direction; a parallel shift up or down
-  \item \highlight{PC2 --- Slope ($\sim$10\%):} short and long maturities load with opposite signs; steepening or flattening
-  \item \highlight{PC3 --- Curvature ($\sim$3\%):} short and long load positively, middle negatively; a butterfly twist
+  \item \highlight{PC1 --- Level:} parallel shift ($\sim$85\%)
+  \item \highlight{PC2 --- Slope:} steepening ($\sim$10\%)
+  \item \highlight{PC3 --- Curvature:} butterfly twist ($\sim$3\%)
 \end{itemize}
 \vspace{0.3em}
-Together these three factors explain over 98\% of daily yield curve movements.
+Together: 98\%+ of daily yield curve movements in just 3 numbers.
+\end{column}
+\end{columns}
 \bottomnote{Level--Slope--Curvature decomposition is the foundation of fixed-income risk management}
 \end{frame}
 
-% SLIDE 13: PCA on Swiss Roll (CHART)
+% SLIDE 14: PCA on Swiss Roll (CHART)
 \begin{frame}[t]{PCA on Swiss Roll: Linear Limits}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{05a_pca_swiss_roll/chart.pdf}
@@ -271,7 +304,7 @@ Together these three factors explain over 98\% of daily yield curve movements.
 \bottomnote{PCA projects linearly and cannot unroll a curved manifold --- distant points on the surface overlap}
 \end{frame}
 
-% SLIDE 14: t-SNE on Swiss Roll (CHART)
+% SLIDE 15: t-SNE on Swiss Roll (CHART)
 \begin{frame}[t]{t-SNE on Swiss Roll: Unrolling the Manifold}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{05b_tsne_swiss_roll/chart.pdf}
@@ -279,7 +312,7 @@ Together these three factors explain over 98\% of daily yield curve movements.
 \bottomnote{t-SNE preserves local neighborhoods and successfully unrolls the non-linear manifold structure}
 \end{frame}
 
-% SLIDE 15: t-SNE Cluster Preservation (CHART)
+% SLIDE 16: t-SNE Cluster Preservation (CHART)
 \begin{frame}[t]{t-SNE Cluster Preservation: MNIST Digits}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{06c_tsne_cluster_projection/chart.pdf}
@@ -287,7 +320,7 @@ Together these three factors explain over 98\% of daily yield curve movements.
 \bottomnote{t-SNE on 784-dimensional MNIST data: digit classes form clearly separated clusters in 2D}
 \end{frame}
 
-% SLIDE 16: t-SNE Caveats
+% SLIDE 17: t-SNE Caveats
 \begin{frame}[t]{t-SNE Caveats: What You Cannot Conclude}
 \textbf{Common misinterpretations to avoid:}
 \begin{itemize}
@@ -306,7 +339,7 @@ Together these three factors explain over 98\% of daily yield curve movements.
 
 \section{Solution}
 
-% SLIDE 17: PCA vs t-SNE Comparison Table
+% SLIDE 18: PCA vs t-SNE Comparison Table
 \begin{frame}[t]{PCA vs.\ t-SNE: Head-to-Head Comparison}
 \vspace{0.3em}
 \begin{center}
@@ -327,7 +360,7 @@ Visualization & Limited & Excellent \\
 \bottomnote{PCA for preprocessing and speed; t-SNE for visualization and exploration}
 \end{frame}
 
-% SLIDE 18: Portfolio Risk Decomposition
+% SLIDE 19: Portfolio Risk Decomposition
 \begin{frame}[t]{Portfolio Risk Decomposition with PCA}
 \textbf{Reducing 100 assets to a few interpretable risk factors:}
 \begin{itemize}
@@ -344,7 +377,7 @@ Visualization & Limited & Excellent \\
 \bottomnote{PCA-based factor models are the backbone of portfolio risk management and stress testing}
 \end{frame}
 
-% SLIDE 19: Market Regime Detection with t-SNE
+% SLIDE 20: Market Regime Detection with t-SNE
 \begin{frame}[t]{Market Regime Detection with t-SNE}
 \textbf{Visualizing hidden structure in market data:}
 \begin{itemize}
@@ -357,7 +390,7 @@ Visualization & Limited & Excellent \\
 \bottomnote{t-SNE visualization guides hypothesis generation --- confirm regimes with formal clustering}
 \end{frame}
 
-% SLIDE 20: Decision Framework (CHART)
+% SLIDE 21: Decision Framework (CHART)
 \begin{frame}[t]{Decision Framework: Which Method to Use?}
 \vspace{-1mm}
 \begin{center}
@@ -367,7 +400,7 @@ Visualization & Limited & Excellent \\
 \bottomnote{Start with PCA for preprocessing; add t-SNE when you need 2D visualization of complex structure}
 \end{frame}
 
-% SLIDE 21: Hands-on Exercise
+% SLIDE 22: Hands-on Exercise
 \begin{frame}[t]{Hands-on Exercise}
 \textbf{Open the Colab Notebook and complete these exercises:}
 \begin{enumerate}
@@ -384,7 +417,7 @@ Visualization & Limited & Excellent \\
 
 \section{Summary}
 
-% SLIDE 22: Key Takeaways
+% SLIDE 23: Key Takeaways
 \begin{frame}[t]{Key Takeaways}
 \textbf{What to remember from this lecture:}
 \begin{itemize}
@@ -396,7 +429,7 @@ Visualization & Limited & Excellent \\
 \bottomnote{Dimensionality reduction is both a preprocessing tool (PCA) and an exploration tool (t-SNE)}
 \end{frame}
 
-% SLIDE 23: Closing Comic
+% SLIDE 24: Closing Comic
 \begin{frame}[t]{Closing Thought}
 \begin{columns}[T]
 \column{0.45\textwidth}
@@ -412,7 +445,7 @@ The fourth component? That's just noise\ldots\ probably.''}
 \bottomnote{XKCD \#2400 ``Statistics'' by Randall Munroe (CC BY-NC 2.5)}
 \end{frame}
 
-% SLIDE 24: References
+% SLIDE 25: References
 \begin{frame}[t]{References}
 \footnotesize
 \begin{itemize}

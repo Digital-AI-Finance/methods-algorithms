@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-10 -->
 
 # L06_Embeddings_RL/
 
@@ -28,8 +28,8 @@ Lesson 6 introduces representation learning (word embeddings) and reinforcement 
 
 | File | Purpose | Slides |
 |------|---------|--------|
-| `L06_overview.tex` | Overview slides with 7 charts | ~17 |
-| `L06_deepdive.tex` | Deep dive with Q-learning derivation | ~30 |
+| `L06_overview.tex` | Overview slides (4 charts: 01, 03, 05, 07) | 24 |
+| `L06_deepdive.tex` | Deep dive (9 charts: 02, 04, 06, 08-13) + 10 appendix slides | 52 |
 | `L06_instructor_guide.md` | Teaching guide with PMSP breakdown | - |
 
 ## Charts
@@ -48,8 +48,11 @@ All charts follow the naming convention `XX_descriptive_name/` and output `chart
 | 08 | `08_skipgram_architecture/` | Skip-gram model architecture | Neural network diagram for Word2Vec |
 | 09 | `09_dqn_architecture/` | Deep Q-Network architecture | Neural network for Q-learning |
 | 10 | `10_negative_sampling/` | Negative sampling visualization | How SGNS samples negatives |
+| 11 | `11_word_analogy_arithmetic/` | Word analogy vector arithmetic | king - man + woman ≈ queen |
+| 12 | `12_epsilon_decay/` | Epsilon decay schedules | Exponential vs linear decay |
+| 13 | `13_walkforward_timeline/` | Walk-forward backtesting | Train/test rolling window |
 
-Note: L06 has **10 charts** (most of any topic). Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
+Note: L06 has **13 charts** (most of any topic). Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
 
 ## Chart Technical Details
 
@@ -277,10 +280,30 @@ This is the final lesson. Students complete the course with:
 - **Presentations**: 15-minute talks on selected ML topics
 - **Quiz 3**: Covers L05 (PCA/t-SNE) and L06 (Embeddings/RL)
 
+## Pedagogical Flow Fixes (Mar 2026)
+
+Ultra-deep pedagogical review identified and fixed 10 issues across both files:
+
+**General flow fixes (overview + deepdive):**
+- DQN forward references removed from overview (only taught in deepdive)
+- Cosine similarity forward-reference added in deepdive slide 5
+- ε-greedy expanded with inline definition on first use (slide 24)
+- Topic transition signals added between embeddings↔RL in overview
+- σ (sigmoid) defined after negative sampling formula
+- f(w) (word frequency) annotated in pseudocode
+- α (learning rate) introduced in TD(0) heading
+
+**RL-specific fixes (deepdive):**
+- α symbol collision fixed: β used for epsilon decay rate (was reusing α=learning rate)
+- R_{t+1} notation clarified with parenthetical on Value Function slide
+- θ⁻ (target network weights) inline note added before DQN loss function
+
+Both files compile clean: 0 errors, 0 Overfull.
+
 ## Extensions
 
-**Advanced Topics** (not covered in this course):
-- Deep RL (DQN, A3C, PPO)
+**Advanced Topics** (covered in deepdive appendix):
+- Deep RL (DQN architecture and stability tricks)
 - Transformer embeddings (BERT, GPT)
 - Multi-agent RL
 - Meta-learning

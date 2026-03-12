@@ -138,8 +138,8 @@ After this lecture, you will be able to:
 \section{Word Embeddings}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Slide 5: Part 1: Word Embeddings Introduction
-\begin{frame}[t]{Part 1: Word Embeddings Introduction}
+%% Slide 5: Word Embeddings: The Representation Problem
+\begin{frame}[t]{Why Can't One-Hot Vectors Capture Meaning?}
 \textbf{The Problem with One-Hot Encoding}
 \begin{itemize}
 \item Vocabulary of 10,000 words $\rightarrow$ 10,000-dim sparse vectors
@@ -150,14 +150,22 @@ After this lecture, you will be able to:
 \textbf{Solution: Dense Embeddings}
 \begin{itemize}
 \item Map words to dense vectors (50-300 dimensions)
-\item Similar words $\rightarrow$ similar vectors
+\item Similar words $\rightarrow$ similar vectors (via cosine similarity---defined later)
 \item Learn from context (distributional hypothesis)
 \end{itemize}
 \bottomnote{``You shall know a word by the company it keeps'' -- Firth, 1957}
 \end{frame}
 
-%% Slide 6: Word2Vec: Skip-gram
-\begin{frame}[t]{Word2Vec: Skip-gram}
+%% Slide 6: Skip-gram Architecture (CHART 08)
+\begin{frame}[t]{Skip-gram Architecture}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{08_skipgram_architecture/chart.pdf}
+\end{center}
+\bottomnote{Two embedding matrices: input $W$ (word vectors) and output $W'$ (context vectors)}
+\end{frame}
+
+%% Slide 7: Word2Vec: Skip-gram
+\begin{frame}[t]{How Does Skip-Gram Learn Word Meaning?}
 \textbf{Objective:} Predict context words given target word
 \[
 P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in V} \exp(v_w^T v_{target})}
@@ -172,8 +180,8 @@ P(w_{context} | w_{target}) = \frac{\exp(v_{context}^T v_{target})}{\sum_{w \in 
 \bottomnote{Skip-gram works well for rare words; CBOW better for frequent words}
 \end{frame}
 
-%% Slide 7: Skip-gram: Computational Challenge (HOSTILE REVIEW FIX C1)
-\begin{frame}[t]{Skip-gram: Computational Challenge}
+%% Slide 8: Skip-gram: Computational Challenge (HOSTILE REVIEW FIX C1)
+\begin{frame}[t]{Why Is Full Softmax Too Expensive?}
 \textbf{Problem:} The softmax denominator sums over \highlight{entire vocabulary}:
 \[
 \sum_{w \in V} \exp(v_w^T v_{target}) \quad \text{--- } O(|V|) \text{ per update!}
@@ -187,6 +195,7 @@ Replace full softmax with binary classification:
 \[
 \log \sigma(v'_{w_O}{}^T v_{w_I}) + \sum_{i=1}^{k} \mathbb{E}_{w_i \sim P_n}\left[\log \sigma(-v'_{w_i}{}^T v_{w_I})\right]
 \]
+where $\sigma(x) = 1/(1+e^{-x})$ is the sigmoid function.
 \begin{itemize}
 \item Positive pair: (target, true context) $\rightarrow$ predict 1
 \item $k$ negative pairs: (target, random word) $\rightarrow$ predict 0
@@ -195,7 +204,7 @@ Replace full softmax with binary classification:
 \bottomnote{Negative sampling: the key innovation that made Word2Vec practical}
 \end{frame}
 
-%% Slide 8: Negative Sampling Illustrated (CHART 10)
+%% Slide 9: Negative Sampling Illustrated (CHART 10)
 \begin{frame}[t]{Negative Sampling Illustrated}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{10_negative_sampling/chart.pdf}
@@ -203,16 +212,8 @@ Replace full softmax with binary classification:
 \bottomnote{Binary classification: distinguish true context words from random ``noise'' words}
 \end{frame}
 
-%% Slide 9: Skip-gram Architecture (CHART 08)
-\begin{frame}[t]{Skip-gram Architecture}
-\begin{center}
-\includegraphics[width=0.55\textwidth]{08_skipgram_architecture/chart.pdf}
-\end{center}
-\bottomnote{Two embedding matrices: input $W$ (word vectors) and output $W'$ (context vectors)}
-\end{frame}
-
 %% Slide 10: Skip-Gram with Negative Sampling: Algorithm (HOSTILE REVIEW FIX M4, INSTRUCTOR GUIDE)
-\begin{frame}[fragile,t]{Skip-Gram with Negative Sampling: Algorithm}
+\begin{frame}[fragile,t]{How Does Negative Sampling Work in Practice?}
 \begin{algorithmic}[1]
 \REQUIRE corpus, embedding dim $d$, negatives $k$, window size, epochs
 \STATE Initialize $W, W' \in \mathbb{R}^{|V| \times d}$ randomly
@@ -221,7 +222,7 @@ Replace full softmax with binary classification:
     \FOR{each context word $w_c$ within window}
       \STATE \textbf{Positive}: update $(w_t, w_c)$ to increase $\sigma(v_{w_t}^\top v'_{w_c})$
       \FOR{$i = 1, \ldots, k$}
-        \STATE Sample $w_n \sim P_n(w) \propto f(w)^{3/4}$
+        \STATE Sample $w_n \sim P_n(w) \propto f(w)^{3/4}$ \COMMENT{$f(w)$: word freq.}
         \STATE \textbf{Negative}: update $(w_t, w_n)$ to decrease $\sigma(v_{w_t}^\top v'_{w_n})$
       \ENDFOR
     \ENDFOR
@@ -231,15 +232,11 @@ Replace full softmax with binary classification:
 \end{algorithmic}
 \vspace{0.5em}
 \textbf{Key}: Negative sampling (3-5 negatives per positive) replaces expensive softmax over entire vocabulary.
-\vfill
-\vspace{-2mm}
-\textcolor{mllavender2}{\rule{\textwidth}{0.4pt}}
-\vspace{1mm}
-{\footnotesize\textbf{Mikolov et al.\ (2013). Distributed representations of words and phrases. \textit{NeurIPS}, 3111--3119.}}
+\bottomnote{Mikolov et al.\ (2013). Distributed representations of words and phrases. \textit{NeurIPS}, 3111--3119.}
 \end{frame}
 
 %% Slide 11: Word Analogies
-\begin{frame}[t]{Word Analogies}
+\begin{frame}[t]{Can Vectors Solve Analogies?}
 \textbf{Famous Example:}
 \[
 \vec{king} - \vec{man} + \vec{woman} \approx \vec{queen}
@@ -259,8 +256,16 @@ Replace full softmax with binary classification:
 \bottomnote{Embeddings capture relational structure, not just similarity}
 \end{frame}
 
-%% Slide 12: Word Analogy Limitations (HOSTILE REVIEW FIX M2)
-\begin{frame}[t]{Word Analogy Limitations}
+%% Slide 12: Word Analogy Arithmetic (CHART 11)
+\begin{frame}[t]{Word Analogy: Vector Arithmetic}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{11_word_analogy_arithmetic/chart.pdf}
+\end{center}
+\bottomnote{Vector arithmetic in embedding space: relationships encoded as directions (PCA projection of 50-dim embeddings)}
+\end{frame}
+
+%% Slide 13: Word Analogy Limitations (HOSTILE REVIEW FIX M2)
+\begin{frame}[t]{When Do Word Analogies Fail?}
 \textbf{Known Issues:}
 \begin{itemize}
 \item Success rates typically 40--70\%, not near 100\% (Levy \& Goldberg, 2014)
@@ -277,8 +282,8 @@ Replace full softmax with binary classification:
 \bottomnote{Critical thinking: embeddings capture statistical patterns, including harmful ones}
 \end{frame}
 
-%% Slide 13: Similarity Measures (CHART 02, HOSTILE REVIEW Mi3 already applied)
-\begin{frame}[t]{Similarity Measures}
+%% Slide 14: Similarity Measures (CHART 02, HOSTILE REVIEW Mi3 already applied)
+\begin{frame}[t]{How Do We Measure Closeness in Vector Space?}
 \textbf{Cosine Similarity:}
 \[
 \text{sim}(u, v) = \frac{u \cdot v}{||u|| \cdot ||v||} = \cos(\theta)
@@ -295,8 +300,8 @@ Replace full softmax with binary classification:
 \bottomnote{Cosine similarity ignores magnitude, focuses on direction}
 \end{frame}
 
-%% Slide 14: Pre-trained Embeddings (HOSTILE REVIEW Mo1 already applied)
-\begin{frame}[t]{Pre-trained Embeddings}
+%% Slide 15: Pre-trained Embeddings (HOSTILE REVIEW Mo1 already applied)
+\begin{frame}[t]{Should You Train Your Own Embeddings?}
 \textbf{Popular Options:}
 \begin{itemize}
 \item \textbf{Word2Vec}: Google, 300-dim, 3M words
@@ -312,8 +317,8 @@ Replace full softmax with binary classification:
 \bottomnote{Fine-tuning pre-trained embeddings usually outperforms training from scratch}
 \end{frame}
 
-%% Slide 15: Static vs Contextual Embeddings (HOSTILE REVIEW FIX M5)
-\begin{frame}[t]{Static vs Contextual Embeddings}
+%% Slide 16: Static vs Contextual Embeddings (HOSTILE REVIEW FIX M5)
+\begin{frame}[t]{Does Context Change a Word's Meaning?}
 \textbf{Static Embeddings} (Word2Vec, GloVe, FastText):
 \begin{itemize}
 \item ONE fixed vector per word, regardless of context
@@ -332,8 +337,8 @@ Replace full softmax with binary classification:
 \bottomnote{Static: one meaning per word. Contextual: meaning depends on context.}
 \end{frame}
 
-%% Slide 16: Embeddings in Finance
-\begin{frame}[t]{Embeddings in Finance}
+%% Slide 17: Embeddings in Finance
+\begin{frame}[t]{How Do Banks Use Word Embeddings?}
 \textbf{Applications:}
 \begin{itemize}
 \item \textbf{Sentiment Analysis}: News $\rightarrow$ embedding $\rightarrow$ positive/negative
@@ -351,8 +356,8 @@ Replace full softmax with binary classification:
 \bottomnote{Aggregate word embeddings to represent documents}
 \end{frame}
 
-%% Slide 17: Finance Example: Embedding-Based Sentiment (HOSTILE REVIEW FIX C2a)
-\begin{frame}[t]{Finance Example: Embedding-Based Sentiment}
+%% Slide 18: Finance Example: Embedding-Based Sentiment (HOSTILE REVIEW FIX C2a)
+\begin{frame}[t]{How Would You Classify This Headline?}
 \textbf{Task:} Classify ``Fed signals rate hike'' as positive or negative
 \vspace{0.3em}
 
@@ -378,8 +383,8 @@ Replace full softmax with binary classification:
 \section{Reinforcement Learning Framework}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Slide 18: Part 2: Reinforcement Learning Framework
-\begin{frame}[t]{Part 2: Reinforcement Learning Framework}
+%% Slide 19: The RL Framework
+\begin{frame}[t]{What Are the Building Blocks of RL?}
 \textbf{Key Components:}
 \vspace{-0.2em}
 \begin{itemize}
@@ -397,8 +402,8 @@ Agent observes State $\rightarrow$ Agent selects Action $\rightarrow$ Environmen
 \bottomnote{RL: Learning from interaction, not from labeled examples}
 \end{frame}
 
-%% Slide 19: Markov Decision Process (HOSTILE REVIEW Mo4 already applied)
-\begin{frame}[t]{Markov Decision Process}
+%% Slide 20: Markov Decision Process (HOSTILE REVIEW Mo4 already applied)
+\begin{frame}[t]{What Makes a Problem Markovian?}
 \textbf{MDP Tuple:} $(S, A, P, R, \gamma)$
 \begin{itemize}
 \item $S$: Set of states
@@ -415,15 +420,15 @@ P(s_{t+1} | s_t, a_t, s_{t-1}, ...) = P(s_{t+1} | s_t, a_t)
 \bottomnote{Future depends only on current state, not history}
 \end{frame}
 
-%% Slide 20: Policy and Value Functions
-\begin{frame}[t]{Policy and Value Functions}
+%% Slide 21: Policy and Value Functions
+\begin{frame}[t]{How Do We Measure a Strategy's Worth?}
 \textbf{Policy:} $\pi(a|s) = P(A_t = a | S_t = s)$
 \begin{itemize}
 \item Maps states to action probabilities
 \item Goal: Find optimal policy $\pi^*$
 \end{itemize}
 \vspace{0.5em}
-\textbf{Value Function:}
+\textbf{Value Function} ($R_{t+1}$: reward at step $t{+}1$):
 \[
 V^\pi(s) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 = s \right]
 \]
@@ -435,8 +440,8 @@ Q^\pi(s, a) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 =
 \bottomnote{Q-function: expected return starting from state s, taking action a}
 \end{frame}
 
-%% Slide 21: Bellman Equation
-\begin{frame}[t]{Bellman Equation}
+%% Slide 22: Bellman Equation
+\begin{frame}[t]{Why Is the Bellman Equation Recursive?}
 \textbf{Optimal Q-Function:}
 \[
 Q^*(s, a) = \mathbb{E} \left[ R + \gamma \max_{a'} Q^*(s', a') \right]
@@ -455,9 +460,9 @@ Q^*(s, a) = \mathbb{E} \left[ R + \gamma \max_{a'} Q^*(s', a') \right]
 \bottomnote{Bellman equation: foundation of all value-based RL methods}
 \end{frame}
 
-%% Slide 22: Temporal Difference Learning (HOSTILE REVIEW FIX M3)
-\begin{frame}[t]{Temporal Difference Learning}
-\textbf{TD(0) Update Rule} --- learn from each transition:
+%% Slide 23: Temporal Difference Learning (HOSTILE REVIEW FIX M3)
+\begin{frame}[t]{Can We Learn Without Waiting for the End?}
+\textbf{TD(0) Update Rule} (learning rate $\alpha \in (0,1]$) --- learn from each transition:
 \[
 V(s) \leftarrow V(s) + \alpha \left[ r + \gamma V(s') - V(s) \right]
 \]
@@ -476,8 +481,8 @@ V(s) \leftarrow V(s) + \alpha \left[ r + \gamma V(s') - V(s) \right]
 \section{Q-Learning and Trading}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Slide 23: Q-Learning Algorithm (HOSTILE REVIEW FIX M9: Robbins-Monro in bottomnote)
-\begin{frame}[t]{Q-Learning Algorithm}
+%% Slide 24: Q-Learning Algorithm (HOSTILE REVIEW FIX M9: Robbins-Monro in bottomnote)
+\begin{frame}[t]{How Does Q-Learning Find the Best Action?}
 \textbf{Update Rule:}
 \[
 Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
@@ -489,7 +494,7 @@ Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s,
 \item For each episode:
 \begin{itemize}
 \item Observe state $s$
-\item Choose action $a$ ($\epsilon$-greedy)
+\item Choose action $a$ ($\epsilon$-greedy: random with prob.\ $\epsilon$, best otherwise)
 \item Execute $a$, observe $r$, $s'$
 \item Update $Q(s, a)$
 \end{itemize}
@@ -497,8 +502,8 @@ Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s,
 \bottomnote{Q-learning is off-policy: converges to $Q^*$ given Robbins-Monro conditions ($\sum \alpha_t = \infty$, $\sum \alpha_t^2 < \infty$) and sufficient exploration (Watkins \& Dayan, 1992)}
 \end{frame}
 
-%% Slide 24: Q-Learning: Worked Example (HOSTILE REVIEW FIX M8)
-\begin{frame}[t]{Q-Learning: Worked Example}
+%% Slide 25: Q-Learning: Worked Example (HOSTILE REVIEW FIX M8)
+\begin{frame}[t]{What Happens in One Q-Learning Update?}
 \textbf{Trading scenario:} State $s_1$ = [RSI=25, position=none]
 
 \vspace{0.3em}
@@ -522,7 +527,7 @@ Q(s_1, \text{buy}) \leftarrow 3.2 + 0.1 \times (-0.1) = \mathbf{3.19}
 \bottomnote{Each update moves Q toward the ``better'' estimate: immediate reward + discounted future}
 \end{frame}
 
-%% Slide 25: Q-Learning Algorithm: Pseudocode (INSTRUCTOR GUIDE REQUIREMENT)
+%% Slide 26: Q-Learning Algorithm: Pseudocode (INSTRUCTOR GUIDE REQUIREMENT)
 \begin{frame}[t]{Q-Learning Algorithm: Pseudocode}
 \begin{algorithmic}[1]
 \REQUIRE environment, $\alpha$, $\gamma$, $\epsilon$, episodes
@@ -545,7 +550,7 @@ Q(s_1, \text{buy}) \leftarrow 3.2 + 0.1 \times (-0.1) = \mathbf{3.19}
 \bottomnote{Watkins \& Dayan (1992). Q-learning. \textit{Machine Learning}, 8(3-4), 279--292.}
 \end{frame}
 
-%% Slide 26: Q-Values Visualization (CHART 04)
+%% Slide 27: Q-Values Visualization (CHART 04)
 \begin{frame}[t]{Q-Values Visualization}
 \vspace{-0.5em}
 \begin{center}
@@ -555,8 +560,8 @@ Q(s_1, \text{buy}) \leftarrow 3.2 + 0.1 \times (-0.1) = \mathbf{3.19}
 \bottomnote{Arrows show policy; colors show Q-values (green=high, red=negative)}
 \end{frame}
 
-%% Slide 27: Exploration vs Exploitation
-\begin{frame}[t]{Exploration vs Exploitation}
+%% Slide 28: Exploration vs Exploitation
+\begin{frame}[t]{Explore or Exploit: How Do You Choose?}
 \textbf{The Dilemma:}
 \begin{itemize}
 \item \textbf{Exploit}: Choose best known action (greedy)
@@ -579,8 +584,32 @@ a = \begin{cases}
 \bottomnote{Balance: too much exploration wastes time; too little misses optima}
 \end{frame}
 
-%% Slide 28: RL for Trading
-\begin{frame}[t]{RL for Trading}
+%% Slide 29: Epsilon Decay Schedule (CHART 12)
+\begin{frame}[t]{Epsilon Decay Schedule}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{12_epsilon_decay/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\textbf{Decay Strategies:}
+\begin{itemize}
+  \item \textbf{Linear:} $\epsilon_t = \epsilon_0 (1 - t/T)$
+  \item \textbf{Exponential:} $\epsilon_t = \epsilon_0 \cdot \beta^t$
+  \item \textbf{Step:} Drop at fixed milestones
+\end{itemize}
+\vspace{0.3em}
+\textbf{In finance:}
+\begin{itemize}
+  \item Early: explore diverse strategies
+  \item Late: exploit best-found policy
+\end{itemize}
+\end{column}
+\end{columns}
+\bottomnote{Exponential decay ($\beta = 0.995$) is the most common default; linear is simpler to tune}
+\end{frame}
+
+%% Slide 30: RL for Trading
+\begin{frame}[t]{Can an Algorithm Learn to Trade?}
 \textbf{Formulation:}
 \begin{itemize}
 \item \textbf{State}: Price history, portfolio, technical indicators
@@ -598,8 +627,8 @@ a = \begin{cases}
 \bottomnote{RL for trading is active research area; not solved problem}
 \end{frame}
 
-%% Slide 29: Trading Reward Function Design (HOSTILE REVIEW FIX C2b)
-\begin{frame}[t]{Trading Reward Function Design}
+%% Slide 31: Trading Reward Function Design (HOSTILE REVIEW FIX C2b)
+\begin{frame}[t]{How Do You Design the Right Reward Signal?}
 \textbf{Reward with transaction costs:}
 \[
 r_t = R_t^{\text{portfolio}} - c \cdot |\Delta w_t|
@@ -622,8 +651,8 @@ where $R_t^{\text{portfolio}}$ = portfolio return, $c$ = transaction cost rate, 
 \bottomnote{Reward design is THE most critical decision in RL for trading}
 \end{frame}
 
-%% Slide 30: Backtesting RL Trading Strategies
-\begin{frame}[t]{Backtesting RL Trading Strategies}
+%% Slide 32: Backtesting RL Trading Strategies
+\begin{frame}[t]{How Do You Know Your RL Strategy Works?}
 \textbf{Critical Challenge:} RL agents overfit to historical data
 
 \vspace{0.3em}
@@ -643,7 +672,15 @@ where $R_t^{\text{portfolio}}$ = portfolio return, $c$ = transaction cost rate, 
 \bottomnote{If your RL agent beats buy-and-hold after costs, you likely have a bug --- verify carefully}
 \end{frame}
 
-%% Slide 31: Trading Policy (CHART 06)
+%% Slide 33: Walk-Forward Validation Timeline (CHART 13)
+\begin{frame}[t]{Walk-Forward Validation Timeline}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{13_walkforward_timeline/chart.pdf}
+\end{center}
+\bottomnote{Walk-forward: the gold standard for evaluating time-series strategies; never look ahead}
+\end{frame}
+
+%% Slide 34: Trading Policy (CHART 06)
 \begin{frame}[t]{Trading Policy}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{06_policy_viz/chart.pdf}
@@ -652,71 +689,60 @@ where $R_t^{\text{portfolio}}$ = portfolio return, $c$ = transaction cost rate, 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Deep RL and Advanced Methods}
+\section{Deep Q-Networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Slide 32: Deep Q-Networks (DQN) (CHART 09, HOSTILE REVIEW FIX M7)
-\begin{frame}[t]{Deep Q-Networks (DQN)}
-\textbf{Idea}: Neural network approximates Q-function: $Q(s, a; \theta) \approx Q^*(s, a)$
-
+%% Slide 35: Why Do We Need Deep Q-Networks?
+\begin{frame}[t]{What If the State Space Is Too Large for a Table?}
+\textbf{Problem:} Tabular Q-learning stores one value per $(s,a)$ pair
+\begin{itemize}
+\item Trading states (prices, indicators, position) are \highlight{continuous} --- infinite combinations
+\item A table with $10^6$ states $\times$ 3 actions = 3 million entries (most never visited)
+\end{itemize}
+\vspace{0.3em}
+\textbf{Solution: Deep Q-Networks (DQN)}
+\begin{itemize}
+\item Neural network approximates $Q(s, a; \theta) \approx Q^*(s, a)$
+\item Generalizes across similar states (nearby prices $\rightarrow$ similar Q-values)
+\end{itemize}
+\vspace{0.3em}
 \textbf{Loss Function:}
 \[
 L(\theta) = \mathbb{E}\left[\left(r + \gamma \max_{a'} Q(s', a'; \theta^-) - Q(s, a; \theta)\right)^2\right]
 \]
-\vspace{-0.3em}
-\textbf{Key Innovations:}
+where $\theta^-$ are frozen target-network weights (see next slide).
+\bottomnote{DQN: Mnih et al.\ (2015) achieved human-level play on 29/49 Atari games; loss is mean squared TD error}
+\end{frame}
+
+%% Slide 36: How Does DQN Stay Stable?
+\begin{frame}[t]{How Does DQN Stay Stable?}
+\textbf{Two Key Innovations:}
+\vspace{0.3em}
+
+\textbf{1. Experience Replay}
 \begin{itemize}
-\item \textbf{Experience Replay}: Store $(s,a,r,s')$, sample random mini-batches (breaks temporal correlation)
-\item \textbf{Target Network} $\theta^-$: Separate, slowly-updated copy for stability
+\item Store transitions $(s,a,r,s')$ in a buffer; sample random mini-batches
+\item Breaks temporal correlation $\rightarrow$ approximately i.i.d.\ training data
 \end{itemize}
-\vspace{-0.5em}
+\vspace{0.3em}
+\textbf{2. Target Network} $\theta^-$
+\begin{itemize}
+\item Separate, slowly-updated copy of the network for computing targets
+\item Prevents moving target problem: targets don't shift every gradient step
+\end{itemize}
+\vspace{-0.3em}
 \begin{center}
-\includegraphics[width=0.50\textwidth]{09_dqn_architecture/chart.pdf}
+\includegraphics[width=0.45\textwidth]{09_dqn_architecture/chart.pdf}
 \end{center}
 \vspace{-0.5em}
-\bottomnote{DQN: Atari-level play from raw pixels (Mnih et al., 2015); loss is mean squared TD error}
-\end{frame}
-
-%% Slide 33: Policy Gradient Methods (HOSTILE REVIEW FIX M6)
-\begin{frame}[t]{Policy Gradient Methods}
-\textbf{Policy Gradient Theorem} (Sutton et al., 2000):
-\[
-\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log \pi_\theta(a|s) \cdot A^{\pi_\theta}(s, a) \right]
-\]
-where $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$ is the \textbf{advantage function}
-\vspace{0.3em}
-\begin{itemize}
-\item \textbf{REINFORCE}: Uses episode returns $G_t$ as $A$; high variance
-\item \textbf{Actor-Critic}: Actor (policy $\pi_\theta$) + Critic (learns $V^\phi$); lower variance
-\item \textbf{PPO}: Clips policy ratio to prevent large updates; widely used
-\end{itemize}
-\bottomnote{Policy gradient handles continuous actions; advantage reduces variance vs raw returns}
-\end{frame}
-
-%% Slide 34: Statistical Inference for Embeddings & RL (HOSTILE REVIEW FIX C4)
-\begin{frame}[t]{Statistical Inference for Embeddings \& RL}
-\textbf{Embedding Uncertainty:}
-\begin{itemize}
-\item Bootstrap cosine similarity: resample corpus, retrain, compute CI
-\item Permutation test: shuffle word-context pairs, check if similarity is significant
-\end{itemize}
-\vspace{0.5em}
-\textbf{RL Uncertainty:}
-\begin{itemize}
-\item Q-value confidence: run $N$ independent training runs, report mean $\pm$ std
-\item Off-policy evaluation: importance sampling to estimate policy value from logged data
-\[
-\hat{V}(\pi) = \frac{1}{n}\sum_{i=1}^{n} \prod_{t=0}^{T} \frac{\pi(a_t|s_t)}{\beta(a_t|s_t)} \cdot G_i
-\]
-\end{itemize}
-\bottomnote{Always report uncertainty --- a single training run is not evidence of a good policy}
+\bottomnote{Experience replay + target network: the two innovations that made deep RL stable}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Practice}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Slide 35: Hands-on Exercise
+%% Slide 37: Hands-on Exercise
 \begin{frame}[t]{Hands-on Exercise}
   \textbf{Open the Colab Notebook}
   \begin{itemize}
@@ -732,8 +758,8 @@ where $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$ is the \textbf{advantage function}
 \section{Decision Framework}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Slide 36: When to Use What (Full Comparison Table — NO chart 07)
-\begin{frame}[t]{When to Use What}
+%% Slide 38: Decision Framework and Best Practices
+\begin{frame}[t]{Decision Framework and Best Practices}
 \vspace{-0.3em}
 \begin{center}
 \small
@@ -750,47 +776,14 @@ Finance use & Sentiment & Trading \\
 \bottomrule
 \end{tabular}
 \end{center}
+\vspace{0.3em}
+\textbf{Deepdive-Level Best Practices:}
+\begin{itemize}
+  \item Evaluate embedding quality via analogy task accuracy AND downstream task F1
+  \item RL: compare against buy-and-hold benchmark after realistic transaction costs
+  \item Always report confidence intervals (bootstrap for embeddings, multiple seeds for RL)
+\end{itemize}
 \bottomnote{Both transform complex inputs into learnable representations}
-\end{frame}
-
-%% Slide 37: Implementation (fragile)
-\begin{frame}[t,fragile]{Implementation}
-\textbf{Embeddings in Python:}
-\small
-\begin{itemize}
-\item \texttt{gensim.models.Word2Vec}: Train your own
-\item \texttt{gensim.downloader.load('glove-wiki-gigaword-100')}: Pre-trained
-\item \texttt{transformers.BertModel}: BERT embeddings
-\end{itemize}
-\normalsize
-\vspace{0.5em}
-\textbf{RL Libraries:}
-\small
-\begin{itemize}
-\item \texttt{gymnasium}: Environment interface (formerly OpenAI Gym)
-\item \texttt{stable-baselines3}: Pre-implemented algorithms
-\item \texttt{ray[rllib]}: Scalable RL
-\end{itemize}
-\bottomnote{Start with pre-trained embeddings; use stable-baselines3 for RL}
-\end{frame}
-
-%% Slide 38: Practical Tips
-\begin{frame}[t]{Practical Tips}
-\textbf{Embeddings:}
-\begin{itemize}
-\item Start with pre-trained, fine-tune if needed
-\item Check domain match (general vs financial)
-\item Visualize with t-SNE/UMAP to verify quality
-\end{itemize}
-\vspace{0.5em}
-\textbf{RL:}
-\begin{itemize}
-\item Start simple (tabular Q-learning before DQN)
-\item Reward shaping is crucial (sparse rewards are hard)
-\item Normalize observations
-\item Use established environments first (Gym, FinRL)
-\end{itemize}
-\bottomnote{Both domains: start simple, iterate, validate thoroughly}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -817,29 +810,46 @@ Finance use & Sentiment & Trading \\
 \bottomnote{Course complete! Apply these methods in your capstone project}
 \end{frame}
 
-%% Slide 40: Closing Comic (XKCD #1838 text callback)
+%% Slide 40: Closing Thought (XKCD #1838 callback with visual)
 \begin{frame}[t]{Closing Thought}
-\vspace{2em}
+\begin{columns}[T]
+\begin{column}{0.35\textwidth}
 \begin{center}
-\Large\textit{``After six lectures of methods and algorithms,}
+\begin{tikzpicture}[scale=0.7]
+  % Robot stick figure
+  \node[rectangle, draw, rounded corners, minimum size=7mm, fill=mllavender4] (head) at (0,2.8) {\footnotesize AI};
+  \draw[thick] (0,2.4) -- (0,1.4);
+  \draw[thick] (0,2.0) -- (-0.5,1.5);
+  \draw[thick] (0,2.0) -- (0.5,1.5);
+  \draw[thick] (0,1.4) -- (-0.3,0.6);
+  \draw[thick] (0,1.4) -- (0.3,0.6);
+  % Toolbelt
+  \node[draw, rounded corners, fill=mllavender4, font=\tiny] at (0,-0.1) {6 Methods};
+  \node[draw, rounded corners, fill=mllavender4, font=\tiny] at (0,-0.6) {1 Toolkit};
+\end{tikzpicture}
+\end{center}
+\end{column}
+\begin{column}{0.62\textwidth}
+\vspace{1em}
+\large\textit{``After six lectures of methods and algorithms,}
 
 \textit{we've learned the most important lesson:}
 
-\vspace{0.5em}
+\vspace{0.3em}
 
 \textit{pour the data into the right pile of linear algebra,}
 
 \textit{and the answers will come out the other side.}
 
-\vspace{0.5em}
+\vspace{0.3em}
 
 \textit{The hard part is knowing which pile.'\,''}
-\end{center}
 
-\vspace{1em}
-\begin{center}
-\normalsize --- Adapted from XKCD \#1838 ``Machine Learning'' by Randall Munroe
-\end{center}
+\vspace{0.5em}
+
+\normalsize --- Adapted from XKCD \#1838
+\end{column}
+\end{columns}
 \bottomnote{Callback to XKCD \#1838 by Randall Munroe (CC BY-NC 2.5). Course complete!}
 \end{frame}
 
@@ -870,7 +880,7 @@ Finance use & Sentiment & Trading \\
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% APPENDIX (8 slides)
+% APPENDIX (10 slides)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
@@ -1035,7 +1045,42 @@ Uses the \textbf{greedy maximum} regardless of what action was actually taken.
 \bottomnote{SARSA: safer path; Q-learning: optimal path}
 \end{frame}
 
-%% Slide A8: References and Further Reading
+%% Slide A8: Statistical Inference for Embeddings & RL
+\begin{frame}[t]{Statistical Inference for Embeddings \& RL}
+\textbf{Embedding Uncertainty:}
+\begin{itemize}
+\item Bootstrap cosine similarity: resample corpus, retrain, compute CI
+\item Permutation test: shuffle word-context pairs, check if similarity is significant
+\end{itemize}
+\vspace{0.5em}
+\textbf{RL Uncertainty:}
+\begin{itemize}
+\item Q-value confidence: run $N$ independent training runs, report mean $\pm$ std
+\item Off-policy evaluation: importance sampling to estimate policy value from logged data
+\[
+\hat{V}(\pi) = \frac{1}{n}\sum_{i=1}^{n} \prod_{t=0}^{T} \frac{\pi(a_t|s_t)}{\beta(a_t|s_t)} \cdot G_i
+\]
+\end{itemize}
+\bottomnote{Always report uncertainty --- a single training run is not evidence of a good policy}
+\end{frame}
+
+%% Slide A9: Policy Gradient Methods
+\begin{frame}[t]{Policy Gradient Methods}
+\textbf{Policy Gradient Theorem} (Sutton et al., 2000):
+\[
+\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log \pi_\theta(a|s) \cdot A^{\pi_\theta}(s, a) \right]
+\]
+where $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$ is the \textbf{advantage function}
+\vspace{0.3em}
+\begin{itemize}
+\item \textbf{REINFORCE}: Uses episode returns $G_t$ as $A$; high variance
+\item \textbf{Actor-Critic}: Actor (policy $\pi_\theta$) + Critic (learns $V^\phi$); lower variance
+\item \textbf{PPO}: Clips policy ratio to prevent large updates; widely used
+\end{itemize}
+\bottomnote{Policy gradient handles continuous actions; advantage reduces variance vs raw returns}
+\end{frame}
+
+%% Slide A10: References and Further Reading
 \begin{frame}[t]{Appendix References and Further Reading}
 \small
 \begin{itemize}

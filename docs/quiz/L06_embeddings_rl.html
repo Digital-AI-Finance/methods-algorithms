@@ -307,7 +307,7 @@
         <div class="quiz-header">
             <div class="quiz-title">Quiz 6: Embeddings & RL</div>
             <div class="quiz-stats">
-                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-progress" id="progressBadge">0/23</span>
                 <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
             </div>
         </div>
@@ -576,6 +576,42 @@
                     },
                     "correct": "B",
                     "explanation": "Backtesting overfitting is the most common failure mode. The agent may exploit: (1) look-ahead bias (using future information), (2) survivorship bias (only training on surviving stocks), (3) regime changes (training on bull market, deploying in crash). Proper train/validation/test splits with walk-forward validation mitigate this."
+                },
+                {
+                    "id": 21,
+                    "question": "In epsilon-greedy exploration, the agent takes a random action with probability $\\varepsilon$. Why is it important to decay $\\varepsilon$ over time?",
+                    "options": {
+                        "A": "Early on, the agent needs exploration (high $\\varepsilon$) to discover good actions; later, it should exploit learned knowledge (low $\\varepsilon$) to maximize reward",
+                        "B": "Decaying $\\varepsilon$ reduces the computational cost of the algorithm",
+                        "C": "A constant $\\varepsilon$ causes the Q-table to diverge",
+                        "D": "Epsilon decay is only needed for continuous action spaces"
+                    },
+                    "correct": "A",
+                    "explanation": "Epsilon decay balances the exploration-exploitation tradeoff over time. Common schedules include linear decay ($\\varepsilon_t = \\varepsilon_0 - t \\cdot \\Delta$), exponential decay ($\\varepsilon_t = \\varepsilon_0 \\cdot \\gamma^t$), and step decay. All converge to a small $\\varepsilon_{\\min}$ so the agent occasionally explores even after convergence."
+                },
+                {
+                    "id": 22,
+                    "question": "Walk-forward validation splits time-series data into expanding training windows followed by fixed test windows. Why is this preferred over standard k-fold cross-validation for RL in finance?",
+                    "options": {
+                        "A": "It respects the temporal ordering of data, preventing the model from training on future information (look-ahead bias)",
+                        "B": "It produces more folds and therefore better statistical estimates",
+                        "C": "It requires less data than k-fold cross-validation",
+                        "D": "It eliminates the need for a separate test set"
+                    },
+                    "correct": "A",
+                    "explanation": "Financial data is non-stationary and temporally ordered. Standard k-fold randomly shuffles data, letting the model 'peek' at future prices during training. Walk-forward validation always trains on past data and tests on unseen future data, mimicking real deployment conditions."
+                },
+                {
+                    "id": 23,
+                    "question": "Deep Q-Networks (DQN) use two mechanisms to stabilize training: experience replay and a target network. What problem does the target network solve?",
+                    "options": {
+                        "A": "Without a target network, the Q-value targets shift with every parameter update, causing unstable 'moving target' oscillations",
+                        "B": "The target network speeds up training by pre-computing gradients",
+                        "C": "The target network replaces the need for exploration",
+                        "D": "The target network reduces the size of the replay buffer"
+                    },
+                    "correct": "A",
+                    "explanation": "In Q-learning, the update target $r + \\gamma \\max_{a'} Q(s',a')$ depends on the same network being updated. This creates a feedback loop where targets change every step. The target network is a frozen copy updated periodically (e.g., every 1000 steps), providing stable targets for the main network to learn against."
                 }
             ]
         };

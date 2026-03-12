@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-10 -->
 
 # slides/
 
@@ -15,6 +15,7 @@ This directory contains all LaTeX Beamer slides for the 6-session MSc Data Scien
 
 ```
 slides/
+├── L00_Prerequisites/                     # Mini-lectures (linear algebra, ML basics)
 ├── L01_Introduction_Linear_Regression/    # House price prediction
 ├── L02_Logistic_Regression/               # Credit scoring
 ├── L03_KNN_KMeans/                        # Customer segmentation
@@ -39,7 +40,7 @@ Each lesson directory contains:
 | L03 | KNN & K-Means | Customer segmentation, anomaly detection | Intermediate | 7 |
 | L04 | Random Forests | Fraud detection, feature importance | Intermediate | 8 |
 | L05 | PCA & t-SNE | Portfolio risk decomposition | Advanced | 12 |
-| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Advanced | 7 |
+| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Advanced | 13 |
 
 ## Beamer Theme & Standards
 
@@ -134,6 +135,7 @@ python run_audit.py
 
 ## Children
 
+- [L00_Prerequisites/AGENTS.md](L00_Prerequisites/AGENTS.md)
 - [L01_Introduction_Linear_Regression/AGENTS.md](L01_Introduction_Linear_Regression/AGENTS.md)
 - [L02_Logistic_Regression/AGENTS.md](L02_Logistic_Regression/AGENTS.md)
 - [L03_KNN_KMeans/AGENTS.md](L03_KNN_KMeans/AGENTS.md)

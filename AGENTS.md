@@ -1,4 +1,4 @@
-<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-10 -->
 
 # Methods and Algorithms
 
@@ -6,7 +6,7 @@
 
 MSc Data Science course covering core ML algorithms with finance/banking applications. The course spans 6 sessions (3 hours each) following the PMSP framework (Problem-Method-Solution-Practice). This repository contains all course materials: LaTeX slides, Python visualization charts, Jupyter notebooks, quizzes, datasets, and supporting infrastructure.
 
-**Recent update (Feb 2026)**: Course underwent comprehensive hostile review scoring 67.7/100 (C+). All 6 lectures received systematic remediation with 1,886 insertions and 502 deletions. All 12 PDFs now compile clean with zero overflow warnings.
+**Recent updates**: Course underwent comprehensive hostile review (Feb 2026) scoring 67.7/100 (C+). All 6 lectures received systematic remediation with 1,886 insertions and 502 deletions. L06 received additional ultra-deep pedagogical flow review (Mar 2026) fixing symbol collisions, term-before-use violations, and topic transitions. All 12 PDFs compile clean with zero overflow warnings.
 
 ## Key Files
 
@@ -31,7 +31,9 @@ MSc Data Science course covering core ML algorithms with finance/banking applica
 | `datasets/` | Synthetic datasets for each topic (see `datasets/AGENTS.md`) |
 | `quizzes/` | Moodle XML quiz files (see `quizzes/AGENTS.md`) |
 | `rubrics/` | Grading rubrics for assessments (see `rubrics/AGENTS.md`) |
-| `capstone/` | Capstone project specification and templates (see `capstone/AGENTS.md`) |
+| `capstone/` | Group assignment specification and templates (see `capstone/AGENTS.md`) |
+| `presentations/` | Student presentation topics |
+| `syllabus/` | Course syllabus materials |
 | `docs/` | GitHub Pages deployment site (see `docs/AGENTS.md`) |
 
 ## For AI Agents
@@ -72,7 +74,7 @@ python run_audit.py
 | L03 | KNN & K-Means | Customer segmentation, anomaly detection | Remediated (Feb 2026) |
 | L04 | Random Forests | Fraud detection, feature importance, boosting | Remediated (Feb 2026) |
 | L05 | PCA & t-SNE | Portfolio risk decomposition, visualization | Remediated (Feb 2026) |
-| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Pending |
+| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Remediated (Mar 2026) |
 
 ## Dependencies
 

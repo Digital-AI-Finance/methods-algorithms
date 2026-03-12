@@ -99,20 +99,20 @@
 \begin{document}
 
 % ============================================================
-% MAIN BODY (40 slides)
+% MAIN BODY (43 slides)
 % ============================================================
 
-% SLIDE 1: Title Page
+%% Slide 1: Title Page
 \begin{frame}
 \titlepage
 \end{frame}
 
-% SLIDE 2: Outline
+%% Slide 2: Outline
 \begin{frame}{Outline}
   \tableofcontents
 \end{frame}
 
-% SLIDE 3: Opening Comic
+%% Slide 3: Opening Comic
 \begin{frame}{Finding Signal in the Noise}
 \begin{center}
 \includegraphics[height=0.65\textheight]{images/2048_curve_fitting.png}
@@ -120,7 +120,7 @@
 \bottomnote{XKCD \#2048 ``Curve Fitting'' by Randall Munroe (CC BY-NC 2.5)}
 \end{frame}
 
-% SLIDE 4: Learning Objectives
+%% Slide 4: Learning Objectives
 \begin{frame}[t]{Learning Objectives}
 \textbf{By the end of this deep dive, you will be able to:}
 \begin{enumerate}
@@ -144,7 +144,65 @@
 \section{PCA Foundations}
 % ============================================================
 
-% SLIDE 5: PCA Variance Maximization
+%% Slide 5: PCA Intuition
+% NOTE: chart 08 intentionally shared with overview (visual anchor at both levels)
+\begin{frame}[t]{PCA Intuition: Finding the Best View}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{08_high_dim_before_after/chart.pdf}
+\end{center}
+\vspace{-0.3em}
+\begin{itemize}
+  \item Imagine 2D data scattered in an ellipse
+  \item \textbf{PC1} = the long axis of the ellipse (direction of most spread)
+  \item \textbf{PC2} = the short axis (remaining spread, perpendicular to PC1)
+  \item PCA generalizes this to \textit{any} number of dimensions
+\end{itemize}
+\bottomnote{PCA finds the ``best camera angle'' --- the view that shows the most variation in the data.}
+\end{frame}
+
+%% Slide 6: Key Terms for PCA
+\begin{frame}[t]{Key Terms for PCA}
+\begin{itemize}
+  \item \textbf{Variance:} How spread out data is along one direction; $\text{Var}(X) = \frac{1}{n-1}\sum(x_i - \bar{x})^2$
+  \item \textbf{Covariance matrix:} $p \times p$ matrix; entry $(i,j)$ measures how features $i$ and $j$ move together
+  \item \textbf{Eigenvector:} A direction that a matrix only \textit{stretches}, never rotates: $A\mathbf{v} = \lambda\mathbf{v}$
+  \item \textbf{Eigenvalue} ($\lambda$): The stretch factor; larger $\lambda$ = more variance along that direction
+  \item \textbf{Orthogonal:} Perpendicular directions (zero dot product); PCA components are always orthogonal
+  \item \textbf{Mean-centering:} Subtract the mean so data is centered at origin; required so PCA measures \textit{variance}, not distance from origin
+\end{itemize}
+\bottomnote{If these terms feel unfamiliar, review the linear algebra refresher in the course prerequisites.}
+\end{frame}
+
+%% Slide 7: PCA by Hand
+\begin{frame}[t]{PCA by Hand: A 2D Mini-Example}
+\begin{columns}[T]
+\begin{column}{0.52\textwidth}
+\textbf{Data:} $(1,2),\; (3,4),\; (5,6),\; (2,3),\; (4,5)$
+
+\vspace{0.15em}
+\textbf{1.\ Center:} Mean $= (3, 4)$. Centered: $(-2,-2),\; (0,0),\; (2,2),\; (-1,-1),\; (1,1)$
+
+\vspace{0.15em}
+\textbf{2.\ Covariance:}
+$C = \begin{pmatrix} 2.5 & 2.5 \\ 2.5 & 2.5 \end{pmatrix}$
+
+\vspace{0.15em}
+\textbf{3.\ Eigenvalues:} $\lambda_1 = 5,\; \lambda_2 = 0$
+
+\vspace{0.15em}
+\textbf{4.\ Eigenvector:} PC1 $= \tfrac{1}{\sqrt{2}}(1,\,1)$
+
+\vspace{0.15em}
+\textbf{Result:} 100\% variance in \textbf{1 dimension}.
+\end{column}
+\begin{column}{0.45\textwidth}
+\includegraphics[width=\textwidth]{10_pca_mini_example/chart.pdf}
+\end{column}
+\end{columns}
+\bottomnote{This toy example has $\lambda_2 = 0$ (perfect correlation). Real data has $\lambda_2 > 0$ but small.}
+\end{frame}
+
+%% Slide 8: PCA Variance Maximization
 \begin{frame}[t]{PCA: Variance Maximization Objective}
 \textbf{Goal:} Find orthogonal directions of maximum variance in the data.
 
@@ -166,8 +224,8 @@ X_c = X - \bar{X} \quad \text{where } \bar{X}_j = \frac{1}{n}\sum_{i=1}^{n} X_{i
 \bottomnote{Centering is not optional: PCA on uncentered data maximizes distance from origin, not variance.}
 \end{frame}
 
-% SLIDE 6: Mathematical Foundation
-\begin{frame}[t]{Mathematical Foundation}
+%% Slide 9: Covariance Matrix and Eigendecomposition
+\begin{frame}[t]{Covariance Matrix and Eigendecomposition}
 \textbf{Covariance Matrix} (from centered data):
 \[
 \Sigma = \frac{1}{n-1} X_c^T X_c \quad \text{where } X_c \in \mathbb{R}^{n \times p}
@@ -189,8 +247,21 @@ Z = X_c W_k \quad \text{where } W_k = [\mathbf{v}_1, \ldots, \mathbf{v}_k] \in \
 \bottomnote{$\Sigma$ is symmetric positive semi-definite, guaranteeing real non-negative eigenvalues and orthogonal eigenvectors.}
 \end{frame}
 
-% SLIDE 7: Why Eigenvectors? The Optimality Proof
+%% Slide 10: Principal Components Visualization (CHART)
+\begin{frame}[t]{Principal Components Visualization}
+\vspace{-0.5em}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{02_principal_components/chart.pdf}
+\end{center}
+\vspace{-0.3em}
+\bottomnote{PC1 captures the dominant variance direction; PC2 captures orthogonal residual variation.}
+\end{frame}
+
+%% Slide 11: Why Eigenvectors? The Optimality Proof
 \begin{frame}[t]{Why Eigenvectors? The Optimality Proof}
+\textbf{We claimed PC1 is the eigenvector with the largest eigenvalue. But why? Could some other direction be better?}
+
+\vspace{0.2em}
 \textbf{Find direction $\mathbf{w}$ maximizing projected variance:}
 \[
 \max_{\mathbf{w}} \; \mathbf{w}^T \Sigma \mathbf{w} \quad \text{subject to } \|\mathbf{w}\| = 1
@@ -213,7 +284,7 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
 \bottomnote{Constrained optimization proves eigenvectors are the unique optimal solution (up to sign).}
 \end{frame}
 
-% SLIDE 8: SVD-PCA Equivalence
+%% Slide 12: SVD-PCA Equivalence
 \begin{frame}[t]{SVD--PCA Equivalence}
 \textbf{Theorem:} The principal components of $X_c$ are the right singular vectors of $X_c$.
 
@@ -233,7 +304,7 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
 \bottomnote{All practical implementations (scikit-learn, R, MATLAB) use SVD internally, not eigendecomposition.}
 \end{frame}
 
-% SLIDE 9: Variance Explained and Component Selection
+%% Slide 13: Variance Explained and Component Selection
 \begin{frame}[t]{Variance Explained and Component Selection}
 \textbf{Explained Variance Ratio (EVR):}
 \[
@@ -250,17 +321,25 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
 \bottomnote{In finance, 3 components explain 98\%+ of yield curve variance; for equities, 5--10 may be needed.}
 \end{frame}
 
-% SLIDE 10: Principal Components Visualization (CHART)
-\begin{frame}[t]{Principal Components Visualization}
-\vspace{-0.5em}
-\begin{center}
-\includegraphics[width=0.55\textwidth]{02_principal_components/chart.pdf}
-\end{center}
-\vspace{-0.3em}
-\bottomnote{PC1 captures the dominant variance direction; PC2 captures orthogonal residual variation.}
+%% Slide 14: PCA Algorithm
+\begin{frame}[t]{The PCA Algorithm}
+\begin{algorithmic}[1]
+\REQUIRE Data matrix $X \in \mathbb{R}^{n \times p}$, number of components $k$
+\ENSURE Projected data $Z \in \mathbb{R}^{n \times k}$, eigenvalues $\lambda_1, \ldots, \lambda_k$
+\STATE \textbf{Center:} $X_c \leftarrow X - \bar{X}$ \hfill \textit{(subtract column means)}
+\STATE \textbf{(Optional) Standardize} if features have different scales
+\STATE \textbf{SVD:} $X_c = U S V^T$ \hfill \textit{(numerically stable)}
+\STATE \textbf{Eigenvalues:} $\lambda_k \leftarrow s_k^2 / (n-1)$
+\STATE \textbf{Select:} $W_k \leftarrow [v_1, \ldots, v_k]$ \hfill \textit{(top $k$ right singular vectors)}
+\STATE \textbf{Project:} $Z \leftarrow X_c \, W_k$
+\RETURN $Z$, $\{\lambda_1, \ldots, \lambda_k\}$, $W_k$
+\end{algorithmic}
+\vspace{0.3em}
+\textbf{Complexity:} $O(\min(n^2 p, n p^2))$ via truncated SVD. For large $n$: randomized SVD gives $O(npk)$.
+\bottomnote{scikit-learn uses randomized truncated SVD internally --- never forms $X_c^T X_c$ explicitly.}
 \end{frame}
 
-% SLIDE 11: Reconstruction
+%% Slide 15: Reconstruction
 \begin{frame}[t]{Reconstruction from Principal Components}
 \textbf{From $k$ components back to original space:}
 \[
@@ -281,7 +360,7 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
 \bottomnote{The Eckart--Young theorem guarantees no other linear method can do better for a given $k$.}
 \end{frame}
 
-% SLIDE 12: Reconstruction Error vs Components (CHART)
+%% Slide 16: Reconstruction Error vs Components (CHART)
 \begin{frame}[t]{Reconstruction Error vs.\ Number of Components}
 \begin{center}
 \includegraphics[width=0.65\textwidth]{03_reconstruction/chart.pdf}
@@ -293,7 +372,7 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
 \section{PCA in Finance}
 % ============================================================
 
-% SLIDE 13: Yield Curve PCA
+%% Slide 17: Yield Curve PCA
 \begin{frame}[t]{Yield Curve PCA: The Canonical Example}
 \textbf{Yield curves decompose into $\sim$3 principal components:}
 \begin{itemize}
@@ -315,7 +394,7 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
 \bottomnote{Litterman \& Scheinkman (1991): the foundational paper establishing level/slope/curvature decomposition.}
 \end{frame}
 
-% SLIDE 14: Yield Curve PCA Worked Example
+%% Slide 18: Yield Curve PCA Worked Example
 \begin{frame}[t]{Yield Curve PCA: Worked Example}
 \textbf{Typical PC Loadings by Maturity:}
 
@@ -345,7 +424,7 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
 \bottomnote{Loadings from US Treasury yields; signs are conventional (eigenvectors are unique up to sign).}
 \end{frame}
 
-% SLIDE 15: Portfolio Risk Decomposition
+%% Slide 19: Portfolio Risk Decomposition
 \begin{frame}[t]{Portfolio Risk Decomposition with PCA}
 \textbf{Applying PCA to equity return covariance:}
 \begin{itemize}
@@ -371,30 +450,7 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
 \bottomnote{PCA-based risk factors are model-free alternatives to explicit factor models (Fama--French).}
 \end{frame}
 
-% SLIDE 16: Statistical Inference for PCA
-\begin{frame}[t]{Statistical Inference for PCA}
-\textbf{Bootstrap Confidence Intervals:}
-\begin{itemize}
-  \item Resample data with replacement, recompute PCA each time
-  \item Track loading stability and eigenvalue confidence bands
-\end{itemize}
-
-\textbf{Parallel Analysis (most rigorous for $k$):}
-\begin{itemize}
-  \item Compare observed eigenvalues to eigenvalues from random data
-  \item Keep components where $\lambda_{\text{data}} > \lambda_{\text{random}}$
-\end{itemize}
-
-\textbf{Cross-Validation:}
-\begin{itemize}
-  \item Split data, fit PCA on training set, evaluate reconstruction on holdout
-\end{itemize}
-
-\textbf{For t-SNE:} Run multiple times with different random seeds; clusters that are unstable across runs are likely artifacts.
-\bottomnote{MSc-level: always quantify uncertainty in dimensionality reduction choices.}
-\end{frame}
-
-% SLIDE 17: PCA Limitations
+%% Slide 20: PCA Limitations
 \begin{frame}[t]{PCA Limitations}
 \textbf{When PCA Falls Short:}
 \begin{itemize}
@@ -411,16 +467,28 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
   \item \textbf{t-SNE / UMAP:} Non-linear methods optimized for visualization
 \end{itemize}
 
+\bottomnote{Non-linear data demands non-linear methods --- motivating the t-SNE section that follows.}
+\end{frame}
+
+%% Slide 21: PCA: Misconceptions and Assumptions
+\begin{frame}[t]{PCA: Misconceptions and Assumptions}
+\textbf{Common Misconceptions:}
+\begin{itemize}
+  \item ``PCA finds clusters'' --- No, PCA finds variance directions; clusters may not align
+  \item ``Discarded components are noise'' --- Low-variance PCs may contain task-relevant signal
+  \item ``All features must be on the same scale'' --- Only for correlation-based PCA (\texttt{StandardScaler})
+\end{itemize}
+
 \vspace{0.3em}
 \highlight{PCA assumes linear structure --- Gaussian NOT required}, but PCA is only provably optimal (in the maximum-variance sense) for Gaussian data.
-\bottomnote{Non-linear data demands non-linear methods --- motivating the t-SNE section that follows.}
+\bottomnote{Challenge yourself: can you construct a dataset where the lowest-variance PC is the most predictive?}
 \end{frame}
 
 % ============================================================
 \section{t-SNE Theory}
 % ============================================================
 
-% SLIDE 18: t-SNE Core Idea
+%% Slide 22: t-SNE Core Idea
 \begin{frame}[t]{t-SNE: Core Idea}
 \textbf{t-Distributed Stochastic Neighbor Embedding} (van der Maaten \& Hinton, 2008)
 
@@ -443,7 +511,7 @@ Substituting back: $\mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T \lambda \mathb
 \bottomnote{t-SNE reveals IF clusters exist; it does not tell you HOW clusters relate to each other.}
 \end{frame}
 
-% SLIDE 19: t-SNE Mathematical Formulation
+%% Slide 23: t-SNE Mathematical Formulation
 \begin{frame}[t]{t-SNE: Mathematical Formulation}
 \textbf{High-dimensional conditional similarity:}
 \[
@@ -464,7 +532,7 @@ q_{ij} = \frac{(1 + \|y_i - y_j\|^2)^{-1}}{\sum_{k \neq l} (1 + \|y_k - y_l\|^2)
 \bottomnote{Symmetrization ensures each point contributes equally regardless of local density.}
 \end{frame}
 
-% SLIDE 20: The Crowding Problem
+%% Slide 24: The Crowding Problem
 \begin{frame}[t]{The Crowding Problem}
 \textbf{Why Student's t instead of Gaussian in low-D?}
 
@@ -486,10 +554,13 @@ q_{ij} = \frac{(1 + \|y_i - y_j\|^2)^{-1}}{\sum_{k \neq l} (1 + \|y_k - y_l\|^2)
 
 \vspace{0.3em}
 This is the key innovation of t-SNE over the original SNE (Hinton \& Roweis, 2002).
+
+\vspace{0.2em}
+{\small \textit{Why ``Student's''? William Gosset published under the pseudonym ``Student'' in 1908. With 1 degree of freedom, it equals the Cauchy distribution: tails decay as $1/(1+x^2)$ instead of $e^{-x^2}$.}}
 \bottomnote{The crowding problem is fundamental to all high-to-low dimensional embeddings, not just t-SNE.}
 \end{frame}
 
-% SLIDE 21: KL Divergence and the Gradient
+%% Slide 25: KL Divergence and the Gradient
 \begin{frame}[t]{KL Divergence and the Gradient}
 \textbf{KL Divergence} (asymmetric):
 \[
@@ -511,7 +582,7 @@ This is the key innovation of t-SNE over the original SNE (Hinton \& Roweis, 200
 \bottomnote{Optimized via gradient descent with momentum; early exaggeration amplifies attractive forces in initial iterations.}
 \end{frame}
 
-% SLIDE 22: Perplexity Low (CHART)
+%% Slide 26: Perplexity Low (CHART)
 \begin{frame}[t]{Perplexity: Low (Local Focus)}
 \begin{columns}
 \begin{column}{0.55\textwidth}
@@ -537,7 +608,7 @@ Effectively considers $\sim$5 nearest neighbors per point.
 \bottomnote{Low perplexity: good for detecting sub-structure within clusters, but risks over-fragmentation.}
 \end{frame}
 
-% SLIDE 23: Perplexity Default (CHART)
+%% Slide 27: Perplexity Default (CHART)
 \begin{frame}[t]{Perplexity: Default (Balanced)}
 \begin{columns}
 \begin{column}{0.55\textwidth}
@@ -560,7 +631,7 @@ The standard default value for most implementations.
 \bottomnote{Perplexity 30 is the recommended starting point; always compare with other values.}
 \end{frame}
 
-% SLIDE 24: Perplexity High (CHART)
+%% Slide 28: Perplexity High (CHART)
 \begin{frame}[t]{Perplexity: High (Global Focus)}
 \begin{columns}
 \begin{column}{0.55\textwidth}
@@ -583,7 +654,7 @@ Considers $\sim$100 neighbors --- broader context.
 \bottomnote{High perplexity: approaches a more global view but may obscure fine cluster boundaries.}
 \end{frame}
 
-% SLIDE 25: Perplexity Guidelines
+%% Slide 29: Perplexity Guidelines
 \begin{frame}[t]{Perplexity Guidelines}
 \textbf{Perplexity} = $2^H$ where $H = -\sum_j p_{j|i} \log_2 p_{j|i}$ is entropy.
 
@@ -611,7 +682,7 @@ Intuitively: the effective number of neighbors each point ``considers.''
 \section{PCA vs t-SNE Comparison}
 % ============================================================
 
-% SLIDE 26: Cluster Preservation: Original Data (CHART)
+%% Slide 30: Cluster Preservation: Original Data (CHART)
 \begin{frame}[t]{Cluster Preservation: Original Data}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{06a_original_clusters/chart.pdf}
@@ -619,7 +690,7 @@ Intuitively: the effective number of neighbors each point ``considers.''
 \bottomnote{MNIST digits (64 dimensions): classes overlap severely when viewed in raw pixel space.}
 \end{frame}
 
-% SLIDE 27: Cluster Preservation: PCA Projection (CHART)
+%% Slide 31: Cluster Preservation: PCA Projection (CHART)
 \begin{frame}[t]{Cluster Preservation: PCA Projection}
 \begin{center}
 \includegraphics[width=0.55\textwidth]{06b_pca_cluster_projection/chart.pdf}
@@ -627,7 +698,7 @@ Intuitively: the effective number of neighbors each point ``considers.''
 \bottomnote{PCA finds max-variance directions --- provides partial digit separation but clusters overlap.}
 \end{frame}
 
-% SLIDE 28: t-SNE Caveats
+%% Slide 32: t-SNE Caveats
 \begin{frame}[t]{t-SNE Caveats and Best Practices}
 \textbf{Important Limitations:}
 \begin{itemize}
@@ -647,7 +718,7 @@ Intuitively: the effective number of neighbors each point ``considers.''
 \bottomnote{t-SNE shows IF clusters exist; cluster sizes, gaps, and densities are artifacts of the algorithm.}
 \end{frame}
 
-% SLIDE 29: UMAP Modern Alternative
+%% Slide 33: UMAP Modern Alternative
 \begin{frame}[t]{UMAP: The Modern Alternative}
 \textbf{Uniform Manifold Approximation and Projection} (McInnes et al., 2018)
 
@@ -671,7 +742,7 @@ Based on Riemannian geometry and algebraic topology (fuzzy simplicial sets).
 \bottomnote{UMAP is increasingly the default choice for visualization in production ML pipelines.}
 \end{frame}
 
-% SLIDE 30: When to Use Which
+%% Slide 34: When to Use Which
 \begin{frame}[t]{When to Use Which Method}
 \textbf{Use PCA When:}
 \begin{itemize}
@@ -699,7 +770,7 @@ Based on Riemannian geometry and algebraic topology (fuzzy simplicial sets).
 \section{Finance Applications}
 % ============================================================
 
-% SLIDE 31: Market Regime Detection with t-SNE
+%% Slide 35: Market Regime Detection with t-SNE
 \begin{frame}[t]{Market Regime Detection with t-SNE}
 \textbf{Pipeline:}
 \begin{enumerate}
@@ -722,7 +793,7 @@ Based on Riemannian geometry and algebraic topology (fuzzy simplicial sets).
 \bottomnote{Regime detection is exploratory --- clusters must be validated against economic fundamentals.}
 \end{frame}
 
-% SLIDE 32: PCA Preprocessing for ML Pipelines
+%% Slide 36: PCA Preprocessing for ML Pipelines
 \begin{frame}[t]{PCA Preprocessing for ML Pipelines}
 \textbf{Standard Pipeline:}
 \[
@@ -747,7 +818,7 @@ Based on Riemannian geometry and algebraic topology (fuzzy simplicial sets).
 \bottomnote{PCA preprocessing is a bias--variance tradeoff: reduces overfitting but may lose signal.}
 \end{frame}
 
-% SLIDE 33: Dimensionality Reduction Comparison Table
+%% Slide 37: Dimensionality Reduction Comparison Table
 \begin{frame}[t]{Dimensionality Reduction: Method Comparison}
 \begin{center}
 \small
@@ -778,56 +849,36 @@ Autoencoder & Non-linear & Slow & Yes & Complex non-linear features \\
 \section{Implementation}
 % ============================================================
 
-% SLIDE 34: PCA in scikit-learn
-\begin{frame}[t]{PCA in scikit-learn}
-\textbf{Core API:}
+%% Slide 38: Implementation: PCA, t-SNE, and UMAP
+\begin{frame}[t]{Implementation: PCA, t-SNE, and UMAP}
+\textbf{PCA} (\texttt{sklearn.decomposition.PCA}):
 \begin{itemize}
-  \item \texttt{PCA(n\_components=k)} --- keep $k$ components (integer)
-  \item \texttt{PCA(n\_components=0.95)} --- keep 95\% variance (float)
+  \item \texttt{PCA(n\_components=k)} or \texttt{PCA(n\_components=0.95)} for 95\% variance
   \item \texttt{pca.explained\_variance\_ratio\_} --- variance per component
   \item \texttt{pca.inverse\_transform(Z)} --- reconstruct original space
 \end{itemize}
 
 \vspace{0.3em}
-\textbf{Implementation details:}
-\begin{itemize}
-  \item Uses randomized truncated SVD internally (not eigendecomposition)
-  \item Automatically centers the data (subtracts mean)
-  \item For sparse data: use \texttt{TruncatedSVD} instead (no centering)
-\end{itemize}
-
-\vspace{0.3em}
-\textbf{Key practice:} Always \texttt{StandardScaler().fit\_transform(X)} before PCA when features have different units or scales.
-\bottomnote{PCA on covariance matrix (raw data) vs.\ correlation matrix (standardized) gives different results.}
-\end{frame}
-
-% SLIDE 35: t-SNE and UMAP in scikit-learn
-\begin{frame}[t]{t-SNE and UMAP in Practice}
 \textbf{t-SNE} (\texttt{sklearn.manifold.TSNE}):
 \begin{itemize}
   \item \texttt{TSNE(n\_components=2, perplexity=30, random\_state=42)}
   \item Key params: \texttt{perplexity}, \texttt{learning\_rate}, \texttt{n\_iter}
-  \item Set \texttt{random\_state} for reproducibility; run multiple seeds to validate
 \end{itemize}
 
 \vspace{0.3em}
 \textbf{UMAP} (\texttt{umap-learn} package):
 \begin{itemize}
   \item \texttt{UMAP(n\_components=2, n\_neighbors=15, min\_dist=0.1)}
-  \item Key params: \texttt{n\_neighbors} ($\approx$ perplexity), \texttt{min\_dist}
-  \item Supports \texttt{.transform()} for new data points
+  \item Supports \texttt{.transform()} for new data (unlike t-SNE)
 \end{itemize}
-
-\vspace{0.3em}
-\textbf{Best practice pipeline:} PCA to 30--50 dims first, then t-SNE/UMAP to 2D. This improves speed and removes noise.
-\bottomnote{Install UMAP via: \texttt{pip install umap-learn} (not \texttt{umap}, which is a different package).}
+\bottomnote{Always \texttt{StandardScaler} before PCA when features differ in scale. PCA to 30--50 dims before t-SNE/UMAP.}
 \end{frame}
 
 % ============================================================
 \section{Practice}
 % ============================================================
 
-% SLIDE 36: Hands-on Exercise
+%% Slide 39: Hands-on Exercise
 \begin{frame}[t]{Hands-on Exercises}
 \textbf{Exercise 1: Yield Curve Decomposition}
 \begin{itemize}
@@ -856,7 +907,7 @@ Autoencoder & Non-linear & Slow & Yes & Complex non-linear features \\
 \section{Summary}
 % ============================================================
 
-% SLIDE 37: Key Takeaways
+%% Slide 40: Key Takeaways
 \begin{frame}[t]{Key Takeaways}
 \textbf{PCA:}
 \begin{itemize}
@@ -880,7 +931,7 @@ Autoencoder & Non-linear & Slow & Yes & Complex non-linear features \\
 \bottomnote{Dimensionality reduction is both a standalone tool and an essential preprocessing step.}
 \end{frame}
 
-% SLIDE 38: Closing Comic
+%% Slide 41: Closing Comic
 \begin{frame}[t]{Closing Thought}
 \begin{center}
 \Large
@@ -905,7 +956,7 @@ Autoencoder & Non-linear & Slow & Yes & Complex non-linear features \\
 \bottomnote{XKCD \#2400 by Randall Munroe (CC BY-NC 2.5). The real question: how do you \textit{know} it was noise?}
 \end{frame}
 
-% SLIDE 39: References (Textbooks)
+%% Slide 42: References (Textbooks)
 \begin{frame}[t]{References: Textbooks and Papers}
 \small
 \textbf{Textbooks:}
@@ -925,7 +976,7 @@ Autoencoder & Non-linear & Slow & Yes & Complex non-linear features \\
 \bottomnote{The van der Maaten \& Hinton (2008) paper has 40,000+ citations --- one of the most cited ML papers.}
 \end{frame}
 
-% SLIDE 40: References (Documentation)
+%% Slide 43: References (Documentation)
 \begin{frame}[t]{References: Documentation and Finance}
 \small
 \textbf{Software Documentation:}
@@ -950,7 +1001,7 @@ Autoencoder & Non-linear & Slow & Yes & Complex non-linear features \\
 \end{frame}
 
 % ============================================================
-% APPENDIX (8 slides)
+% APPENDIX (9 slides)
 % ============================================================
 \appendix
 \section*{Advanced Topics}
@@ -1102,7 +1153,30 @@ where $\mathcal{V}_k(i)$ = points in $k$-NN of $i$ in high-D but \textit{not} in
 \bottomnote{Trustworthiness penalizes ``false neighbors''; continuity penalizes ``missing neighbors'' in the embedding.}
 \end{frame}
 
-% SLIDE A8: References and Further Reading
+% SLIDE A8: Statistical Inference for PCA
+\begin{frame}[t]{Statistical Inference for PCA}
+\textbf{Bootstrap Confidence Intervals:}
+\begin{itemize}
+  \item Resample data with replacement, recompute PCA each time
+  \item Track loading stability and eigenvalue confidence bands
+\end{itemize}
+
+\textbf{Parallel Analysis (most rigorous for $k$):}
+\begin{itemize}
+  \item Compare observed eigenvalues to eigenvalues from random data
+  \item Keep components where $\lambda_{\text{data}} > \lambda_{\text{random}}$
+\end{itemize}
+
+\textbf{Cross-Validation:}
+\begin{itemize}
+  \item Split data, fit PCA on training set, evaluate reconstruction on holdout
+\end{itemize}
+
+\textbf{For t-SNE:} Run multiple times with different random seeds; clusters that are unstable across runs are likely artifacts.
+\bottomnote{MSc-level: always quantify uncertainty in dimensionality reduction choices.}
+\end{frame}
+
+% SLIDE A9: References and Further Reading
 \begin{frame}[t]{References and Further Reading}
 \small
 \textbf{Advanced Theory:}

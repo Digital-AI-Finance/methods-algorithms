@@ -1063,6 +1063,11 @@
             "id": "09_yield_curve_factors",
             "file": "slides/L05_PCA_tSNE/09_yield_curve_factors/chart.py",
             "status": "complete"
+          },
+          {
+            "id": "10_pca_mini_example",
+            "file": "slides/L05_PCA_tSNE/10_pca_mini_example/chart.py",
+            "status": "complete"
           }
         ],
         "notebook": {
@@ -1308,6 +1313,21 @@
           {
             "id": "top10_20_reward_shaping",
             "file": "slides/L06_Embeddings_RL/top10_20_reward_shaping/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "11_word_analogy_arithmetic",
+            "file": "slides/L06_Embeddings_RL/11_word_analogy_arithmetic/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "12_epsilon_decay",
+            "file": "slides/L06_Embeddings_RL/12_epsilon_decay/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "13_walkforward_timeline",
+            "file": "slides/L06_Embeddings_RL/13_walkforward_timeline/chart.py",
             "status": "complete"
           }
         ],
