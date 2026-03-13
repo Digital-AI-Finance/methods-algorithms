@@ -1378,6 +1378,18 @@
         "embeddings_rl_simple_slides": {
             "file": "slides/L06_Embeddings_RL/L06_embeddings_rl_simple.tex",
             "status": "complete"
+        },
+        "embeddings_simple_slides": {
+            "file": "slides/L06_Embeddings_RL/L06a_embeddings_simple.tex",
+            "status": "complete"
+        },
+        "rl_simple_slides": {
+            "file": "slides/L06_Embeddings_RL/L06b_rl_simple.tex",
+            "status": "complete"
+        },
+        "embeddings_llm_simple_slides": {
+            "file": "slides/L06_Embeddings_RL/L06c_embeddings_llm_simple.tex",
+            "status": "complete"
         }
       },
       "related_topics": [
