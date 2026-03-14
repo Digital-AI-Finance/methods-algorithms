@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Quiz: PCA Basics | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVuj4nkfMTmM/M/7EKJVGr6aSozTWXMEoxlNVlTqOgKHMJCnGZJ73Lpr/7Vdw" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Ber8i1e2fQs9/h7qJC/H6MXGLS8/3k0JzqfGJhZ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxUvBOCaIpzhqKdQZnIJu5B6/HYJv9CrNR6xFZveLXHPmGIFV9O1e5sXD0J1c" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quick Quiz: PCA Basics</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quick Quiz: PCA Basics</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "What does PCA stand for?",
+                    "options": {
+                        "A": "Primary Cluster Analysis",
+                        "B": "Principal Component Analysis",
+                        "C": "Partial Correlation Assessment",
+                        "D": "Predictive Classification Algorithm"
+                    },
+                    "correct": "B",
+                    "explanation": "PCA stands for Principal Component Analysis. It is a technique for reducing the dimensionality of data while retaining as much variance as possible."
+                },
+                {
+                    "id": 2,
+                    "question": "What is the main goal of PCA?",
+                    "options": {
+                        "A": "Classify data into categories",
+                        "B": "Find outliers in the dataset",
+                        "C": "Reduce the number of dimensions while keeping as much information as possible",
+                        "D": "Increase the number of features for better accuracy"
+                    },
+                    "correct": "C",
+                    "explanation": "PCA aims to reduce dimensionality by projecting data onto a smaller set of new axes (principal components) that capture the most variance in the original data."
+                },
+                {
+                    "id": 3,
+                    "question": "What does 'dimensionality reduction' mean?",
+                    "options": {
+                        "A": "Removing rows from the dataset",
+                        "B": "Reducing the number of features/variables",
+                        "C": "Making the dataset smaller in file size",
+                        "D": "Lowering the precision of numbers"
+                    },
+                    "correct": "B",
+                    "explanation": "Dimensionality reduction means reducing the number of features (columns/variables) in a dataset while trying to preserve the important information."
+                },
+                {
+                    "id": 4,
+                    "question": "What is a principal component?",
+                    "options": {
+                        "A": "The most important original feature",
+                        "B": "A new axis that captures the most variance in the data",
+                        "C": "The average of all features",
+                        "D": "A cluster center"
+                    },
+                    "correct": "B",
+                    "explanation": "A principal component is a new axis (direction) in the data space, computed as a linear combination of the original features, chosen to capture maximum variance."
+                },
+                {
+                    "id": 5,
+                    "question": "The first principal component captures:",
+                    "options": {
+                        "A": "The direction of minimum variance",
+                        "B": "The direction of maximum variance",
+                        "C": "The mean of the data",
+                        "D": "The direction with the most outliers"
+                    },
+                    "correct": "B",
+                    "explanation": "The first principal component (PC1) points in the direction of maximum variance in the data. Each subsequent component captures the next highest variance, orthogonal to the previous ones."
+                },
+                {
+                    "id": 6,
+                    "question": "Are principal components correlated with each other?",
+                    "options": {
+                        "A": "Yes, they are always highly correlated",
+                        "B": "It depends on the dataset",
+                        "C": "No, they are orthogonal (uncorrelated)",
+                        "D": "Only the first two are correlated"
+                    },
+                    "correct": "C",
+                    "explanation": "Principal components are orthogonal to each other by construction, meaning they are completely uncorrelated. Each component captures a unique direction of variance."
+                },
+                {
+                    "id": 7,
+                    "question": "What does a scree plot show?",
+                    "options": {
+                        "A": "The correlation between features",
+                        "B": "How much variance each component explains",
+                        "C": "The distribution of data points",
+                        "D": "The number of clusters in the data"
+                    },
+                    "correct": "B",
+                    "explanation": "A scree plot displays the variance explained by each principal component in descending order. It helps you decide how many components to keep."
+                },
+                {
+                    "id": 8,
+                    "question": "When should you stop adding principal components?",
+                    "options": {
+                        "A": "After exactly 2 components",
+                        "B": "When the scree plot shows an 'elbow' (flattens out)",
+                        "C": "When you have used all components",
+                        "D": "After the first component only"
+                    },
+                    "correct": "B",
+                    "explanation": "The 'elbow rule' says to look for a bend in the scree plot where additional components explain much less variance. Components after the elbow add little information."
+                },
+                {
+                    "id": 9,
+                    "question": "What does 'explained variance ratio' tell you?",
+                    "options": {
+                        "A": "The number of features in the data",
+                        "B": "The percentage of total variance captured by each component",
+                        "C": "The accuracy of the PCA model",
+                        "D": "The correlation between components"
+                    },
+                    "correct": "B",
+                    "explanation": "The explained variance ratio shows what fraction of the total variance in the data is captured by each principal component. For example, 0.85 means that component explains 85% of the variance."
+                },
+                {
+                    "id": 10,
+                    "question": "Does PCA work well on non-linear data?",
+                    "options": {
+                        "A": "Yes, PCA handles any type of data",
+                        "B": "No, PCA only captures linear relationships",
+                        "C": "Only if you use more than 3 components",
+                        "D": "Yes, but only for small datasets"
+                    },
+                    "correct": "B",
+                    "explanation": "PCA finds linear combinations of features and can only capture linear relationships. For non-linear structure, techniques like kernel PCA or t-SNE are more appropriate."
+                },
+                {
+                    "id": 11,
+                    "question": "What must you do to data before applying PCA?",
+                    "options": {
+                        "A": "Remove all missing values only",
+                        "B": "Sort the data by the target variable",
+                        "C": "Standardize (scale) the features",
+                        "D": "Convert everything to integers"
+                    },
+                    "correct": "C",
+                    "explanation": "Standardization (zero mean, unit variance) is essential before PCA. Without it, features with larger scales dominate the principal components regardless of their actual importance."
+                },
+                {
+                    "id": 12,
+                    "question": "Why is standardization important for PCA?",
+                    "options": {
+                        "A": "It makes the algorithm run faster",
+                        "B": "Features with larger scales would dominate the components",
+                        "C": "PCA requires positive values only",
+                        "D": "It removes outliers from the data"
+                    },
+                    "correct": "B",
+                    "explanation": "PCA maximizes variance. If one feature ranges from 0-1000 and another from 0-1, the high-range feature would dominate the components simply due to scale, not importance."
+                },
+                {
+                    "id": 13,
+                    "question": "PCA is supervised or unsupervised?",
+                    "options": {
+                        "A": "Supervised - it uses class labels",
+                        "B": "Semi-supervised",
+                        "C": "Unsupervised - it does not use labels",
+                        "D": "It depends on the dataset"
+                    },
+                    "correct": "C",
+                    "explanation": "PCA is unsupervised. It only looks at the features (X) to find directions of maximum variance. It does not use any target variable or class labels."
+                },
+                {
+                    "id": 14,
+                    "question": "What is a 'loading' in PCA?",
+                    "options": {
+                        "A": "The time it takes to compute PCA",
+                        "B": "The weight/contribution of each original feature to a component",
+                        "C": "The number of data points used",
+                        "D": "The file size of the dataset"
+                    },
+                    "correct": "B",
+                    "explanation": "Loadings are the coefficients (weights) that define each principal component as a linear combination of the original features. High absolute loading means that feature contributes strongly to that component."
+                },
+                {
+                    "id": 15,
+                    "question": "Can PCA be used for visualization?",
+                    "options": {
+                        "A": "No, PCA is only for preprocessing",
+                        "B": "Yes, by projecting data to 2 or 3 principal components",
+                        "C": "Only if the data is already 3D",
+                        "D": "Only with categorical data"
+                    },
+                    "correct": "B",
+                    "explanation": "A common use of PCA is to reduce high-dimensional data to 2 or 3 components so it can be plotted and visually inspected for patterns or clusters."
+                },
+                {
+                    "id": 16,
+                    "question": "What happens to less important components in PCA?",
+                    "options": {
+                        "A": "They are given more weight",
+                        "B": "They are discarded to reduce dimensionality",
+                        "C": "They are combined into one component",
+                        "D": "They are stored separately for later"
+                    },
+                    "correct": "B",
+                    "explanation": "Components that explain little variance are discarded. By keeping only the top-k components, you reduce dimensionality while retaining most of the information."
+                },
+                {
+                    "id": 17,
+                    "question": "PCA preserves which type of structure?",
+                    "options": {
+                        "A": "Local structure (neighborhoods)",
+                        "B": "Cluster labels",
+                        "C": "Global structure (overall variance and spread)",
+                        "D": "Time-series ordering"
+                    },
+                    "correct": "C",
+                    "explanation": "PCA preserves global structure by maximizing variance. It captures the broad spread and relationships in the data, but may not preserve fine-grained local neighborhoods."
+                },
+                {
+                    "id": 18,
+                    "question": "How many principal components can you have at most?",
+                    "options": {
+                        "A": "Always exactly 3",
+                        "B": "As many as the number of data points",
+                        "C": "As many as the number of original features",
+                        "D": "There is no limit"
+                    },
+                    "correct": "C",
+                    "explanation": "The maximum number of principal components equals the number of original features (or the number of samples, whichever is smaller). Usually you keep far fewer to achieve dimensionality reduction."
+                },
+                {
+                    "id": 19,
+                    "question": "In sklearn, which class implements PCA?",
+                    "options": {
+                        "A": "sklearn.cluster.PCA",
+                        "B": "sklearn.decomposition.PCA",
+                        "C": "sklearn.linear_model.PCA",
+                        "D": "sklearn.preprocessing.PCA"
+                    },
+                    "correct": "B",
+                    "explanation": "PCA is found in sklearn.decomposition.PCA. The decomposition module contains matrix decomposition methods including PCA, NMF, and others."
+                },
+                {
+                    "id": 20,
+                    "question": "What is the 'curse of dimensionality'?",
+                    "options": {
+                        "A": "When your computer runs out of memory",
+                        "B": "Problems that arise when data has too many features",
+                        "C": "When PCA produces negative values",
+                        "D": "When features are perfectly correlated"
+                    },
+                    "correct": "B",
+                    "explanation": "The curse of dimensionality refers to various problems that arise in high-dimensional spaces: data becomes sparse, distances lose meaning, and models need exponentially more data. PCA helps combat this by reducing dimensions."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                const opts = {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
+                });
+            }
+        }
+
+        function waitForKaTeX(callback, maxAttempts = 50) {
+    let attempts = 0;
+    function check() {
+        if (typeof renderMathInElement !== 'undefined') {
+            callback();
+        } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(check, 50);
+        }
+    }
+    check();
+}
+
+// Initialize with error handling
+        try {
+            initQuiz();
+            waitForKaTeX(renderMath);
+        } catch (e) {
+            console.error('Quiz initialization error:', e);
+            const container = document.getElementById('questionsRow') || document.querySelector('.main');
+            if (container) {
+                container.innerHTML =
+                    '<div style="padding:2rem;text-align:center;color:#991b1b;">' +
+                    '<h3>Quiz failed to load</h3><p>Error: ' + e.message + '</p>' +
+                    '<p>Please refresh the page or try a different browser.</p></div>';
+            }
+        }
+    </script>
+</body>
+</html>
