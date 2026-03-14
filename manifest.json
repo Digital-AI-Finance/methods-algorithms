@@ -1117,6 +1117,10 @@
         "pca_tsne_simple_slides": {
           "file": "slides/L05_PCA_tSNE/L05_pca_tsne_simple.tex",
           "status": "complete"
+        },
+        "tsne_simple_slides": {
+          "file": "slides/L05_PCA_tSNE/L05b_tsne_simple.tex",
+          "status": "complete"
         }
       },
       "related_topics": [

@@ -1,13 +1,12 @@
 {
   "active": false,
   "mode": "ralplan",
-  "iteration": 4,
+  "iteration": 3,
   "max_iterations": 5,
-  "plan_path": ".omc/plans/pca-simple-narrative.md",
+  "plan_path": ".omc/plans/l05b-tsne-visual-lecture.md",
   "current_phase": "complete",
-  "started_at": "2026-03-07T18:30:00Z",
-  "completed_at": "2026-03-07T19:30:00Z",
-  "task_description": "Create a simple PCA lecture using beamer-slide-creator skill. Narrative-driven, chart-first. All charts use synthetic data and Python. As simple as possible.",
+  "started_at": "2026-03-14T00:30:00Z",
+  "task_description": "Create a standalone t-SNE visual lecture (L05b_tsne_simple.tex) with visual formula diagrams. Also update skill.",
   "verdict": "OKAY",
-  "verdict_iteration": 4
+  "completed_at": "2026-03-14T01:15:00Z"
 }
