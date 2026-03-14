@@ -301,6 +301,19 @@ p_{j|i} = \frac{\exp\!\bigl(-\|x_i - x_j\|^2 \,/\, 2\sigma_i^2\bigr)}{\sum_{k \n
 \bottomnote{Each point gets its own $\sigma_i$ -- dense regions use small $\sigma$, sparse regions use large $\sigma$}
 \end{frame}
 
+%% SLIDE 7b: Chart -- Gaussian Similarity
+\begin{frame}[t]{How Does the Gaussian Kernel Convert Distance to Similarity?}
+\centering
+\includegraphics[width=0.60\textwidth]{11_gaussian_similarity/chart.pdf}
+
+\begin{compactlist}
+  \item Small $\sigma$ = only very close points are ``neighbors'' (tight focus)
+  \item Large $\sigma$ = distant points still get some similarity weight
+  \item \highlight{Perplexity controls $\sigma$}: it sets how many effective neighbors each point has
+\end{compactlist}
+\bottomnote{Each point $x_i$ gets its own $\sigma_i$ -- t-SNE adapts automatically to local density}
+\end{frame}
+
 %% SLIDE 8: Definition Block -- Low-D Similarities
 \begin{frame}[t]{Step 2: Similarities in Low-D (Student-t Kernel)}
 \begin{columns}[T]
@@ -330,6 +343,19 @@ q_{ij} = \frac{(1 + \|y_i - y_j\|^2)^{-1}}{\sum_{k \neq l}(1 + \|y_k - y_l\|^2)^
 \bottomnote{Student-t with 1 degree of freedom = Cauchy distribution -- heavier tails than Gaussian, which is the key to avoiding the crowding problem}
 \end{frame}
 
+%% SLIDE 8b: Chart -- Gaussian vs Student-t
+\begin{frame}[t]{Why Does the Student-t Kernel Solve the Crowding Problem?}
+\centering
+\includegraphics[width=0.60\textwidth]{12_student_t_vs_gaussian/chart.pdf}
+
+\begin{compactlist}
+  \item Gaussian decays fast: moderate-distance pairs get almost zero weight
+  \item Student-t has \highlight{heavy tails}: moderate pairs keep meaningful weight
+  \item Result: clusters stay tight, but gaps between clusters become visible
+\end{compactlist}
+\bottomnote{The orange shaded region shows where Student-t gives more ``room'' than Gaussian -- this prevents the crowding problem}
+\end{frame}
+
 %% SLIDE 9: KL Divergence
 \begin{frame}[t]{Step 3: Minimize KL Divergence}
 \begin{columns}[T]
@@ -357,6 +383,19 @@ q_{ij} = \frac{(1 + \|y_i - y_j\|^2)^{-1}}{\sum_{k \neq l}(1 + \|y_k - y_l\|^2)^
 \end{columns}
 
 \bottomnote{KL divergence is asymmetric -- $\text{KL}(P\|Q) \neq \text{KL}(Q\|P)$. The choice $\text{KL}(P\|Q)$ prioritizes keeping nearby points together.}
+\end{frame}
+
+%% SLIDE 9b: Chart -- KL Divergence Asymmetry
+\begin{frame}[t]{Why Does KL Divergence Prioritize Keeping Neighbors Together?}
+\centering
+\includegraphics[width=0.60\textwidth]{13_kl_divergence_asymmetry/chart.pdf}
+
+\begin{compactlist}
+  \item When true neighbors (high $p$) get low map similarity (low $q$): \highlight{huge penalty}
+  \item When distant points (low $p$) end up close (high $q$): small penalty
+  \item This asymmetry means: t-SNE will sacrifice global accuracy to preserve local neighborhoods
+\end{compactlist}
+\bottomnote{The asymmetry explains why t-SNE cluster sizes and inter-cluster distances are unreliable}
 \end{frame}
 
 %% SLIDE 10: The Crowding Problem
