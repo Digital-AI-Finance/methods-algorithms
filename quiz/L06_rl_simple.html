@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Quiz: Reinforcement Learning Basics | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVuj4nkfMTmM/M/7EKJVGr6aSozTWXMEoxlNVlTqOgKHMJCnGZJ73Lpr/7Vdw" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Ber8i1e2fQs9/h7qJC/H6MXGLS8/3k0JzqfGJhZ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxUvBOCaIpzhqKdQZnIJu5B6/HYJv9CrNR6xFZveLXHPmGIFV9O1e5sXD0J1c" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --quiz-accent: #8b5cf6;
+            --quiz-light: #ede9fe;
+            --correct: #22c55e;
+            --correct-bg: #dcfce7;
+            --incorrect: #ef4444;
+            --incorrect-bg: #fee2e2;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-title { font-weight: 600; font-size: 14px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .quiz-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .quiz-title { font-size: 16px; font-weight: 600; color: var(--mlpurple); }
+        .quiz-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .stat-progress { background: var(--quiz-light); color: var(--quiz-accent); }
+        .stat-score { background: var(--correct-bg); color: var(--correct); }
+
+        .progress-bar-container {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--quiz-accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* Three-column layout */
+        .questions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 280px;
+        }
+
+        .question-card.answered { opacity: 0.7; }
+
+        .question-card.correct-card {
+            border: 2px solid var(--correct);
+            background: linear-gradient(to bottom, var(--correct-bg), var(--card-bg));
+        }
+
+        .question-card.incorrect-card {
+            border: 2px solid var(--incorrect);
+            background: linear-gradient(to bottom, var(--incorrect-bg), var(--card-bg));
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .q-number {
+            background: var(--quiz-light);
+            color: var(--quiz-accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .q-status { font-size: 14px; }
+
+        .q-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--quiz-accent);
+            background: var(--quiz-light);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: var(--correct-bg);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--incorrect);
+            background: var(--incorrect-bg);
+        }
+
+        .option-btn.disabled { cursor: default; }
+
+        .option-letter {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--incorrect);
+            color: white;
+        }
+
+        .option-text { flex: 1; }
+
+        .feedback {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            line-height: 1.4;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: var(--correct-bg); color: #166534; }
+        .feedback.incorrect { background: var(--incorrect-bg); color: #991b1b; }
+
+        /* Results */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            display: none;
+        }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 48px; margin-bottom: 8px; }
+        .results-score { font-size: 36px; font-weight: 700; color: var(--quiz-accent); }
+        .results-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .results-grade {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .grade-a { background: #dcfce7; color: #166534; }
+        .grade-b { background: #dbeafe; color: #1e40af; }
+        .grade-c { background: #fef3c7; color: #92400e; }
+        .grade-d { background: #fed7aa; color: #9a3412; }
+        .grade-f { background: #fee2e2; color: #991b1b; }
+
+        .results-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--quiz-accent); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+
+        /* Next button container */
+        .next-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn-next {
+            padding: 10px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--quiz-accent);
+            color: white;
+            transition: all 0.2s;
+            display: none;
+        }
+        .btn-next:hover { background: #7c3aed; transform: scale(1.02); }
+        .btn-next.show { display: inline-block; }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 900px) {
+            .questions-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .questions-row { grid-template-columns: 1fr; }
+            .question-card { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Quick Quiz: Reinforcement Learning Basics</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <div class="quiz-header">
+            <div class="quiz-title">Quick Quiz: Reinforcement Learning Basics</div>
+            <div class="quiz-stats">
+                <span class="stat-badge stat-progress" id="progressBadge">0/20</span>
+                <span class="stat-badge stat-score" id="scoreBadge">Score: 0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="questions-row" id="questionsRow"></div>
+
+        <div class="next-btn-container">
+            <button class="btn-next" id="nextBtn" onclick="loadNextQuestions()">Next</button>
+        </div>
+
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon"></div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-label">Correct Answers</div>
+            <div class="results-grade" id="resultsGrade"></div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+                <a href="../index.html" class="btn btn-secondary">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = {
+            questions: [
+                {
+                    "id": 1,
+                    "question": "What is reinforcement learning?",
+                    "options": {
+                        "A": "A method that memorizes correct answers from a textbook",
+                        "B": "An agent learns by interacting with an environment and receiving rewards",
+                        "C": "A technique for compressing data",
+                        "D": "A type of database query language"
+                    },
+                    "correct": "B",
+                    "explanation": "In reinforcement learning, an agent takes actions in an environment, receives rewards (or penalties), and learns a strategy to maximize cumulative reward over time."
+                },
+                {
+                    "id": 2,
+                    "question": "What are the three main components of RL?",
+                    "options": {
+                        "A": "Input, output, and error",
+                        "B": "Agent, environment, and reward",
+                        "C": "Training, validation, and test",
+                        "D": "CPU, GPU, and memory"
+                    },
+                    "correct": "B",
+                    "explanation": "The three core components are: the agent (decision maker), the environment (the world it acts in), and the reward signal (feedback on how good each action was)."
+                },
+                {
+                    "id": 3,
+                    "question": "What is a 'reward' in RL?",
+                    "options": {
+                        "A": "The final grade on a test",
+                        "B": "A numerical signal telling the agent how good its action was",
+                        "C": "The total number of actions taken",
+                        "D": "The size of the training dataset"
+                    },
+                    "correct": "B",
+                    "explanation": "A reward is a scalar number the agent receives after each action. Positive rewards encourage the action; negative rewards (penalties) discourage it."
+                },
+                {
+                    "id": 4,
+                    "question": "What is a 'state' in RL?",
+                    "options": {
+                        "A": "A US geographic region",
+                        "B": "The current situation the agent observes",
+                        "C": "The final outcome of the game",
+                        "D": "The learning rate of the algorithm"
+                    },
+                    "correct": "B",
+                    "explanation": "A state is a description of the current situation - everything the agent can observe about the environment at a given moment (e.g., position on a board, stock prices)."
+                },
+                {
+                    "id": 5,
+                    "question": "What is an 'action' in RL?",
+                    "options": {
+                        "A": "A choice the agent makes in a given state",
+                        "B": "A bug in the code",
+                        "C": "The environment's response",
+                        "D": "The reward signal"
+                    },
+                    "correct": "A",
+                    "explanation": "An action is a decision the agent makes - like moving left or right, buying or selling a stock, or any choice available in the current state."
+                },
+                {
+                    "id": 6,
+                    "question": "What is a 'policy' in RL?",
+                    "options": {
+                        "A": "A company's rules and regulations",
+                        "B": "A strategy that maps states to actions",
+                        "C": "The reward function",
+                        "D": "The environment's transition rules"
+                    },
+                    "correct": "B",
+                    "explanation": "A policy is the agent's strategy - it defines what action to take in each state. The goal of RL is to learn an optimal policy that maximizes total reward."
+                },
+                {
+                    "id": 7,
+                    "question": "What is the goal of an RL agent?",
+                    "options": {
+                        "A": "Minimize the number of states visited",
+                        "B": "Maximize the total (cumulative) reward over time",
+                        "C": "Take as few actions as possible",
+                        "D": "Memorize the entire environment"
+                    },
+                    "correct": "B",
+                    "explanation": "The agent's objective is to maximize the total cumulative reward over time, not just the immediate reward. This is why long-term planning matters in RL."
+                },
+                {
+                    "id": 8,
+                    "question": "What is the explore-exploit tradeoff?",
+                    "options": {
+                        "A": "Choosing between fast and slow algorithms",
+                        "B": "Balancing trying new actions (explore) vs using known good actions (exploit)",
+                        "C": "Deciding between training and testing",
+                        "D": "Choosing between two different environments"
+                    },
+                    "correct": "B",
+                    "explanation": "The agent must balance exploration (trying new actions to discover better strategies) with exploitation (using actions already known to give good rewards). Too much of either hurts performance."
+                },
+                {
+                    "id": 9,
+                    "question": "What is epsilon-greedy?",
+                    "options": {
+                        "A": "An algorithm that always picks the best known action",
+                        "B": "A strategy that explores randomly with probability epsilon, otherwise exploits",
+                        "C": "A method that only explores and never exploits",
+                        "D": "A way to calculate rewards"
+                    },
+                    "correct": "B",
+                    "explanation": "Epsilon-greedy is a simple exploration strategy: with probability epsilon, take a random action (explore); otherwise, take the action with the highest known value (exploit)."
+                },
+                {
+                    "id": 10,
+                    "question": "What is Q-learning?",
+                    "options": {
+                        "A": "A quiz-based learning platform",
+                        "B": "A method that learns the value of taking each action in each state",
+                        "C": "A quality control process",
+                        "D": "A method for generating questions"
+                    },
+                    "correct": "B",
+                    "explanation": "Q-learning is a model-free RL algorithm that learns Q-values - the expected total future reward for taking a specific action in a specific state. It updates these values as the agent gains experience."
+                },
+                {
+                    "id": 11,
+                    "question": "What does the Q-value represent?",
+                    "options": {
+                        "A": "The quality of the training data",
+                        "B": "The expected total future reward for taking an action in a state",
+                        "C": "The number of questions answered correctly",
+                        "D": "The speed of the algorithm"
+                    },
+                    "correct": "B",
+                    "explanation": "Q(s, a) represents the expected cumulative future reward the agent will receive if it takes action a in state s and then follows the optimal policy afterward."
+                },
+                {
+                    "id": 12,
+                    "question": "Is RL supervised or unsupervised?",
+                    "options": {
+                        "A": "Supervised - it uses labeled examples",
+                        "B": "Unsupervised - it finds clusters in data",
+                        "C": "Neither - it is a third paradigm based on rewards, not labels",
+                        "D": "It is a type of regression"
+                    },
+                    "correct": "C",
+                    "explanation": "RL is its own paradigm. Unlike supervised learning (which uses labels) or unsupervised learning (which finds patterns), RL learns from a reward signal through trial-and-error interaction."
+                },
+                {
+                    "id": 13,
+                    "question": "What is a 'discount factor' (gamma)?",
+                    "options": {
+                        "A": "A price reduction for bulk purchases",
+                        "B": "A number between 0 and 1 that reduces the value of future rewards",
+                        "C": "The error rate of the model",
+                        "D": "The learning rate multiplier"
+                    },
+                    "correct": "B",
+                    "explanation": "Gamma (between 0 and 1) controls how much the agent values future rewards. Gamma = 0 means only care about immediate reward; gamma close to 1 means value future rewards almost as much as current ones."
+                },
+                {
+                    "id": 14,
+                    "question": "Why use a discount factor?",
+                    "options": {
+                        "A": "To make training faster",
+                        "B": "To make the agent prefer sooner rewards over later ones",
+                        "C": "To increase the number of states",
+                        "D": "To reduce memory usage"
+                    },
+                    "correct": "B",
+                    "explanation": "The discount factor makes the agent prefer rewards received sooner. This is practical because distant future rewards are less certain, and it helps the math converge in infinite-horizon problems."
+                },
+                {
+                    "id": 15,
+                    "question": "What is an 'episode' in RL?",
+                    "options": {
+                        "A": "A TV show segment",
+                        "B": "One complete run from start to a terminal state",
+                        "C": "A single action taken by the agent",
+                        "D": "A batch of training data"
+                    },
+                    "correct": "B",
+                    "explanation": "An episode is one complete sequence of interactions from an initial state to a terminal state. For example, one game of chess from first move to checkmate (or draw) is one episode."
+                },
+                {
+                    "id": 16,
+                    "question": "What is a gridworld?",
+                    "options": {
+                        "A": "A spreadsheet application",
+                        "B": "A simple grid environment where an agent navigates to a goal",
+                        "C": "A type of neural network architecture",
+                        "D": "A data storage format"
+                    },
+                    "correct": "B",
+                    "explanation": "A gridworld is a classic toy environment for teaching RL. The agent moves on a grid (up, down, left, right) trying to reach a goal while avoiding obstacles or penalties."
+                },
+                {
+                    "id": 17,
+                    "question": "Can RL be used in finance?",
+                    "options": {
+                        "A": "No, RL only works for games",
+                        "B": "Yes, for portfolio management, trading strategies, and order execution",
+                        "C": "Only for cryptocurrency",
+                        "D": "Only for detecting fraud"
+                    },
+                    "correct": "B",
+                    "explanation": "RL is increasingly used in finance for algorithmic trading, portfolio optimization, optimal order execution, and risk management, where an agent learns to make sequential decisions to maximize returns."
+                },
+                {
+                    "id": 18,
+                    "question": "What happens if epsilon is too high?",
+                    "options": {
+                        "A": "The agent becomes very accurate",
+                        "B": "The agent explores too much and rarely uses what it learned",
+                        "C": "The agent stops learning completely",
+                        "D": "The environment resets"
+                    },
+                    "correct": "B",
+                    "explanation": "A high epsilon means the agent takes random actions most of the time, exploring excessively instead of exploiting its learned knowledge. This leads to poor performance."
+                },
+                {
+                    "id": 19,
+                    "question": "What happens if epsilon is too low?",
+                    "options": {
+                        "A": "The agent explores too much",
+                        "B": "The agent exploits too much and may miss better strategies",
+                        "C": "The agent learns faster",
+                        "D": "The reward becomes negative"
+                    },
+                    "correct": "B",
+                    "explanation": "A low epsilon means the agent almost always picks the action it thinks is best, rarely exploring alternatives. It may get stuck in a suboptimal strategy and never discover better ones."
+                },
+                {
+                    "id": 20,
+                    "question": "What is the difference between model-based and model-free RL?",
+                    "options": {
+                        "A": "Model-based is faster; model-free is slower",
+                        "B": "Model-based learns a model of the environment; model-free learns directly from experience",
+                        "C": "Model-based uses neural networks; model-free does not",
+                        "D": "There is no difference"
+                    },
+                    "correct": "B",
+                    "explanation": "Model-based RL builds an internal model of how the environment works (transitions, rewards) and plans using it. Model-free RL (like Q-learning) learns directly from experience without modeling the environment."
+                }
+            ]
+        };
+
+        const state = {
+            currentIndex: 0,
+            answers: {},
+            score: 0,
+            displayedQuestions: [],
+            pendingSlots: []
+        };
+
+        const questionsRow = document.getElementById('questionsRow');
+        const progressBar = document.getElementById('progressBar');
+        const progressBadge = document.getElementById('progressBadge');
+        const scoreBadge = document.getElementById('scoreBadge');
+        const resultsCard = document.getElementById('resultsCard');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function initQuiz() {
+            state.currentIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.displayedQuestions = [];
+            state.pendingSlots = [];
+
+            resultsCard.classList.remove('show');
+            questionsRow.style.display = 'grid';
+            nextBtn.classList.remove('show');
+
+            // Show first 3 questions
+            for (let i = 0; i < 3 && i < quizData.questions.length; i++) {
+                state.displayedQuestions.push(i);
+            }
+            state.currentIndex = Math.min(3, quizData.questions.length);
+
+            renderQuestions();
+            updateStats();
+        }
+
+        function renderQuestions() {
+            questionsRow.innerHTML = '';
+
+            state.displayedQuestions.forEach((qIdx, slot) => {
+                const q = quizData.questions[qIdx];
+                const answered = state.answers[q.id] !== undefined;
+                const isCorrect = answered && state.answers[q.id] === q.correct;
+                const isIncorrect = answered && state.answers[q.id] !== q.correct;
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                if (isCorrect) card.classList.add('correct-card', 'answered');
+                if (isIncorrect) card.classList.add('incorrect-card', 'answered');
+
+                card.innerHTML = `
+                    <div class="q-header">
+                        <span class="q-number">Q${qIdx + 1}</span>
+                        ${answered ? `<span class="q-status">${isCorrect ? '&#10004;' : '&#10008;'}</span>` : ''}
+                    </div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options" data-qid="${q.id}" data-slot="${slot}">
+                        ${['A','B','C','D'].map(letter => {
+                            let optClass = 'option-btn';
+                            if (answered) {
+                                optClass += ' disabled';
+                                if (letter === q.correct) optClass += ' correct';
+                                else if (letter === state.answers[q.id]) optClass += ' incorrect';
+                            }
+                            return `
+                                <button class="${optClass}" data-letter="${letter}" ${answered ? 'disabled' : ''}>
+                                    <span class="option-letter">${letter}</span>
+                                    <span class="option-text">${q.options[letter]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feedback ${answered ? 'show' : ''} ${isCorrect ? 'correct' : 'incorrect'}">
+                        ${answered ? (isCorrect ? '&#10004; ' : `&#10008; Answer: ${q.correct}. `) + q.explanation : ''}
+                    </div>
+                `;
+
+                // Add click handlers
+                if (!answered) {
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.addEventListener('click', () => handleAnswer(qIdx, slot, btn.dataset.letter));
+                    });
+                }
+
+                questionsRow.appendChild(card);
+            });
+
+            renderMath();
+        }
+
+        function handleAnswer(qIdx, slot, letter) {
+            const q = quizData.questions[qIdx];
+            state.answers[q.id] = letter;
+
+            if (letter === q.correct) state.score++;
+
+            // Track this slot as pending replacement
+            if (!state.pendingSlots.includes(slot)) {
+                state.pendingSlots.push(slot);
+            }
+
+            updateStats();
+            renderQuestions();
+
+            // Check if all questions answered
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                // Short delay then show results
+                setTimeout(showResults, 800);
+            } else if (state.currentIndex < quizData.questions.length && state.pendingSlots.length > 0) {
+                // Show Next button if there are more questions and pending slots
+                nextBtn.classList.add('show');
+            }
+        }
+
+        function loadNextQuestions() {
+            // Replace pending slots with new questions
+            while (state.pendingSlots.length > 0 && state.currentIndex < quizData.questions.length) {
+                const slot = state.pendingSlots.shift();
+                state.displayedQuestions[slot] = state.currentIndex;
+                state.currentIndex++;
+            }
+
+            // Hide Next button
+            nextBtn.classList.remove('show');
+
+            renderQuestions();
+
+            // Check if quiz is complete (all displayed questions answered)
+            const answered = Object.keys(state.answers).length;
+            if (answered >= quizData.questions.length) {
+                setTimeout(showResults, 500);
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(state.answers).length;
+            const total = quizData.questions.length;
+
+            progressBar.style.width = `${(answered / total) * 100}%`;
+            progressBadge.textContent = `${answered}/${total}`;
+            scoreBadge.textContent = `Score: ${state.score}`;
+        }
+
+        function showResults() {
+            questionsRow.style.display = 'none';
+            nextBtn.classList.remove('show');
+            resultsCard.classList.add('show');
+
+            const total = quizData.questions.length;
+            const percentage = Math.round((state.score / total) * 100);
+
+            document.getElementById('resultsScore').textContent = `${state.score}/${total}`;
+
+            let grade, gradeClass, icon;
+            if (percentage >= 90) { grade = 'Excellent! A'; gradeClass = 'grade-a'; icon = '&#127942;'; }
+            else if (percentage >= 80) { grade = 'Great! B'; gradeClass = 'grade-b'; icon = '&#11088;'; }
+            else if (percentage >= 70) { grade = 'Good! C'; gradeClass = 'grade-c'; icon = '&#128077;'; }
+            else if (percentage >= 60) { grade = 'Pass - D'; gradeClass = 'grade-d'; icon = '&#128221;'; }
+            else { grade = 'Keep practicing'; gradeClass = 'grade-f'; icon = '&#128218;'; }
+
+            document.getElementById('resultsIcon').innerHTML = icon;
+            const gradeEl = document.getElementById('resultsGrade');
+            gradeEl.textContent = `${grade} (${percentage}%)`;
+            gradeEl.className = `results-grade ${gradeClass}`;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                const opts = {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                };
+                // Render only quiz content elements — avoids cross-element
+                // delimiter pairing when renderMathInElement scans document.body
+                document.querySelectorAll('.q-text, .option-text, .feedback').forEach(el => {
+                    renderMathInElement(el, opts);
+                });
+            }
+        }
+
+        function waitForKaTeX(callback, maxAttempts = 50) {
+    let attempts = 0;
+    function check() {
+        if (typeof renderMathInElement !== 'undefined') {
+            callback();
+        } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(check, 50);
+        }
+    }
+    check();
+}
+
+// Initialize with error handling
+        try {
+            initQuiz();
+            waitForKaTeX(renderMath);
+        } catch (e) {
+            console.error('Quiz initialization error:', e);
+            const container = document.getElementById('questionsRow') || document.querySelector('.main');
+            if (container) {
+                container.innerHTML =
+                    '<div style="padding:2rem;text-align:center;color:#991b1b;">' +
+                    '<h3>Quiz failed to load</h3><p>Error: ' + e.message + '</p>' +
+                    '<p>Please refresh the page or try a different browser.</p></div>';
+            }
+        }
+    </script>
+</body>
+</html>
