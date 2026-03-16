@@ -1394,6 +1394,10 @@
         "embeddings_llm_simple_slides": {
             "file": "slides/L06_Embeddings_RL/L06c_embeddings_llm_simple.tex",
             "status": "complete"
+        },
+        "modern_embeddings_simple_slides": {
+            "file": "slides/L06_Embeddings_RL/L06d_modern_embeddings_simple.tex",
+            "status": "complete"
         }
       },
       "related_topics": [
