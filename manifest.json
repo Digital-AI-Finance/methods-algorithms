@@ -1337,6 +1337,11 @@
             "id": "13_walkforward_timeline",
             "file": "slides/L06_Embeddings_RL/13_walkforward_timeline/chart.py",
             "status": "complete"
+          },
+          {
+            "id": "15_ppo_training_curve",
+            "file": "slides/L06_Embeddings_RL/15_ppo_training_curve/chart.py",
+            "status": "complete"
           }
         ],
         "notebook": {
@@ -1397,6 +1402,10 @@
         },
         "modern_embeddings_simple_slides": {
             "file": "slides/L06_Embeddings_RL/L06d_modern_embeddings_simple.tex",
+            "status": "complete"
+        },
+        "modern_rl_simple_slides": {
+            "file": "slides/L06_Embeddings_RL/L06e_modern_rl_simple.tex",
             "status": "complete"
         }
       },
