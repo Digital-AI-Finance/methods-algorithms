@@ -1452,6 +1452,13 @@
         "modern_rl_simple_slides": {
             "file": "slides/L06_Embeddings_RL/L06e_modern_rl_simple.tex",
             "status": "complete"
+        },
+        "embeddings_complete_slides": {
+            "file": "slides/L06_Embeddings_RL/L06f_embeddings_complete.tex",
+            "title": "L06f Embeddings Complete",
+            "status": "complete",
+            "slides": 39,
+            "charts": 9
         }
       },
       "related_topics": [

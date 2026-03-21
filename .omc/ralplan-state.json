@@ -1,18 +1,17 @@
 {
   "active": false,
   "mode": "ralplan",
-  "iteration": 3,
+  "iteration": 2,
   "max_iterations": 5,
-  "plan_path": ".omc/plans/rl-lecture-ultra-deep.md",
+  "plan_path": ".omc/plans/embeddings-ultra-deep-lecture.md",
   "current_phase": "complete",
-  "started_at": "2026-03-20T21:20:00Z",
-  "completed_at": "2026-03-20T22:45:00Z",
-  "task_description": "Ultra deep improvement of the RL lecture across all L06 RL-related files",
+  "started_at": "2026-03-21T09:00:00Z",
+  "completed_at": "2026-03-21T10:00:00Z",
+  "task_description": "Create one more ultra-deep Embeddings lecture with all formulas, 1 slide per concept, narrative progression, then deploy to gh-pages",
   "verdict": "OKAY",
   "score": "34/35",
   "iterations_history": [
-    {"iteration": 1, "verdict": "REJECT", "score": "24/35", "issues": "5 critical: budget blown, subplot violation, stale counts, TODO-13 ambiguity, empty Phase 1"},
-    {"iteration": 2, "verdict": "REJECT", "score": "32/35", "issues": "1 critical: Embeddings=19 not 18, budget off by 1"},
-    {"iteration": 3, "verdict": "OKAY", "score": "34/35", "issues": "2 cosmetic: P2/P3 tally, stale Q2 text"}
+    {"iteration": 1, "verdict": "REJECT", "score": "28/35", "issues": "5 critical: BPE formula wrong, SBERT loss invalid, closing comic missing, chart count mismatch, Zone 1 formula violation"},
+    {"iteration": 2, "verdict": "OKAY", "score": "34/35", "issues": "1 minor: DoD chart count wording"}
   ]
 }
