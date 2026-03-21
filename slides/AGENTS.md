@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-03-18 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-21 -->
 
 # slides/
 
@@ -10,6 +10,8 @@
 This directory contains all LaTeX Beamer slides for the 6-session MSc Data Science course on Methods and Algorithms. Each lesson follows the PMSP framework (Problem-Method-Solution-Practice) and includes finance/banking case studies.
 
 **Recent remediation (Feb 2026)**: All lectures underwent systematic content review. Learning objectives rewritten to Bloom's Level 4-5, formulas added to overview slides, proofs/derivations added to deep dives. All 12 PDFs compile clean (zero overflow warnings).
+
+**L06 RL overhaul (Mar 2026)**: L06 extended with 5 new charts (20-24) covering RL taxonomy, SARSA vs Q-learning on cliff walk, Actor-Critic architecture, offline vs online RL, and the bandit-to-MDP progression. Total L06 numbered charts: 24 (most of any topic), plus top10 series.
 
 ## Structure
 
@@ -41,7 +43,7 @@ Each lesson directory contains:
 | L03 | KNN & K-Means | Customer segmentation, anomaly detection | Intermediate | 7 |
 | L04 | Random Forests | Fraud detection, feature importance | Intermediate | 8 |
 | L05 | PCA & t-SNE | Portfolio risk decomposition | Advanced | 17 |
-| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Advanced | 15 |
+| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Advanced | 24+ |
 
 ## Beamer Theme & Standards
 
@@ -61,7 +63,16 @@ Every chart MUST:
 4. Output to `chart.pdf` in the same directory
 5. Use scaled fonts (font.size=14, legend=13, labels=14)
 
-**Naming convention**: Charts are numbered sequentially (01, 02, 03...) with the final chart always being `07_decision_flowchart` (when to use this algorithm).
+**Naming convention**: Charts are numbered sequentially (01, 02, 03...) with the standard final chart being `07_decision_flowchart` (when to use this algorithm). L06 extends to 24 numbered charts.
+
+**Shared style module**: All chart.py files import from `templates/chart_style.py`:
+```python
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
+```
 
 ## LaTeX Inclusion Rules
 

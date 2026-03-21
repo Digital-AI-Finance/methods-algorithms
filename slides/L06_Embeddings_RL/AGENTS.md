@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-03-18 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-21 -->
 
 # L06_Embeddings_RL/
 
@@ -47,7 +47,7 @@ Lesson 6 introduces representation learning (word embeddings) and reinforcement 
 |------|---------|--------|
 | `L06_embeddings_full.tex` | Full embeddings lecture | - |
 | `L06_embeddings_mini.tex` | Mini embeddings lecture | - |
-| `L06_rl_full.tex` | Standalone RL lecture with full PPO math (for separate teaching) | 29 |
+| `L06_rl_full.tex` | Standalone RL lecture with full PPO math (for separate teaching) | 30 |
 | `L06_rl_mini.tex` | Quick-reference condensed RL overview | 10 |
 | `L06_embeddings_rl_simple.tex` | Combined simple lecture | - |
 | `L06_embeddings_rl_top10.tex` | Top-10 charts lecture | - |
@@ -83,21 +83,23 @@ Note: L06 has **24 numbered charts** (most of any topic), plus top10 series char
 
 ## Chart Technical Details
 
-**Standard settings** (same as L01-L05):
+**Shared style module** (Mar 2026): All chart.py files import from `templates/chart_style.py`:
 ```python
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150
-})
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 ```
+`apply_style()` sets: font.size=15, axes.labelsize=16, axes.titlesize=18, xtick/ytick=14, legend=13, figsize=(10,6), dpi=150.
 
-**Color palette**:
+**Color palette** (from chart_style.py):
 - MLPurple: #3333B2 (structure)
 - MLBlue: #0066CC (Q-values, embeddings)
 - MLOrange: #FF7F0E (optimal actions, high similarity)
 - MLGreen: #2CA02C (positive rewards)
 - MLRed: #D62728 (negative rewards, penalties)
+- MLLavender: #ADADE0 (light fills)
 
 ## Building Charts
 

@@ -1,9 +1,9 @@
 # templates/
 
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-21 -->
 
-**Generated**: 2026-01-25 | **Updated**: 2026-02-07
+**Generated**: 2026-01-25 | **Updated**: 2026-03-21
 **Purpose**: Source-of-truth templates for all course content - charts, slides, notebooks, quizzes, and instructor guides
 
 ---
@@ -18,8 +18,10 @@ This directory contains the master templates that define the styling, structure,
 
 | File | Purpose | Used By |
 |------|---------|---------|
+| `chart_style.py` | **Shared chart styling module** (Mar 2026): defines `apply_style()`, `COLORS`, and ML color constants (`MLPURPLE`, `MLBLUE`, `MLORANGE`, `MLGREEN`, `MLRED`, `MLLAVENDER`). Imported by all 162+ `chart.py` files. | All `XX_chart_name/chart.py` files |
+| `chart_template.py` | Python chart template boilerplate with correct import block and `apply_style()` call | New chart.py files |
 | `beamer_template.tex` | Master LaTeX/Beamer slide template with PMSP structure | All `L0X_overview.tex` and `L0X_deepdive.tex` files |
-| `chart_template.py` | Python chart template with color palette and rcParams | All `XX_chart_name/chart.py` files |
+| `beamer_template_v2.tex` | Extended v2 Beamer template with additional layout patterns | Reference template |
 | `notebook_template.ipynb` | Jupyter notebook template with standard structure | All `notebooks/L0X_*.ipynb` files |
 | `quiz_template.xml` | Moodle XML quiz template | All `quizzes/quiz*.xml` files |
 | `instructor_guide_template.md` | Instructor guide template | All `slides/L0X_Topic/L0X_instructor_guide.md` files |
@@ -32,7 +34,7 @@ This directory contains the master templates that define the styling, structure,
 
 When creating or modifying course content, **ALWAYS reference these templates first**:
 
-1. **Chart creation**: Copy `chart_template.py` to new chart folder, customize data and plotting code
+1. **Chart creation**: Copy `chart_template.py` to new chart folder; it already contains the `chart_style` import block — do not add inline `plt.rcParams.update` or color constants
 2. **Slide creation**: Use `beamer_template.tex` structure with PMSP sections (Problem, Method, Solution, Practice)
 3. **Notebook creation**: Use `notebook_template.ipynb` structure (Setup → Theory → Scratch Implementation → scikit-learn → Exercises)
 4. **Quiz creation**: Follow `quiz_template.xml` XML structure for Moodle compatibility
@@ -76,35 +78,29 @@ MLRed: #D62728
 - Use `\vspace{1em}` for spacing instead of extra items
 - Run `python infrastructure/course_cli.py validate latex --strict` to catch "Overfull" warnings
 
-#### Chart Python (chart_template.py)
+#### Chart Python (chart_style.py + chart_template.py)
+
+`chart_style.py` is the **shared style module** (introduced Mar 2026). All chart.py files MUST import it:
 
 ```python
-# REQUIRED rcParams
-plt.rcParams.update({
-    'font.size': 14,
-    'axes.labelsize': 14,
-    'axes.titlesize': 16,
-    'xtick.labelsize': 13,
-    'ytick.labelsize': 13,
-    'legend.fontsize': 13,
-    'figure.figsize': (10, 6),  # REQUIRED for Beamer
-    'figure.dpi': 150,
-})
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
+```
 
-# REQUIRED color palette
-COLORS = {
-    'primary': '#3333B2',    # ML Purple
-    'secondary': '#0066CC',  # ML Blue
-    'accent': '#FF7F0E',     # ML Orange
-    'success': '#2CA02C',    # ML Green
-    'danger': '#D62728',     # ML Red
-    'lavender': '#ADADE0',   # Light purple
-}
+`apply_style()` sets all rcParams. Font sizes after `apply_style()`:
+- font.size: 15, axes.labelsize: 16, axes.titlesize: 18
+- xtick/ytick: 14, legend: 13, figsize: (10, 6), dpi: 150
 
+**Do NOT define inline `plt.rcParams.update()` or color constants** — use the shared module. Use `tools/patch_charts.py` to migrate old chart.py files.
+
+```python
 # REQUIRED outputs
 # 1. Single figure only (no subplots)
 # 2. File: chart.pdf in same directory
-# 3. GitHub URL in bottom-right corner
+# 3. savefig with facecolor='white', bbox_inches='tight'
 ```
 
 **Chart folder structure**:
@@ -218,12 +214,13 @@ python infrastructure/course_cli.py validate --all
 # 1. Create folder
 mkdir slides/L01_Introduction_Linear_Regression/08_new_chart
 
-# 2. Copy template
+# 2. Copy template (already has chart_style import block)
 cp templates/chart_template.py slides/L01_Introduction_Linear_Regression/08_new_chart/chart.py
 
-# 3. Edit chart.py: update CHART_METADATA, data generation, plotting code
+# 3. Edit chart.py: update data generation and plotting code
+#    DO NOT add inline rcParams or color constants — use apply_style() + COLORS
 
-# 4. Run script
+# 4. Run script from project root
 python slides/L01_Introduction_Linear_Regression/08_new_chart/chart.py
 
 # 5. Verify chart.pdf generated
