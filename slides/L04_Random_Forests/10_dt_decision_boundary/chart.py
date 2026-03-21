@@ -5,19 +5,11 @@ from pathlib import Path
 from sklearn.datasets import make_classification
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.inspection import DecisionBoundaryDisplay
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False,
-})
-
-MLPURPLE = '#3333B2'
-MLBLUE = '#0066CC'
-MLORANGE = '#FF7F0E'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
 
 X, y = make_classification(n_samples=300, n_features=2, n_redundant=0,
                            n_clusters_per_class=2, random_state=42)
@@ -48,6 +40,6 @@ ax.set_title("Decision Tree: Axis-Aligned Decision Boundaries")
 ax.legend(loc='lower right')
 
 plt.tight_layout()
-fig.savefig(Path(__file__).parent / "chart.pdf", bbox_inches='tight')
+fig.savefig(Path(__file__).parent / "chart.pdf", bbox_inches='tight', facecolor='white')
 plt.close(fig)
 print("10_dt_decision_boundary/chart.pdf created")

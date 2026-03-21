@@ -5,6 +5,10 @@ from pathlib import Path
 from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.inspection import partial_dependence
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 CHART_METADATA = {
     'title': '2D Partial Dependence: Feature Interaction',
@@ -12,18 +16,6 @@ CHART_METADATA = {
     'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L04_Random_Forests/top10_17_2d_pdp_contour'
 }
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False,
-})
-
-MLPURPLE = '#3333B2'
-MLBLUE = '#0066CC'
-MLORANGE = '#FF7F0E'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
 
 feature_names = ['Amount', 'Frequency', 'Distance', 'Time', 'Device']
 X, y = make_classification(n_samples=1000, n_features=5, n_informative=3, random_state=42)
@@ -52,6 +44,6 @@ ax.set_title("2D Partial Dependence: Feature Interaction", fontsize=16, fontweig
 
 plt.figtext(0.99, 0.01, CHART_METADATA['url'], fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 print("Chart saved: top10_17_2d_pdp_contour/chart.pdf")

@@ -1342,6 +1342,51 @@
             "id": "15_ppo_training_curve",
             "file": "slides/L06_Embeddings_RL/15_ppo_training_curve/chart.py",
             "status": "complete"
+          },
+          {
+            "id": "16_finbert_sentiment_bars",
+            "file": "slides/L06_Embeddings_RL/16_finbert_sentiment_bars/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "17_static_vs_contextual_embedding",
+            "file": "slides/L06_Embeddings_RL/17_static_vs_contextual_embedding/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "18_rlhf_pipeline",
+            "file": "slides/L06_Embeddings_RL/18_rlhf_pipeline/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "19_reward_shaping_trading",
+            "file": "slides/L06_Embeddings_RL/19_reward_shaping_trading/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "20_rl_taxonomy_tree",
+            "file": "slides/L06_Embeddings_RL/20_rl_taxonomy_tree/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "21_sarsa_vs_qlearning_cliff",
+            "file": "slides/L06_Embeddings_RL/21_sarsa_vs_qlearning_cliff/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "22_actor_critic_architecture",
+            "file": "slides/L06_Embeddings_RL/22_actor_critic_architecture/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "23_offline_vs_online_rl",
+            "file": "slides/L06_Embeddings_RL/23_offline_vs_online_rl/chart.py",
+            "status": "complete"
+          },
+          {
+            "id": "24_bandit_to_mdp_progression",
+            "file": "slides/L06_Embeddings_RL/24_bandit_to_mdp_progression/chart.py",
+            "status": "complete"
           }
         ],
         "notebook": {

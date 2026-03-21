@@ -7,6 +7,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta}
 \usepackage{hyperref}
 \usepackage{algorithm}
 \usepackage{algorithmic}
@@ -89,6 +90,16 @@
 % Custom commands for course compatibility
 \newcommand{\highlight}[1]{\textcolor{mlorange}{\textbf{#1}}}
 \newcommand{\mathbold}[1]{\boldsymbol{#1}}
+
+% Compact itemize environment
+\newenvironment{compactlist}{%
+  \begin{itemize}%
+    \setlength{\itemsep}{2pt}%
+    \setlength{\parskip}{0pt}%
+    \setlength{\parsep}{0pt}%
+}{%
+  \end{itemize}%
+}
 
 \title[L06: Embeddings \& RL Deep Dive]{L06: Embeddings \& RL}
 \subtitle{Deep Dive: Theory, Implementation, and Applications}
@@ -337,6 +348,19 @@ where $\sigma(x) = 1/(1+e^{-x})$ is the sigmoid function.
 \bottomnote{Static: one meaning per word. Contextual: meaning depends on context.}
 \end{frame}
 
+%% Slide 16b: Polysemy Visualization
+\begin{frame}[t]{Can You See Why Static Embeddings Fail?}
+\centering
+\includegraphics[width=0.65\textwidth]{17_static_vs_contextual_embedding/chart.pdf}
+\vspace{2mm}
+\begin{itemize}
+\item ``Bank'' sits between two clusters --- the model can't decide which meaning
+\item Contextual models solve this by producing different vectors per context
+\item The dashed arrows show where BERT would place each sense of ``bank''
+\end{itemize}
+\bottomnote{This visualization uses synthetic coordinates but reflects real embedding space behavior}
+\end{frame}
+
 %% Slide 17: Embeddings in Finance
 \begin{frame}[t]{How Do Banks Use Word Embeddings?}
 \textbf{Applications:}
@@ -377,6 +401,66 @@ where $\sigma(x) = 1/(1+e^{-x})$ is the sigmoid function.
 
 \textbf{Real-world:} Use FinBERT for production sentiment (up to 87\% accuracy on financial text; Araci, 2019)
 \bottomnote{Simplified example --- real embeddings are 300-768 dimensions with learned sentiment structure}
+\end{frame}
+
+%% Slide NEW: RL in One Picture
+\begin{frame}[t]{What Does the RL Landscape Look Like?}
+\centering
+\begin{tikzpicture}[scale=0.75]
+  % Central loop
+  \node[draw=mlpurple, fill=mllavender4, rounded corners, minimum width=2cm, minimum height=0.8cm, font=\small\bfseries] (agent) at (0,1.5) {Agent};
+  \node[draw=mlblue, fill=mllavender3, rounded corners, minimum width=2cm, minimum height=0.8cm, font=\small\bfseries] (env) at (0,-0.5) {Environment};
+  \draw[-{Stealth}, thick, mlpurple] (agent.east) -- ++(1,0) |- (env.east) node[midway, right, font=\small] {action};
+  \draw[-{Stealth}, thick, mlblue] (env.west) -- ++(-1,0) |- (agent.west) node[midway, left, font=\small] {state, reward};
+  % Roadmap (right side)
+  \node[draw=mlgray, rounded corners, fill=white, text width=5.5cm, font=\small, align=left] at (6,1.5) {
+    \textbf{Today's roadmap:}\\[3pt]
+    1. Bandits (simplest RL)\\
+    2. MDPs \& Bellman equation\\
+    3. Q-Learning \& exploration\\
+    4. Deep Q-Networks\\
+    5. Actor-Critic \& PPO (intuition)
+  };
+  % Finance context
+  \node[draw=mlorange, rounded corners, fill=mlorange!10, text width=5cm, font=\small, align=center] at (6,-0.5) {\textbf{Running example:} training a trading agent};
+\end{tikzpicture}
+\bottomnote{This roadmap covers the RL section. We progress from the simplest case (bandits) to modern methods (PPO).}
+\end{frame}
+
+%% Slide NEW: Multi-Armed Bandits
+\begin{frame}[t]{What If There Is Only One State?}
+\textbf{The Multi-Armed Bandit Problem}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\includegraphics[width=\textwidth]{top10_16_bandit_regret/chart.pdf}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{compactlist}
+  \item $k$ actions (``arms''), each with unknown reward distribution
+  \item Goal: maximize total reward over $T$ rounds
+  \item \textbf{Regret:} $\text{Regret}_T = T \cdot \mu^* - \sum_{t=1}^T r_t$
+  \item Finance: ``Which of $k$ trading strategies to allocate capital to?''
+\end{compactlist}
+\vspace{3pt}
+\begin{block}{Key Insight}
+Bandits are RL with \textbf{no state transitions} --- the simplest case.
+\end{block}
+\end{column}
+\end{columns}
+\bottomnote{Bandits are the gateway to full RL. Next: add state transitions to get MDPs.}
+\end{frame}
+
+%% Slide NEW: Bandits to MDP Progression
+\begin{frame}[t]{From Bandits to MDPs: Adding Complexity Step by Step}
+\centering
+\includegraphics[width=0.65\textwidth]{24_bandit_to_mdp_progression/chart.pdf}
+\begin{compactlist}
+  \item \textbf{Bandit:} One state, $k$ actions --- just explore vs.\ exploit
+  \item \textbf{Contextual bandit:} State matters, but actions don't change the state
+  \item \textbf{Full MDP:} Actions cause state transitions --- now the future depends on your choices
+\end{compactlist}
+\bottomnote{Each level adds complexity. The MDP formalism (next slide) captures the full problem.}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -440,28 +524,46 @@ Q^\pi(s, a) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_{t+1} | S_0 =
 \bottomnote{Q-function: expected return starting from state s, taking action a}
 \end{frame}
 
-%% Slide 22: Bellman Equation
+%% Slide: Bellman Equation (MVF Protocol)
 \begin{frame}[t]{Why Is the Bellman Equation Recursive?}
-\textbf{Optimal Q-Function:}
+\textbf{Motivate:} Evaluating a policy requires summing infinite future rewards --- impossible directly.
+
+\vspace{-0.3em}
+\begin{columns}[T]
+\begin{column}{0.40\textwidth}
+\textbf{Visualize:} One-step lookahead:
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  \node[circle, draw=mlpurple, fill=mllavender4, minimum size=6mm, font=\small] (s) at (0,2) {$s$};
+  \node[circle, draw=mlblue, fill=mllavender3, minimum size=6mm, font=\small] (s1) at (-1,0) {$s'_1$};
+  \node[circle, draw=mlblue, fill=mllavender3, minimum size=6mm, font=\small] (s2) at (1,0) {$s'_2$};
+  \draw[-{Stealth}, thick] (s) -- (s1) node[midway, left, font=\scriptsize] {$a, r_1$};
+  \draw[-{Stealth}, thick] (s) -- (s2) node[midway, right, font=\scriptsize] {$a, r_2$};
+  \node[font=\scriptsize, below] at (-1,-0.5) {$+\gamma V(s'_1)$};
+  \node[font=\scriptsize, below] at (1,-0.5) {$+\gamma V(s'_2)$};
+\end{tikzpicture}
+\end{center}
+\end{column}
+\begin{column}{0.56\textwidth}
+\textbf{Formalize:}
 \[
 Q^*(s, a) = \mathbb{E} \left[ R + \gamma \max_{a'} Q^*(s', a') \right]
 \]
-\vspace{0.5em}
-\textbf{Interpretation:}
-\begin{itemize}
-\item Value = immediate reward + discounted future value
-\item Recursive definition enables dynamic programming
-\end{itemize}
-\vspace{0.5em}
-\textbf{Optimal Policy:}
-\[
-\pi^*(s) = \arg\max_a Q^*(s, a)
-\]
-\bottomnote{Bellman equation: foundation of all value-based RL methods}
+\textbf{Trading example} ($\gamma = 0.9$):
+\begin{compactlist}
+  \item Cash $\xrightarrow{\text{buy}}$ Holding: $r = -0.01$ (commission)
+  \item Holding $\xrightarrow{\text{sell}}$ Cash: $r = +0.10$ (profit)
+  \item $Q(\text{Cash}, \text{buy}) = -0.01 + 0.9 \times 0.10 = 0.08$
+\end{compactlist}
+\end{column}
+\end{columns}
+\bottomnote{Bellman equation: value = immediate reward + discounted future. Foundation of all value-based RL.}
 \end{frame}
 
 %% Slide 23: Temporal Difference Learning (HOSTILE REVIEW FIX M3)
 \begin{frame}[t]{Can We Learn Without Waiting for the End?}
+\begin{columns}[T]
+\begin{column}{0.66\textwidth}
 \textbf{TD(0) Update Rule} (learning rate $\alpha \in (0,1]$) --- learn from each transition:
 \[
 V(s) \leftarrow V(s) + \alpha \left[ r + \gamma V(s') - V(s) \right]
@@ -474,6 +576,11 @@ V(s) \leftarrow V(s) + \alpha \left[ r + \gamma V(s') - V(s) \right]
 \item \textbf{vs Dynamic Programming}: DP requires model $P(s'|s,a)$; TD is model-free
 \item \textbf{Q-learning}: TD applied to Q-function with $\max$ over actions
 \end{itemize}
+\end{column}
+\begin{column}{0.30\textwidth}
+\includegraphics[width=\textwidth]{top10_17_td_learning_update/chart.pdf}
+\end{column}
+\end{columns}
 \bottomnote{TD learning: the theoretical foundation connecting DP, MC, and Q-learning (Sutton, 1988)}
 \end{frame}
 
@@ -529,6 +636,8 @@ Q(s_1, \text{buy}) \leftarrow 3.2 + 0.1 \times (-0.1) = \mathbf{3.19}
 
 %% Slide 26: Q-Learning Algorithm: Pseudocode (INSTRUCTOR GUIDE REQUIREMENT)
 \begin{frame}[t]{Q-Learning Algorithm: Pseudocode}
+\begin{columns}[T]
+\begin{column}{0.60\textwidth}
 \begin{algorithmic}[1]
 \REQUIRE environment, $\alpha$, $\gamma$, $\epsilon$, episodes
 \STATE Initialize $Q(s, a) \leftarrow 0$ for all $s \in \mathcal{S}$, $a \in \mathcal{A}$
@@ -543,21 +652,27 @@ Q(s_1, \text{buy}) \leftarrow 3.2 + 0.1 \times (-0.1) = \mathbf{3.19}
 \ENDFOR
 \RETURN $Q$
 \end{algorithmic}
-
 \medskip
 \textbf{Key}: The $\max_{a'}$ makes Q-learning \textbf{off-policy} --- it learns the optimal policy regardless of the exploration strategy used.
-
+\end{column}
+\begin{column}{0.36\textwidth}
+\includegraphics[width=\textwidth]{top10_14_qvalue_convergence/chart.pdf}
+\end{column}
+\end{columns}
 \bottomnote{Watkins \& Dayan (1992). Q-learning. \textit{Machine Learning}, 8(3-4), 279--292.}
 \end{frame}
 
 %% Slide 27: Q-Values Visualization (CHART 04)
 \begin{frame}[t]{Q-Values Visualization}
-\vspace{-0.5em}
-\begin{center}
-\includegraphics[width=0.50\textwidth]{04_q_learning_grid/chart.pdf}
-\end{center}
-\vspace{-0.3em}
-\bottomnote{Arrows show policy; colors show Q-values (green=high, red=negative)}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{04_q_learning_grid/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\includegraphics[width=\textwidth]{top10_15_state_action_heatmap/chart.pdf}
+\end{column}
+\end{columns}
+\bottomnote{Left: arrows show policy; colors show Q-values (green=high, red=negative). Right: state-action Q-value heatmap.}
 \end{frame}
 
 %% Slide 28: Exploration vs Exploitation
@@ -651,6 +766,19 @@ where $R_t^{\text{portfolio}}$ = portfolio return, $c$ = transaction cost rate, 
 \bottomnote{Reward design is THE most critical decision in RL for trading}
 \end{frame}
 
+%% Slide 31b: Reward Shaping Impact
+\begin{frame}[t]{How Much Does Reward Design Affect Learning?}
+\centering
+\includegraphics[width=0.65\textwidth]{19_reward_shaping_trading/chart.pdf}
+\vspace{2mm}
+\begin{itemize}
+\item Same trading environment, two different reward functions
+\item Raw P\&L reward (red): high variance, slow convergence
+\item Risk-adjusted Sharpe reward (green): smoother, faster learning
+\end{itemize}
+\bottomnote{Always compare at least 2--3 reward functions before committing to a design}
+\end{frame}
+
 %% Slide 32: Backtesting RL Trading Strategies
 \begin{frame}[t]{How Do You Know Your RL Strategy Works?}
 \textbf{Critical Challenge:} RL agents overfit to historical data
@@ -672,20 +800,29 @@ where $R_t^{\text{portfolio}}$ = portfolio return, $c$ = transaction cost rate, 
 \bottomnote{If your RL agent beats buy-and-hold after costs, you likely have a bug --- verify carefully}
 \end{frame}
 
-%% Slide 33: Walk-Forward Validation Timeline (CHART 13)
-\begin{frame}[t]{Walk-Forward Validation Timeline}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{13_walkforward_timeline/chart.pdf}
-\end{center}
-\bottomnote{Walk-forward: the gold standard for evaluating time-series strategies; never look ahead}
-\end{frame}
-
-%% Slide 34: Trading Policy (CHART 06)
-\begin{frame}[t]{Trading Policy}
-\begin{center}
-\includegraphics[width=0.65\textwidth]{06_policy_viz/chart.pdf}
-\end{center}
-\bottomnote{Q-learning trained policy: agent discovers buy/sell/hold regions from reward signal}
+%% Slide: Validation and Policy (Merged)
+\begin{frame}[t]{How Do You Validate and Deploy a Trading Policy?}
+\begin{columns}[T]
+\begin{column}{0.55\textwidth}
+\includegraphics[width=\textwidth]{13_walkforward_timeline/chart.pdf}
+\end{column}
+\begin{column}{0.42\textwidth}
+\textbf{Walk-Forward Validation:}
+\begin{compactlist}
+  \item Train on $[t_0, t_1]$, test on $[t_1, t_2]$
+  \item Roll forward and repeat
+  \item Report average OOS performance
+\end{compactlist}
+\vspace{3pt}
+\textbf{Deployment:}
+\begin{compactlist}
+  \item Compare to buy-and-hold benchmark
+  \item Include 0.1--0.5\% transaction costs
+  \item Test across bull, bear, sideways regimes
+\end{compactlist}
+\end{column}
+\end{columns}
+\bottomnote{Walk-forward: the gold standard for time-series strategies. If your RL agent beats buy-and-hold after costs, verify carefully.}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -738,52 +875,48 @@ where $\theta^-$ are frozen target-network weights (see next slide).
 \bottomnote{Experience replay + target network: the two innovations that made deep RL stable}
 \end{frame}
 
+%% Slide NEW: RL Taxonomy + Actor-Critic/PPO Intuition
+\begin{frame}[t]{Where Does Each RL Method Fit?}
+\begin{columns}[T]
+\begin{column}{0.45\textwidth}
+\includegraphics[width=\textwidth]{20_rl_taxonomy_tree/chart.pdf}
+\end{column}
+\begin{column}{0.50\textwidth}
+\begin{compactlist}
+  \item \textbf{Value-based:} Learn $Q$-values, pick best action (Q-learning, DQN) --- \textit{this lecture}
+  \item \textbf{Policy-based:} Learn actions directly via gradients (REINFORCE, PPO)
+  \item \textbf{Actor-Critic:} Actor picks actions, Critic evaluates --- best of both worlds
+  \item \textbf{PPO:} Clips policy updates to prevent catastrophic strategy changes
+\end{compactlist}
+\vspace{3pt}
+\begin{block}{For the Math}
+See appendix A9 for policy gradient. See L06\_rl\_full for full PPO derivation.
+\end{block}
+\end{column}
+\end{columns}
+\bottomnote{Orange = covered in this course. Actor-Critic combines value estimation with direct policy learning.}
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Practice}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Slide 37: Hands-on Exercise
-\begin{frame}[t]{Hands-on Exercise}
-  \textbf{Open the Colab Notebook}
-  \begin{itemize}
-    \item Exercise 1: Explore word embeddings with Word2Vec
-    \item Exercise 2: Implement basic Q-learning
-    \item Exercise 3: Apply RL to a simple trading environment
-  \end{itemize}
-  \vspace{1em}
-  \textbf{Link:} \url{https://colab.research.google.com/github/Digital-AI-Finance/methods-algorithms/blob/master/notebooks/L06_embeddings_rl.ipynb}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Decision Framework}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% Slide 38: Decision Framework and Best Practices
-\begin{frame}[t]{Decision Framework and Best Practices}
-\vspace{-0.3em}
-\begin{center}
-\small
-\begin{tabular}{l|cc}
-\toprule
-\textbf{Aspect} & \textbf{Embeddings} & \textbf{RL} \\
-\midrule
-Input & Text, categorical & State sequence \\
-Output & Dense vectors & Actions/policy \\
-Learning & Unsupervised/supervised & Trial and error \\
-Signal & Context (words) & Rewards \\
-Key challenge & Semantics & Credit assignment \\
-Finance use & Sentiment & Trading \\
-\bottomrule
-\end{tabular}
-\end{center}
+%% Slide: Practice (Merged Hands-on + Decision Framework)
+\begin{frame}[t]{How Do You Practice and Choose the Right Method?}
+\textbf{Hands-on Exercises} (see Colab notebook):
+\begin{enumerate}
+  \item Explore word embeddings with Word2Vec --- find similar words and visualize clusters
+  \item Implement Q-learning on a gridworld and analyze the learned policy
+  \item Apply RL to a simple trading environment
+\end{enumerate}
 \vspace{0.3em}
-\textbf{Deepdive-Level Best Practices:}
-\begin{itemize}
-  \item Evaluate embedding quality via analogy task accuracy AND downstream task F1
-  \item RL: compare against buy-and-hold benchmark after realistic transaction costs
-  \item Always report confidence intervals (bootstrap for embeddings, multiple seeds for RL)
-\end{itemize}
-\bottomnote{Both transform complex inputs into learnable representations}
+\textbf{Decision Rules:}
+\begin{compactlist}
+  \item Text $\rightarrow$ embeddings; sequential decisions $\rightarrow$ RL
+  \item Evaluate embeddings via downstream task F1, not just analogy accuracy
+  \item RL: always compare against buy-and-hold after realistic transaction costs
+\end{compactlist}
+\bottomnote{Both transform complex inputs into learnable representations. Notebook: L06 folder on GitHub.}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -853,28 +986,26 @@ Finance use & Sentiment & Trading \\
 \bottomnote{Callback to XKCD \#1838 by Randall Munroe (CC BY-NC 2.5). Course complete!}
 \end{frame}
 
-%% Slide 41: References (Embeddings)
-\begin{frame}[t]{References: Embeddings}
-\small
+%% Slide: References (Combined)
+\begin{frame}[t]{References}
+\scriptsize
+\textbf{Embeddings:}
 \begin{itemize}
-\item Mikolov, T., Sutskever, I., Chen, K., Corrado, G., \& Dean, J. (2013). Distributed representations of words and phrases and their compositionality. \textit{NeurIPS}, 3111--3119.
-\item Pennington, J., Socher, R., \& Manning, C. (2014). GloVe: Global vectors for word representation. \textit{EMNLP}, 1532--1543.
-\item Devlin, J., Chang, M.-W., Lee, K., \& Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers. \textit{NAACL}, 4171--4186.
-\item Levy, O. \& Goldberg, Y. (2014). Linguistic regularities in sparse and explicit word representations. \textit{CoNLL}, 171--180.
-\item Bolukbasi, T., Chang, K.-W., Zou, J., Saligrama, V., \& Kalai, A. (2016). Man is to computer programmer as woman is to homemaker? Debiasing word embeddings. \textit{NeurIPS}, 4349--4357.
+\item Mikolov et al.\ (2013). Distributed representations of words and phrases. \textit{NeurIPS}, 3111--3119.
+\item Pennington et al.\ (2014). GloVe: Global vectors for word representation. \textit{EMNLP}, 1532--1543.
+\item Devlin et al.\ (2019). BERT: Pre-training of deep bidirectional transformers. \textit{NAACL}, 4171--4186.
+\item Araci (2019). FinBERT: Financial sentiment analysis with pre-trained language models. arXiv:1908.10063.
 \end{itemize}
-\end{frame}
-
-%% Slide 42: References (RL and Finance)
-\begin{frame}[t]{References: RL and Finance}
-\small
+\vspace{-0.3em}
+\textbf{Reinforcement Learning:}
 \begin{itemize}
-\item Sutton, R. \& Barto, A. (2018). \textit{Reinforcement Learning: An Introduction} (2nd ed.). MIT Press.
-\item Mnih, V., Kavukcuoglu, K., Silver, D., et al. (2015). Human-level control through deep reinforcement learning. \textit{Nature}, 518, 529--533.
-\item Schulman, J., Wolski, F., Dhariwal, P., Radford, A., \& Klimov, O. (2017). Proximal policy optimization algorithms. \textit{arXiv:1707.06347}.
-\item Watkins, C. \& Dayan, P. (1992). Q-learning. \textit{Machine Learning}, 8(3-4), 279--292.
-\item Liu, X.-Y., Yang, H., Gao, J., \& Wang, C. (2021). FinRL: Deep reinforcement learning framework for automated trading. \textit{SSRN}.
-\item Araci, D. (2019). FinBERT: Financial sentiment analysis with pre-trained language models. \textit{arXiv:1908.10063}.
+\item Sutton \& Barto (2018). \textit{Reinforcement Learning: An Introduction} (2nd ed.). MIT Press.
+\item Mnih et al.\ (2015). Human-level control through deep RL. \textit{Nature}, 518, 529--533.
+\item Watkins \& Dayan (1992). Q-learning. \textit{Machine Learning}, 8(3-4), 279--292.
+\item Schulman et al.\ (2017). Proximal policy optimization algorithms. arXiv:1707.06347.
+\item Levine et al.\ (2020). Offline RL: Tutorial, review, and perspectives. arXiv:2005.01643.
+\item Chen et al.\ (2021). Decision Transformer: Reinforcement learning via sequence modeling. \textit{NeurIPS}.
+\item Liu et al.\ (2021). FinRL: Deep RL framework for automated trading. \textit{SSRN}.
 \end{itemize}
 \bottomnote{Sutton \& Barto: the definitive RL textbook (free at incompleteideas.net)}
 \end{frame}
@@ -1020,29 +1151,28 @@ where PMI$(w,c) = \log \frac{P(w,c)}{P(w)P(c)}$ and $k$ = number of negatives
 \bottomnote{Embedding bias is a compliance risk in regulated financial services}
 \end{frame}
 
-%% Slide A7: SARSA vs Q-Learning
+%% Slide A7: SARSA vs Q-Learning (Enhanced with Cliff-Walking Chart)
 \begin{frame}[t]{SARSA vs Q-Learning}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\includegraphics[width=\textwidth]{21_sarsa_vs_qlearning_cliff/chart.pdf}
+\end{column}
+\begin{column}{0.48\textwidth}
 \textbf{SARSA} (on-policy):
 \[
 Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma Q(s', a') - Q(s,a)\bigr]
 \]
-Uses the \textbf{actual next action} $a'$ chosen by the current policy.
+Uses the \textbf{actual next action} $a'$.
 
 \vspace{0.3em}
 \textbf{Q-Learning} (off-policy):
 \[
 Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\bigr]
 \]
-Uses the \textbf{greedy maximum} regardless of what action was actually taken.
-
-\vspace{0.3em}
-\textbf{Key Differences:}
-\begin{itemize}
-\item \textbf{Safety}: SARSA accounts for exploration risk; Q-learning ignores it
-\item \textbf{Cliff-walking example}: SARSA learns the safe path (away from cliff edge); Q-learning learns the optimal but risky path (along the edge)
-\item \textbf{Convergence}: Both converge given Robbins-Monro conditions; Q-learning to $Q^*$, SARSA to $Q^\pi$
-\end{itemize}
-\bottomnote{SARSA: safer path; Q-learning: optimal path}
+Uses the \textbf{greedy maximum}.
+\end{column}
+\end{columns}
+\bottomnote{SARSA learns the safe path (accounts for exploration risk); Q-learning learns the optimal but risky path along the cliff edge.}
 \end{frame}
 
 %% Slide A8: Statistical Inference for Embeddings & RL

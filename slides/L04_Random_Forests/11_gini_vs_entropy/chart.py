@@ -2,19 +2,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False,
-})
-
-MLPURPLE = '#3333B2'
-MLBLUE = '#0066CC'
-MLORANGE = '#FF7F0E'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
 
 p = np.linspace(0.001, 0.999, 500)
 gini = 2 * p * (1 - p)
@@ -43,6 +35,6 @@ ax.set_xlim(0, 1)
 ax.set_ylim(0, 0.55)
 
 plt.tight_layout()
-fig.savefig(Path(__file__).parent / "chart.pdf", bbox_inches='tight')
+fig.savefig(Path(__file__).parent / "chart.pdf", bbox_inches='tight', facecolor='white')
 plt.close(fig)
 print("11_gini_vs_entropy/chart.pdf created")

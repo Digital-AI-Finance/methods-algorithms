@@ -5,13 +5,10 @@ Shows 8 points, initial centroids, assignments, and centroid movement.
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
-
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False,
-})
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 COLORS = {
     'purple': '#3333B2', 'blue': '#0066CC', 'orange': '#FF7F0E',

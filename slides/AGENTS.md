@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-03-10 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-18 -->
 
 # slides/
 
@@ -30,6 +30,7 @@ Each lesson directory contains:
 - **LXX_instructor_guide.md** - Teaching guide with PMSP breakdown
 - **XX_chart_name/** - Chart directories (each with chart.py → chart.pdf)
 - **images/** - XKCD cartoons and supporting visuals
+- **Formula-free visual lectures** (L05, L06) - Companion lectures with zero display math, TikZ comics, XKCD bookends
 
 ## Lessons Overview
 
@@ -39,8 +40,8 @@ Each lesson directory contains:
 | L02 | Logistic Regression | Credit scoring, default prediction | Intermediate | 7 |
 | L03 | KNN & K-Means | Customer segmentation, anomaly detection | Intermediate | 7 |
 | L04 | Random Forests | Fraud detection, feature importance | Intermediate | 8 |
-| L05 | PCA & t-SNE | Portfolio risk decomposition | Advanced | 12 |
-| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Advanced | 13 |
+| L05 | PCA & t-SNE | Portfolio risk decomposition | Advanced | 17 |
+| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Advanced | 15 |
 
 ## Beamer Theme & Standards
 

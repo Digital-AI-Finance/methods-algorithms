@@ -1,4 +1,6 @@
 \documentclass[8pt,aspectratio=169]{beamer}
+%% Standalone RL lecture for use when taught separately from Embeddings
+%% Contains full PPO math that L06_deepdive intentionally omits
 \usetheme{Madrid}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -158,8 +160,8 @@ After this lecture, you will be able to:
 \begin{enumerate}
   \item \textbf{Formalize} sequential decisions as Markov Decision Processes
   \item \textbf{Derive} the Bellman equation and implement Q-learning
-  \item \textbf{Analyze} exploration-exploitation trade-offs using epsilon-greedy
-  \item \textbf{Apply} RL to algorithmic trading and portfolio management
+  \item \textbf{Evaluate} model-free RL methods (Q-learning vs SARSA vs PPO) for trading
+  \item \textbf{Critique} RL trading strategies accounting for transaction costs, non-stationarity, and offline constraints
 \end{enumerate}
 
 \bottomnote{LOs at Bloom's levels 4--5: formalize, derive, analyze, apply.}
@@ -223,6 +225,29 @@ An \highlight{agent} learns to make decisions by interacting with an
 % =====================================================
 % CORE -- METHOD (slides 6-14)
 % =====================================================
+
+% --- Slide NEW: Multi-Armed Bandits ---
+\begin{frame}{What If There Is Only One State?}
+\textbf{The Multi-Armed Bandit} --- simplest RL problem.
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{compactlist}
+  \item $k$ actions (``arms''), each with unknown reward
+  \item Goal: maximize cumulative reward
+  \item \textbf{Regret:} gap between optimal and actual reward
+  \item No state transitions --- just explore vs.\ exploit
+\end{compactlist}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Finance Example}
+Which of $k$ trading strategies should you allocate capital to? You only learn their quality by trying them.
+\end{block}
+\end{column}
+\end{columns}
+
+\bottomnote{Bandits are RL without state transitions. Add transitions $\rightarrow$ you get MDPs (next slide).}
+\end{frame}
 
 % --- Slide 6: Agent-Environment Loop (chart) ---
 \begin{frame}{The Agent-Environment Loop}
@@ -330,9 +355,9 @@ The optimal action-value satisfies a \highlight{recursive} relationship:
 \begin{column}{0.48\textwidth}
 \textbf{Epsilon-Greedy Policy}
 \begin{compactlist}
-  \item With probability $\varepsilon$: random action
-  \item With probability $1-\varepsilon$: greedy action
-  \item \textbf{Decaying $\varepsilon$}: explore early, exploit later
+  \item With probability $\epsilon$: random action
+  \item With probability $1-\epsilon$: greedy action
+  \item \textbf{Decaying $\epsilon$}: explore early, exploit later
 \end{compactlist}
 \end{column}
 \end{columns}
@@ -390,6 +415,75 @@ Scales to continuous or very large state spaces.
 % =====================================================
 % CORE -- SOLUTION (slides 15-19)
 % =====================================================
+
+% --- Slide NEW: Actor-Critic ---
+\begin{frame}{Why Combine Value and Policy Methods?}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\includegraphics[width=\textwidth]{22_actor_critic_architecture/chart.pdf}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Actor-Critic Architecture:}
+\begin{compactlist}
+  \item \textbf{Actor}: learns policy $\pi_\theta(a|s)$ directly
+  \item \textbf{Critic}: learns value $V_\phi(s)$ to reduce variance
+  \item \textbf{Advantage}: $A(s,a) = Q(s,a) - V(s)$\\``Was this action better or worse than average?''
+\end{compactlist}
+\vspace{3pt}
+\textbf{Finance}: Actor decides trades, Critic evaluates portfolio value.
+\end{column}
+\end{columns}
+
+\bottomnote{Actor-Critic: the foundation for modern algorithms like PPO, A2C, and SAC.}
+\end{frame}
+
+% --- Slide NEW: PPO with Math ---
+\begin{frame}{How Does PPO Prevent Catastrophic Updates?}
+\textbf{The Clipped Surrogate Objective:}
+\[
+L^{\text{CLIP}}(\theta) = \mathbb{E}_t\left[\min\!\left(r_t(\theta)\,A_t,\;\text{clip}\!\left(r_t(\theta),\,1{-}\epsilon,\,1{+}\epsilon\right)A_t\right)\right]
+\]
+where $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}$ is the probability ratio.
+
+\vspace{3pt}
+\begin{compactlist}
+  \item If the policy changes too much ($r_t$ far from 1), the objective is \textbf{clipped}
+  \item Prevents catastrophic forgetting: no sudden strategy flips
+  \item $\epsilon \approx 0.2$ is the standard clipping range
+  \item PPO is used by OpenAI (ChatGPT via RLHF), DeepMind, and most practitioners
+\end{compactlist}
+
+\bottomnote{PPO = Proximal Policy Optimization (Schulman et al., 2017). The workhorse of modern RL.}
+\end{frame}
+
+% --- Slide NEW: Offline RL ---
+\begin{frame}{What If You Cannot Explore? Offline RL}
+\textbf{Problem:} Standard RL requires live interaction. In finance, exploration is costly.
+
+\vspace{3pt}
+\textbf{Conservative Q-Learning (CQL):}
+\[
+\min_Q \;\alpha\,\mathbb{E}_{s \sim D}\!\left[\log \sum_a \exp Q(s,a) - \mathbb{E}_{a \sim \hat{\pi}_\beta}[Q(s,a)]\right] + \frac{1}{2}\,\mathbb{E}_{(s,a,r,s') \sim D}\!\left[\text{TD error}^2\right]
+\]
+\begin{compactlist}
+  \item First term: penalize Q-values for unseen actions (conservative)
+  \item Second term: standard Bellman error on the dataset $D$
+  \item Result: learns a policy that stays close to the data
+  \item \textbf{Decision Transformer}: treats RL as sequence modeling (no value function needed)
+\end{compactlist}
+
+\bottomnote{Offline RL (Levine et al., 2020): learn from historical data without new interaction. Critical for finance.}
+\end{frame}
+
+% --- Slide NEW: RL Taxonomy ---
+\begin{frame}{Where Does Each Method Fit?}
+\centering
+\includegraphics[width=0.55\textwidth]{20_rl_taxonomy_tree/chart.pdf}
+\vspace{-3mm}
+\small
+\textbf{Value-based}: Q-learning, DQN \quad \textbf{Policy-based}: PPO \quad \textbf{Actor-Critic}: A2C, SAC
+\bottomnote{Orange = covered in this course. Most practitioners start with PPO (policy-based + Actor-Critic).}
+\end{frame}
 
 % --- Slide 15: Trading as MDP ---
 \begin{frame}{Algorithmic Trading as an MDP}
@@ -608,24 +702,6 @@ for episode in range(500):
 \bottomnote{RL is powerful for sequential decisions but demands careful reward engineering.}
 \end{frame}
 
-% --- Slide 24: Course Wrap-Up ---
-\begin{frame}{Course Wrap-Up: From Regression to RL}
-\begin{compactlist}
-  \item \textbf{L01}: Predict (Linear Regression)
-  \item \textbf{L02}: Classify (Logistic Regression)
-  \item \textbf{L03}: Cluster (KNN \& K-Means)
-  \item \textbf{L04}: Ensemble (Random Forests)
-  \item \textbf{L05}: Reduce (PCA \& t-SNE)
-  \item \textbf{L06}: Represent \& Act (Embeddings \& RL)
-\end{compactlist}
-
-\vspace{6pt}
-\centering
-\textit{Your ML toolbox is complete.}
-
-\bottomnote{Six sessions, six paradigms -- from prediction to decision-making under uncertainty.}
-\end{frame}
-
 % --- Slide 25: Closing Comic ---
 \begin{frame}{Closing Thought}
 \centering
@@ -653,6 +729,21 @@ for episode in range(500):
 \end{tikzpicture}
 
 \bottomnote{Thank you for a great semester! Good luck with your group assignments.}
+\end{frame}
+
+% --- Slide: References ---
+\begin{frame}{References}
+\scriptsize
+\begin{itemize}
+\item Sutton, R.S.\ \& Barto, A.G.\ (2018). \textit{Reinforcement Learning: An Introduction} (2nd ed.). MIT Press.
+\item Watkins, C.\ \& Dayan, P.\ (1992). Q-learning. \textit{Machine Learning}, 8(3-4), 279--292.
+\item Mnih, V.\ et al.\ (2015). Human-level control through deep reinforcement learning. \textit{Nature}, 518, 529--533.
+\item Schulman, J.\ et al.\ (2017). Proximal policy optimization algorithms. arXiv:1707.06347.
+\item Levine, S.\ et al.\ (2020). Offline reinforcement learning: Tutorial, review, and perspectives. arXiv:2005.01643.
+\item Chen, L.\ et al.\ (2021). Decision Transformer: Reinforcement learning via sequence modeling. \textit{NeurIPS}.
+\item Liu, X.-Y.\ et al.\ (2021). FinRL: Deep reinforcement learning framework for automated stock trading. \textit{SSRN}.
+\end{itemize}
+\bottomnote{Sutton \& Barto: the definitive RL textbook, free at \url{incompleteideas.net}}
 \end{frame}
 
 \end{document}

@@ -362,6 +362,18 @@ This is called \textbf{polysemy} --- and static embeddings can't handle it.
 \bottomnote{Polysemy (many meanings) is everywhere: ``run'' has 645 definitions in the dictionary.}
 \end{frame}
 
+% Slide 13b: Polysemy Visualization
+\begin{frame}{Can You See the Problem?}
+\centering
+\includegraphics[width=0.65\textwidth]{17_static_vs_contextual_embedding/chart.pdf}
+\begin{compactlist}
+\item Static embeddings place ``bank'' at ONE point between two clusters
+\item Contextual embeddings (BERT) split it into two distinct meanings
+\item This is why the evolution from Word2Vec to BERT matters
+\end{compactlist}
+\bottomnote{Static: one vector per word type. Contextual: one vector per word token (different in each sentence).}
+\end{frame}
+
 %% ===== ACT 3: CONTEXTUAL EMBEDDINGS -> LLMs (5 slides) =====
 
 % Slide 14: Transition

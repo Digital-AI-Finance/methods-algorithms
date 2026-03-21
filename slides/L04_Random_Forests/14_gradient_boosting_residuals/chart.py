@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.ensemble import GradientBoostingRegressor
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 CHART_METADATA = {
     'title': 'Gradient Boosting: First Residual Fit',
@@ -10,19 +14,6 @@ CHART_METADATA = {
     'url': 'https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L04_Random_Forests/14_gradient_boosting_residuals'
 }
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False,
-    'axes.spines.right': False,
-})
-
-MLPURPLE = '#3333B2'
-MLBLUE = '#0066CC'
-MLORANGE = '#FF7F0E'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
 
 np.random.seed(42)
 
@@ -65,6 +56,6 @@ plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 print("Chart saved: 14_gradient_boosting_residuals/chart.pdf")

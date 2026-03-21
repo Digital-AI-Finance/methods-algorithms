@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Class Discovery: Embeddings & RL | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-title { font-weight: 600; font-size: 15px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+            border: 1px solid #c4b5fd;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--mlpurple);
+            font-weight: 600;
+        }
+        .banner-hint {
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .activity-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .activity-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px;
+            line-height: 1.3;
+        }
+
+        .activity-visual {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .activity-visual img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        .data-table th {
+            background: #f5f3ff;
+            color: var(--mlpurple);
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--mlpurple);
+        }
+        .data-table td {
+            padding: 7px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table tr:nth-child(even) td {
+            background: #fafbfc;
+        }
+
+        .questions {
+            margin-bottom: 16px;
+        }
+        .questions h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--mlpurple);
+            margin-bottom: 8px;
+        }
+        .questions ol {
+            padding-left: 20px;
+            font-size: 14px;
+        }
+        .questions li {
+            margin-bottom: 6px;
+        }
+
+        details {
+            background: #f0f7ff;
+            border-left: 4px solid var(--mlblue);
+            padding: 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+        details summary {
+            color: var(--mlblue);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        details summary:hover {
+            color: var(--mlpurple);
+        }
+        details[open] summary {
+            margin-bottom: 10px;
+        }
+        details p, details ul {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        details ul {
+            padding-left: 18px;
+            margin-top: 6px;
+        }
+        details li {
+            margin-bottom: 4px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
+        }
+        .footer a {
+            color: var(--mlblue);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 12px 10px 30px; }
+            .activity-card { padding: 16px; }
+            .activity-title { font-size: 16px; }
+            .banner { flex-direction: column; gap: 4px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Pre-Class Discovery: Embeddings & RL</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="banner">
+            <span>6 Activities | Embeddings & RL</span>
+            <span class="banner-hint">Complete before lecture. Expand solutions after attempting.</span>
+        </div>
+
+        <!-- Activity 1 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 1</div>
+            <h3 class="activity-title">"Words as Numbers"</h3>
+
+            <table class="data-table">
+                <thead><tr><th>Financial Term</th></tr></thead>
+                <tbody>
+                    <tr><td>stock</td></tr>
+                    <tr><td>bond</td></tr>
+                    <tr><td>interest</td></tr>
+                    <tr><td>dividend</td></tr>
+                    <tr><td>inflation</td></tr>
+                    <tr><td>risk</td></tr>
+                    <tr><td>return</td></tr>
+                    <tr><td>portfolio</td></tr>
+                </tbody>
+            </table>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Which pairs are most similar in meaning? Rank the top 3 pairs.</li>
+                    <li>How would you assign each word a score from 0-10 for "riskiness"?</li>
+                    <li>Could you add a second dimension -- say "income-generating" -- and plot the words on a 2D map?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>You just created a 2D <em>word embedding</em> by hand! Real embeddings (Word2Vec, GloVe) learn 100-300 dimensions from billions of text examples. Similar words end up with similar vectors: $\cos(\vec{\text{stock}}, \vec{\text{bond}}) > \cos(\vec{\text{stock}}, \vec{\text{inflation}})$.</p>
+            </details>
+        </div>
+
+        <!-- Activity 2 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 2</div>
+            <h3 class="activity-title">"The Meaning Map"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L06_Embeddings_RL/01_word_embedding_space.png"
+                     alt="2D projection of word embedding space showing financial terms clustered by semantic similarity"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Which words are close together in the map?</li>
+                    <li>Does their proximity match your intuition from Activity 1?</li>
+                    <li>Famous example: king - man + woman = queen. What financial analogy could work?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>The embedding space captures <em>semantic relationships</em> as geometric relationships. Possible financial analogy: stock - risk + safety = bond. These arithmetic properties emerge automatically from training on large text corpora -- the model learns meaning from context.</p>
+            </details>
+        </div>
+
+        <!-- Activity 3 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 3</div>
+            <h3 class="activity-title">"How Similar?"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L06_Embeddings_RL/02_similarity_heatmap.png"
+                     alt="Cosine similarity heatmap between financial term embeddings"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Which pair has the highest similarity score?</li>
+                    <li>Are any words surprisingly similar or different compared to your expectations?</li>
+                    <li>How might a bank use these similarity scores?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p><em>Cosine similarity</em> measures the angle between vectors: $\cos(\theta) = \frac{\vec{a} \cdot \vec{b}}{|\vec{a}||\vec{b}|}$. Range: -1 (opposite) to +1 (identical direction). Banks use embeddings for: document search, customer query matching, sentiment analysis, fraud detection (unusual language patterns).</p>
+            </details>
+        </div>
+
+        <!-- Activity 4 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 4</div>
+            <h3 class="activity-title">"The Learning Loop"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L06_Embeddings_RL/03_rl_loop.png"
+                     alt="Reinforcement learning loop showing agent, environment, state, action, and reward"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>A robot trader can buy, sell, or hold. It earns +1 for profit, -1 for loss. What should it learn?</li>
+                    <li>How is this different from supervised learning (where someone tells you the right answer)?</li>
+                    <li>What role does the "state" play?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>In <em>Reinforcement Learning</em>, the agent learns a <em>policy</em> (state to action mapping) by trial and error. Unlike supervised learning, there's no labeled dataset -- the agent discovers good actions through rewards. The state (e.g., current prices, portfolio, market indicators) determines which action is best.</p>
+            </details>
+        </div>
+
+        <!-- Activity 5 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 5</div>
+            <h3 class="activity-title">"Navigate the Grid"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L06_Embeddings_RL/04_q_learning_grid.png"
+                     alt="Q-learning grid world showing state values and optimal path"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>The agent starts at the top-left and wants to reach the goal. What path would you take?</li>
+                    <li>Some cells have penalties -- how do you avoid them?</li>
+                    <li>If you stored a "goodness score" for each cell+direction, how would you update it after each move?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>This is <em>Q-learning</em>. The Q-table stores $Q(s, a)$ = expected total reward from taking action $a$ in state $s$. Update rule: $Q(s,a) \leftarrow Q(s,a) + \alpha[r + \gamma \max_{a'} Q(s',a') - Q(s,a)]$. Over many episodes, Q-values converge to optimal, and the agent learns the best path.</p>
+            </details>
+        </div>
+
+        <!-- Activity 6 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 6</div>
+            <h3 class="activity-title">"Learning to Trade"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L06_Embeddings_RL/05_reward_curves.png"
+                     alt="Training reward curves showing agent learning over episodes"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>The agent starts badly -- why?</li>
+                    <li>When does performance start improving?</li>
+                    <li>Why does the curve plateau?</li>
+                    <li>What might cause the occasional dips?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>Early episodes: the agent <em>explores</em> randomly (low reward). As it learns Q-values, it starts <em>exploiting</em> good strategies (rising reward). The plateau means the policy has converged. Dips come from <em>exploration</em> -- the agent occasionally tries random actions (epsilon-greedy) to discover potentially better strategies.</p>
+            </details>
+        </div>
+
+        <div class="footer">
+            <a href="../quiz/L06_embeddings_rl.html">Take the Quiz</a> &middot;
+            <a href="../index.html">Back to Dashboard</a> &middot;
+            Methods & Algorithms &mdash; MSc Data Science
+        </div>
+    </main>
+
+    <script>
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+        renderMath();
+        setTimeout(renderMath, 200);
+    </script>
+</body>
+</html>

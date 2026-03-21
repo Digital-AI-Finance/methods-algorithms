@@ -2,19 +2,16 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 CHART_METADATA = {
     "title": "Gaussian Kernel: Distance to Similarity",
     "description": "Shows how the Gaussian kernel converts distances to similarity probabilities for different sigma values",
     "url": "https://digital-ai-finance.github.io/methods-algorithms/slides/L05_PCA_tSNE/11_gaussian_similarity"
 }
-
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False
-})
 
 MLPurple = '#3333B2'
 MLBlue = '#0066CC'
@@ -54,5 +51,5 @@ fig.text(0.99, 0.01, CHART_METADATA["url"],
          ha='right', va='bottom', fontsize=7, color='gray', alpha=0.6)
 
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()

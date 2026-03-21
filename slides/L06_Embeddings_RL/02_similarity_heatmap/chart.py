@@ -3,13 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 11, 'ytick.labelsize': 11, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False
-})
-
 CHART_METADATA = {
     "title": "Similarity Heatmap",
     "description": "Cosine similarity matrix from real GloVe-50d embeddings",
@@ -20,6 +13,10 @@ np.random.seed(42)
 cache_path = Path(__file__).parent / 'similarity_cache.npy'
 
 words = ['stock', 'equity', 'bond', 'risk', 'volatility', 'buy', 'sell', 'bullish', 'bearish']
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 try:
     import gensim.downloader as api
@@ -36,6 +33,7 @@ except Exception as e:
 n = len(words)
 fig, ax = plt.subplots(figsize=(10, 6))
 im = ax.imshow(similarity, cmap='RdYlGn', aspect='auto', vmin=0, vmax=1)
+ax.grid(False)
 
 ax.set_xticks(range(n))
 ax.set_yticks(range(n))
@@ -57,6 +55,6 @@ plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 print("Chart saved: 02_similarity_heatmap/chart.pdf")

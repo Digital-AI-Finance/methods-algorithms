@@ -2,14 +2,12 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import os
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150
-})
-
-# ML color palette
 COLORS = ['#3333B2', '#0066CC', '#FF7F0E', '#2CA02C', '#D62728']
 
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -63,6 +61,6 @@ for i, (x, _, _, _) in enumerate(boxes):
 
 plt.tight_layout()
 out = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'chart.pdf')
-plt.savefig(out, bbox_inches='tight', pad_inches=0.1)
+plt.savefig(out, bbox_inches='tight', pad_inches=0.1, facecolor='white')
 plt.close()
 print(f'Saved: {out}')

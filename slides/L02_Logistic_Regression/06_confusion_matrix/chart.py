@@ -6,6 +6,10 @@ from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 CHART_METADATA = {
     "title": "Confusion Matrix",
@@ -13,19 +17,6 @@ CHART_METADATA = {
     "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L02_Logistic_Regression/06_confusion_matrix"
 }
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False,
-    'axes.spines.right': False
-})
-
-MLPURPLE = '#3333B2'
-MLBLUE = '#0066CC'
-MLORANGE = '#FF7F0E'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
 
 # Generate data and compute confusion matrix with sklearn
 X, y = make_classification(n_samples=500, n_features=10, n_informative=5,
@@ -42,6 +33,7 @@ fig, ax = plt.subplots(figsize=(10, 6))
 # Create heatmap
 cmap_custom = plt.cm.Blues
 im = ax.imshow(cm, cmap=cmap_custom, aspect='auto')
+ax.grid(False)
 
 # Add text annotations
 labels = [[f'TN\n(True Negative)\n{tn}', f'FP\n(False Positive)\n{fp}'],
@@ -87,6 +79,6 @@ ax.text(0.99, 0.01, CHART_METADATA['url'],
         alpha=0.7)
 
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 print("Chart saved: 06_confusion_matrix/chart.pdf")

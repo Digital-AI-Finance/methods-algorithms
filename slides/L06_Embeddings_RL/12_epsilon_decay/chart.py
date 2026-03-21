@@ -7,6 +7,10 @@ with exploration/exploitation shaded regions.
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 # ---------------------------------------------------------------------------
 # Metadata
@@ -23,18 +27,6 @@ CHART_METADATA = {
 # ---------------------------------------------------------------------------
 # Style
 # ---------------------------------------------------------------------------
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False
-})
-
-MLPURPLE = '#3333B2'
-MLBLUE   = '#0066CC'
-MLORANGE = '#FF7F0E'
-MLGREEN  = '#2CA02C'
-MLRED    = '#D62728'
 
 # ---------------------------------------------------------------------------
 # Decay curves
@@ -99,5 +91,5 @@ ax.text(0.99, 0.01, CHART_METADATA["url"],
         ha='right', va='bottom')
 
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()

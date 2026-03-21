@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-18 -->
 
 # GitHub Pages Deployment Directory
 
@@ -15,7 +15,8 @@ This is the **GitHub Pages deployment directory** for the Methods and Algorithms
 - PNG slide images (extracted from PDF at 150 DPI)
 - Static HTML site with wiki-style navigation
 - CSS/JS assets for the course website
-- PDF downloads for print-friendly versions
+- PDF downloads for print-friendly versions (47+ PDFs including mini/full/simple variants)
+- Interactive JavaScript quizzes (20 quiz files for L01-L06)
 
 **URL:** https://digital-ai-finance.github.io/methods-algorithms/
 
@@ -92,7 +93,7 @@ docs/
 - **pdf/*.pdf** - Original compiled LaTeX PDFs
   - Generated from slides/LXX_Topic/*.tex source files
   - Downloadable for print-friendly offline use
-  - 12 files total (6 topics × 2 types)
+  - 47+ files (6 topics × overview/deepdive + mini/full/simple/top10 variants)
 
 ## For AI Agents
 

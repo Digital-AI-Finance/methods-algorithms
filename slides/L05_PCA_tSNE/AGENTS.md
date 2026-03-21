@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-18 -->
 
 # L05_PCA_tSNE/
 
@@ -24,11 +24,29 @@ Lesson 5 introduces dimensionality reduction with portfolio risk decomposition a
 
 ## Files
 
+### Core Lectures
 | File | Purpose | Slides |
 |------|---------|--------|
-| `L05_overview.tex` | Overview slides with 12 charts | ~17 |
-| `L05_deepdive.tex` | Deep dive with eigenvector derivation | ~30 |
+| `L05_overview.tex` | Overview slides with charts | 25 |
+| `L05_deepdive.tex` | Deep dive with eigenvector derivation | 48 (39+9 appendix) |
 | `L05_instructor_guide.md` | Teaching guide with PMSP breakdown | - |
+
+### Formula-Free Visual Lectures (Mar 2026)
+| File | Purpose | Slides |
+|------|---------|--------|
+| `L05_pca_simple.tex` | Simple narrative-driven PCA lecture | 25 |
+| `L05b_tsne_simple.tex` | Simple t-SNE visual guide | ~15 |
+| `L05_pca_tsne_simple.tex` | Combined PCA+t-SNE simple | ~20 |
+
+### Additional Variants
+| File | Purpose |
+|------|---------|
+| `L05_pca_full.tex` | Full PCA lecture |
+| `L05_pca_mini.tex` | Mini PCA lecture |
+| `L05_tsne_full.tex` | Full t-SNE lecture |
+| `L05_tsne_mini.tex` | Mini t-SNE lecture |
+| `L05_pca_tsne_top10.tex` | Top-10 charts lecture |
+| `L05_pca_tsne_top20.tex` | Top-20 charts lecture |
 
 ## Charts
 
@@ -48,8 +66,14 @@ All charts follow the naming convention `XX_descriptive_name/` and output `chart
 | 06b | `06b_pca_cluster_projection/` | PCA cluster projection | Linear projection may overlap clusters |
 | 06c | `06c_tsne_cluster_projection/` | t-SNE cluster projection | Non-linear projection separates clusters |
 | 07 | `07_decision_flowchart/` | When to use PCA/t-SNE | Flowchart for algorithm selection |
+| 08 | `08_high_dim_before_after/` | High-dimensional before/after | Dimensionality reduction visualization |
+| 09 | `09_yield_curve_factors/` | Yield curve PCA factors | PC1=level, PC2=slope, PC3=curvature |
+| 10 | `10_pca_mini_example/` | PCA worked example (5 points) | PC1 arrow + projection lines |
+| 11 | `11_gaussian_similarity/` | Gaussian kernel (t-SNE step 1) | Similarity as distance function |
+| 12 | `12_student_t_vs_gaussian/` | Student-t vs Gaussian kernels | Comparison for t-SNE step 2 |
+| 13 | `13_kl_divergence_asymmetry/` | KL divergence asymmetry | t-SNE step 3 optimization |
 
-Note: Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
+Note: L05 has **17 chart directories**. Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
 
 ## CRITICAL: Chart Rewrite (Feb 2026)
 
@@ -230,7 +254,7 @@ where P is high-dimensional similarities, Q is low-dimensional similarities.
 
 ## Testing Checklist
 
-- [ ] All 12 chart.py scripts generate chart.pdf
+- [ ] All 17 chart.py scripts generate chart.pdf
 - [ ] L05_overview.tex compiles without errors
 - [ ] L05_deepdive.tex compiles without errors
 - [ ] ZERO "Overfull \hbox" warnings in LaTeX output

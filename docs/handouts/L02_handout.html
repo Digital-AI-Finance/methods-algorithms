@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Class Discovery: Logistic Regression | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-title { font-weight: 600; font-size: 15px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+            border: 1px solid #c4b5fd;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--mlpurple);
+            font-weight: 600;
+        }
+        .banner-hint {
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .activity-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .activity-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px;
+            line-height: 1.3;
+        }
+
+        .activity-visual {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .activity-visual img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        .data-table th {
+            background: #f5f3ff;
+            color: var(--mlpurple);
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--mlpurple);
+        }
+        .data-table td {
+            padding: 7px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table tr:nth-child(even) td {
+            background: #fafbfc;
+        }
+
+        .questions {
+            margin-bottom: 16px;
+        }
+        .questions h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--mlpurple);
+            margin-bottom: 8px;
+        }
+        .questions ol {
+            padding-left: 20px;
+            font-size: 14px;
+        }
+        .questions li {
+            margin-bottom: 6px;
+        }
+
+        details {
+            background: #f0f7ff;
+            border-left: 4px solid var(--mlblue);
+            padding: 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+        details summary {
+            color: var(--mlblue);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        details summary:hover {
+            color: var(--mlpurple);
+        }
+        details[open] summary {
+            margin-bottom: 10px;
+        }
+        details p, details ul {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        details ul {
+            padding-left: 18px;
+            margin-top: 6px;
+        }
+        details li {
+            margin-bottom: 4px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
+        }
+        .footer a {
+            color: var(--mlblue);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 12px 10px 30px; }
+            .activity-card { padding: 16px; }
+            .activity-title { font-size: 16px; }
+            .banner { flex-direction: column; gap: 4px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Pre-Class Discovery: Logistic Regression</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="banner">
+            <span>6 Activities | Logistic Regression</span>
+            <span class="banner-hint">Complete before lecture. Expand solutions after attempting.</span>
+        </div>
+
+        <!-- Activity 1 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 1</div>
+            <h3 class="activity-title">"Approve or Deny?"</h3>
+
+            <table class="data-table">
+                <thead><tr><th>Income ($k)</th><th>Debt Ratio</th><th>Credit Score</th><th>Outcome</th></tr></thead>
+                <tbody>
+                    <tr><td>35</td><td>0.65</td><td>580</td><td>Denied</td></tr>
+                    <tr><td>85</td><td>0.20</td><td>750</td><td>Approved</td></tr>
+                    <tr><td>42</td><td>0.55</td><td>620</td><td>Denied</td></tr>
+                    <tr><td>120</td><td>0.15</td><td>800</td><td>Approved</td></tr>
+                    <tr><td>55</td><td>0.45</td><td>660</td><td>Denied</td></tr>
+                    <tr><td>95</td><td>0.30</td><td>720</td><td>Approved</td></tr>
+                    <tr><td>38</td><td>0.70</td><td>590</td><td>Denied</td></tr>
+                    <tr><td>110</td><td>0.25</td><td>780</td><td>Approved</td></tr>
+                </tbody>
+            </table>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Sort by income -- does higher income always mean approval?</li>
+                    <li>Which single feature best separates approved from denied?</li>
+                    <li>Can you write a simple rule (e.g., "approve if credit score > __")?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>No single feature perfectly separates the outcomes. We need a model that <em>combines</em> features and outputs a probability, not just yes/no. Logistic regression does exactly this: it maps a weighted sum of features through the <em>sigmoid function</em> to produce a probability between 0 and 1.</p>
+            </details>
+        </div>
+
+        <!-- Activity 2 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 2</div>
+            <h3 class="activity-title">"The S-Shaped Curve"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L02_Logistic_Regression/01_sigmoid_function.png"
+                     alt="Sigmoid function mapping any real number to a probability between 0 and 1"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>What happens at the extremes -- very large or very small input?</li>
+                    <li>What is the output when the input equals 0?</li>
+                    <li>Why is this S-shape useful for modeling probabilities?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>The sigmoid function $\sigma(z) = \frac{1}{1 + e^{-z}}$ maps any number to (0, 1). At extremes, it saturates near 0 or 1 (high confidence). At $z=0$, the output is 0.5 (maximum uncertainty). It's perfect for probabilities because it's smooth, monotonic, and bounded.</p>
+            </details>
+        </div>
+
+        <!-- Activity 3 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 3</div>
+            <h3 class="activity-title">"Where Do You Draw the Line?"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L02_Logistic_Regression/02_decision_boundary.png"
+                     alt="Decision boundary separating two classes in feature space"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Where would you place a boundary to separate the two groups?</li>
+                    <li>Can a straight line do it perfectly?</li>
+                    <li>What about the points near the boundary -- how confident should the model be about those?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>The <em>decision boundary</em> is where $P(\text{class}=1) = 0.5$. In 2D feature space, logistic regression draws a straight line (or hyperplane in higher dimensions). Points near the boundary have probabilities close to 0.5 -- the model is uncertain. Points far away have probabilities near 0 or 1.</p>
+            </details>
+        </div>
+
+        <!-- Activity 4 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 4</div>
+            <h3 class="activity-title">"The Confusion Table"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L02_Logistic_Regression/06_confusion_matrix.png"
+                     alt="Confusion matrix showing true positives, false positives, true negatives, and false negatives"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>In banking, which is worse: approving a bad loan (false positive) or rejecting a good customer (false negative)?</li>
+                    <li>Count the errors in each category.</li>
+                    <li>If you lower the approval threshold from 0.5 to 0.3, what changes?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>The <em>confusion matrix</em> organizes predictions into TP, FP, TN, FN. Lowering the threshold approves more applicants -- increases true positives but also false positives. The trade-off between <em>precision</em> (how many approvals are correct) and <em>recall</em> (how many good customers you catch) is fundamental.</p>
+            </details>
+        </div>
+
+        <!-- Activity 5 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 5</div>
+            <h3 class="activity-title">"Which Model Wins?"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L02_Logistic_Regression/04_roc_curve.png"
+                     alt="ROC curves comparing model performance with diagonal random baseline"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>What does the diagonal line represent?</li>
+                    <li>Which curve is better and why?</li>
+                    <li>Can a model be perfect -- what would that look like on this chart?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>The diagonal is a <em>random classifier</em> (coin flip). The ROC curve plots True Positive Rate vs False Positive Rate at every threshold. A curve closer to the top-left is better. The <em>AUC</em> (Area Under Curve) summarizes performance: 0.5 = random, 1.0 = perfect. A perfect model reaches the top-left corner.</p>
+            </details>
+        </div>
+
+        <!-- Activity 6 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 6</div>
+            <h3 class="activity-title">"Your Turn: Credit Scoring"</h3>
+
+            <table class="data-table">
+                <thead><tr><th>#</th><th>Income ($k)</th><th>Debt Ratio</th><th>Credit Score</th><th>Your Prediction</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>45</td><td>0.50</td><td>640</td><td>?</td></tr>
+                    <tr><td>2</td><td>90</td><td>0.25</td><td>730</td><td>?</td></tr>
+                    <tr><td>3</td><td>60</td><td>0.40</td><td>680</td><td>?</td></tr>
+                    <tr><td>4</td><td>75</td><td>0.35</td><td>700</td><td>?</td></tr>
+                    <tr><td>5</td><td>30</td><td>0.60</td><td>600</td><td>?</td></tr>
+                    <tr><td>6</td><td>105</td><td>0.20</td><td>760</td><td>?</td></tr>
+                </tbody>
+            </table>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Predict approve/deny for each applicant.</li>
+                    <li>For each, rate your confidence from 0-100%.</li>
+                    <li>Two applicants (#3 and #4) have similar incomes but might get different outcomes -- why?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>Logistic regression combines all features: $P(\text{approve}) = \sigma(\beta_0 + \beta_1 \cdot \text{income} + \beta_2 \cdot \text{debt} + \beta_3 \cdot \text{score})$. Each feature contributes -- debt ratio might penalize #3 enough to shift the probability. Your confidence ratings are you intuitively doing what logistic regression formalizes!</p>
+            </details>
+        </div>
+
+        <div class="footer">
+            <a href="../quiz/L02_logistic_regression.html">Take the Quiz</a> &middot;
+            <a href="../index.html">Back to Dashboard</a> &middot;
+            Methods & Algorithms &mdash; MSc Data Science
+        </div>
+    </main>
+
+    <script>
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+        renderMath();
+        setTimeout(renderMath, 200);
+    </script>
+</body>
+</html>

@@ -6,6 +6,10 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 CHART_METADATA = {
     "title": "KNN Confusion Matrix (k=7, 3-Class)",
@@ -13,18 +17,6 @@ CHART_METADATA = {
     "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L03_KNN_KMeans/top10_20_knn_confusion_matrix"
 }
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False,
-})
-
-MLPURPLE = '#3333B2'
-MLBLUE = '#0066CC'
-MLORANGE = '#FF7F0E'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
 
 X, y = make_classification(n_samples=800, n_features=8, n_informative=5,
                            n_classes=3, n_clusters_per_class=1, random_state=42)
@@ -41,6 +33,7 @@ class_names = ['Low Risk', 'Medium Risk', 'High Risk']
 fig, ax = plt.subplots(figsize=(10, 6))
 
 im = ax.imshow(cm, interpolation='nearest', cmap='Blues')
+ax.grid(False)
 
 # Annotate cells
 thresh = cm.max() / 2.0
@@ -64,6 +57,6 @@ cbar.set_label('Count', fontsize=12)
 plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 print("Chart saved: top10_20_knn_confusion_matrix/chart.pdf")

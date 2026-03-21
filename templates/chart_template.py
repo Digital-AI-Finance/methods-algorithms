@@ -3,16 +3,25 @@ Chart Template - Methods and Algorithms Course
 
 Usage:
     Copy this file to your chart folder, rename to chart.py, and customize.
+    Style and colors are provided by templates/chart_style.py (imported below).
 
 Chart requirements:
     - figsize=(10, 6) for Beamer compatibility
-    - Font sizes scaled for 0.55-0.65 textwidth display
+    - Font sizes set automatically by apply_style()
     - Output: chart.pdf in same directory
     - GitHub URL in bottom-right corner
 """
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 from pathlib import Path
+
+# Shared style: fonts, colors, grid, spine removal
+# NOTE: Adjust parents[3] if running this template directly from templates/
+# When copied to slides/LXX/chart_name/chart.py, parents[3] resolves to repo root
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 # =============================================================================
 # CHART CONFIGURATION
@@ -23,31 +32,6 @@ CHART_METADATA = {
     "title": "Chart Title",
     "description": "Brief description of what this chart shows",
     "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L01_Introduction_Linear_Regression/01_simple_regression"
-}
-
-# Font sizes scaled for Beamer display at 0.55-0.65 textwidth
-plt.rcParams.update({
-    'font.size': 14,
-    'axes.labelsize': 14,
-    'axes.titlesize': 16,
-    'xtick.labelsize': 13,
-    'ytick.labelsize': 13,
-    'legend.fontsize': 13,
-    'figure.figsize': (10, 6),
-    'figure.dpi': 150,
-    'axes.spines.top': False,
-    'axes.spines.right': False,
-})
-
-# ML Color palette
-COLORS = {
-    'primary': '#3333B2',    # ML Purple
-    'secondary': '#0066CC',  # ML Blue
-    'accent': '#FF7F0E',     # ML Orange
-    'success': '#2CA02C',    # ML Green
-    'danger': '#D62728',     # ML Red
-    'lavender': '#ADADE0',   # Light purple
-    'gray': '#808080',       # Gray
 }
 
 # =============================================================================

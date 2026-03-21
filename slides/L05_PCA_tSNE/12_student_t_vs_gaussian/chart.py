@@ -2,19 +2,16 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 CHART_METADATA = {
     "title": "Gaussian vs Student-t: The Heavy-Tail Advantage",
     "description": "Compares Gaussian and Student-t kernel tails, showing why Student-t solves the crowding problem",
     "url": "https://digital-ai-finance.github.io/methods-algorithms/slides/L05_PCA_tSNE/12_student_t_vs_gaussian"
 }
-
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False
-})
 
 MLBlue = '#0066CC'
 MLOrange = '#FF7F0E'
@@ -53,5 +50,5 @@ fig.text(0.99, 0.01, CHART_METADATA["url"],
          ha='right', va='bottom', fontsize=7, color='gray', alpha=0.6)
 
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()

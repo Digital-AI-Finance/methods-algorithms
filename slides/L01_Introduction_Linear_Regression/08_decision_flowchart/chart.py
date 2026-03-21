@@ -2,6 +2,10 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 # QuantLet branding metadata
 CHART_METADATA = {
@@ -10,19 +14,6 @@ CHART_METADATA = {
     "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L01_Introduction_Linear_Regression/08_decision_flowchart"
 }
 
-# Chart settings
-plt.rcParams.update({
-    'font.size': 11, 'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False,
-    'axes.spines.right': False
-})
-
-# Colors
-MLBLUE = '#0066CC'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
-MLORANGE = '#FF7F0E'
-MLPURPLE = '#3333B2'
 
 def draw_box(ax, x, y, text, color, width=1.8, height=0.6):
     """Draw a rounded rectangle with text."""
@@ -89,6 +80,6 @@ plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 print("Chart saved: 08_decision_flowchart/chart.pdf")

@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-03-10 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-18 -->
 
 # L06_Embeddings_RL/
 
@@ -7,7 +7,7 @@
 
 ## Purpose
 
-Lesson 6 introduces representation learning (word embeddings) and reinforcement learning with sentiment analysis and trading strategies as motivating finance cases. Students learn Word2Vec, Q-learning, and how to design reward functions.
+Lesson 6 introduces representation learning (word embeddings) and reinforcement learning with sentiment analysis and trading strategies as motivating finance cases. Students learn Word2Vec, Q-learning, and how to design reward functions. Extended with formula-free visual lectures covering modern embeddings (sentence-transformers, RAG, vector DBs) and modern RL (PPO, RLHF, Gymnasium).
 
 ## Finance Case
 
@@ -26,11 +26,31 @@ Lesson 6 introduces representation learning (word embeddings) and reinforcement 
 
 ## Files
 
+### Core Lectures
 | File | Purpose | Slides |
 |------|---------|--------|
-| `L06_overview.tex` | Overview slides (4 charts: 01, 03, 05, 07) | 24 |
-| `L06_deepdive.tex` | Deep dive (9 charts: 02, 04, 06, 08-13) + 10 appendix slides | 52 |
+| `L06_overview.tex` | Combined overview (Embeddings + RL, 4 charts: 01, 03, 05, 07) | 26 |
+| `L06_deepdive.tex` | Combined deep dive with full RL theory (45 main + 10 appendix) | 55 |
 | `L06_instructor_guide.md` | Teaching guide with PMSP breakdown | - |
+
+### Formula-Free Visual Lectures (Mar 2026)
+| File | Purpose | Slides |
+|------|---------|--------|
+| `L06a_embeddings_simple.tex` | Classic embeddings basics (Word2Vec, GloVe) | 16 |
+| `L06b_rl_simple.tex` | Beginner visual RL guide, no math (Q-learning, reward curves) | 20 |
+| `L06c_embeddings_llm_simple.tex` | Embeddings evolution (Word2Vec→BERT→GPT) | 25 |
+| `L06d_modern_embeddings_simple.tex` | Modern embeddings (sentence-transformers, RAG, vector DBs) | 11 |
+| `L06e_modern_rl_simple.tex` | Modern RL practical guide, no math (PPO, RLHF, Gymnasium, Stable-Baselines3) | 14 |
+
+### Additional Variants
+| File | Purpose | Slides |
+|------|---------|--------|
+| `L06_embeddings_full.tex` | Full embeddings lecture | - |
+| `L06_embeddings_mini.tex` | Mini embeddings lecture | - |
+| `L06_rl_full.tex` | Standalone RL lecture with full PPO math (for separate teaching) | 29 |
+| `L06_rl_mini.tex` | Quick-reference condensed RL overview | 10 |
+| `L06_embeddings_rl_simple.tex` | Combined simple lecture | - |
+| `L06_embeddings_rl_top10.tex` | Top-10 charts lecture | - |
 
 ## Charts
 
@@ -38,7 +58,7 @@ All charts follow the naming convention `XX_descriptive_name/` and output `chart
 
 | Chart | Directory | Description | Key Visual |
 |-------|-----------|-------------|------------|
-| 01 | `01_word_embedding_space/` | 2D embedding projection | Financial terms in 2D space (e.g., "profit", "loss", "equity") |
+| 01 | `01_word_embedding_space/` | 2D embedding projection | Financial terms in 2D space |
 | 02 | `02_similarity_heatmap/` | Cosine similarity matrix | Heatmap showing word-word similarities |
 | 03 | `03_rl_loop/` | Agent-environment interaction | State → Action → Reward → Next State cycle |
 | 04 | `04_q_learning_grid/` | Q-values in grid world | Heatmap showing learned Q-values per state-action |
@@ -51,8 +71,15 @@ All charts follow the naming convention `XX_descriptive_name/` and output `chart
 | 11 | `11_word_analogy_arithmetic/` | Word analogy vector arithmetic | king - man + woman ≈ queen |
 | 12 | `12_epsilon_decay/` | Epsilon decay schedules | Exponential vs linear decay |
 | 13 | `13_walkforward_timeline/` | Walk-forward backtesting | Train/test rolling window |
+| 14 | `14_rag_pipeline_flow/` | RAG pipeline flowchart | Documents→Chunk→Embed→Store→Retrieve→LLM |
+| 15 | `15_ppo_training_curve/` | PPO training on CartPole-v1 | Reward curve with solved threshold |
+| 20 | `20_rl_taxonomy_tree/` | RL method taxonomy tree | Value-based, policy-based, actor-critic, model-based branches |
+| 21 | `21_sarsa_vs_qlearning_cliff/` | SARSA vs Q-learning on cliff walk | Side-by-side path comparison showing on-policy vs off-policy |
+| 22 | `22_actor_critic_architecture/` | Actor-critic architecture diagram | Actor (policy) + Critic (value) with advantage signal |
+| 23 | `23_offline_vs_online_rl/` | Offline vs online RL comparison | Dataset-only vs live interaction learning modes |
+| 24 | `24_bandit_to_mdp_progression/` | Progression from bandits to MDPs | Conceptual ladder: bandit → contextual bandit → MDP |
 
-Note: L06 has **13 charts** (most of any topic). Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
+Note: L06 has **24 numbered charts** (most of any topic), plus top10 series charts. Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
 
 ## Chart Technical Details
 
@@ -251,7 +278,7 @@ for episode in range(n_episodes):
 
 ## Testing Checklist
 
-- [ ] All 7 chart.py scripts generate chart.pdf
+- [ ] All 24 numbered chart.py scripts generate chart.pdf
 - [ ] L06_overview.tex compiles without errors
 - [ ] L06_deepdive.tex compiles without errors
 - [ ] ZERO "Overfull \hbox" warnings in LaTeX output
@@ -300,6 +327,18 @@ Ultra-deep pedagogical review identified and fixed 10 issues across both files:
 
 Both files compile clean: 0 errors, 0 Overfull.
 
+## Formula-Free Visual Lectures (Mar 2026)
+
+L06 has 5 companion visual lectures created using the formula-free-visual-lecture skill:
+
+| Pair | Basics | Modern Companion |
+|------|--------|------------------|
+| Embeddings | L06a (Word2Vec/GloVe basics) | L06d (sentence-transformers, RAG, vector DBs) |
+| RL | L06b (Q-learning, reward curves) | L06e (PPO, RLHF, Gymnasium, sim-to-real) |
+| Evolution | L06c (Word2Vec→BERT→GPT arc) | - |
+
+All visual lectures: zero display math, TikZ stick-figure comics, XKCD bookends, `\bottomnote{}` on every content slide. Charts 14 (RAG pipeline) and 15 (PPO training curve) were created specifically for L06d and L06e.
+
 ## Extensions
 
 **Advanced Topics** (covered in deepdive appendix):
@@ -311,4 +350,4 @@ Both files compile clean: 0 errors, 0 Overfull.
 **Further Reading**:
 - Sutton & Barto: Reinforcement Learning (RL bible)
 - Mikolov et al.: Word2Vec papers
-- OpenAI Gym: RL environments
+- OpenAI Gym / Gymnasium: RL environments

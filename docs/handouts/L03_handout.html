@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Class Discovery: KNN & K-Means | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-title { font-weight: 600; font-size: 15px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+            border: 1px solid #c4b5fd;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--mlpurple);
+            font-weight: 600;
+        }
+        .banner-hint {
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .activity-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .activity-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px;
+            line-height: 1.3;
+        }
+
+        .activity-visual {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .activity-visual img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        .data-table th {
+            background: #f5f3ff;
+            color: var(--mlpurple);
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--mlpurple);
+        }
+        .data-table td {
+            padding: 7px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table tr:nth-child(even) td {
+            background: #fafbfc;
+        }
+
+        .questions {
+            margin-bottom: 16px;
+        }
+        .questions h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--mlpurple);
+            margin-bottom: 8px;
+        }
+        .questions ol {
+            padding-left: 20px;
+            font-size: 14px;
+        }
+        .questions li {
+            margin-bottom: 6px;
+        }
+
+        details {
+            background: #f0f7ff;
+            border-left: 4px solid var(--mlblue);
+            padding: 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+        details summary {
+            color: var(--mlblue);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        details summary:hover {
+            color: var(--mlpurple);
+        }
+        details[open] summary {
+            margin-bottom: 10px;
+        }
+        details p, details ul {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        details ul {
+            padding-left: 18px;
+            margin-top: 6px;
+        }
+        details li {
+            margin-bottom: 4px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
+        }
+        .footer a {
+            color: var(--mlblue);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 12px 10px 30px; }
+            .activity-card { padding: 16px; }
+            .activity-title { font-size: 16px; }
+            .banner { flex-direction: column; gap: 4px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Pre-Class Discovery: KNN & K-Means</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="banner">
+            <span>7 Activities | KNN & K-Means</span>
+            <span class="banner-hint">Complete before lecture. Expand solutions after attempting.</span>
+        </div>
+
+        <!-- Activity 1 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 1</div>
+            <h3 class="activity-title">"Who Are Your Neighbors?"</h3>
+
+            <table class="data-table">
+                <thead><tr><th>Age</th><th>Annual Spending ($k)</th><th>Label</th></tr></thead>
+                <tbody>
+                    <tr><td>25</td><td>2</td><td>Low</td></tr>
+                    <tr><td>35</td><td>5</td><td>Low</td></tr>
+                    <tr><td>45</td><td>8</td><td>High</td></tr>
+                    <tr><td>22</td><td>1.5</td><td>Low</td></tr>
+                    <tr><td>55</td><td>12</td><td>High</td></tr>
+                    <tr><td>30</td><td>4</td><td>Low</td></tr>
+                    <tr><td>40</td><td>7</td><td>High</td></tr>
+                    <tr><td>28</td><td>3</td><td>Low</td></tr>
+                    <tr><td>50</td><td>10</td><td>High</td></tr>
+                    <tr><td>38</td><td>6</td><td>High</td></tr>
+                    <tr><td>60</td><td>15</td><td>High</td></tr>
+                    <tr><td>33</td><td>4.5</td><td>Low</td></tr>
+                </tbody>
+            </table>
+
+            <p style="font-size:14px; margin-bottom:12px; font-weight:600; color:var(--mlpurple);">New customer: Age=32, Spending=$5k, Label=?</p>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Find the 3 closest customers to the new one (by eyeballing age and spending).</li>
+                    <li>Based on those 3 neighbors, what label would you assign?</li>
+                    <li>What if you used 7 neighbors instead -- would the answer change?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>This is <em>K-Nearest Neighbors (KNN)</em> -- classify by majority vote of the $k$ closest training points. With $k=3$, you likely get "Low." With $k=7$, you include more distant points -- the decision may change. The choice of $k$ is critical: small $k$ = sensitive to noise, large $k$ = smoother boundaries.</p>
+            </details>
+        </div>
+
+        <!-- Activity 2 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 2</div>
+            <h3 class="activity-title">"How Far Apart?"</h3>
+
+            <table class="data-table">
+                <thead><tr><th>Customer</th><th>Income ($k)</th><th>Age</th><th>Debt Ratio</th></tr></thead>
+                <tbody>
+                    <tr><td>A</td><td>50</td><td>30</td><td>0.4</td></tr>
+                    <tr><td>B</td><td>80</td><td>45</td><td>0.2</td></tr>
+                </tbody>
+            </table>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L03_KNN_KMeans/02_distance_metrics.png"
+                     alt="Comparison of Euclidean and Manhattan distance metrics"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Calculate |A-B| for each feature.</li>
+                    <li>If income is in dollars and age in years, does the raw distance make sense?</li>
+                    <li>What if you multiply income by 1000 (to get actual dollars)?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>Raw differences: |50-80|=30, |30-45|=15, |0.4-0.2|=0.2. But income dominates just because of scale! <em>Feature scaling</em> (standardizing to mean=0, std=1) ensures all features contribute equally. Without scaling, KNN essentially ignores low-magnitude features.</p>
+            </details>
+        </div>
+
+        <!-- Activity 3 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 3</div>
+            <h3 class="activity-title">"Draw the Boundaries"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L03_KNN_KMeans/01_knn_boundaries.png"
+                     alt="KNN decision boundaries showing how classification regions change with k"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Where do the decision boundaries fall?</li>
+                    <li>Are they smooth or jagged?</li>
+                    <li>What would happen if you increased $k$ to a very large number?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>KNN creates <em>piecewise</em> boundaries that trace around training points. Small $k$ = jagged, complex boundaries (high variance). Large $k$ = smoother boundaries (high bias). As $k \to n$, the model just predicts the overall majority class.</p>
+            </details>
+        </div>
+
+        <!-- Activity 4 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 4</div>
+            <h3 class="activity-title">"Group These Customers"</h3>
+
+            <table class="data-table">
+                <thead><tr><th>Customer</th><th>Age</th><th>Spending ($k)</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>22</td><td>1.5</td></tr>
+                    <tr><td>2</td><td>25</td><td>2</td></tr>
+                    <tr><td>3</td><td>45</td><td>8</td></tr>
+                    <tr><td>4</td><td>48</td><td>9</td></tr>
+                    <tr><td>5</td><td>50</td><td>10</td></tr>
+                    <tr><td>6</td><td>23</td><td>1</td></tr>
+                    <tr><td>7</td><td>47</td><td>7.5</td></tr>
+                    <tr><td>8</td><td>30</td><td>3.5</td></tr>
+                    <tr><td>9</td><td>52</td><td>11</td></tr>
+                    <tr><td>10</td><td>26</td><td>2.5</td></tr>
+                </tbody>
+            </table>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Divide these 10 customers into 3 groups that "make sense" to you.</li>
+                    <li>Describe each group in plain English (e.g., "young, low spenders").</li>
+                    <li>How did you decide which group each customer belongs to?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>You just did <em>clustering</em> -- grouping similar items without labels. K-Means does this automatically: (1) pick $k$ random centers, (2) assign each point to the nearest center, (3) recompute centers, (4) repeat until stable. Your groups likely match: Young/Low, Middle/Medium, Older/High.</p>
+            </details>
+        </div>
+
+        <!-- Activity 5 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 5</div>
+            <h3 class="activity-title">"Watch the Algorithm"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L03_KNN_KMeans/03_kmeans_iteration.png"
+                     alt="K-means clustering iterations showing centroids moving and cluster assignments changing"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>What changed between iterations?</li>
+                    <li>When would the algorithm stop?</li>
+                    <li>What if the starting points were in different positions -- would you get the same clusters?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>Each iteration: reassign points to nearest centroid, then recompute centroids. It stops when assignments no longer change (<em>convergence</em>). Different starting centroids can yield different results -- this is <em>initialization sensitivity</em>. Solutions: run multiple times (K-Means++) or use smart initialization.</p>
+            </details>
+        </div>
+
+        <!-- Activity 6 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 6</div>
+            <h3 class="activity-title">"How Many Groups?"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L03_KNN_KMeans/04_elbow_method.png"
+                     alt="Elbow method plot showing within-cluster sum of squares versus number of clusters"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>What happens to the error as you add more clusters?</li>
+                    <li>Where is the "elbow" -- the point of diminishing returns?</li>
+                    <li>Why not just use $k = 10$?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>More clusters always reduce within-cluster error, but at a cost of complexity. The <em>elbow method</em> looks for where adding another cluster stops helping much. Using $k = n$ gives zero error but zero insight -- every point is its own cluster. The elbow balances fit vs. parsimony.</p>
+            </details>
+        </div>
+
+        <!-- Activity 7 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 7</div>
+            <h3 class="activity-title">"K-Means By Hand"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L03_KNN_KMeans/12_kmeans_worked_example.png"
+                     alt="Worked example of K-means clustering on a small 2D dataset"
+                     loading="lazy">
+            </div>
+
+            <table class="data-table">
+                <thead><tr><th>Point</th><th>X</th><th>Y</th></tr></thead>
+                <tbody>
+                    <tr><td>A</td><td>1</td><td>2</td></tr>
+                    <tr><td>B</td><td>2</td><td>1</td></tr>
+                    <tr><td>C</td><td>1.5</td><td>1.5</td></tr>
+                    <tr><td>D</td><td>6</td><td>5</td></tr>
+                    <tr><td>E</td><td>7</td><td>6</td></tr>
+                    <tr><td>F</td><td>6.5</td><td>5.5</td></tr>
+                </tbody>
+            </table>
+
+            <p style="font-size:14px; margin-bottom:12px; font-weight:600; color:var(--mlpurple);">Initial centroids: C1=(1,1), C2=(7,7)</p>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Assign each point to its nearest centroid.</li>
+                    <li>Compute the new centroid of each cluster.</li>
+                    <li>Would any points switch clusters in the next iteration?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>Round 1: Cluster1={A,B,C} with new centroid=(1.5,1.5). Cluster2={D,E,F} with new centroid=(6.5,5.5). Round 2: all assignments stay the same, so the algorithm converges in 2 iterations! This is K-Means in action.</p>
+            </details>
+        </div>
+
+        <div class="footer">
+            <a href="../quiz/L03_knn_kmeans.html">Take the Quiz</a> &middot;
+            <a href="../index.html">Back to Dashboard</a> &middot;
+            Methods & Algorithms &mdash; MSc Data Science
+        </div>
+    </main>
+
+    <script>
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+        renderMath();
+        setTimeout(renderMath, 200);
+    </script>
+</body>
+</html>

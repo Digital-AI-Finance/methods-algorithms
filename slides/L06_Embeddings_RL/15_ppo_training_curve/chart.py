@@ -2,22 +2,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
-# Standard rcParams for Beamer
-plt.rcParams.update({
-    'font.size': 14,
-    'axes.labelsize': 14,
-    'axes.titlesize': 16,
-    'xtick.labelsize': 13,
-    'ytick.labelsize': 13,
-    'legend.fontsize': 13,
-    'figure.figsize': (10, 6),
-    'figure.dpi': 150,
-})
-
-# ML color palette
-MLBLUE = '#0066CC'
-MLGREEN = '#2CA02C'
 
 np.random.seed(42)
 
@@ -74,6 +64,6 @@ ax.grid(True, alpha=0.3)
 
 plt.tight_layout()
 output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'chart.pdf')
-plt.savefig(output_path, bbox_inches='tight')
+plt.savefig(output_path, bbox_inches='tight', facecolor='white')
 plt.close()
 print(f"Saved: {output_path}")

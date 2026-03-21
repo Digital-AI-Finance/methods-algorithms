@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Class Discovery: Random Forests | Methods & Algorithms</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --mlpurple: #3333B2;
+            --mlblue: #0066CC;
+            --bg: #f6f8fa;
+            --card-bg: #ffffff;
+            --text: #24292e;
+            --text-secondary: #586069;
+            --border: #e1e4e8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-title { font-weight: 600; font-size: 15px; }
+        .nav-links { display: flex; gap: 16px; }
+        .nav-links a { color: white; text-decoration: none; font-size: 12px; opacity: 0.9; }
+        .nav-links a:hover { opacity: 1; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+            border: 1px solid #c4b5fd;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--mlpurple);
+            font-weight: 600;
+        }
+        .banner-hint {
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .activity-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--mlpurple), var(--mlblue));
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .activity-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px;
+            line-height: 1.3;
+        }
+
+        .activity-visual {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .activity-visual img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        .data-table th {
+            background: #f5f3ff;
+            color: var(--mlpurple);
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--mlpurple);
+        }
+        .data-table td {
+            padding: 7px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table tr:nth-child(even) td {
+            background: #fafbfc;
+        }
+
+        .questions {
+            margin-bottom: 16px;
+        }
+        .questions h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--mlpurple);
+            margin-bottom: 8px;
+        }
+        .questions ol {
+            padding-left: 20px;
+            font-size: 14px;
+        }
+        .questions li {
+            margin-bottom: 6px;
+        }
+
+        details {
+            background: #f0f7ff;
+            border-left: 4px solid var(--mlblue);
+            padding: 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+        details summary {
+            color: var(--mlblue);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        details summary:hover {
+            color: var(--mlpurple);
+        }
+        details[open] summary {
+            margin-bottom: 10px;
+        }
+        details p, details ul {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        details ul {
+            padding-left: 18px;
+            margin-top: 6px;
+        }
+        details li {
+            margin-bottom: 4px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
+        }
+        .footer a {
+            color: var(--mlblue);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 12px 10px 30px; }
+            .activity-card { padding: 16px; }
+            .activity-title { font-size: 16px; }
+            .banner { flex-direction: column; gap: 4px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-title">Pre-Class Discovery: Random Forests</div>
+        <div class="nav-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="https://github.com/Digital-AI-Finance/methods-algorithms" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="banner">
+            <span>6 Activities | Random Forests</span>
+            <span class="banner-hint">Complete before lecture. Expand solutions after attempting.</span>
+        </div>
+
+        <!-- Activity 1 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 1</div>
+            <h3 class="activity-title">"20 Questions for Fraud"</h3>
+
+            <table class="data-table">
+                <thead><tr><th>Amount</th><th>Merchant</th><th>Time</th><th>Foreign</th><th>Outcome</th></tr></thead>
+                <tbody>
+                    <tr><td>$15</td><td>grocery</td><td>10am</td><td>No</td><td>Legit</td></tr>
+                    <tr><td>$800</td><td>electronics</td><td>2am</td><td>Yes</td><td>Fraud</td></tr>
+                    <tr><td>$25</td><td>cafe</td><td>9am</td><td>No</td><td>Legit</td></tr>
+                    <tr><td>$2500</td><td>jewelry</td><td>3am</td><td>Yes</td><td>Fraud</td></tr>
+                    <tr><td>$10</td><td>grocery</td><td>11am</td><td>No</td><td>Legit</td></tr>
+                    <tr><td>$950</td><td>electronics</td><td>1pm</td><td>No</td><td>Legit</td></tr>
+                    <tr><td>$5</td><td>cafe</td><td>8am</td><td>No</td><td>Legit</td></tr>
+                    <tr><td>$3200</td><td>online</td><td>4am</td><td>Yes</td><td>Fraud</td></tr>
+                </tbody>
+            </table>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>What is the single best yes/no question to separate fraud from legit?</li>
+                    <li>After that split, ask a second question for each group.</li>
+                    <li>Draw your question tree on paper.</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>You just built a <em>decision tree</em>! Good first questions: "Is it foreign?" or "Is the amount > $500?" or "Is the time between midnight and 5am?" Decision trees split data recursively using the question that best separates the classes.</p>
+            </details>
+        </div>
+
+        <!-- Activity 2 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 2</div>
+            <h3 class="activity-title">"Which Split Is Better?"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L04_Random_Forests/08_gini_split.png"
+                     alt="Comparison of two possible splits showing class purity distributions"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Which split creates purer groups?</li>
+                    <li>In the left split, what fraction of each group is fraud?</li>
+                    <li>Why is a 90/10 split better than a 60/40 split?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p><em>Gini impurity</em> measures how mixed a group is: $G = 1 - \sum p_i^2$. A pure group (all one class) has $G=0$. A 50/50 mix has $G=0.5$ (worst). The algorithm picks the split that reduces Gini the most -- this is <em>information gain</em>.</p>
+            </details>
+        </div>
+
+        <!-- Activity 3 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 3</div>
+            <h3 class="activity-title">"One Tree vs. Many Trees"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L04_Random_Forests/01_decision_tree.png"
+                     alt="Decision tree visualization showing splits and leaf predictions"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>If you trained this tree on slightly different data, would the splits change?</li>
+                    <li>Would the predictions change?</li>
+                    <li>How could you make the predictions more stable?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>A single tree is <em>unstable</em> -- small data changes cause big tree changes (high variance). Solution: train many trees on slightly different data and let them <em>vote</em>. This is the key insight behind <em>Random Forests</em>: a committee of diverse trees is more reliable than any single tree.</p>
+            </details>
+        </div>
+
+        <!-- Activity 4 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 4</div>
+            <h3 class="activity-title">"Voting Committee"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L04_Random_Forests/05_ensemble_voting.png"
+                     alt="Ensemble voting diagram showing multiple classifiers combining predictions"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>If 7 out of 10 classifiers say "fraud," what do you conclude?</li>
+                    <li>Why is a committee better than one expert?</li>
+                    <li>What if all 10 experts were trained on the exact same data?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p><em>Ensemble voting</em> reduces errors: even if individual trees are wrong 40% of the time, a majority vote of 10 trees is wrong far less often (by the law of large numbers). But trees must be <em>diverse</em> -- if trained identically, they make the same mistakes. <em>Bootstrap sampling</em> (random subsets with replacement) creates diversity.</p>
+            </details>
+        </div>
+
+        <!-- Activity 5 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 5</div>
+            <h3 class="activity-title">"Which Feature Matters?"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L04_Random_Forests/02_feature_importance.png"
+                     alt="Bar chart showing feature importance scores from a random forest model"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>Which feature is most important for prediction?</li>
+                    <li>Does "important" mean "causal"?</li>
+                    <li>If you removed the top feature, what would happen to model accuracy?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p><em>Feature importance</em> measures how much each feature reduces impurity across all trees. But importance does not equal causation -- a feature can be important because it's correlated with the true cause. Removing the top feature usually hurts accuracy, but other correlated features may partially compensate.</p>
+            </details>
+        </div>
+
+        <!-- Activity 6 -->
+        <div class="activity-card">
+            <div class="activity-badge">Activity 6</div>
+            <h3 class="activity-title">"Overfitting the Fraud Detector"</h3>
+
+            <div class="activity-visual">
+                <img src="../slides/images/L04_Random_Forests/06_bias_variance.png"
+                     alt="Bias-variance tradeoff as a function of model complexity for decision trees and random forests"
+                     loading="lazy">
+            </div>
+
+            <div class="questions">
+                <h4>Your Task</h4>
+                <ol>
+                    <li>What happens when a single tree is very deep?</li>
+                    <li>What happens when it's very shallow?</li>
+                    <li>How does a random forest fix this problem?</li>
+                </ol>
+            </div>
+
+            <details>
+                <summary>Reveal Solution</summary>
+                <p>Deep trees <em>overfit</em> (memorize noise). Shallow trees <em>underfit</em> (miss patterns). Random forests fix this: each tree can be deep (low bias), but averaging many trees reduces variance. The formula: $\text{Var}(\bar{X}) = \frac{\sigma^2}{n}$ -- averaging $n$ independent estimates reduces variance by $n$.</p>
+            </details>
+        </div>
+
+        <div class="footer">
+            <a href="../quiz/L04_random_forests.html">Take the Quiz</a> &middot;
+            <a href="../index.html">Back to Dashboard</a> &middot;
+            Methods & Algorithms &mdash; MSc Data Science
+        </div>
+    </main>
+
+    <script>
+        function renderMath() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+        renderMath();
+        setTimeout(renderMath, 200);
+    </script>
+</body>
+</html>

@@ -197,6 +197,36 @@ Unsupervised & ``Find patterns'' & No labels & Clustering, dim.\ reduction \\
 \bottomnote{RL is the only paradigm where the agent actively interacts with its environment.}
 \end{frame}
 
+% Slide NEW: Bandit Teaser
+\begin{frame}{The Simplest RL Problem: Multi-Armed Bandits}
+\centering
+\begin{tikzpicture}[scale=0.8]
+  % Stick figure
+  \draw[thick] (0,3.2) circle (0.25);
+  \draw[thick] (0,2.95) -- (0,1.8);
+  \draw[thick] (0,2.5) -- (-0.5,2.0);
+  \draw[thick] (0,2.5) -- (0.5,2.0);
+  \draw[thick] (0,1.8) -- (-0.3,1.0);
+  \draw[thick] (0,1.8) -- (0.3,1.0);
+  % Speech bubble
+  \node[draw, rounded corners, fill=white, font=\small, text width=3cm, align=center] at (0,4.2) {Which one\\pays the most?};
+  % Three slot machines
+  \foreach \x/\label/\col in {-3/A/mlblue, 0/B/mlorange, 3/C/mlgreen} {
+    \draw[\col, thick, rounded corners] (\x-0.6,0) rectangle (\x+0.6,1.5);
+    \node[font=\Large, \col] at (\x,0.75) {\textbf{\label}};
+    \node[font=\scriptsize] at (\x,-0.3) {???};
+  }
+  % Arrows from stick figure to machines
+  \draw[-{Stealth}, thick, mlgray, dashed] (-0.3,1.0) -- (-2.4,1.2);
+  \draw[-{Stealth}, thick, mlgray, dashed] (0,1.0) -- (0,1.5);
+  \draw[-{Stealth}, thick, mlgray, dashed] (0.3,1.0) -- (2.4,1.2);
+\end{tikzpicture}
+
+\vspace{2mm}
+\textbf{You can only learn by trying.} This is the explore-vs-exploit dilemma.
+\bottomnote{Multi-armed bandits: the simplest RL setting. No states, no transitions --- just pick and learn.}
+\end{frame}
+
 % Slide 6: CHART --- The RL Loop
 \begin{frame}{The Core Idea: Act, Observe, Learn, Repeat}
 \centering
@@ -320,6 +350,30 @@ Repeat thousands of times. The agent gets better.
 \item \textcolor{mlred}{\textbf{!}} \textbf{Sim-to-real gap} --- what works in simulation may not work in the real world without fine-tuning.
 \end{enumerate}
 \bottomnote{RL is powerful but hungry: it needs massive compute and careful reward engineering.}
+\end{frame}
+
+% Slide 13b: Trading Reward Shaping
+\begin{frame}{Why Does Reward Design Matter So Much?}
+\centering
+\includegraphics[width=0.65\textwidth]{19_reward_shaping_trading/chart.pdf}
+\begin{compactlist}
+\item Same trading task, two different reward functions --- dramatically different learning
+\item Risk-adjusted rewards (green) converge faster and more stably
+\item The reward function is the most important design choice in RL
+\end{compactlist}
+\bottomnote{Reward shaping can make or break an RL trading agent. Always compare multiple reward designs.}
+\end{frame}
+
+% Slide 13c: Reward Shaping (Gridworld)
+\begin{frame}{Does This Pattern Hold Beyond Trading?}
+\centering
+\includegraphics[width=0.65\textwidth]{top10_20_reward_shaping/chart.pdf}
+\begin{compactlist}
+\item Same principle in a simple gridworld: shaped rewards learn faster
+\item Sparse rewards (red) give the agent almost no guidance early on
+\item Dense/shaped rewards (blue) provide learning signal at every step
+\end{compactlist}
+\bottomnote{Reward shaping is a universal RL principle: give the agent a gradient to follow, not just a distant goal.}
 \end{frame}
 
 % Slide 14: Finance Application

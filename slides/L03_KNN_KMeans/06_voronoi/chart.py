@@ -9,19 +9,6 @@ CHART_METADATA = {
     "url": "https://github.com/Digital-AI-Finance/methods-algorithms/tree/master/slides/L03_KNN_KMeans/06_voronoi"
 }
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False,
-    'axes.spines.right': False,
-})
-
-MLPURPLE = '#3333B2'
-MLBLUE = '#0066CC'
-MLORANGE = '#FF7F0E'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
 
 np.random.seed(42)
 
@@ -33,6 +20,10 @@ c3 = np.random.randn(n_per_cluster, 2) * 0.6 + np.array([0, -1])
 X = np.vstack([c1, c2, c3])
 
 from sklearn.cluster import KMeans
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
 labels = kmeans.fit_predict(X)
@@ -81,6 +72,6 @@ plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 print("Chart saved: 06_voronoi/chart.pdf")

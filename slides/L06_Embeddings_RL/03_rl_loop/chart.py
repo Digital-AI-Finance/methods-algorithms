@@ -2,19 +2,11 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
-plt.rcParams.update({
-    'font.size': 14, 'axes.labelsize': 14, 'axes.titlesize': 16,
-    'xtick.labelsize': 13, 'ytick.labelsize': 13, 'legend.fontsize': 13,
-    'figure.figsize': (10, 6), 'figure.dpi': 150,
-    'axes.spines.top': False,
-    'axes.spines.right': False
-})
-
-MLPURPLE = '#3333B2'
-MLBLUE = '#0066CC'
-MLGREEN = '#2CA02C'
-MLORANGE = '#FF7F0E'
 
 CHART_METADATA = {
     "title": "RL Loop",
@@ -85,6 +77,6 @@ plt.figtext(0.99, 0.01, CHART_METADATA['url'],
             fontsize=7, color='gray', ha='right', va='bottom', alpha=0.7)
 
 plt.tight_layout()
-plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight')
+plt.savefig(Path(__file__).parent / 'chart.pdf', dpi=300, bbox_inches='tight', facecolor='white')
 plt.close()
 print("Chart saved: 03_rl_loop/chart.pdf")

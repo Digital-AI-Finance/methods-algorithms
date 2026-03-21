@@ -2,29 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'templates'))
+from chart_style import apply_style, COLORS, MLPURPLE, MLBLUE, MLORANGE, MLGREEN, MLRED, MLLAVENDER
+apply_style()
 
 # Set random seed
 np.random.seed(42)
 
-# Configure matplotlib for Beamer display
-plt.rcParams.update({
-    'font.size': 14,
-    'axes.labelsize': 14,
-    'axes.titlesize': 16,
-    'xtick.labelsize': 13,
-    'ytick.labelsize': 13,
-    'legend.fontsize': 13,
-    'figure.figsize': (10, 6),
-    'figure.dpi': 150
-})
-
-# Color palette
-MLPURPLE = '#3333B2'
-MLBLUE = '#0066CC'
-MLORANGE = '#FF7F0E'
-MLGREEN = '#2CA02C'
-MLRED = '#D62728'
-MLLAVENDER = '#ADADE0'
 
 # Chart metadata
 CHART_METADATA = {

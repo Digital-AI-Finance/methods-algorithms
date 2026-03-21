@@ -314,6 +314,20 @@ $\text{sim}(\vec{u}, \vec{v}) = \frac{\vec{u} \cdot \vec{v}}{\|\vec{u}\| \, \|\v
 \bottomnote{Q-learning: the foundation of value-based reinforcement learning}
 \end{frame}
 
+% Slide NEW: RL Taxonomy Teaser
+\begin{frame}[t]{Beyond Q-Learning: The RL Family}
+\begin{compactlist}
+  \item \textbf{Value-based} (today): Q-learning learns what each action is worth
+  \item \textbf{Policy-based} (L06e): PPO learns the action selection directly
+  \item \textbf{Actor-Critic} (deepdive): Combines both --- Actor picks, Critic evaluates
+\end{compactlist}
+\vspace{0.5em}
+\begin{block}{Q-Learning Is Just the Beginning}
+Today we cover the foundation. The deepdive adds DQN, Actor-Critic, and the full method taxonomy.
+\end{block}
+\bottomnote{All these methods build on the same agent-environment loop you learned today.}
+\end{frame}
+
 \section{Solution}
 
 % Slide 15: Does the Agent Actually Improve? (CHART 05)
@@ -341,6 +355,19 @@ $\text{sim}(\vec{u}, \vec{v}) = \frac{\vec{u} \cdot \vec{v}}{\|\vec{u}\| \, \|\v
 \item FinBERT achieves 87\% accuracy on financial sentiment (Araci, 2019)
 \end{itemize}
 \bottomnote{Simplified example --- real embeddings are 300--768 dimensions}
+\end{frame}
+
+% Slide 16b: FinBERT Sentiment Visualization
+\begin{frame}[t]{What Does Sentiment Classification Look Like?}
+\centering
+\includegraphics[width=0.65\textwidth]{16_finbert_sentiment_bars/chart.pdf}
+\vspace{2mm}
+\begin{itemize}
+\item Each headline compared to positive/negative sentiment anchors via cosine similarity
+\item Green bars = positive similarity, red bars = negative similarity
+\item FinBERT captures financial nuance (``hawkish'' = negative for equities)
+\end{itemize}
+\bottomnote{Cosine similarity measures alignment between embedding vectors: higher = more similar meaning}
 \end{frame}
 
 % Slide 17: RL in Finance: Trading Agents

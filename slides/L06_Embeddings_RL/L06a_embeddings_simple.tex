@@ -320,6 +320,18 @@ Embeddings let machines understand financial text --- reports, news, filings.
 \bottomnote{JPMorgan, Goldman Sachs, and Bloomberg all use NLP with embeddings for financial analysis.}
 \end{frame}
 
+% Slide 13b: FinBERT Sentiment Visualization
+\begin{frame}{How Does Sentiment Classification Actually Work?}
+\centering
+\includegraphics[width=0.65\textwidth]{16_finbert_sentiment_bars/chart.pdf}
+\begin{compactlist}
+\item Each headline is compared to positive and negative anchor phrases
+\item Higher green bar = positive sentiment; higher red bar = negative
+\item FinBERT captures financial nuance that general models miss
+\end{compactlist}
+\bottomnote{FinBERT (Araci, 2019): BERT fine-tuned on financial text. 87\% accuracy on financial sentiment.}
+\end{frame}
+
 % Slide 14: Try It Yourself
 \begin{frame}{Try It Yourself: 3 Lines of Python}
 \vspace{2mm}
