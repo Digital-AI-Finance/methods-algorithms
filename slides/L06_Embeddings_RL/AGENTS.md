@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-03-21 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-22 -->
 
 # L06_Embeddings_RL/
 
@@ -41,6 +41,7 @@ Lesson 6 introduces representation learning (word embeddings) and reinforcement 
 | `L06c_embeddings_llm_simple.tex` | Embeddings evolution (Word2Vec→BERT→GPT) | 25 |
 | `L06d_modern_embeddings_simple.tex` | Modern embeddings (sentence-transformers, RAG, vector DBs) | 11 |
 | `L06e_modern_rl_simple.tex` | Modern RL practical guide, no math (PPO, RLHF, Gymnasium, Stable-Baselines3) | 14 |
+| `L06f_embeddings_complete.tex` | Definitive embeddings reference (one-hot through RAG, 15 formulas) | 39 |
 
 ### Additional Variants
 | File | Purpose | Slides |
@@ -51,6 +52,8 @@ Lesson 6 introduces representation learning (word embeddings) and reinforcement 
 | `L06_rl_mini.tex` | Quick-reference condensed RL overview | 10 |
 | `L06_embeddings_rl_simple.tex` | Combined simple lecture | - |
 | `L06_embeddings_rl_top10.tex` | Top-10 charts lecture | - |
+
+**Total L06 lecture files: 11** (core 3 + formula-free visuals 5 + variants 3)
 
 ## Charts
 

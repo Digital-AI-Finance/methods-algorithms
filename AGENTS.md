@@ -1,4 +1,4 @@
-<!-- Generated: 2026-01-25 | Updated: 2026-03-21 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-22 -->
 
 # Methods and Algorithms
 
@@ -76,9 +76,9 @@ python run_audit.py
 | L01 | Linear Regression | House price prediction, factor models, CAPM | Remediated (Feb 2026) |
 | L02 | Logistic Regression | Credit scoring, default prediction, Basel scorecards | Remediated (Feb 2026) |
 | L03 | KNN & K-Means | Customer segmentation, anomaly detection | Remediated (Feb 2026) |
-| L04 | Random Forests | Fraud detection, feature importance, boosting | Remediated (Feb 2026) |
+| L04 | Random Forests | Fraud detection, feature importance, boosting | Remediated (Feb 2026), 32 charts (5 new GB) |
 | L05 | PCA & t-SNE | Portfolio risk decomposition, visualization | Remediated (Feb 2026) |
-| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Remediated + RL overhaul (Mar 2026) |
+| L06 | Embeddings & RL | Sentiment analysis, trading strategies | Remediated + RL overhaul (Mar 2026), 11 lectures (added L06f) |
 
 ## Dependencies
 

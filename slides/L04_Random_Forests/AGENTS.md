@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-01-25 | Updated: 2026-02-07 -->
+<!-- Generated: 2026-01-25 | Updated: 2026-03-22 -->
 
 # L04_Random_Forests/
 
@@ -44,8 +44,13 @@ All charts follow the naming convention `XX_descriptive_name/` and output `chart
 | 06a | `06a_single_tree_variance/` | Single tree predictions | High variance across different data samples |
 | 06b | `06b_random_forest_variance/` | Random forest predictions | Reduced variance through ensemble |
 | 07 | `07_decision_flowchart/` | When to use random forests | Flowchart for algorithm selection |
+| 28 | `28_gb_residual_steps/` | Gradient boosting residual fitting | Residual reduction across 3 iterations |
+| 29 | `29_gb_prediction_sum/` | GBM prediction composition | Stacked bar showing tree contribution decomposition |
+| 30 | `30_gb_learning_rate_simple/` | Learning rate comparison | Learning rate zones with annotated effects |
+| 31 | `31_gb_vs_rf_diagram/` | RF vs GBM architecture | Parallel bagging vs sequential boosting diagram |
+| 32 | `32_gb_early_stopping/` | Early stopping visualization | Train/test divergence with stopping threshold |
 
-Note: Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
+Note: **32 total charts** (was 27, updated Mar 2026 with 5 new gradient boosting charts). Also includes `images/` subdirectory for XKCD cartoons and supporting visuals.
 
 ## Chart Technical Details
 
@@ -193,12 +198,13 @@ This topic received **MAJOR MSc-level enhancements** in February 2026:
 
 ## Testing Checklist
 
-- [ ] All 8 chart.py scripts generate chart.pdf
+- [ ] All 32 chart.py scripts generate chart.pdf
 - [ ] L04_overview.tex compiles without errors
 - [ ] L04_deepdive.tex compiles without errors
 - [ ] ZERO "Overfull \hbox" warnings in LaTeX output
 - [ ] Feature importance sums to 1.0
 - [ ] OOB error converges to stable value
+- [ ] Gradient boosting charts show sequential residual reduction
 
 ## Related Assets
 
